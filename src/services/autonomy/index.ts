@@ -1,0 +1,5 @@
+export { decideAutonomy } from './decideAutonomy'
+export type { AutonomyEngineInput } from './decideAutonomy'
+export { computeBrandSafetyFlags } from './computeBrandSafetyFlags'
+export { inferSourceQuality } from './inferSourceQuality'
+export { computeConfidenceAndRisk, domainMatchRole } from './computeConfidenceAndRisk'
