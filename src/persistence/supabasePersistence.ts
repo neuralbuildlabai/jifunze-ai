@@ -117,21 +117,23 @@ class SbSignals implements SignalRepository {
     batch: SignalIngestionBatch
     scored: ScoredSignal[]
   }): Promise<void> {
-    const { error } = await this.client
-      .from('signal_cache')
-      .upsert(
-        {
-          tenant_id: this.tenantId,
-          brand_profile_id: input.brandProfileId,
-          batch: asJson(input.batch),
-          scored: asJson(input.scored),
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: 'tenant_id,brand_profile_id' },
-      )
-      .select('tenant_id,brand_profile_id')
-      .maybeSingle()
-    if (error) throw error
+    await safeSupabaseWrite(this.client, async () => {
+      const { error } = await this.client
+        .from('signal_cache')
+        .upsert(
+          {
+            tenant_id: this.tenantId,
+            brand_profile_id: input.brandProfileId,
+            batch: asJson(input.batch),
+            scored: asJson(input.scored),
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: 'tenant_id,brand_profile_id' },
+        )
+        .select('tenant_id,brand_profile_id')
+        .maybeSingle()
+      if (error) throw error
+    })
   }
 
   async listScoredForBrand(brandProfileId: BrandProfileId): Promise<ScoredSignal[]> {
@@ -175,20 +177,22 @@ class SbOpportunities implements OpportunityRepository {
       brandProfileId,
       computedAt,
     }))
-    const { error } = await this.client
-      .from('opportunity_cache')
-      .upsert(
-        {
-          tenant_id: this.tenantId,
-          brand_profile_id: brandProfileId,
-          opportunities: asJson(stored),
-          updated_at: computedAt,
-        },
-        { onConflict: 'tenant_id,brand_profile_id' },
-      )
-      .select('tenant_id,brand_profile_id')
-      .maybeSingle()
-    if (error) throw error
+    await safeSupabaseWrite(this.client, async () => {
+      const { error } = await this.client
+        .from('opportunity_cache')
+        .upsert(
+          {
+            tenant_id: this.tenantId,
+            brand_profile_id: brandProfileId,
+            opportunities: asJson(stored),
+            updated_at: computedAt,
+          },
+          { onConflict: 'tenant_id,brand_profile_id' },
+        )
+        .select('tenant_id,brand_profile_id')
+        .maybeSingle()
+      if (error) throw error
+    })
   }
 
   async listForBrand(brandProfileId: BrandProfileId, params?: ListParams): Promise<StoredOpportunity[]> {
@@ -217,21 +221,23 @@ class SbContentItems implements ContentItemRepository {
   }
 
   async put(item: StoredContentItem): Promise<void> {
-    const { error } = await this.client
-      .from('content_items')
-      .upsert(
-        {
-          id: item.id,
-          tenant_id: this.tenantId,
-          brand_profile_id: item.brandProfileId,
-          payload: asJson(item),
-          created_at: item.createdAt,
-        },
-        { onConflict: 'id' },
-      )
-      .select('id')
-      .maybeSingle()
-    if (error) throw error
+    await safeSupabaseWrite(this.client, async () => {
+      const { error } = await this.client
+        .from('content_items')
+        .upsert(
+          {
+            id: item.id,
+            tenant_id: this.tenantId,
+            brand_profile_id: item.brandProfileId,
+            payload: asJson(item),
+            created_at: item.createdAt,
+          },
+          { onConflict: 'id' },
+        )
+        .select('id')
+        .maybeSingle()
+      if (error) throw error
+    })
   }
 
   async get(id: string): Promise<StoredContentItem | undefined> {
@@ -289,20 +295,22 @@ class SbSocialAccounts implements SocialAccountRepository {
       grouped.set(a.brand_profile_id, cur)
     }
     for (const [brandId, list] of grouped) {
-      const { error } = await this.client
-        .from('social_accounts')
-        .upsert(
-          {
-            tenant_id: this.tenantId,
-            brand_profile_id: brandId,
-            accounts: asJson(list),
-            updated_at: new Date().toISOString(),
-          },
-          { onConflict: 'tenant_id,brand_profile_id' },
-        )
-        .select('tenant_id,brand_profile_id')
-        .maybeSingle()
-      if (error) throw error
+      await safeSupabaseWrite(this.client, async () => {
+        const { error } = await this.client
+          .from('social_accounts')
+          .upsert(
+            {
+              tenant_id: this.tenantId,
+              brand_profile_id: brandId,
+              accounts: asJson(list),
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: 'tenant_id,brand_profile_id' },
+          )
+          .select('tenant_id,brand_profile_id')
+          .maybeSingle()
+        if (error) throw error
+      })
     }
   }
 }
@@ -343,19 +351,21 @@ class SbBrands implements BrandProfileRepository {
         `SbBrands.upsert: brand id must be a UUID for public.brands (got "${brand.id}"). Demo slug ids cannot be written to the workspace table.`,
       )
     }
-    const { error } = await this.client
-      .from('brands')
-      .upsert(
-        {
-          id: brand.id,
-          tenant_id: this.tenantId,
-          name: brand.name,
-        },
-        { onConflict: 'id' },
-      )
-      .select('id')
-      .maybeSingle()
-    if (error) throw error
+    await safeSupabaseWrite(this.client, async () => {
+      const { error } = await this.client
+        .from('brands')
+        .upsert(
+          {
+            id: brand.id,
+            tenant_id: this.tenantId,
+            name: brand.name,
+          },
+          { onConflict: 'id' },
+        )
+        .select('id')
+        .maybeSingle()
+      if (error) throw error
+    })
   }
 }
 
@@ -373,20 +383,22 @@ class SbLearningSnapshots implements LearningSnapshotRepository {
    * same request to pass **SELECT** RLS on the written row (catches missing SELECT / upsert edge cases).
    */
   async save(snapshot: StoredLearningSnapshot): Promise<void> {
-    const { error } = await this.client
-      .from('learning_snapshots')
-      .upsert(
-        {
-          tenant_id: this.tenantId,
-          brand_profile_id: snapshot.brandProfileId,
-          payload: asJson(snapshot),
-          captured_at: snapshot.capturedAt,
-        },
-        { onConflict: 'tenant_id,brand_profile_id' },
-      )
-      .select('tenant_id,brand_profile_id')
-      .maybeSingle()
-    if (error) throw error
+    await safeSupabaseWrite(this.client, async () => {
+      const { error } = await this.client
+        .from('learning_snapshots')
+        .upsert(
+          {
+            tenant_id: this.tenantId,
+            brand_profile_id: snapshot.brandProfileId,
+            payload: asJson(snapshot),
+            captured_at: snapshot.capturedAt,
+          },
+          { onConflict: 'tenant_id,brand_profile_id' },
+        )
+        .select('tenant_id,brand_profile_id')
+        .maybeSingle()
+      if (error) throw error
+    })
   }
 
   async getLatest(brandProfileId: BrandProfileId): Promise<StoredLearningSnapshot | undefined> {
@@ -411,18 +423,20 @@ class SbLearningLabHistory implements LearningLabHistoryRepository {
   }
 
   async appendRun(run: StoredLearningLabRun): Promise<void> {
-    const { error } = await this.client
-      .from('learning_lab_runs')
-      .insert({
-        id: run.id,
-        tenant_id: this.tenantId,
-        brand_profile_id: run.brandProfileId,
-        payload: asJson(run),
-        ran_at: run.ranAt,
-      })
-      .select('id')
-      .maybeSingle()
-    if (error) throw error
+    await safeSupabaseWrite(this.client, async () => {
+      const { error } = await this.client
+        .from('learning_lab_runs')
+        .insert({
+          id: run.id,
+          tenant_id: this.tenantId,
+          brand_profile_id: run.brandProfileId,
+          payload: asJson(run),
+          ran_at: run.ranAt,
+        })
+        .select('id')
+        .maybeSingle()
+      if (error) throw error
+    })
   }
 
   async listRunsForBrand(

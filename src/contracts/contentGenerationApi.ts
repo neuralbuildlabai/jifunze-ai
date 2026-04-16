@@ -16,6 +16,9 @@ export type GenerateContentRequestBody = {
 
 /**
  * Expected successful JSON body from the server.
- * Matches {@link SocialContent} so the client can render without extra mapping.
+ * Matches {@link SocialContent} for caption/hashtags; adds a non-secret delivery hint for logs.
  */
-export type GenerateContentResponseBody = SocialContent
+export type GenerateContentResponseBody = SocialContent & {
+  /** Present on Edge `generate-content` responses; distinguishes LLM vs deterministic server mock. */
+  source: 'backend_llm' | 'backend_mock'
+}

@@ -287,6 +287,17 @@ function buildSelectionReason(
   return parts.join(' ')
 }
 
+/** Tenant scope + optional learning snapshot control for {@link buildOpportunitiesFromSignals}. */
+export type BuildOpportunitiesTenantContext = {
+  tenantId: string
+  supabase?: SupabaseClient
+  /**
+   * Forwarded to {@link getBrandLearningState}. Default `true` (persist snapshot when session allows).
+   * Trend pipeline sets `false` on the draft pass before synthetic rows exist.
+   */
+  persistLearningSnapshot?: boolean
+}
+
 /**
  * Maps scored signals into reviewable opportunities (no auto-posting).
  * Drops signals whose trend category is forbidden for the brand.
@@ -296,10 +307,12 @@ export async function buildOpportunitiesFromSignals(
   signals: ScoredSignal[],
   brand: BrandProfile,
   minRelevance = 0.18,
-  tenantContext: { tenantId: string; supabase?: SupabaseClient },
+  tenantContext: BuildOpportunitiesTenantContext,
 ): Promise<ContentOpportunity[]> {
   await ensureBrandLearningDemoSeed(brand, tenantContext)
-  const learningState = await getBrandLearningState(brand.id, tenantContext.tenantId, tenantContext.supabase)
+  const learningState = await getBrandLearningState(brand.id, tenantContext.tenantId, tenantContext.supabase, {
+    persistLearningSnapshot: tenantContext.persistLearningSnapshot,
+  })
 
   const hayFor = (s: ScoredSignal) =>
     `${s.title} ${s.summary} ${s.topic_tags.join(' ')}`

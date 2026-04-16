@@ -57,6 +57,10 @@ export type AdaptOpportunityToPlatformsInput = {
   targetPlatforms?: AdaptationPlatformId[]
   /** Short titles from the learning layer; appended to each variant rationale. */
   learningSurfaceNotes?: string[]
+  /**
+   * When set, skips {@link getBrandLearningState} inside this function (caller already loaded learning).
+   */
+  recommendations?: BrandLearningState['recommendations']
   tenantId: string
   supabase?: SupabaseClient
 }
@@ -511,9 +515,9 @@ export async function adaptOpportunityToPlatforms(
     tiktok: buildVariantTikTok,
     facebook: buildVariantFacebook,
   }
-  const recommendations = (
-    await getBrandLearningState(input.brand.id, input.tenantId, input.supabase)
-  ).recommendations
+  const recommendations =
+    input.recommendations ??
+    (await getBrandLearningState(input.brand.id, input.tenantId, input.supabase)).recommendations
 
   const notes = input.learningSurfaceNotes?.filter(Boolean) ?? []
   const learningSuffix =

@@ -12,7 +12,10 @@ import { initialPackageLifecycleStatus } from '../lifecycle/packageLifecycle'
 import { buildCreativeBriefFromOpportunity } from '../creative/buildCreativeBrief'
 import { buildMockMediaPrompts, buildVisualConceptSummary } from '../creative/mockMediaPlanning'
 import { buildAllMediaPlans } from '../mediaPlanning/buildMediaPlans'
-import { getLearningAdapterNotes } from '../learning/learningContext'
+import {
+  buildLearningContextLinesFromState,
+  getBrandLearningState,
+} from '../learning/learningContext'
 import { onContentPackageGenerated } from '../pipeline'
 import { firstAdaptationPlatformFromSuggestions } from '../conversion/mapSuggestedPlatform'
 import { adaptOpportunityToPlatforms } from '../platforms/adaptOpportunityToPlatforms'
@@ -92,7 +95,9 @@ export async function generateContentPackage(params: {
       ? buildCreativeBriefFromOpportunity(opportunity, brand)
       : undefined
 
-  const learningNotes = await getLearningAdapterNotes(brand.id, tenantId, supabase)
+  const learningState = await getBrandLearningState(brand.id, tenantId, supabase)
+  const learningNotes = learningState.recommendations.slice(0, 3).map((r) => r.title)
+  const learningContextLines = buildLearningContextLinesFromState(learningState)
 
   const adaptation =
     multi && creative_brief
@@ -101,12 +106,18 @@ export async function generateContentPackage(params: {
           opportunity,
           creativeBrief: creative_brief,
           learningSurfaceNotes: learningNotes,
+          recommendations: learningState.recommendations,
           tenantId,
           supabase,
         })
       : undefined
 
-  const social = await generateFromOpportunity(opportunity, { brand, tenantId, supabase })
+  const social = await generateFromOpportunity(opportunity, {
+    brand,
+    tenantId,
+    supabase,
+    learningContextLines,
+  })
   const learningFingerprint = buildLearningFingerprint(opportunity)
 
   const withHook = async (pkg: ContentPackage): Promise<ContentPackage> => {

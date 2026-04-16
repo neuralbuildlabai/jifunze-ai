@@ -22,7 +22,7 @@ import { isDemoPersistenceTenantId, isWorkspaceTenantId } from '../persistence/t
 import type { BrandProfile } from '../types/brand'
 import { authFailureMessage } from './authErrorMessage'
 import { loadBrandsForTenant } from './bootstrapTenant'
-import { registerAuthWriteGuards } from '../lib/safeSupabaseWrite'
+import { registerAuthWriteGuards, safeSupabaseWrite } from '../lib/safeSupabaseWrite'
 import { jifunzeCriticalLog } from '../lib/jifunzeTelemetry'
 
 export type AuthContextValue = {
@@ -1214,10 +1214,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         const validProfileTenant = isWorkspaceTenantId(profileTenantId) ? profileTenantId : null
         if (!validProfileTenant || validProfileTenant !== resolvedTenant) {
-          const { error: patchProfileErr } = await supabase
-            .from('profiles')
-            .update({ default_tenant_id: resolvedTenant })
-            .eq('id', uid)
+          const patchOutcome = await safeSupabaseWrite(supabase, async () => {
+            const { error } = await supabase
+              .from('profiles')
+              .update({ default_tenant_id: resolvedTenant })
+              .eq('id', uid)
+            return { error }
+          })
+          const patchProfileErr = patchOutcome?.error
           if (patchProfileErr) {
             console.error('[JifunzeAI workspace]', {
               profile_default_tenant_repair_failed: {
@@ -1230,7 +1234,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 hint: (patchProfileErr as { hint?: string }).hint ?? null,
               },
             })
-          } else {
+          } else if (patchOutcome) {
             console.log('[JifunzeAI workspace]', {
               profile_default_tenant_repaired: {
                 userId: uid,
@@ -1383,10 +1387,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.log('[JifunzeAI workspace]', {
         bootstrap_rpc_lane_b_repair: { workspace_name: rpcArgs.workspace_name, userId: uid },
       })
-      const { data: rpcData, error: rpcErr } = await supabase.rpc('bootstrap_my_workspace', rpcArgs)
-      if (rpcErr) throw rpcErr
-      if (rpcData == null || String(rpcData).trim() === '') {
-        throw new Error('Workspace bootstrap returned no tenant')
+      const ran = await safeSupabaseWrite(supabase, async () => {
+        const { data: rpcData, error: rpcErr } = await supabase.rpc('bootstrap_my_workspace', rpcArgs)
+        if (rpcErr) throw rpcErr
+        if (rpcData == null || String(rpcData).trim() === '') {
+          throw new Error('Workspace bootstrap returned no tenant')
+        }
+      })
+      if (ran === undefined) {
+        throw new Error('Workspace repair skipped (session ended).')
       }
     },
     [supabase],

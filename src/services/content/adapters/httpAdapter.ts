@@ -1,18 +1,11 @@
+import { FunctionsHttpError } from '@supabase/supabase-js'
 import type { GenerateContentRequestBody } from '../../../contracts/contentGenerationApi'
+import { isSupabaseConfigured } from '../../../config/supabaseEnv'
+import { getSupabaseBrowserClient } from '@/lib/supabaseClient'
 import type { SocialContent } from '../../../types/content'
 import type { ContentGenerationAdapter } from '../adapter'
 import type { GenerationPayload } from '../payloads'
-import { parseSocialContentResponse } from '../validateResponse'
-
-function getInvokeUrl(): string {
-  const url = import.meta.env.VITE_CONTENT_API_URL?.trim()
-  if (!url) {
-    throw new Error(
-      'Content API is not configured. Set VITE_CONTENT_API_URL (e.g. https://<project-ref>.supabase.co/functions/v1/generate-content).',
-    )
-  }
-  return url
-}
+import { parseGenerationDeliverySource, parseSocialContentResponse } from '../validateResponse'
 
 /** Browsers typically throw TypeError when fetch cannot complete (offline, DNS, CORS, etc.). */
 function isLikelyFetchFailure(error: unknown): boolean {
@@ -35,49 +28,63 @@ function toRequestBody(payload: GenerationPayload): GenerateContentRequestBody {
 export function createHttpContentAdapter(): ContentGenerationAdapter {
   return {
     async generate(payload: GenerationPayload): Promise<SocialContent> {
-      const url = getInvokeUrl()
+      if (!isSupabaseConfigured()) {
+        throw new Error(
+          'Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to use remote generation.',
+        )
+      }
+
+      const supabase = getSupabaseBrowserClient()
       const body = toRequestBody(payload)
 
-      let response: Response
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-      }
-      if (payload.accessToken?.trim()) {
-        headers.Authorization = `Bearer ${payload.accessToken.trim()}`
-      }
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+      console.info('[JifunzeAI invoke_auth]', {
+        hasSession: Boolean(session),
+        hasToken: Boolean(session?.access_token),
+      })
 
+      let data: unknown
       try {
-        response = await fetch(url, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify(body),
-        })
+        const result = await supabase.functions.invoke('generate-content', { body })
+        if (result.error) {
+          if (result.error instanceof FunctionsHttpError) {
+            const res = result.error.context as Response
+            if (res.status === 503) {
+              try {
+                const payload = (await res.clone().json()) as Record<string, unknown>
+                const reason =
+                  typeof payload.reason === 'string' && payload.reason.trim()
+                    ? payload.reason.trim()
+                    : null
+                if (reason) {
+                  throw new Error(`Generation unavailable: ${reason}`)
+                }
+              } catch (e) {
+                if (e instanceof Error && e.message.startsWith('Generation unavailable:')) throw e
+              }
+            }
+          }
+          throw result.error
+        }
+        data = result.data
       } catch (error) {
         if (isLikelyFetchFailure(error)) {
           throw new Error('Network problem. Check your connection and try again.')
         }
-        throw new Error('Could not reach the generation service. Try again in a moment.')
+        throw error
       }
 
-      const rawText = await response.text()
-
-      if (!response.ok) {
-        throw new Error(
-          `Generation service returned an error (${response.status}). Please try again.`,
-        )
-      }
-
-      let parsed: unknown
-      try {
-        parsed = rawText.trim() ? JSON.parse(rawText) : null
-      } catch {
-        throw new Error('The server returned data we could not read. Please try again.')
-      }
-
-      const content = parseSocialContentResponse(parsed)
+      const content = parseSocialContentResponse(data)
       if (!content) {
         throw new Error('The server response was missing a caption or hashtags.')
       }
+
+      const delivery = parseGenerationDeliverySource(data)
+      console.info('[JifunzeAI content_generation]', {
+        source: delivery ?? 'backend_unspecified',
+      })
 
       return content
     },

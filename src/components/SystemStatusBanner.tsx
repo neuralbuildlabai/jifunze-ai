@@ -1,11 +1,25 @@
+import { useEffect, useReducer } from 'react'
 import {
   getContentMockNotice,
   getPublishingSimulatedNotice,
   getSystemSurfaceMode,
+  refreshContentRuntimeStatus,
 } from '../config/systemSurfaceMode'
 import type { EnvCheckResult } from '../lib/envCheck'
 
-export function SystemStatusBanner({ env }: { env: EnvCheckResult }) {
+export function SystemStatusBanner({ env, accessToken }: { env: EnvCheckResult; accessToken?: string }) {
+  const [, forceRefresh] = useReducer((n: number) => n + 1, 0)
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      await refreshContentRuntimeStatus(accessToken)
+      if (!cancelled) forceRefresh()
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [accessToken])
+
   const mode = getSystemSurfaceMode()
   const publishingLine = getPublishingSimulatedNotice()
   const contentLine = getContentMockNotice()

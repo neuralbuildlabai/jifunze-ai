@@ -1,4 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { safeSupabaseWrite } from '../../lib/safeSupabaseWrite'
 import { demoBrands } from '../../config/demoBrands'
 import { isWorkspaceTenantId } from '../../persistence/tenantPersistenceMode'
 
@@ -84,17 +85,28 @@ export async function insertFirstBrandProfile(
   })
 
   try {
-    const { error } = await supabase
-      .from('brands')
-      .insert({
-        id,
-        tenant_id: tid,
-        name,
-        created_by: uid,
-      })
-      .select('id')
-      .maybeSingle()
+    const writeResult = await safeSupabaseWrite(supabase, async () => {
+      const { error } = await supabase
+        .from('brands')
+        .insert({
+          id,
+          tenant_id: tid,
+          name,
+          created_by: uid,
+        })
+        .select('id')
+        .maybeSingle()
+      return { error }
+    })
 
+    if (writeResult === undefined) {
+      return {
+        ok: false,
+        message: 'You must be signed in to create a brand.',
+      }
+    }
+
+    const { error } = writeResult
     if (error) {
       const message = formatSupabaseInsertError(error as PostgrestLikeError)
       console.log('[JifunzeAI workspace]', {

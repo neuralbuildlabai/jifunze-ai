@@ -47,6 +47,25 @@ export type GetBrandLearningStateOptions = {
   persistLearningSnapshot?: boolean
 }
 
+const LEARNING_STATE_CACHE_TTL_MS = 30_000
+
+type CachedLearningState = {
+  state: BrandLearningState
+  timestamp: number
+}
+
+const learningStateCache = new Map<string, CachedLearningState>()
+const learningStateInFlight = new Map<string, Promise<BrandLearningState>>()
+
+function learningStateCacheKey(
+  tenantId: string,
+  brandProfileId: string,
+  options?: GetBrandLearningStateOptions,
+): string {
+  const persistLearningSnapshot = options?.persistLearningSnapshot !== false
+  return `${tenantId}:${brandProfileId}:${persistLearningSnapshot}`
+}
+
 /**
  * Full learning bundle for a tenant (recompute is cheap at MVP scale).
  */
@@ -56,42 +75,70 @@ export async function getBrandLearningState(
   supabase?: SupabaseClient,
   options?: GetBrandLearningStateOptions,
 ): Promise<BrandLearningState> {
-  const { snapshot, insights } = await analyzeBrandPerformance(brandProfileId, tenantId, supabase)
-  const recommendations = buildStrategyRecommendations(brandProfileId, insights)
-  const learnedSummaryLines = summaryLines({
-    brandProfileId,
-    snapshot,
-    insights,
-    recommendations,
-    learnedSummaryLines: [],
-  })
-  const state: BrandLearningState = {
-    brandProfileId,
-    snapshot,
-    insights,
-    recommendations,
-    learnedSummaryLines,
+  const key = learningStateCacheKey(tenantId, brandProfileId, options)
+  const active = learningStateInFlight.get(key)
+  if (active) return active
+
+  const cached = learningStateCache.get(key)
+  if (cached && Date.now() - cached.timestamp < LEARNING_STATE_CACHE_TTL_MS) {
+    return cached.state
   }
 
-  let shouldPersist = options?.persistLearningSnapshot !== false
-  if (shouldPersist && supabase) {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
-    if (!session?.user) {
-      shouldPersist = false
-    }
-  }
-  if (shouldPersist) {
-    await getPersistence(tenantId, supabase).learningSnapshots.save({
+  const promise = (async (): Promise<BrandLearningState> => {
+    const { snapshot, insights } = await analyzeBrandPerformance(brandProfileId, tenantId, supabase)
+    const recommendations = buildStrategyRecommendations(brandProfileId, insights)
+    const learnedSummaryLines = summaryLines({
       brandProfileId,
-      capturedAt: new Date().toISOString(),
       snapshot,
       insights,
       recommendations,
+      learnedSummaryLines: [],
     })
+    const state: BrandLearningState = {
+      brandProfileId,
+      snapshot,
+      insights,
+      recommendations,
+      learnedSummaryLines,
+    }
+
+    let shouldPersist = options?.persistLearningSnapshot !== false
+    if (shouldPersist && supabase) {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+      if (!session?.user) {
+        shouldPersist = false
+      }
+    }
+    if (shouldPersist) {
+      await getPersistence(tenantId, supabase).learningSnapshots.save({
+        brandProfileId,
+        capturedAt: new Date().toISOString(),
+        snapshot,
+        insights,
+        recommendations,
+      })
+    }
+    learningStateCache.set(key, { state, timestamp: Date.now() })
+    return state
+  })()
+
+  learningStateInFlight.set(key, promise)
+  try {
+    return await promise
+  } finally {
+    learningStateInFlight.delete(key)
   }
-  return state
+}
+
+/** Same lines as {@link buildLearningContextLines} without fetching — use when you already have state. */
+export function buildLearningContextLinesFromState(s: BrandLearningState): string[] {
+  return [
+    'Performance learning (rule-based, MVP):',
+    ...s.learnedSummaryLines,
+    ...s.recommendations.slice(0, 3).map((r) => `Rec: ${r.title} — ${r.rationale}`),
+  ]
 }
 
 export async function buildLearningContextLines(
@@ -100,11 +147,7 @@ export async function buildLearningContextLines(
   supabase?: SupabaseClient,
 ): Promise<string[]> {
   const s = await getBrandLearningState(brandProfileId, tenantId, supabase)
-  return [
-    'Performance learning (rule-based, MVP):',
-    ...s.learnedSummaryLines,
-    ...s.recommendations.slice(0, 3).map((r) => `Rec: ${r.title} — ${r.rationale}`),
-  ]
+  return buildLearningContextLinesFromState(s)
 }
 
 export async function getLearningAdapterNotes(

@@ -1,5 +1,9 @@
 import { getContentAdapterMode } from '../services/content/createAdapter'
 import { isAllPublishingSimulated } from '../services/publishing/registry'
+import {
+  getContentGenerationRuntimeSnapshot,
+  probeContentGenerationRuntime,
+} from '../services/content/runtimeMode'
 
 export type SystemSurfaceMode = 'preview' | 'live'
 
@@ -14,7 +18,7 @@ const CONTENT_MOCK_NOTICE =
  * declares `delivery: "live"`. Otherwise **preview** so the UI does not imply full automation.
  */
 export function getSystemSurfaceMode(): SystemSurfaceMode {
-  const remoteContent = getContentAdapterMode() === 'http'
+  const remoteContent = getContentGenerationRuntimeSnapshot().mode === 'backend'
   const anyLivePublish = !isAllPublishingSimulated()
   return remoteContent && anyLivePublish ? 'live' : 'preview'
 }
@@ -24,7 +28,12 @@ export function getPublishingSimulatedNotice(): string | null {
 }
 
 export function getContentMockNotice(): string | null {
-  return getContentAdapterMode() === 'mock' ? CONTENT_MOCK_NOTICE : null
+  if (getContentAdapterMode() === 'mock') return CONTENT_MOCK_NOTICE
+  return getContentGenerationRuntimeSnapshot().mode === 'backend' ? null : CONTENT_MOCK_NOTICE
+}
+
+export async function refreshContentRuntimeStatus(accessToken?: string): Promise<void> {
+  await probeContentGenerationRuntime({ accessToken })
 }
 
 /** Show a small “demo” hint next to lifecycle chips when the stack is not fully live. */

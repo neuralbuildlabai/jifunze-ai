@@ -21,6 +21,8 @@ export function createMockContentAdapter(): ContentGenerationAdapter {
         ? ` Weave in this context naturally: ${payload.context.slice(0, 180)}${payload.context.length > 180 ? '…' : ''}`
         : ''
 
+      console.info('[JifunzeAI content_generation]', { source: 'fallback_mock' })
+
       return {
         caption: `Draft (${angle}): lead with “${payload.topic}”.${contextHint} Tune CTA and compliance when you connect the model.`,
         hashtags:

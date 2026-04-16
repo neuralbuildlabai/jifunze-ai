@@ -28,3 +28,16 @@ export function parseSocialContentResponse(data: unknown): SocialContent | null 
     hashtags: hashtagsTrimmed,
   }
 }
+
+/**
+ * Reads Edge `GenerateContentResponseBody['source']` without affecting {@link SocialContent}
+ * validation. Absent or unknown values yield null (older servers / proxies).
+ */
+export function parseGenerationDeliverySource(
+  data: unknown,
+): 'backend_llm' | 'backend_mock' | null {
+  if (data === null || typeof data !== 'object') return null
+  const v = (data as Record<string, unknown>).source
+  if (v === 'backend_llm' || v === 'backend_mock') return v
+  return null
+}

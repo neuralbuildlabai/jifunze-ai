@@ -108,6 +108,8 @@ export async function buildRankedOpportunitiesForBrand(
   const opportunitiesDraft = await buildOpportunitiesFromSignals(ranked, brand, options?.minRelevance, {
     tenantId,
     supabase,
+    /** Two-pass mode only: skip snapshot on draft; final pass persists (default). */
+    ...(enableSynthetic ? { persistLearningSnapshot: false as const } : {}),
   })
   const sim = enableSynthetic
     ? await appendSimulatedPerformanceFromTrendBatch({

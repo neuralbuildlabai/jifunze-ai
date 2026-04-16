@@ -2,5 +2,5 @@
 # https://supabase.com/docs/guides/cli/config
 
 [functions.generate-content]
-# Set true and pass the user JWT from the app when you want auth-only generation.
-verify_jwt = false
+# Keep auth enforced for production/UAT generation.
+verify_jwt = true

@@ -3,6 +3,8 @@
  * Does not log secret values.
  */
 
+import { isSupabaseConfigured } from '../config/supabaseEnv'
+
 export type EnvCheckResult = {
   ok: boolean
   missing: string[]
@@ -61,9 +63,11 @@ export function validateStartupEnv(): EnvCheckResult {
     warnings.push(`VITE_SIGNAL_MODE must be "mock" or "remote" (got "${signalMode}").`)
   }
 
-  if (contentMode === 'http' && !raw('VITE_CONTENT_API_URL')) {
-    warnings.push('VITE_CONTENT_MODE is "http" but VITE_CONTENT_API_URL is missing.')
-    hints.push('Set VITE_CONTENT_API_URL to your Edge Function URL for HTTP content generation.')
+  if (contentMode === 'http' && !isSupabaseConfigured()) {
+    warnings.push(
+      'VITE_CONTENT_MODE is "http" but Supabase is not fully configured for Edge Function calls.',
+    )
+    hints.push('Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY (same project as generate-content).')
   }
   if (signalMode === 'remote' && !raw('VITE_SIGNAL_INGESTION_URL')) {
     warnings.push('VITE_SIGNAL_MODE is "remote" but VITE_SIGNAL_INGESTION_URL is missing.')

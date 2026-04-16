@@ -1,4 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { safeSupabaseWrite } from '../lib/safeSupabaseWrite'
 import { demoBrands } from '../config/demoBrands'
 import type { BrandProfile } from '../types/brand'
 import { mapDbBrandRowToProfile, type BrandsTableRow } from '../services/brands/mapDbBrandToProfile'
@@ -40,17 +41,23 @@ async function seedDefaultBrand(
   if (!template) return []
   const id = crypto.randomUUID()
   const name = template.name
-  const { error } = await supabase
-    .from('brands')
-    .insert({
-      id,
-      tenant_id: tenantId,
-      name,
-    })
-    .select('id')
-    .maybeSingle()
-  if (error) {
-    console.error('[JifunzeAI workspace] seed default brand insert failed (empty brands UI):', error)
+  const outcome = await safeSupabaseWrite(supabase, async () => {
+    const { error } = await supabase
+      .from('brands')
+      .insert({
+        id,
+        tenant_id: tenantId,
+        name,
+      })
+      .select('id')
+      .maybeSingle()
+    return { error }
+  })
+  if (outcome === undefined) {
+    return []
+  }
+  if (outcome.error) {
+    console.error('[JifunzeAI workspace] seed default brand insert failed (empty brands UI):', outcome.error)
     return []
   }
   return [mapDbBrandRowToProfile({ id, tenant_id: tenantId, name })]

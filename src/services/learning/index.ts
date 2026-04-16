@@ -15,6 +15,7 @@ export {
 export {
   getBrandLearningState,
   buildLearningContextLines,
+  buildLearningContextLinesFromState,
   getLearningAdapterNotes,
 } from './learningContext'
 export type { GetBrandLearningStateOptions } from './learningContext'

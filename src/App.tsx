@@ -7,10 +7,11 @@ import { logEnvValidationFailure, validateStartupEnv } from './lib/envCheck'
 import type { EnvCheckResult } from './lib/envCheck'
 
 function AppChrome({ env }: { env: EnvCheckResult }) {
-  const { user } = useAuth()
+  const { user, session } = useAuth()
+  const accessToken = session?.access_token
   return (
     <div className="sticky top-0 z-50">
-      <SystemStatusBanner env={env} />
+      <SystemStatusBanner env={env} accessToken={accessToken} />
       <InternalUatDiagnostics key={user?.id ?? 'guest'} />
     </div>
   )

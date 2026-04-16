@@ -141,12 +141,20 @@ export async function generateFromExternalSignal(
  */
 export async function generateFromOpportunity(
   opportunity: ContentOpportunity,
-  options?: { brand?: BrandProfile; tenantId?: string; supabase?: SupabaseClient },
+  options?: {
+    brand?: BrandProfile
+    tenantId?: string
+    supabase?: SupabaseClient
+    /** When set, skips {@link buildLearningContextLines} / duplicate getBrandLearningState. */
+    learningContextLines?: string[]
+  },
 ): Promise<SocialContent> {
   const tenantId = options?.tenantId ?? options?.brand?.tenant_id ?? LOCAL_DEV_TENANT_ID
-  const learningLines = options?.brand
-    ? await buildLearningContextLines(options.brand.id, tenantId, options.supabase)
-    : undefined
+  const learningLines =
+    options?.learningContextLines ??
+    (options?.brand
+      ? await buildLearningContextLines(options.brand.id, tenantId, options.supabase)
+      : undefined)
   return generateWithPayload(
     {
       topic: opportunity.topic,
