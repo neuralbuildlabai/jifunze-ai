@@ -1,7 +1,7 @@
 import type { ContentDomain } from '../../types/contentDomain'
 import type { ExternalSignal } from '../../types/signal'
 
-const DEFAULT_DOMAIN: ContentDomain = 'lifestyle'
+const DEFAULT_DOMAIN: ContentDomain = 'ai'
 
 /**
  * Keyword routing into one of the five Jifunze domains. Replace with ML later; contract stays stable.
@@ -12,7 +12,7 @@ export function classifySignal(
   const t = `${signal.title} ${signal.summary} ${signal.topic_tags.join(' ')}`.toLowerCase()
 
   if (
-    /\b(ai|ml|llm|gpt|openai|anthropic|model weights|neural|gpu|cuda|api|saas|software|developer|devops|kubernetes|typescript|javascript|python|chip|semiconductor|startup tech|machine learning)\b/.test(
+    /\b(ai|ml|llm|gpt|openai|anthropic|claude|gemini|copilot|midjourney|stable diffusion|prompt|prompting|embedding|rag|fine-?tun|token|model weights|neural|gpu|cuda|api|saas|software|developer|devops|kubernetes|typescript|javascript|python|chip|semiconductor|startup tech|machine learning|tutorial|walkthrough|workflow)\b/.test(
       t,
     )
   ) {

@@ -8,7 +8,7 @@ function getInvokeUrl(): string {
   const url = import.meta.env.VITE_CONTENT_API_URL?.trim()
   if (!url) {
     throw new Error(
-      'Content API is not configured. Set VITE_CONTENT_API_URL to your Edge Function URL.',
+      'Content API is not configured. Set VITE_CONTENT_API_URL (e.g. https://<project-ref>.supabase.co/functions/v1/generate-content).',
     )
   }
   return url
@@ -39,12 +39,17 @@ export function createHttpContentAdapter(): ContentGenerationAdapter {
       const body = toRequestBody(payload)
 
       let response: Response
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
+      if (payload.accessToken?.trim()) {
+        headers.Authorization = `Bearer ${payload.accessToken.trim()}`
+      }
+
       try {
         response = await fetch(url, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers,
           body: JSON.stringify(body),
         })
       } catch (error) {

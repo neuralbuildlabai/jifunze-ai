@@ -1,15 +1,26 @@
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { DEFAULT_OPTIMIZATION_LEARNING_WEIGHTS } from '../../config/optimizationLearning'
 import type { ContentDomain } from '../../types/contentDomain'
 import type { ContentFormat } from '../../types/contentFormat'
 import type { TrendCategory } from '../../types/trendCategory'
 import type {
   ContentPerformanceSnapshot,
+  LearningInfluenceDirection,
   OptimizationInsight,
   OptimizationInsightKind,
+  PatternStrength,
+  PerformancePlatformId,
   PublishedContentPerformance,
   StrategyAdjustmentPayload,
 } from '../../types/performanceLearning'
+import type { TeachingLevel } from '../../types/teaching'
 import { getPerformanceMemoryStore } from './performanceMemoryStore'
+import { learningMemoryRowWeight } from './learningMemoryRowWeight'
+import {
+  insightConfidenceForStrength,
+  strengthForStrongSignal,
+  strengthForWeakSignal,
+} from './patternStrength'
 
 const W = () => DEFAULT_OPTIMIZATION_LEARNING_WEIGHTS
 
@@ -50,6 +61,12 @@ function mkInsight(
   confidence: OptimizationInsight['confidence'],
   tags?: StrategyAdjustmentPayload,
   evidence?: string[],
+  extras?: {
+    patternStrength?: PatternStrength
+    patternKey?: string
+    learningDirection?: LearningInfluenceDirection
+    estimatedDelta?: number
+  },
 ): OptimizationInsight {
   return {
     id: `ins-${brandId}-${kind}-${subject}`.replace(/\s+/g, '_').slice(0, 120),
@@ -63,8 +80,15 @@ function mkInsight(
     evidence,
     tags,
     createdAt: new Date().toISOString(),
+    patternStrength: extras?.patternStrength,
+    patternKey: extras?.patternKey,
+    learningDirection: extras?.learningDirection,
+    estimatedDelta: extras?.estimatedDelta,
   }
 }
+
+/** Lower weighted-support floor so format/platform, CTA/platform, and teaching/platform fire earlier. */
+const COMBO_EVIDENCE_FLOOR = { minW: 0.2, perN: 0.1 } as const
 
 function scanAxis(
   brandId: string,
@@ -75,15 +99,24 @@ function scanAxis(
   label: (key: string) => string,
   tagFor: (key: string) => StrategyAdjustmentPayload | undefined,
   minN: number,
+  evidenceFloor?: { minW: number; perN: number },
 ): OptimizationInsight[] {
+  const cfg = W()
   const out: OptimizationInsight[] = []
+  const minW = evidenceFloor?.minW ?? 0.35
+  const perN = evidenceFloor?.perN ?? 0.15
   for (const [k, st] of map) {
-    if (st.n < minN || st.w < minN * 0.2) continue
+    if (st.n < minN || st.w < Math.max(minW, st.n * perN)) continue
     const m = mean(st)
     if (m == null) continue
     const ratio = m / gMean
-    const ev = [`Global baseline ER ≈ ${(gMean * 100).toFixed(2)}%`]
-    if (ratio >= W().strongRatioThreshold) {
+    const ev = [
+      `Global baseline ER ≈ ${(gMean * 100).toFixed(2)}%`,
+      `Axis ratio ≈ ${ratio.toFixed(3)} (n=${st.n})`,
+    ]
+    const strong = strengthForStrongSignal(st.n, ratio, cfg)
+    if (strong) {
+      const deltaHint = Math.min(0.12, Math.abs(ratio - 1) * 0.22)
       out.push(
         mkInsight(
           brandId,
@@ -92,12 +125,22 @@ function scanAxis(
           'weighted_avg_engagement_rate',
           m,
           st.n,
-          st.n >= minN + 2 ? 'high' : 'medium',
+          insightConfidenceForStrength(strong),
           tagFor(k),
           ev,
+          {
+            patternStrength: strong,
+            patternKey: k,
+            learningDirection: 'boost',
+            estimatedDelta: deltaHint,
+          },
         ),
       )
-    } else if (ratio <= W().weakRatioThreshold) {
+      continue
+    }
+    const weak = strengthForWeakSignal(st.n, ratio, cfg)
+    if (weak) {
+      const deltaHint = Math.min(0.12, Math.abs(ratio - 1) * 0.22)
       out.push(
         mkInsight(
           brandId,
@@ -106,9 +149,15 @@ function scanAxis(
           'weighted_avg_engagement_rate',
           m,
           st.n,
-          'medium',
+          insightConfidenceForStrength(weak),
           tagFor(k),
           ev,
+          {
+            patternStrength: weak,
+            patternKey: k,
+            learningDirection: 'penalty',
+            estimatedDelta: deltaHint,
+          },
         ),
       )
     }
@@ -125,14 +174,22 @@ function ctaStyleFromTrackedLabel(ctaType: string): string {
   return 'save_share'
 }
 
+function compositeKey(...parts: Array<string | undefined>): string {
+  return parts.filter(Boolean).join('::')
+}
+
 /**
  * Aggregates historical performance into a snapshot + typed insights.
  */
-export function analyzeBrandPerformance(brandProfileId: string): {
+export async function analyzeBrandPerformance(
+  brandProfileId: string,
+  tenantId: string,
+  supabase?: SupabaseClient,
+): Promise<{
   snapshot: ContentPerformanceSnapshot
   insights: OptimizationInsight[]
-} {
-  const rows = getPerformanceMemoryStore().listForBrand(brandProfileId)
+}> {
+  const rows = await getPerformanceMemoryStore(tenantId, supabase).listForBrand(brandProfileId)
   const iso = new Date().toISOString()
 
   if (rows.length === 0) {
@@ -162,6 +219,12 @@ export function analyzeBrandPerformance(brandProfileId: string): {
   const byTrend = new Map<string, WeightedStat>()
   const byCta = new Map<string, WeightedStat>()
   const byFormat = new Map<string, WeightedStat>()
+  const byDomainPlatform = new Map<string, WeightedStat>()
+  const byTrendPlatform = new Map<string, WeightedStat>()
+  const byCtaPlatform = new Map<string, WeightedStat>()
+  const byFormatPlatform = new Map<string, WeightedStat>()
+  const byTeachingStylePlatform = new Map<string, WeightedStat>()
+  const byTeachingLevelDomain = new Map<string, WeightedStat>()
   const byHour = new Map<number, WeightedStat>()
   const byCombo = new Map<string, WeightedStat>()
 
@@ -174,7 +237,7 @@ export function analyzeBrandPerformance(brandProfileId: string): {
     tsav = 0
 
   for (const r of rows) {
-    const rw = recencyWeight(r.publishedAt)
+    const rw = recencyWeight(r.publishedAt) * learningMemoryRowWeight(r)
     const er = effectiveEngagementRate(r)
     if (er == null) continue
     bump(global, rw, er)
@@ -201,6 +264,34 @@ export function analyzeBrandPerformance(brandProfileId: string): {
     if (!byFormat.has(fk)) byFormat.set(fk, { w: 0, wv: 0, n: 0 })
     bump(byFormat.get(fk)!, rw, er)
 
+    const dp = compositeKey(r.domain, r.platform)
+    if (!byDomainPlatform.has(dp)) byDomainPlatform.set(dp, { w: 0, wv: 0, n: 0 })
+    bump(byDomainPlatform.get(dp)!, rw, er)
+
+    const tp = compositeKey(r.trendCategory, r.platform)
+    if (!byTrendPlatform.has(tp)) byTrendPlatform.set(tp, { w: 0, wv: 0, n: 0 })
+    bump(byTrendPlatform.get(tp)!, rw, er)
+
+    const cp = compositeKey(ctaStyleFromTrackedLabel(r.ctaType), r.platform)
+    if (!byCtaPlatform.has(cp)) byCtaPlatform.set(cp, { w: 0, wv: 0, n: 0 })
+    bump(byCtaPlatform.get(cp)!, rw, er)
+
+    const fp = compositeKey(r.contentFormat, r.platform)
+    if (!byFormatPlatform.has(fp)) byFormatPlatform.set(fp, { w: 0, wv: 0, n: 0 })
+    bump(byFormatPlatform.get(fp)!, rw, er)
+
+    if (r.explanationStyle) {
+      const tsp = compositeKey(r.explanationStyle, r.platform)
+      if (!byTeachingStylePlatform.has(tsp)) byTeachingStylePlatform.set(tsp, { w: 0, wv: 0, n: 0 })
+      bump(byTeachingStylePlatform.get(tsp)!, rw, er)
+    }
+
+    if (r.teachingLevel) {
+      const tld = compositeKey(r.teachingLevel, r.domain)
+      if (!byTeachingLevelDomain.has(tld)) byTeachingLevelDomain.set(tld, { w: 0, wv: 0, n: 0 })
+      bump(byTeachingLevelDomain.get(tld)!, rw, er)
+    }
+
     const hr = new Date(r.publishedAt).getUTCHours()
     if (!byHour.has(hr)) byHour.set(hr, { w: 0, wv: 0, n: 0 })
     bump(byHour.get(hr)!, rw, er)
@@ -211,7 +302,7 @@ export function analyzeBrandPerformance(brandProfileId: string): {
   }
 
   const gMean = mean(global)
-  const minN = W().minSamplesForPattern
+  const minN = W().minSamplesDirectional
   const insights: OptimizationInsight[] = []
 
   if (gMean != null && gMean > 0) {
@@ -230,6 +321,25 @@ export function analyzeBrandPerformance(brandProfileId: string): {
     insights.push(
       ...scanAxis(
         brandProfileId,
+        byDomainPlatform,
+        gMean,
+        'strong_domain_platform',
+        'weak_domain_platform',
+        (k) => {
+          const [d, p] = k.split('::')
+          return `Domain+platform: ${d} on ${p}`
+        },
+        (k) => {
+          const [d, p] = k.split('::')
+          return { domain: d as ContentDomain, platform: p as PerformancePlatformId }
+        },
+        minN,
+        COMBO_EVIDENCE_FLOOR,
+      ),
+    )
+    insights.push(
+      ...scanAxis(
+        brandProfileId,
         byTrend,
         gMean,
         'strong_trend',
@@ -237,6 +347,25 @@ export function analyzeBrandPerformance(brandProfileId: string): {
         (k) => `Trend: ${k.replace(/_/g, ' ')}`,
         (k) => ({ trendCategory: k as TrendCategory }),
         minN,
+      ),
+    )
+    insights.push(
+      ...scanAxis(
+        brandProfileId,
+        byTrendPlatform,
+        gMean,
+        'strong_trend_platform',
+        'weak_trend_platform',
+        (k) => {
+          const [t, p] = k.split('::')
+          return `Trend+platform: ${t.replace(/_/g, ' ')} on ${p}`
+        },
+        (k) => {
+          const [t, p] = k.split('::')
+          return { trendCategory: t as TrendCategory, platform: p as PerformancePlatformId }
+        },
+        minN,
+        COMBO_EVIDENCE_FLOOR,
       ),
     )
     insights.push(
@@ -254,6 +383,25 @@ export function analyzeBrandPerformance(brandProfileId: string): {
     insights.push(
       ...scanAxis(
         brandProfileId,
+        byCtaPlatform,
+        gMean,
+        'strong_cta_platform',
+        'weak_cta_platform',
+        (k) => {
+          const [c, p] = k.split('::')
+          return `CTA+platform: ${c} on ${p}`
+        },
+        (k) => {
+          const [c, p] = k.split('::')
+          return { ctaStyle: c, platform: p as PerformancePlatformId }
+        },
+        minN,
+        COMBO_EVIDENCE_FLOOR,
+      ),
+    )
+    insights.push(
+      ...scanAxis(
+        brandProfileId,
         byFormat,
         gMean,
         'strong_format',
@@ -263,18 +411,80 @@ export function analyzeBrandPerformance(brandProfileId: string): {
         minN,
       ),
     )
+    insights.push(
+      ...scanAxis(
+        brandProfileId,
+        byFormatPlatform,
+        gMean,
+        'strong_format_platform',
+        'weak_format_platform',
+        (k) => {
+          const [f, p] = k.split('::')
+          return `Format+platform: ${f.replace(/_/g, ' ')} on ${p}`
+        },
+        (k) => {
+          const [f, p] = k.split('::')
+          return { contentFormat: f as ContentFormat, platform: p as PerformancePlatformId }
+        },
+        minN,
+        COMBO_EVIDENCE_FLOOR,
+      ),
+    )
+    insights.push(
+      ...scanAxis(
+        brandProfileId,
+        byTeachingStylePlatform,
+        gMean,
+        'strong_teaching_style_platform',
+        'weak_teaching_style_platform',
+        (k) => {
+          const [s, p] = k.split('::')
+          return `Teaching+platform: ${s.replace(/_/g, ' ')} on ${p}`
+        },
+        (k) => {
+          const [s, p] = k.split('::')
+          return {
+            explanationStyle: s as StrategyAdjustmentPayload['explanationStyle'],
+            platform: p as PerformancePlatformId,
+          }
+        },
+        minN,
+        COMBO_EVIDENCE_FLOOR,
+      ),
+    )
+    insights.push(
+      ...scanAxis(
+        brandProfileId,
+        byTeachingLevelDomain,
+        gMean,
+        'strong_teaching_level_domain',
+        'weak_teaching_level_domain',
+        (k) => {
+          const [lvl, dom] = k.split('::')
+          return `Teaching level+domain: ${lvl} · ${dom}`
+        },
+        (k) => {
+          const [lvl, dom] = k.split('::')
+          return { teachingLevel: lvl as TeachingLevel, domain: dom as ContentDomain }
+        },
+        minN,
+      ),
+    )
 
     let bestH: number | null = null
     let bestM = -1
     for (const [h, st] of byHour) {
       const m = mean(st)
-      if (st.n < minN - 1 || m == null) continue
+      if (st.n < W().minSamplesDirectional || m == null) continue
       if (m > bestM) {
         bestM = m
         bestH = h
       }
     }
     if (bestH != null && bestM >= 0) {
+      const nBest = byHour.get(bestH)?.n ?? 0
+      const hourStrength: PatternStrength =
+        nBest >= W().minSamplesForPattern ? 'confirmed' : nBest >= W().minSamplesEmerging ? 'emerging' : 'weak'
       insights.push(
         mkInsight(
           brandProfileId,
@@ -282,32 +492,46 @@ export function analyzeBrandPerformance(brandProfileId: string): {
           `UTC hour ~${bestH}:00`,
           'weighted_avg_engagement_rate',
           bestM,
-          byHour.get(bestH)?.n ?? 0,
-          'medium',
+          nBest,
+          insightConfidenceForStrength(hourStrength),
           { postingHour: bestH },
+          [`Posting-time band shows relative lift vs other hours (n=${nBest}).`],
+          {
+            patternStrength: hourStrength,
+            patternKey: `hour:${bestH}`,
+            learningDirection: 'boost',
+            estimatedDelta: Math.min(0.1, Math.abs(bestM / gMean - 1) * 0.2),
+          },
         ),
       )
     }
 
     for (const [combo, st] of byCombo) {
       const m = mean(st)
-      if (st.n < minN || m == null) continue
-      if (m / gMean <= W().weakRatioThreshold) {
-        const [dom, tr] = combo.split('::') as [ContentDomain, TrendCategory]
-        insights.push(
-          mkInsight(
-            brandProfileId,
-            'weak_combo',
-            `${dom} × ${tr.replace(/_/g, ' ')}`,
-            'weighted_avg_engagement_rate',
-            m,
-            st.n,
-            'medium',
-            { domain: dom, trendCategory: tr },
-            ['Underperforming vs brand baseline for this pairing'],
-          ),
-        )
-      }
+      if (m == null) continue
+      const ratio = m / gMean
+      const weak = strengthForWeakSignal(st.n, ratio, W())
+      if (!weak) continue
+      const [dom, tr] = combo.split('::') as [ContentDomain, TrendCategory]
+      insights.push(
+        mkInsight(
+          brandProfileId,
+          'weak_combo',
+          `${dom} × ${tr.replace(/_/g, ' ')}`,
+          'weighted_avg_engagement_rate',
+          m,
+          st.n,
+          insightConfidenceForStrength(weak),
+          { domain: dom, trendCategory: tr },
+          ['Underperforming vs brand baseline for this pairing'],
+          {
+            patternStrength: weak,
+            patternKey: combo,
+            learningDirection: 'penalty',
+            estimatedDelta: Math.min(0.12, Math.abs(ratio - 1) * 0.22),
+          },
+        ),
+      )
     }
   }
 
@@ -332,5 +556,5 @@ export function analyzeBrandPerformance(brandProfileId: string): {
     },
   }
 
-  return { snapshot, insights: insights.slice(0, 18) }
+  return { snapshot, insights: insights.slice(0, 34) }
 }

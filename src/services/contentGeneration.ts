@@ -1,4 +1,5 @@
 export {
+  generateContent,
   generateFromExternalSignal,
   generateFromOpportunity,
   generateSocialContent,
@@ -26,6 +27,7 @@ export type { SocialPlatformId } from '../types/socialPlatform'
 export type { SocialAccount } from '../types/socialAccount'
 export {
   getPublishingConnector,
+  isAllPublishingSimulated,
   registerPublishingConnector,
   createMockPublishingConnector,
 } from './publishing'
@@ -43,3 +45,21 @@ export {
   buildTeachingContextLines,
 } from './teaching'
 export type { TeachingLevel, ExplanationStyle } from '../types/teaching'
+export {
+  getLatestPipelineStageCounts,
+  getLatestPipelineAdaptation,
+  getRecentPipelineEvents,
+} from './pipeline'
+export type {
+  PipelineFeedbackEvent,
+  PipelineFeedbackEventType,
+  PipelineStageCounts,
+} from '../types/pipelineFeedback'
+export {
+  getPersistence,
+  setPersistence,
+  resetPersistenceForTests,
+  clearSupabasePersistenceCache,
+  persistenceBackendForTenant,
+} from '../persistence'
+export type { PersistenceLayer } from '../persistence'

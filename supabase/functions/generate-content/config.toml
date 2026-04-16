@@ -1,0 +1,5 @@
+# INTERNAL UAT / production: keep JWT verification enabled so anonymous callers cannot invoke this
+# function with only the anon key. Local `supabase functions serve` still sends a user JWT when
+# the client is authenticated.
+[functions.generate-content]
+verify_jwt = true

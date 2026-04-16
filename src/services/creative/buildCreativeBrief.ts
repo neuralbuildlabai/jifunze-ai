@@ -40,7 +40,7 @@ export function buildCreativeBriefFromOpportunity(
       ? ` AI vertical: ${domainDef.guidanceNotes.join(' ')} Prefer tone: ${domainDef.tone.join(', ')}. Shape ideas around: ${domainDef.contentTypes.slice(0, 6).join(', ')}. Where useful, add numbered steps or a “how to start / how to use” block — teach first, hype second.`
       : ''
 
-  const teachingHint = ` Teaching: ${opportunity.teaching_level} audience · ${opportunity.explanation_style.replace(/_/g, ' ')} explanation. Include structured steps, one concrete example, and progressive depth (simple → nuance).`
+  const teachingHint = ` Teaching: ${opportunity.teaching_level} audience · ${opportunity.explanation_style.replace(/_/g, ' ')} explanation · clarity ${opportunity.clarity_preference.replace(/_/g, ' ')} · framing ${opportunity.educational_framing.replace(/_/g, ' ')}. Include structured steps, one concrete example, and progressive depth (simple → nuance).`
   const teaching_rubric = buildTeachingRubric(opportunity, brand)
 
   return {

@@ -1,5 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
-import { demoBrands } from '../config/demoBrands'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useAuth } from '../auth/AuthContext'
+import { isWorkspaceTenantId } from '../persistence/tenantPersistenceMode'
+import { isSupabaseConfigured } from '../config/supabaseEnv'
+import { getSimulationMode } from '../config/simulationMode'
 import {
   getSignalProviderMode,
   isTrendOpportunitiesEnabled,
@@ -10,8 +13,21 @@ import {
   generateSocialContent,
   resolveSocialAccountsForBrand,
 } from '../services/contentGeneration'
+import { AuthForm } from './AuthForm'
+import { EmptyWorkspaceCreateBrand } from './EmptyWorkspaceCreateBrand'
+import { LifecycleSimulationBadge } from './LifecycleSimulationBadge'
+import { LearningImpactComparisonPanel } from './LearningImpactComparisonPanel'
 import { LearningOptimizationPanel } from './LearningOptimizationPanel'
+import { SimulationModePanel } from './SimulationModePanel'
+import {
+  logLearningUiErrorUnlessStaleSession,
+  USER_MSG_SUPABASE_NOT_READY,
+  userFacingLearningError,
+} from '../lib/learningUiErrors'
+import { jifunzeCriticalLog } from '../lib/jifunzeTelemetry'
 import { buildTrendPreviewForBrand } from '../services/trendPreview'
+import { loadCachedTrendStateFromPersistence } from '../services/trendPreviewRestore'
+import type { TrendPreviewBundle } from '../services/trendPreview'
 import { describeFunnelMapping } from '../services/conversion/funnelMap'
 import type { ContentGenerationMode, ContentPackage } from '../types/contentPackage'
 import type { AutonomyAction } from '../types/autonomy'
@@ -20,6 +36,8 @@ import type { ContentOpportunity } from '../types/opportunity'
 import type { PriorityLabel } from '../types/priorityLabel'
 import type { SocialContent } from '../types/content'
 import type { ScoredSignal } from '../services/relevance/types'
+import type { PlatformPostVariant } from '../types/platformAdaptation'
+import type { SocialAccount } from '../types/socialAccount'
 
 function lifecycleStatusChipClass(status: ContentLifecycleStatus): string {
   switch (status) {
@@ -77,6 +95,27 @@ function formatTeachingStyle(style: ContentOpportunity['explanation_style']): st
   return style.replace(/_/g, ' ')
 }
 
+function learningBandChipClass(band: ContentOpportunity['learning_confidence_band']): string {
+  switch (band) {
+    case 'strong':
+      return 'bg-emerald-600/20 text-emerald-100 border border-emerald-500/35'
+    case 'emerging':
+      return 'bg-amber-500/15 text-amber-100 border border-amber-500/25'
+    default:
+      return 'bg-zinc-700/50 text-zinc-400 border border-zinc-600/50'
+  }
+}
+
+function formatLearningAffects(a: ContentOpportunity['learning_affects']): string {
+  const bits: string[] = []
+  if (a.format) bits.push('format')
+  if (a.cta) bits.push('CTA')
+  if (a.teaching) bits.push('teaching style')
+  if (a.platform) bits.push('platform order')
+  if (a.priority) bits.push('priority / confidence')
+  return bits.length ? bits.join(' · ') : 'baseline (editorial defaults only)'
+}
+
 function priorityLabelChipClass(label: PriorityLabel): string {
   switch (label) {
     case 'critical':
@@ -98,13 +137,50 @@ const PACKAGE_MODE_OPTIONS: { value: ContentGenerationMode; label: string }[] = 
 ]
 
 export function ContentGenerator() {
-  const [brandId, setBrandId] = useState(demoBrands[0].id)
+  const {
+    user,
+    brands,
+    tenantId,
+    supabase,
+    loading: authLoading,
+    error: authError,
+    workspaceTenantResolved,
+    workspaceShellReady,
+    session,
+    signOut,
+    signOutPending,
+    retryWorkspaceBootstrap,
+  } = useAuth()
+
+  const [brandId, setBrandId] = useState('')
+  useEffect(() => {
+    if (brands.length === 0) return
+    setBrandId((prev) => {
+      if (prev && brands.some((b) => b.id === prev)) return prev
+      return brands[0]!.id
+    })
+  }, [brands])
+
   const brand = useMemo(
-    () => demoBrands.find((b) => b.id === brandId) ?? demoBrands[0],
-    [brandId],
+    () => brands.find((b) => b.id === brandId) ?? brands[0] ?? null,
+    [brands, brandId],
   )
 
-  const socialAccounts = useMemo(() => resolveSocialAccountsForBrand(brand), [brand])
+  const [socialAccounts, setSocialAccounts] = useState<SocialAccount[]>([])
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      if (!user || !brand) {
+        setSocialAccounts([])
+        return
+      }
+      const acc = await resolveSocialAccountsForBrand(brand, tenantId, supabase ?? undefined)
+      if (!cancelled && user) setSocialAccounts(acc)
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [brand, tenantId, supabase, user])
 
   const trendUiEnabled = useMemo(() => isTrendOpportunitiesEnabled(), [])
   const signalSourceLabel = useMemo(
@@ -112,12 +188,24 @@ export function ContentGenerator() {
     [],
   )
 
+  const [simulationMode, setSimulationMode] = useState(() => getSimulationMode())
+  const [learningRefreshSignal, setLearningRefreshSignal] = useState(0)
+
   const [topic, setTopic] = useState('')
   const [result, setResult] = useState<SocialContent | null>(null)
   const [loading, setLoading] = useState(false)
+  /** Distinguishes manual topic vs package generation for labels and wait hints. */
+  const [generationKind, setGenerationKind] = useState<'idle' | 'topic' | 'package'>('idle')
   const [error, setError] = useState<string | null>(null)
 
   const [opportunities, setOpportunities] = useState<ContentOpportunity[]>([])
+  const [stageCounts, setStageCounts] = useState<{
+    raw: number
+    guarded: number
+    scored: number
+    opportunities: number
+    simulationRowsWritten: number
+  } | null>(null)
   const [scoredBySignalId, setScoredBySignalId] = useState<Record<string, ScoredSignal>>({})
   const [trendLoading, setTrendLoading] = useState(trendUiEnabled)
   const [trendError, setTrendError] = useState<string | null>(null)
@@ -126,25 +214,81 @@ export function ContentGenerator() {
   const [includeMultiPlatform, setIncludeMultiPlatform] = useState(false)
   const [contentPackage, setContentPackage] = useState<ContentPackage | null>(null)
 
+  const applyTrendBundle = useCallback((bundle: TrendPreviewBundle) => {
+    const scoreMap: Record<string, ScoredSignal> = {}
+    for (const s of bundle.scored_signals) {
+      scoreMap[s.id] = s
+    }
+    setStageCounts({
+      raw: bundle.raw_signals.length,
+      guarded: bundle.guarded_signals.length,
+      scored: bundle.scored_signals.length,
+      opportunities: bundle.opportunities.length,
+      simulationRowsWritten: bundle.simulation_rows_written,
+    })
+    setOpportunities(bundle.opportunities)
+    setScoredBySignalId(scoreMap)
+    setTrendError(null)
+    setSelectedOpportunityId((prev) => {
+      if (!prev) return null
+      return bundle.opportunities.some((o) => o.id === prev) ? prev : null
+    })
+  }, [])
+
   const opportunitiesSorted = useMemo(
     () => [...opportunities].sort((a, b) => b.priority_score - a.priority_score),
     [opportunities],
   )
+
+  const latestScoredSignals = useMemo(() => Object.values(scoredBySignalId), [scoredBySignalId])
 
   const selectedOpportunity = useMemo(
     () => opportunitiesSorted.find((o) => o.id === selectedOpportunityId) ?? null,
     [opportunitiesSorted, selectedOpportunityId],
   )
 
-  const accountSurfaceVariants = useMemo(() => {
-    if (!selectedOpportunity) return []
-    return adaptContentForSocialAccounts({
-      brand,
-      opportunity: selectedOpportunity,
-      accounts: socialAccounts,
-      creativeBrief: contentPackage?.creative_brief,
-    })
-  }, [brand, selectedOpportunity, socialAccounts, contentPackage?.creative_brief])
+  const [accountSurfaceVariants, setAccountSurfaceVariants] = useState<PlatformPostVariant[]>([])
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      if (!user || signOutPending || !session?.user || !selectedOpportunity || !brand) {
+        setAccountSurfaceVariants([])
+        return
+      }
+      try {
+        const vars = await adaptContentForSocialAccounts({
+          brand,
+          opportunity: selectedOpportunity,
+          accounts: socialAccounts,
+          creativeBrief: contentPackage?.creative_brief,
+          tenantId,
+          supabase: supabase ?? undefined,
+        })
+        if (cancelled || signOutPending || !session?.user) return
+        setAccountSurfaceVariants(vars)
+      } catch (e) {
+        logLearningUiErrorUnlessStaleSession(
+          'ContentGenerator adaptContentForSocialAccounts',
+          e,
+          signOutPending || !session?.user,
+        )
+        if (!cancelled && user && session?.user && !signOutPending) setAccountSurfaceVariants([])
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [
+    brand,
+    contentPackage?.creative_brief,
+    selectedOpportunity,
+    session?.user,
+    signOutPending,
+    socialAccounts,
+    supabase,
+    tenantId,
+    user,
+  ])
 
   useEffect(() => {
     setSelectedOpportunityId(null)
@@ -154,9 +298,33 @@ export function ContentGenerator() {
   useEffect(() => {
     if (!trendUiEnabled) {
       setOpportunities([])
+      setStageCounts(null)
       setScoredBySignalId({})
       setTrendLoading(false)
       setTrendError(null)
+      return
+    }
+    if (!brand) {
+      setOpportunities([])
+      setStageCounts(null)
+      setScoredBySignalId({})
+      setTrendLoading(false)
+      setTrendError(null)
+      return
+    }
+
+    if (!user || signOutPending || !session?.user) {
+      setOpportunities([])
+      setStageCounts(null)
+      setScoredBySignalId({})
+      setTrendLoading(false)
+      setTrendError(null)
+      return
+    }
+
+    if (isWorkspaceTenantId(tenantId) && !supabase) {
+      setTrendError(USER_MSG_SUPABASE_NOT_READY)
+      setTrendLoading(false)
       return
     }
 
@@ -165,17 +333,101 @@ export function ContentGenerator() {
       setTrendLoading(true)
       setTrendError(null)
       try {
-        const bundle = await buildTrendPreviewForBrand(brand)
-        if (cancelled) return
+        const cached = await loadCachedTrendStateFromPersistence(brand, tenantId, supabase ?? undefined)
+        if (cancelled || signOutPending) return
+        if (supabase) {
+          const {
+            data: { session: sNow },
+          } = await supabase.auth.getSession()
+          if (!sNow?.user) return
+        }
+        if (!cancelled && cached) {
+          const warmMap: Record<string, ScoredSignal> = {}
+          for (const s of cached.scored_signals) {
+            warmMap[s.id] = s
+          }
+          setStageCounts({
+            raw: cached.rawCount,
+            guarded: cached.guardedCount,
+            scored: cached.scored_signals.length,
+            opportunities: cached.opportunities.length,
+            simulationRowsWritten: cached.lastSimulationRowsWritten,
+          })
+          setOpportunities(cached.opportunities)
+          setScoredBySignalId(warmMap)
+        }
+      } catch (e) {
+        logLearningUiErrorUnlessStaleSession(
+          'ContentGenerator trend warm cache',
+          e,
+          signOutPending || !session?.user,
+        )
+      }
+      try {
+        const bundle = await buildTrendPreviewForBrand(brand, {
+          tenantId,
+          supabase: supabase ?? undefined,
+          enableSyntheticPerformance: simulationMode,
+        })
+        if (cancelled || signOutPending) return
+        if (supabase) {
+          const {
+            data: { session: sNow },
+          } = await supabase.auth.getSession()
+          if (!sNow?.user) return
+        }
+        if (bundle.trend_ingestion_error) {
+          jifunzeCriticalLog({
+            action: 'trend_ingestion',
+            userId: user?.id ?? null,
+            tenantId,
+            brandProfileId: brand.id,
+            status: 'error',
+            error: bundle.trend_ingestion_error,
+          })
+          setTrendError(
+            `Trend ingestion unavailable. ${bundle.trend_ingestion_error.reason}`,
+          )
+          setOpportunities([])
+          setStageCounts(null)
+          setScoredBySignalId({})
+          setSelectedOpportunityId(null)
+          return
+        }
+        setTrendError(null)
         const scoreMap: Record<string, ScoredSignal> = {}
         for (const s of bundle.scored_signals) {
           scoreMap[s.id] = s
         }
+        setStageCounts({
+          raw: bundle.raw_signals.length,
+          guarded: bundle.guarded_signals.length,
+          scored: bundle.scored_signals.length,
+          opportunities: bundle.opportunities.length,
+          simulationRowsWritten: bundle.simulation_rows_written,
+        })
         setOpportunities(bundle.opportunities)
         setScoredBySignalId(scoreMap)
-      } catch {
+        jifunzeCriticalLog({
+          action: 'trend_preview_loaded',
+          userId: user?.id ?? null,
+          tenantId,
+          brandProfileId: brand.id,
+          status: 'ok',
+          opportunities: bundle.opportunities.length,
+          simulationRowsWritten: bundle.simulation_rows_written,
+        })
+      } catch (e) {
         if (!cancelled) {
-          setTrendError('Could not load trend preview. Try refreshing the page.')
+          logLearningUiErrorUnlessStaleSession(
+            'ContentGenerator trend preview',
+            e,
+            signOutPending || !session?.user,
+          )
+          if (!signOutPending && session?.user) {
+            setTrendError(userFacingLearningError(e, 'Unexpected error while loading trend preview.'))
+            setStageCounts(null)
+          }
         }
       } finally {
         if (!cancelled) setTrendLoading(false)
@@ -184,7 +436,42 @@ export function ContentGenerator() {
     return () => {
       cancelled = true
     }
-  }, [brand, trendUiEnabled])
+  }, [brand, trendUiEnabled, tenantId, supabase, simulationMode, session?.user, signOutPending, user?.id])
+
+  const [topicWaitHint, setTopicWaitHint] = useState<string | null>(null)
+  const [packageWaitHint, setPackageWaitHint] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!loading || generationKind !== 'topic') {
+      setTopicWaitHint(null)
+      return
+    }
+    setTopicWaitHint('Sending your topic to the generation service…')
+    const t1 = window.setTimeout(() => {
+      setTopicWaitHint('Still working—remote models often need 30–90 seconds when busy.')
+    }, 4000)
+    const t2 = window.setTimeout(() => {
+      setTopicWaitHint('Hang tight—this can take over a minute if the service is cold or overloaded.')
+    }, 18000)
+    return () => {
+      window.clearTimeout(t1)
+      window.clearTimeout(t2)
+    }
+  }, [loading, generationKind])
+
+  useEffect(() => {
+    if (!loading || generationKind !== 'package') {
+      setPackageWaitHint(null)
+      return
+    }
+    setPackageWaitHint('Building your package…')
+    const t1 = window.setTimeout(() => {
+      setPackageWaitHint('Still working—full packages run several model steps.')
+    }, 6000)
+    return () => {
+      window.clearTimeout(t1)
+    }
+  }, [loading, generationKind])
 
   const canSubmitTopic = topic.trim().length > 0 && !loading
   const canRunPackage = Boolean(selectedOpportunity) && !loading
@@ -194,15 +481,32 @@ export function ContentGenerator() {
   async function handleGenerateTopic() {
     setError(null)
     setContentPackage(null)
+    setGenerationKind('topic')
     setLoading(true)
     try {
-      const data = await generateSocialContent(topic)
+      const data = await generateSocialContent(topic, { supabase: supabase ?? undefined })
       setResult(data)
+      jifunzeCriticalLog({
+        action: 'content_generate_topic',
+        userId: user?.id ?? null,
+        tenantId,
+        brandProfileId: brand?.id ?? null,
+        status: 'ok',
+      })
     } catch (e) {
+      jifunzeCriticalLog({
+        action: 'content_generate_topic',
+        userId: user?.id ?? null,
+        tenantId,
+        brandProfileId: brand?.id ?? null,
+        status: 'error',
+        error: e,
+      })
       setResult(null)
       setError(e instanceof Error ? e.message : 'Something went wrong.')
     } finally {
       setLoading(false)
+      setGenerationKind('idle')
     }
   }
 
@@ -213,6 +517,7 @@ export function ContentGenerator() {
     }
     setError(null)
     setResult(null)
+    setGenerationKind('package')
     setLoading(true)
     try {
       const pkg = await generateContentPackage({
@@ -220,29 +525,130 @@ export function ContentGenerator() {
         brand,
         mode: packageMode,
         platformAdaptation: includeMultiPlatform ? 'multi' : 'off',
+        tenantId,
+        supabase: supabase ?? undefined,
       })
       setContentPackage(pkg)
+      jifunzeCriticalLog({
+        action: 'content_generate_package',
+        userId: user?.id ?? null,
+        tenantId,
+        brandProfileId: brand.id,
+        status: 'ok',
+        detail: { mode: packageMode },
+      })
     } catch (e) {
+      jifunzeCriticalLog({
+        action: 'content_generate_package',
+        userId: user?.id ?? null,
+        tenantId,
+        brandProfileId: brand.id,
+        status: 'error',
+        error: e,
+      })
       setContentPackage(null)
       setError(e instanceof Error ? e.message : 'Something went wrong.')
     } finally {
       setLoading(false)
+      setGenerationKind('idle')
     }
+  }
+
+  const workspaceBootstrapNeedsRecovery =
+    isSupabaseConfigured() &&
+    Boolean(user) &&
+    !workspaceTenantResolved &&
+    authError != null
+
+  if (workspaceBootstrapNeedsRecovery) {
+    return (
+      <div className="w-full max-w-2xl space-y-6 text-center">
+        <header className="space-y-2">
+          <h1 className="text-2xl font-semibold text-white">Workspace setup</h1>
+          <p className="text-sm text-rose-300/90 whitespace-pre-wrap">{authError}</p>
+        </header>
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <button
+            type="button"
+            onClick={() => void retryWorkspaceBootstrap()}
+            className="rounded-lg border border-violet-500/40 bg-violet-600/25 px-4 py-2 text-sm font-medium text-violet-100 hover:bg-violet-600/35"
+          >
+            Retry workspace setup
+          </button>
+          <button
+            type="button"
+            disabled={signOutPending}
+            onClick={() => void signOut()}
+            className="rounded-lg border border-zinc-600 bg-zinc-800/80 px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Sign out
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  /** Block the shell only until the first successful workspace bootstrap; not on background refresh. */
+  if (isSupabaseConfigured() && authLoading && !workspaceShellReady) {
+    return (
+      <div className="w-full max-w-2xl space-y-6 text-center">
+        <p className="text-sm text-zinc-400">Loading workspace…</p>
+      </div>
+    )
+  }
+
+  if (isSupabaseConfigured() && !user) {
+    return (
+      <div className="w-full max-w-2xl space-y-6 text-center">
+        <header className="space-y-2">
+          <h1 className="text-2xl font-semibold text-white">JifunzeAI</h1>
+          <p className="text-sm text-zinc-500">Sign in for your AI educator workspace.</p>
+        </header>
+        <div className="flex justify-center">
+          <AuthForm />
+        </div>
+      </div>
+    )
+  }
+
+  if (isSupabaseConfigured() && user && brands.length === 0) {
+    return <EmptyWorkspaceCreateBrand gate="empty_brands" />
+  }
+
+  if (!brand) {
+    return (
+      <div className="w-full max-w-2xl text-center text-sm text-zinc-500">No brand profile loaded.</div>
+    )
   }
 
   return (
     <div className="w-full max-w-2xl space-y-10">
       <header className="space-y-2 text-center">
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-violet-300/90">
-          Multi-domain · Creative engine
+          AI educators · Tutorials & breakdowns
         </p>
         <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
           JifunzeAI
         </h1>
         <p className="text-sm text-zinc-400">
-          Shared intelligence → per-platform adaptation (X, Instagram, Facebook, TikTok, LinkedIn) —
-          lightweight previews, autonomy-first.
+          Angles, formats, and platform variants tuned for people who teach AI tools and concepts —
+          demos, carousels, and insight-first threads — not generic lifestyle content.
         </p>
+        {isSupabaseConfigured() && user ? (
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+            <span className="rounded-full border border-zinc-700/80 bg-zinc-900/50 px-2 py-0.5 text-[10px] text-zinc-500">
+              Tenant <span className="font-mono text-zinc-400">{tenantId.slice(0, 8)}…</span>
+            </span>
+            <button
+              type="button"
+              disabled={signOutPending}
+              onClick={() => void signOut()}
+              className="text-[11px] text-violet-300/90 hover:text-violet-200 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {signOutPending ? 'Signing out…' : 'Sign out'}
+            </button>
+          </div>
+        ) : null}
       </header>
 
       <section className="rounded-2xl border border-zinc-800/80 bg-zinc-900/35 p-4 space-y-3">
@@ -256,7 +662,7 @@ export function ContentGenerator() {
             onChange={(e) => setBrandId(e.target.value)}
             className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-violet-500/50"
           >
-            {demoBrands.map((b) => (
+            {brands.map((b) => (
               <option key={b.id} value={b.id}>
                 {b.name}
               </option>
@@ -274,7 +680,32 @@ export function ContentGenerator() {
             </>
           ) : null}
         </p>
-        <LearningOptimizationPanel brand={brand} />
+        <LearningOptimizationPanel
+          brand={brand}
+          tenantId={tenantId}
+          supabase={supabase}
+          refreshSignal={learningRefreshSignal}
+        />
+
+        <SimulationModePanel
+          brand={brand}
+          tenantId={tenantId}
+          supabase={supabase}
+          trendUiEnabled={trendUiEnabled}
+          simulationMode={simulationMode}
+          onSimulationModeChange={setSimulationMode}
+          onApplyBundle={applyTrendBundle}
+          onApplyOpportunities={(opps) => {
+            setOpportunities(opps)
+            setSelectedOpportunityId((prev) => {
+              if (!prev) return null
+              return opps.some((o) => o.id === prev) ? prev : null
+            })
+          }}
+          onLearningTick={() => setLearningRefreshSignal((n) => n + 1)}
+          latestScoredSignals={latestScoredSignals}
+          latestOpportunities={opportunities}
+        />
 
         <p className="text-[11px] leading-relaxed text-zinc-600">
           Connected surfaces (demo):{' '}
@@ -312,6 +743,31 @@ export function ContentGenerator() {
           <p className="text-sm text-rose-400" role="alert">
             {trendError}
           </p>
+        ) : null}
+        {trendUiEnabled && !trendLoading && !trendError && stageCounts ? (
+          <div className="space-y-1 text-[11px] text-zinc-600">
+            <p>
+              Flow: signals {stageCounts.raw} → guarded {stageCounts.guarded} → scored{' '}
+              {stageCounts.scored} → opportunities {stageCounts.opportunities}
+            </p>
+            <p className="text-zinc-500">
+              {simulationMode ? (
+                <>
+                  Simulated publish outcomes this refresh:{' '}
+                  <span className="font-medium text-zinc-400">{stageCounts.simulationRowsWritten}</span>{' '}
+                  (written into performance memory, then opportunities were rebuilt so learning can move
+                  format, tone hints, CTA, and platform order in the same load).
+                </>
+              ) : (
+                <>
+                  Simulation mode is <span className="font-medium text-zinc-400">OFF</span> — this
+                  refresh did not write synthetic performance rows. Turn it on in the Learning lab to
+                  exercise the full loop, or use <span className="font-medium text-zinc-400">Run iteration</span>{' '}
+                  there with the toggle ON.
+                </>
+              )}
+            </p>
+          </div>
         ) : null}
 
         {trendUiEnabled && !trendLoading && !trendError && opportunities.length === 0 ? (
@@ -380,6 +836,12 @@ export function ContentGenerator() {
                       <span className="rounded border border-indigo-700/35 bg-indigo-950/30 px-2 py-0.5 text-[10px] font-medium capitalize tracking-wide text-indigo-100/90">
                         {formatTeachingStyle(opp.explanation_style)}
                       </span>
+                      <span className="rounded border border-indigo-800/40 bg-indigo-950/25 px-2 py-0.5 text-[10px] font-medium capitalize tracking-wide text-indigo-200/85">
+                        {opp.clarity_preference.replace(/_/g, ' ')}
+                      </span>
+                      <span className="rounded border border-indigo-800/40 bg-indigo-950/25 px-2 py-0.5 text-[10px] font-medium capitalize tracking-wide text-indigo-200/85">
+                        {opp.educational_framing.replace(/_/g, ' ')}
+                      </span>
                       <span className="rounded border border-zinc-600/80 px-2 py-0.5 text-[10px] text-zinc-300">
                         Score {(opp.priority_score * 100).toFixed(0)}
                       </span>
@@ -388,6 +850,26 @@ export function ContentGenerator() {
                       </span>
                       {relevancePct !== null ? (
                         <span className="text-xs text-zinc-500">Rel ~{relevancePct}%</span>
+                      ) : null}
+                      {scored?.source_label ? (
+                        <span className="text-[10px] text-zinc-500" title={scored.url}>
+                          {scored.source_label}
+                        </span>
+                      ) : null}
+                      {typeof scored?.signal_strength === 'number' ? (
+                        <span className="text-[10px] tabular-nums text-teal-200/80">
+                          Strength {(scored.signal_strength * 100).toFixed(0)}
+                        </span>
+                      ) : null}
+                      {scored?.published_at ? (
+                        <span className="text-[10px] text-zinc-500">
+                          {new Date(scored.published_at).toLocaleString(undefined, {
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </span>
                       ) : null}
                       <span
                         className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${autonomyActionChipClass(opp.autonomy_action)}`}
@@ -406,11 +888,66 @@ export function ContentGenerator() {
                           Auto path
                         </span>
                       )}
-                      <span
-                        className={`rounded-full px-2 py-0.5 text-[10px] font-semibold capitalize tracking-wide ${lifecycleStatusChipClass(opp.lifecycle_status)}`}
-                      >
-                        {opp.lifecycle_status}
+                      <span className="inline-flex flex-wrap items-center gap-1">
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-semibold capitalize tracking-wide ${lifecycleStatusChipClass(opp.lifecycle_status)}`}
+                        >
+                          {opp.lifecycle_status}
+                        </span>
+                        <LifecycleSimulationBadge label="Demo" />
                       </span>
+                    </div>
+                    <div className="mt-2 space-y-2 rounded-xl border border-teal-900/25 bg-teal-950/10 px-2.5 py-2">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-[10px] font-semibold uppercase tracking-wide text-teal-200/80">
+                          Learning
+                        </span>
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${learningBandChipClass(opp.learning_confidence_band)}`}
+                        >
+                          Memory {opp.learning_confidence_band}
+                        </span>
+                        <span className="text-[10px] text-zinc-500">
+                          Adapts from published outcomes — see what moved below.
+                        </span>
+                      </div>
+                      {opp.learning_adaptation_labels.length ? (
+                        <ul className="flex flex-wrap gap-1.5">
+                          {opp.learning_adaptation_labels.map((lbl, i) => (
+                            <li
+                              key={`lbl-${opp.id}-${i}`}
+                              className="rounded-full border border-violet-500/25 bg-violet-950/30 px-2 py-0.5 text-[10px] leading-snug text-violet-100/95"
+                            >
+                              {lbl}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-[10px] text-zinc-500">
+                          No adaptation labels yet — add performance rows or keep publishing to
+                          strengthen memory.
+                        </p>
+                      )}
+                      <p className="text-[10px] text-zinc-500">
+                        <span className="font-medium text-zinc-400">Adjusted</span>:{' '}
+                        {formatLearningAffects(opp.learning_affects)}
+                      </p>
+                      {opp.learning_performance_hints.length ? (
+                        <div>
+                          <p className="text-[10px] font-medium text-zinc-400">Past performance used</p>
+                          <ul className="mt-0.5 list-inside list-disc space-y-0.5 text-[10px] text-zinc-500">
+                            {opp.learning_performance_hints.map((h, i) => (
+                              <li key={`hint-${opp.id}-${i}`}>{h}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      ) : null}
+                      {opp.learning_impact_comparison ? (
+                        <LearningImpactComparisonPanel
+                          impact={opp.learning_impact_comparison}
+                          compact
+                        />
+                      ) : null}
                     </div>
                     <p className="mt-2 text-sm font-medium text-zinc-100">{opp.topic}</p>
                     <p className="mt-1 text-xs leading-relaxed text-zinc-500">
@@ -440,7 +977,8 @@ export function ContentGenerator() {
                       <div className="flex flex-wrap gap-x-2 gap-y-0.5">
                         <dt className="shrink-0 font-medium text-zinc-600">Teaching</dt>
                         <dd className="text-zinc-300">
-                          {opp.teaching_level} · {formatTeachingStyle(opp.explanation_style)}
+                          {opp.teaching_level} · {formatTeachingStyle(opp.explanation_style)} · clarity{' '}
+                          {opp.clarity_preference.replace(/_/g, ' ')} · {opp.educational_framing.replace(/_/g, ' ')}
                         </dd>
                       </div>
                       <div className="flex flex-wrap gap-x-2 gap-y-0.5">
@@ -453,9 +991,10 @@ export function ContentGenerator() {
                       </div>
                       <div className="flex flex-wrap gap-x-2 gap-y-0.5">
                         <dt className="shrink-0 font-medium text-zinc-600">Lifecycle</dt>
-                        <dd className="text-zinc-400">
+                        <dd className="flex flex-wrap items-center gap-1.5 text-zinc-400">
                           {opp.lifecycle_status}{' '}
                           <span className="text-zinc-600">· {opp.lifecycle_driver}</span>
+                          <LifecycleSimulationBadge label="Demo" />
                         </dd>
                       </div>
                     </dl>
@@ -466,6 +1005,25 @@ export function ContentGenerator() {
                           {opp.teaching_explainability.slice(0, 3).map((e, idx) => (
                             <li key={`${idx}-${e.what}`}>
                               <span className="text-zinc-300">{e.what}</span> — {e.why}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : null}
+                    {opp.learning_influence_trace.length ? (
+                      <div className="mt-2 rounded-lg border border-teal-900/30 bg-teal-950/15 px-2 py-1.5 text-[10px] text-zinc-500">
+                        <p className="font-medium text-teal-200/90">What influenced this</p>
+                        <ul className="mt-1 list-inside list-disc space-y-0.5">
+                          {opp.learning_influence_trace.slice(0, 8).map((t, idx) => (
+                            <li key={`learn-${idx}`}>
+                              <span className={t.direction === 'boost' ? 'text-emerald-200/90' : 'text-amber-200/90'}>
+                                {t.direction}
+                              </span>{' '}
+                              {t.pattern}
+                              {t.patternStrength ? (
+                                <span className="text-zinc-600"> ({t.patternStrength} evidence)</span>
+                              ) : null}{' '}
+                              — {t.why}
                             </li>
                           ))}
                         </ul>
@@ -508,6 +1066,43 @@ export function ContentGenerator() {
               <p className="text-[11px] text-zinc-500">
                 Trend: {selectedOpportunity.trend_category.replace(/_/g, ' ')}
               </p>
+              <div className="space-y-2 rounded-lg border border-teal-900/25 bg-teal-950/10 px-2 py-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-[10px] font-semibold uppercase tracking-wide text-teal-200/80">
+                    Learning
+                  </span>
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${learningBandChipClass(selectedOpportunity.learning_confidence_band)}`}
+                  >
+                    Memory {selectedOpportunity.learning_confidence_band}
+                  </span>
+                </div>
+                {selectedOpportunity.learning_adaptation_labels.length ? (
+                  <ul className="flex flex-wrap gap-1">
+                    {selectedOpportunity.learning_adaptation_labels.map((lbl, i) => (
+                      <li
+                        key={`sel-lbl-${i}`}
+                        className="rounded-full border border-violet-500/25 bg-violet-950/30 px-2 py-0.5 text-[10px] text-violet-100/95"
+                      >
+                        {lbl}
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+                <p className="text-[10px] text-zinc-500">
+                  Adjusted: {formatLearningAffects(selectedOpportunity.learning_affects)}
+                </p>
+                {selectedOpportunity.learning_performance_hints.length ? (
+                  <ul className="list-inside list-disc text-[10px] text-zinc-500 space-y-0.5">
+                    {selectedOpportunity.learning_performance_hints.map((h, i) => (
+                      <li key={`sel-hint-${i}`}>{h}</li>
+                    ))}
+                  </ul>
+                ) : null}
+                {selectedOpportunity.learning_impact_comparison ? (
+                  <LearningImpactComparisonPanel impact={selectedOpportunity.learning_impact_comparison} />
+                ) : null}
+              </div>
               <p className="text-[11px] text-zinc-500">
                 Conversion: {formatConversionIntent(selectedOpportunity.conversion_intent)}
               </p>
@@ -517,7 +1112,9 @@ export function ContentGenerator() {
               </p>
               <p className="text-[11px] text-zinc-500">
                 Teaching: {selectedOpportunity.teaching_level} ·{' '}
-                {formatTeachingStyle(selectedOpportunity.explanation_style)}
+                {formatTeachingStyle(selectedOpportunity.explanation_style)} · clarity{' '}
+                {selectedOpportunity.clarity_preference.replace(/_/g, ' ')} ·{' '}
+                {selectedOpportunity.educational_framing.replace(/_/g, ' ')}
               </p>
               {selectedOpportunity.teaching_explainability.length ? (
                 <ul className="list-inside list-disc text-[11px] text-zinc-500 space-y-0.5">
@@ -527,6 +1124,22 @@ export function ContentGenerator() {
                     </li>
                   ))}
                 </ul>
+              ) : null}
+              {selectedOpportunity.learning_influence_trace.length ? (
+                <div>
+                  <p className="text-[10px] font-medium text-teal-200/90">What influenced this</p>
+                  <ul className="list-inside list-disc text-[11px] text-teal-200/85 space-y-0.5">
+                    {selectedOpportunity.learning_influence_trace.slice(0, 8).map((t, idx) => (
+                      <li key={`sel-learn-${idx}`}>
+                        {t.direction}: {t.pattern}
+                        {t.patternStrength ? (
+                          <span className="text-zinc-500"> ({t.patternStrength})</span>
+                        ) : null}{' '}
+                        — {t.why}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ) : null}
               <p className="text-[11px] text-zinc-500">
                 Keywords:{' '}
@@ -551,10 +1164,13 @@ export function ContentGenerator() {
               </p>
               <p className="text-[11px] text-zinc-500">{selectedOpportunity.autonomy_reason}</p>
               <p className="flex flex-wrap items-center gap-2">
-                <span
-                  className={`rounded-full px-2 py-0.5 text-[10px] font-semibold capitalize tracking-wide ${lifecycleStatusChipClass(selectedOpportunity.lifecycle_status)}`}
-                >
-                  {selectedOpportunity.lifecycle_status}
+                <span className="inline-flex flex-wrap items-center gap-1">
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-semibold capitalize tracking-wide ${lifecycleStatusChipClass(selectedOpportunity.lifecycle_status)}`}
+                  >
+                    {selectedOpportunity.lifecycle_status}
+                  </span>
+                  <LifecycleSimulationBadge label="Demo" />
                 </span>
                 <span className="text-[11px] text-zinc-600">
                   {selectedOpportunity.lifecycle_driver} ·{' '}
@@ -597,8 +1213,13 @@ export function ContentGenerator() {
             disabled={!canRunPackage}
             className="w-full rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            {loading ? 'Working…' : 'Generate from opportunity'}
+            {loading && generationKind === 'package' ? 'Working…' : 'Generate from opportunity'}
           </button>
+          {loading && generationKind === 'package' && packageWaitHint ? (
+            <p className="text-center text-[11px] leading-relaxed text-zinc-500" aria-live="polite">
+              {packageWaitHint}
+            </p>
+          ) : null}
         </section>
       ) : null}
 
@@ -694,10 +1315,21 @@ export function ContentGenerator() {
           type="button"
           onClick={handleGenerateTopic}
           disabled={!canSubmitTopic}
+          aria-busy={loading && generationKind === 'topic'}
           className="flex w-full items-center justify-center rounded-xl border border-zinc-600 bg-zinc-800/80 px-4 py-3 text-sm font-semibold text-zinc-100 transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {loading ? 'Generating…' : 'Generate from topic'}
+          {loading && generationKind === 'topic' ? 'Generating…' : 'Generate from topic'}
         </button>
+        {loading && generationKind === 'topic' && topicWaitHint ? (
+          <p className="text-center text-[11px] leading-relaxed text-zinc-500" aria-live="polite">
+            {topicWaitHint}
+          </p>
+        ) : null}
+        {!loading && topic.trim().length > 0 ? (
+          <p className="text-center text-[11px] text-zinc-600">
+            Typical wait is 30–90s; progress updates appear below once you start.
+          </p>
+        ) : null}
       </div>
 
       {displaySocial ? (
@@ -715,10 +1347,13 @@ export function ContentGenerator() {
           </h2>
           {contentPackage?.lifecycle_status ? (
             <div className="rounded-lg border border-zinc-800/70 bg-zinc-950/35 px-3 py-2 text-[11px] text-zinc-400">
-              <span
-                className={`mr-2 inline-flex rounded-full px-2 py-0.5 font-semibold capitalize tracking-wide ${lifecycleStatusChipClass(contentPackage.lifecycle_status)}`}
-              >
-                {contentPackage.lifecycle_status}
+              <span className="mr-2 inline-flex flex-wrap items-center gap-1 align-middle">
+                <span
+                  className={`inline-flex rounded-full px-2 py-0.5 font-semibold capitalize tracking-wide ${lifecycleStatusChipClass(contentPackage.lifecycle_status)}`}
+                >
+                  {contentPackage.lifecycle_status}
+                </span>
+                <LifecycleSimulationBadge label="Demo" />
               </span>
               {contentPackage.source_opportunity_id ? (
                 <span className="text-zinc-500">Opp {contentPackage.source_opportunity_id} · </span>
@@ -756,9 +1391,15 @@ export function ContentGenerator() {
                 Adapted surfaces
               </h3>
               <p className="text-[11px] text-zinc-600">
-                One opportunity → four distinct platform-native variants (same brand, different shape
-                and constraints).
+                One opportunity → Instagram (caption + carousel), TikTok (hook + flow + shots), X
+                (post + thread beats), and Facebook — same lesson, native packaging (ready to paste).
               </p>
+              {contentPackage.platform_adaptation.variants[0]?.consistency_spine ? (
+                <p className="rounded-lg border border-zinc-700/60 bg-zinc-950/50 px-3 py-2 text-[11px] leading-relaxed text-zinc-400">
+                  <span className="font-semibold text-zinc-500">Consistency spine · </span>
+                  {contentPackage.platform_adaptation.variants[0].consistency_spine}
+                </p>
+              ) : null}
               <div className="grid gap-3 sm:grid-cols-2">
                 {contentPackage.platform_adaptation.variants.map((v) => (
                   <div
@@ -772,11 +1413,27 @@ export function ContentGenerator() {
                       <p className="mt-1 text-sm font-medium text-zinc-100">{v.title}</p>
                     ) : null}
                     {v.hook ? (
-                      <p className="mt-1 text-xs font-medium text-zinc-300">{v.hook}</p>
+                      <div className="mt-2 space-y-0.5">
+                        <p className="text-[10px] font-semibold uppercase tracking-wide text-zinc-500">
+                          Hook
+                        </p>
+                        <p className="text-xs font-medium text-zinc-200">{v.hook}</p>
+                      </div>
                     ) : null}
-                    <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-zinc-200">
-                      {v.caption}
-                    </p>
+                    {v.body ? (
+                      <div className="mt-2 space-y-0.5">
+                        <p className="text-[10px] font-semibold uppercase tracking-wide text-zinc-500">
+                          Body
+                        </p>
+                        <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-200">{v.body}</p>
+                      </div>
+                    ) : null}
+                    <div className="mt-2 space-y-0.5">
+                      <p className="text-[10px] font-semibold uppercase tracking-wide text-zinc-500">
+                        Full caption (copy block)
+                      </p>
+                      <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-300">{v.caption}</p>
+                    </div>
                     {v.hashtags ? (
                       <p className="mt-2 font-mono text-xs text-violet-200/90">{v.hashtags}</p>
                     ) : null}
@@ -806,10 +1463,47 @@ export function ContentGenerator() {
                         })}
                       </p>
                     ) : null}
-                    {v.thread_continuation_hint ? (
+                    {v.platform === 'x' && v.thread_beats && v.thread_beats.length ? (
+                      <div className="mt-2 space-y-1">
+                        <p className="text-[10px] font-semibold uppercase tracking-wide text-zinc-500">
+                          Thread (lead + replies)
+                        </p>
+                        <ol className="list-decimal space-y-1 pl-4 text-[11px] leading-relaxed text-sky-200/90">
+                          <li>
+                            <span className="text-zinc-500">Lead: </span>
+                            {v.caption}
+                          </li>
+                          {v.thread_beats.map((b, i) => (
+                            <li key={`tb-${v.platform}-${i}`}>{b}</li>
+                          ))}
+                        </ol>
+                      </div>
+                    ) : v.platform === 'x' && v.thread_continuation_hint ? (
                       <p className="mt-1 text-[11px] text-sky-300/90">
                         <span className="text-zinc-600">Thread:</span> {v.thread_continuation_hint}
                       </p>
+                    ) : null}
+                    {v.platform === 'instagram' && v.carousel_slides && v.carousel_slides.length ? (
+                      <div className="mt-2 space-y-1">
+                        <p className="text-[10px] font-semibold uppercase tracking-wide text-zinc-500">
+                          Carousel idea (slides)
+                        </p>
+                        <ol className="list-decimal space-y-1 pl-4 text-[11px] leading-relaxed text-zinc-300">
+                          {v.carousel_slides.map((s, i) => (
+                            <li key={`cs-${v.platform}-${i}`}>{s}</li>
+                          ))}
+                        </ol>
+                      </div>
+                    ) : null}
+                    {v.platform === 'tiktok' && v.tiktok_flow ? (
+                      <div className="mt-2 space-y-1">
+                        <p className="text-[10px] font-semibold uppercase tracking-wide text-zinc-500">
+                          TikTok flow (beats)
+                        </p>
+                        <p className="whitespace-pre-wrap text-[11px] leading-relaxed text-zinc-400">
+                          {v.tiktok_flow}
+                        </p>
+                      </div>
                     ) : null}
                     {v.visual_note ? (
                       <p className="mt-2 text-[11px] text-zinc-500">

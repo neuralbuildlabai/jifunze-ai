@@ -43,6 +43,7 @@ export function mergeSocialAccountAutomation(
 /** Linked social handle under a brand tenant (many accounts per brand). */
 export type SocialAccount = {
   id: string
+  /** Persisted as `brand_profile_id` in Supabase JSON/cache; value equals `BrandProfile.id` / `public.brands.id`. */
   brand_profile_id: string
   platform: SocialPlatformId
   handle: string

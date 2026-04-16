@@ -11,6 +11,10 @@ export type SignalSourceId = string
 export type ExternalSignal = {
   id: string
   source: SignalSourceId
+  /** Human-readable outlet / wire name for UI (mock + future connectors). */
+  source_label?: string
+  /** 0–1 synthetic “velocity / confidence” for mocks; optional for live APIs. */
+  signal_strength?: number
   title: string
   summary: string
   url: string

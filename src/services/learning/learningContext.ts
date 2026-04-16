@@ -1,3 +1,5 @@
+import type { SupabaseClient } from '@supabase/supabase-js'
+import { getPersistence } from '../../persistence/registry'
 import type { BrandLearningState } from '../../types/performanceLearning'
 import { analyzeBrandPerformance } from './analyzePerformance'
 import { buildStrategyRecommendations } from './buildRecommendations'
@@ -12,22 +14,49 @@ function summaryLines(state: BrandLearningState): string[] {
   lines.push(
     `Memory: ${state.snapshot.sampleCount} published rows · weighted avg engagement ${er != null ? `${(er * 100).toFixed(2)}%` : 'n/a'}.`,
   )
+  lines.push(
+    'Rapid learning: weak / emerging / strong pattern tiers update with small samples — combo axes (format+surface, CTA+surface, teaching+surface) are weighted heavily.',
+  )
   const top = state.insights.filter((i) => i.kind.startsWith('strong')).slice(0, 3)
   for (const t of top) {
-    lines.push(`Strength signal: ${t.subject}${t.value != null ? ` (~${(t.value * 100).toFixed(2)}% ER)` : ''}.`)
+    const tier = t.patternStrength ? ` (${t.patternStrength})` : ''
+    lines.push(
+      `Strength signal${tier}: ${t.subject}${t.value != null ? ` (~${(t.value * 100).toFixed(2)}% ER)` : ''}.`,
+    )
+  }
+  const early = state.insights
+    .filter((i) => i.patternStrength === 'weak' || i.patternStrength === 'emerging')
+    .slice(0, 2)
+  for (const e of early) {
+    lines.push(
+      `Directional hint (${e.patternStrength ?? 'n/a'} evidence): ${e.subject}${e.learningDirection ? ` — ${e.learningDirection}` : ''}.`,
+    )
   }
   const risk = state.insights.filter((i) => i.kind === 'weak_combo' || i.kind === 'weak_format').slice(0, 2)
   for (const r of risk) {
     lines.push(`Watch-out: ${r.subject}.`)
   }
-  return lines.slice(0, 6)
+  return lines.slice(0, 8)
+}
+
+export type GetBrandLearningStateOptions = {
+  /**
+   * When `false`, skip persisting to `learning_snapshots` (read-only / UI refresh).
+   * Default `true` for backward compatibility with content/opportunity pipelines.
+   */
+  persistLearningSnapshot?: boolean
 }
 
 /**
  * Full learning bundle for a tenant (recompute is cheap at MVP scale).
  */
-export function getBrandLearningState(brandProfileId: string): BrandLearningState {
-  const { snapshot, insights } = analyzeBrandPerformance(brandProfileId)
+export async function getBrandLearningState(
+  brandProfileId: string,
+  tenantId: string,
+  supabase?: SupabaseClient,
+  options?: GetBrandLearningStateOptions,
+): Promise<BrandLearningState> {
+  const { snapshot, insights } = await analyzeBrandPerformance(brandProfileId, tenantId, supabase)
   const recommendations = buildStrategyRecommendations(brandProfileId, insights)
   const learnedSummaryLines = summaryLines({
     brandProfileId,
@@ -36,17 +65,41 @@ export function getBrandLearningState(brandProfileId: string): BrandLearningStat
     recommendations,
     learnedSummaryLines: [],
   })
-  return {
+  const state: BrandLearningState = {
     brandProfileId,
     snapshot,
     insights,
     recommendations,
     learnedSummaryLines,
   }
+
+  let shouldPersist = options?.persistLearningSnapshot !== false
+  if (shouldPersist && supabase) {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+    if (!session?.user) {
+      shouldPersist = false
+    }
+  }
+  if (shouldPersist) {
+    await getPersistence(tenantId, supabase).learningSnapshots.save({
+      brandProfileId,
+      capturedAt: new Date().toISOString(),
+      snapshot,
+      insights,
+      recommendations,
+    })
+  }
+  return state
 }
 
-export function buildLearningContextLines(brandProfileId: string): string[] {
-  const s = getBrandLearningState(brandProfileId)
+export async function buildLearningContextLines(
+  brandProfileId: string,
+  tenantId: string,
+  supabase?: SupabaseClient,
+): Promise<string[]> {
+  const s = await getBrandLearningState(brandProfileId, tenantId, supabase)
   return [
     'Performance learning (rule-based, MVP):',
     ...s.learnedSummaryLines,
@@ -54,7 +107,11 @@ export function buildLearningContextLines(brandProfileId: string): string[] {
   ]
 }
 
-export function getLearningAdapterNotes(brandProfileId: string): string[] {
-  const state = getBrandLearningState(brandProfileId)
+export async function getLearningAdapterNotes(
+  brandProfileId: string,
+  tenantId: string,
+  supabase?: SupabaseClient,
+): Promise<string[]> {
+  const state = await getBrandLearningState(brandProfileId, tenantId, supabase)
   return state.recommendations.slice(0, 3).map((r) => r.title)
 }

@@ -77,6 +77,16 @@ export function refinePlatformVariant(
     adjustments.push('Inserted platform-native fallback hook (source line was thin).')
   }
 
+  if (!v.body?.trim()) {
+    const h = v.hook?.trim()
+    let derived = v.caption.trim()
+    if (h && derived.toLowerCase().startsWith(h.toLowerCase())) {
+      derived = derived.slice(h.length).trim().replace(/^\n+/, '')
+    }
+    v = { ...v, body: derived || v.caption.trim() }
+    adjustments.push('Derived body from caption for structured hook/body/CTA output.')
+  }
+
   if (isWeakCta(v.cta)) {
     v = { ...v, cta: strengthenCta(v.cta, brand, opportunity, v.platform) }
     adjustments.push('CTA strengthened for clarity and channel norms.')

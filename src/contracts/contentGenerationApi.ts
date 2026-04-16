@@ -2,7 +2,10 @@ import type { SocialContent } from '../types/content'
 
 export type GenerateContentRequestSource = 'manual_topic' | 'signal' | 'opportunity'
 
-/** JSON body sent to the server-side generator (e.g. Supabase Edge Function). */
+/**
+ * JSON body sent to the server-side generator (Supabase Edge `generate-content` or any
+ * compatible POST endpoint). LLM keys stay on the server; the browser only sends this payload.
+ */
 export type GenerateContentRequestBody = {
   topic: string
   context?: string

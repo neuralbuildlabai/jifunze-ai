@@ -1,6 +1,10 @@
 export type SignalProviderMode = 'mock' | 'remote'
 
 export function getSignalProviderMode(): SignalProviderMode {
+  const explicit = import.meta.env.VITE_SIGNAL_MODE?.toLowerCase().trim()
+  if (explicit === 'remote' || explicit === 'mock') {
+    return explicit === 'remote' ? 'remote' : 'mock'
+  }
   const raw = import.meta.env.VITE_SIGNAL_PROVIDER_MODE?.toLowerCase().trim()
   return raw === 'remote' ? 'remote' : 'mock'
 }

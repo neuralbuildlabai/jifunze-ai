@@ -7,6 +7,12 @@ import type { TrendCategory } from './trendCategory'
 /** Surfaces we track; matches adaptation IDs plus room for LinkedIn / future. */
 export type PerformancePlatformId = AdaptationPlatformId | 'linkedin' | string
 
+/** How much evidence backs a rule-based pattern (used for explainability + weighting). */
+export type PatternStrength = 'weak' | 'emerging' | 'confirmed'
+
+/** Coarse UTC bucket for publish-time learning. */
+export type PublishTimingBucket = 'morning' | 'afternoon' | 'evening' | 'night'
+
 /**
  * One published (or “shipped”) content row with outcomes — Supabase-ready flat shape.
  * `metadata` carries vendor ids, campaign ids, A/B keys, etc.
@@ -24,6 +30,14 @@ export type PublishedContentPerformance = {
   ctaType: string
   /** Short classifier: `timely`, `first_frame`, `pov`, `community`, `plain` */
   hookStyle: string
+  /** Optional: normalized CTA style cluster (`dm`, `link_in_bio`, …) for combo learning. */
+  ctaStyle?: string
+  /** Optional: human-readable lifecycle path for this artifact (e.g. drafted→queued→published). */
+  lifecyclePathSummary?: string
+  /** Optional: when the post was scheduled to go live (ISO); helps separate timing from creation. */
+  scheduledPublishAt?: string | null
+  /** Derived from {@link publishedAt} UTC hour for rapid time-of-day learning. */
+  publishTimingBucket?: PublishTimingBucket
   impressions: number | null
   reach: number | null
   clicks: number | null
@@ -75,12 +89,24 @@ export type ContentPerformanceSnapshot = {
 export type OptimizationInsightKind =
   | 'strong_domain'
   | 'weak_domain'
+  | 'strong_domain_platform'
+  | 'weak_domain_platform'
   | 'strong_trend'
   | 'weak_trend'
+  | 'strong_trend_platform'
+  | 'weak_trend_platform'
   | 'strong_cta'
   | 'weak_cta'
+  | 'strong_cta_platform'
+  | 'weak_cta_platform'
   | 'strong_format'
   | 'weak_format'
+  | 'strong_format_platform'
+  | 'weak_format_platform'
+  | 'strong_teaching_style_platform'
+  | 'weak_teaching_style_platform'
+  | 'strong_teaching_level_domain'
+  | 'weak_teaching_level_domain'
   | 'strong_posting_hour'
   | 'weak_posting_hour'
   | 'weak_combo'
@@ -90,7 +116,13 @@ export type OptimizationInsightConfidence = 'low' | 'medium' | 'high'
 export type StrategyAdjustmentKind =
   | 'boost_domain_platform'
   | 'penalize_format'
+  /** Actively bias toward a format that is outperforming (not only deprioritize weak). */
+  | 'prefer_format'
+  /** Actively bias toward a surface that is outperforming (ordering + priority). */
+  | 'prefer_platform'
   | 'prefer_cta_style'
+  /** Actively bias explanation style toward a winning teaching+platform pattern. */
+  | 'prefer_teaching_style'
   | 'prefer_posting_window'
   | 'penalize_weak_combo'
   | 'tighten_autonomy'
@@ -101,10 +133,24 @@ export type StrategyAdjustmentPayload = {
   platform?: PerformancePlatformId
   trendCategory?: TrendCategory
   contentFormat?: ContentFormat
+  explanationStyle?: ExplanationStyle
+  teachingLevel?: TeachingLevel
   /** e.g. `dm`, `link_in_bio`, `save_share` */
   ctaStyle?: string
   /** 0–23 local / UTC note in rationale */
   postingHour?: number
+}
+
+export type LearningInfluenceDirection = 'boost' | 'penalty'
+
+/** Explainability record: one rule that affected a decision. */
+export type LearningInfluenceTrace = {
+  pattern: string
+  direction: LearningInfluenceDirection
+  delta: number
+  why: string
+  /** Evidence tier for the underlying performance pattern, when known. */
+  patternStrength?: PatternStrength
 }
 
 export type OptimizationInsight = {
@@ -121,6 +167,14 @@ export type OptimizationInsight = {
   /** Machine routing for recommendations (avoid parsing `subject`). */
   tags?: StrategyAdjustmentPayload
   createdAt: string
+  /** Evidence tier for this pattern (early learning vs proven). */
+  patternStrength?: PatternStrength
+  /** Stable axis key, e.g. `beauty::instagram` or `step_by_step::instagram`. */
+  patternKey?: string
+  /** Whether this row is historically helpful or harmful for ranking heuristics. */
+  learningDirection?: LearningInfluenceDirection
+  /** Rough effect size in engagement-rate space (for UI / traces). */
+  estimatedDelta?: number
 }
 
 export type StrategyAdjustmentRecommendation = {
@@ -133,6 +187,8 @@ export type StrategyAdjustmentRecommendation = {
   weight: number
   payload?: StrategyAdjustmentPayload
   createdAt: string
+  /** Propagated from {@link OptimizationInsight.patternStrength} for explainability. */
+  sourcePatternStrength?: PatternStrength
 }
 
 /** Hint passed into CTA copy when `prefer_cta_style` recommendations fire. */

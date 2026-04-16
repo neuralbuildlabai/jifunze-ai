@@ -35,7 +35,7 @@ function parseClassifiedTrend(value: unknown): TrendCategory | undefined {
 }
 
 /**
- * Best-effort parse for a future Edge response. Returns [] if shape is unknown.
+ * Best-effort parse for a future Edge response.
  */
 function parseSignalsPayload(data: unknown): ExternalSignal[] {
   if (!Array.isArray(data)) return []
@@ -87,16 +87,25 @@ function parseSignalsPayload(data: unknown): ExternalSignal[] {
   return out
 }
 
+export type RemoteSignalsAggregateResult =
+  | { status: 'ok'; signals: ExternalSignal[]; source: 'remoteSignalsClient' }
+  | { status: 'error'; reason: string; source: 'remoteSignalsClient' }
+
 /**
  * Fetches pre-aggregated signals from your backend (recommended for production).
  * The browser should not scrape third-party sites directly at scale.
+ * Errors are explicit — no silent `[]` on failure paths.
  */
 export async function fetchSignalsFromRemoteAggregate(
   context: SignalIngestionContext,
-): Promise<ExternalSignal[]> {
+): Promise<RemoteSignalsAggregateResult> {
   const url = getSignalIngestionUrl()
   if (!url) {
-    return []
+    return {
+      status: 'error',
+      reason: 'Remote signal ingest URL is not configured (VITE_SIGNAL_INGESTION_URL).',
+      source: 'remoteSignalsClient',
+    }
   }
 
   let response: Response
@@ -106,24 +115,66 @@ export async function fetchSignalsFromRemoteAggregate(
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ fetched_at: context.fetched_at }),
     })
-  } catch {
-    return []
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e)
+    return {
+      status: 'error',
+      reason: `Network error while fetching remote signals: ${msg}`,
+      source: 'remoteSignalsClient',
+    }
   }
 
   if (!response.ok) {
-    return []
+    const snippet = await response.text().catch(() => '')
+    return {
+      status: 'error',
+      reason: `Remote signal ingest HTTP ${response.status}${snippet ? `: ${snippet.slice(0, 280)}` : ''}`,
+      source: 'remoteSignalsClient',
+    }
   }
 
   const text = await response.text()
-  if (!text.trim()) return []
+  if (!text.trim()) {
+    return {
+      status: 'error',
+      reason: 'Remote signal ingest returned an empty response body.',
+      source: 'remoteSignalsClient',
+    }
+  }
 
   let parsed: unknown
   try {
     parsed = JSON.parse(text)
-  } catch {
-    return []
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e)
+    return {
+      status: 'error',
+      reason: `Remote signal ingest returned invalid JSON: ${msg}`,
+      source: 'remoteSignalsClient',
+    }
+  }
+
+  if (!Array.isArray(parsed)) {
+    return {
+      status: 'error',
+      reason: 'Remote signal ingest JSON must be an array of signal objects.',
+      source: 'remoteSignalsClient',
+    }
   }
 
   const raw = parseSignalsPayload(parsed)
-  return normalizeExternalSignals(raw)
+  if (raw.length === 0 && parsed.length > 0) {
+    return {
+      status: 'error',
+      reason:
+        'Remote signal ingest returned items, but none matched the expected signal shape (id, source, title, …).',
+      source: 'remoteSignalsClient',
+    }
+  }
+
+  return {
+    status: 'ok',
+    signals: normalizeExternalSignals(raw),
+    source: 'remoteSignalsClient',
+  }
 }

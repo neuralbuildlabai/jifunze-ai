@@ -1,12 +1,14 @@
+import type { SupabaseClient } from '@supabase/supabase-js'
 import type { BrandProfile } from '../../types/brand'
 import type { ContentDomain } from '../../types/contentDomain'
 import type { ContentFormat } from '../../types/contentFormat'
 import type { TrendCategory } from '../../types/trendCategory'
-import type { PublishedContentPerformance } from '../../types/performanceLearning'
+import type { PublishedContentPerformance, PublishTimingBucket } from '../../types/performanceLearning'
 import type { ExplanationStyle, TeachingLevel } from '../../types/teaching'
 import type { AdaptationPlatformId } from '../../types/adaptationPlatform'
 import { recordPublishedContentPerformance } from './recordPerformance'
 import { getPerformanceMemoryStore } from './performanceMemoryStore'
+import { shouldAutoSeedDemoLearningRows } from '../../persistence/tenantPersistenceMode'
 
 const TRENDS: TrendCategory[] = [
   'product_launch',
@@ -42,23 +44,45 @@ function mix(i: number, brandId: string): number {
   return (h % 1000) / 1000
 }
 
+function publishTimingBucketFromIso(iso: string): PublishTimingBucket {
+  const hr = new Date(iso).getUTCHours()
+  if (hr >= 5 && hr < 12) return 'morning'
+  if (hr >= 12 && hr < 17) return 'afternoon'
+  if (hr >= 17 && hr < 22) return 'evening'
+  return 'night'
+}
+
+function ctaStyleFromType(cta: string): string {
+  if (cta.includes('dm')) return 'dm'
+  if (cta.includes('link')) return 'link_in_bio'
+  if (cta.includes('engagement')) return 'save_share'
+  return 'link_in_bio'
+}
+
 function effectiveEngagement(i: number, brandId: string, domain: ContentDomain): number {
   const m = mix(i, brandId)
-  const primaryBoost = domain === 'beauty' || domain === 'music' ? 0.12 : 0.06
+  const primaryBoost =
+    domain === 'ai' ? 0.14 : domain === 'beauty' || domain === 'music' ? 0.1 : 0.06
   return Math.min(0.14, 0.018 + m * 0.09 + primaryBoost * (i % 3 === 0 ? 1 : 0.35))
 }
 
 /**
- * Seeds deterministic demo rows once per brand so the learning UI is non-empty in preview.
+ * Seeds deterministic demo rows once per brand so the learning UI is non-empty in **demo**
+ * persistence. Skipped for real workspace UUIDs unless `VITE_SEED_DEMO_LEARNING_IN_WORKSPACE=true`.
  */
-export function ensureBrandLearningDemoSeed(brand: BrandProfile): void {
-  const store = getPerformanceMemoryStore()
-  if (store.countForBrand(brand.id) >= 12) return
+export async function ensureBrandLearningDemoSeed(
+  brand: BrandProfile,
+  tenantContext: { tenantId: string; supabase?: SupabaseClient },
+): Promise<void> {
+  const { tenantId, supabase } = tenantContext
+  if (!shouldAutoSeedDemoLearningRows(tenantId)) return
+  const store = getPerformanceMemoryStore(tenantId, supabase)
+  if ((await store.countForBrand(brand.id)) >= 8) return
 
   const domains = [brand.primaryDomain, ...(brand.secondaryDomains ?? [])] as ContentDomain[]
   const now = Date.now()
 
-  for (let i = 0; i < 22; i++) {
+  for (let i = 0; i < 14; i++) {
     const domain = domains[i % domains.length] ?? brand.primaryDomain
     const trend = TRENDS[i % TRENDS.length]
     const contentFormat = FORMATS[i % FORMATS.length]
@@ -88,7 +112,14 @@ export function ensureBrandLearningDemoSeed(brand: BrandProfile): void {
       trendCategory: trend,
       contentFormat,
       ctaType: CTA_TYPES[i % CTA_TYPES.length],
+      ctaStyle: ctaStyleFromType(CTA_TYPES[i % CTA_TYPES.length]),
       hookStyle: HOOKS[i % HOOKS.length],
+      lifecyclePathSummary:
+        i % 5 === 0
+          ? 'detected→shortlisted→drafted→published'
+          : 'detected→shortlisted→drafted',
+      scheduledPublishAt: i % 3 === 0 ? publishedAt : null,
+      publishTimingBucket: publishTimingBucketFromIso(publishedAt),
       impressions,
       reach: Math.round(impressions * 0.92),
       clicks: Math.round(impressions * (0.008 + mix(i + 3, brand.id) * 0.02)),
@@ -106,6 +137,6 @@ export function ensureBrandLearningDemoSeed(brand: BrandProfile): void {
       engagementDepthScore,
       metadata: { source: 'demo_seed' },
     }
-    recordPublishedContentPerformance(row)
+    await recordPublishedContentPerformance(row, tenantId, supabase)
   }
 }

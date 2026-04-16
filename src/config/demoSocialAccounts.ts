@@ -21,78 +21,61 @@ function ac(input: {
   }
 }
 
-const JIFUNZE_SUSTAIN: SocialAccount[] = [
+const JIFUNZE_AI_STUDIO: SocialAccount[] = [
   ac({
-    id: 'acct-jifunze-ig',
-    brand_profile_id: 'jifunze-sustain',
+    id: 'acct-jas-ig',
+    brand_profile_id: 'jifunze-ai-studio',
     platform: 'instagram',
-    handle: 'jifunzedemoco',
+    handle: 'jifunzeaistudio',
     automation: { posting_cadence_per_day_max: 3, blocked_trend_categories: ['breaking_news'] },
   }),
   ac({
-    id: 'acct-jifunze-fb',
-    brand_profile_id: 'jifunze-sustain',
-    platform: 'facebook',
-    handle: 'JifunzeDemoCo',
-    automation: { posting_cadence_per_day_max: 2 },
+    id: 'acct-jas-tiktok',
+    brand_profile_id: 'jifunze-ai-studio',
+    platform: 'tiktok',
+    handle: '@jifunzeaistudio',
+    automation: { posting_cadence_per_day_max: 4 },
   }),
   ac({
-    id: 'acct-jifunze-li',
-    brand_profile_id: 'jifunze-sustain',
+    id: 'acct-jas-x',
+    brand_profile_id: 'jifunze-ai-studio',
+    platform: 'x',
+    handle: 'jifunzeaistudio',
+  }),
+  ac({
+    id: 'acct-jas-li',
+    brand_profile_id: 'jifunze-ai-studio',
     platform: 'linkedin',
-    handle: 'company/jifunze-demo-co',
+    handle: 'company/jifunze-ai-studio',
   }),
 ]
 
-const PULSE_BEAUTY: SocialAccount[] = [
+const CONTEXT_WEIGHTS: SocialAccount[] = [
   ac({
-    id: 'acct-pulse-ig',
-    brand_profile_id: 'pulse-beauty',
+    id: 'acct-cw-ig',
+    brand_profile_id: 'context-weights',
     platform: 'instagram',
-    handle: 'pulsebeautylab',
+    handle: 'contextweights',
     automation: { auto_publish_enabled: true, posting_cadence_per_day_max: 5 },
   }),
   ac({
-    id: 'acct-pulse-tiktok',
-    brand_profile_id: 'pulse-beauty',
+    id: 'acct-cw-tiktok',
+    brand_profile_id: 'context-weights',
     platform: 'tiktok',
-    handle: '@pulsebeautylab',
+    handle: '@contextweights',
     automation: { posting_cadence_per_day_max: 3 },
   }),
   ac({
-    id: 'acct-pulse-x',
-    brand_profile_id: 'pulse-beauty',
+    id: 'acct-cw-x',
+    brand_profile_id: 'context-weights',
     platform: 'x',
-    handle: 'pulsebeautylab',
-  }),
-]
-
-const NOCTURNE: SocialAccount[] = [
-  ac({
-    id: 'acct-nocturne-ig',
-    brand_profile_id: 'nocturne-events',
-    platform: 'instagram',
-    handle: 'nocturnecollective',
-  }),
-  ac({
-    id: 'acct-nocturne-tiktok',
-    brand_profile_id: 'nocturne-events',
-    platform: 'tiktok',
-    handle: '@nocturnecollective',
-  }),
-  ac({
-    id: 'acct-nocturne-fb',
-    brand_profile_id: 'nocturne-events',
-    platform: 'facebook',
-    handle: 'NocturneCollectiveEvents',
-    publishing_eligibility: 'restricted',
+    handle: 'contextweights',
   }),
 ]
 
 const BY_BRAND: Record<string, SocialAccount[]> = {
-  'jifunze-sustain': JIFUNZE_SUSTAIN,
-  'pulse-beauty': PULSE_BEAUTY,
-  'nocturne-events': NOCTURNE,
+  'jifunze-ai-studio': JIFUNZE_AI_STUDIO,
+  'context-weights': CONTEXT_WEIGHTS,
 }
 
 export function getDemoSocialAccountsForBrand(brandId: string): SocialAccount[] {

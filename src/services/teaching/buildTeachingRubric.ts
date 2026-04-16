@@ -1,6 +1,32 @@
 import type { BrandProfile } from '../../types/brand'
 import type { ContentOpportunity } from '../../types/opportunity'
 
+function clarityRubric(pref: ContentOpportunity['clarity_preference']): string {
+  switch (pref) {
+    case 'plain':
+      return 'Clarity rubric: plain — define terms; ban insider shorthand without gloss; prioritize scannability.'
+    case 'concise_technical':
+      return 'Clarity rubric: concise technical — correct terminology with one-line definitions; no filler hype.'
+    default:
+      return 'Clarity rubric: balanced — inline glosses; at most one stacked concept per paragraph.'
+  }
+}
+
+function framingRubric(framing: ContentOpportunity['educational_framing']): string {
+  switch (framing) {
+    case 'how_it_works':
+      return 'Framing: explain mechanism and sequence before opinions.'
+    case 'why_it_matters':
+      return 'Framing: lead with outcome relevance, then minimal steps to capture value.'
+    case 'decision_guide':
+      return 'Framing: decision-first; compare options against explicit criteria.'
+    case 'news_with_context':
+      return 'Framing: timestamp the change, add “so what”, then one recommended action.'
+    default:
+      return 'Framing: teach-first narrative arc.'
+  }
+}
+
 /**
  * Structured rubric string embedded in {@link CreativeBrief.teaching_rubric}.
  */
@@ -36,6 +62,8 @@ export function buildTeachingRubric(opportunity: ContentOpportunity, brand: Bran
 
   return [
     `Brand voice ${brand.voice}; teaching target ${lvl}; explanation mode: ${st}.`,
+    clarityRubric(opportunity.clarity_preference),
+    framingRubric(opportunity.educational_framing),
     depth,
     style,
     aiExtra.trim(),

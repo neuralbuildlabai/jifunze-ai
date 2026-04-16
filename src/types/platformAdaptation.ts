@@ -32,10 +32,22 @@ export type PlatformAdaptationQuality = {
 export type PlatformPostVariant = {
   platform: AdaptationPlatformId
   title?: string
+  /** Full surface-native post text (often hook + body); safe to copy-paste as one block when limits allow. */
   caption: string
+  /** Opening line or first-frame promise — distinct from body for structured UIs. */
   hook?: string
+  /** Main teachable / narrative block (may also appear inside `caption`). */
+  body?: string
   hashtags?: string
   cta?: string
+  /** Same lesson + CTA spine across all platforms for consistency. */
+  consistency_spine?: string
+  /** Instagram: slide-by-slide carousel ideas (cover through CTA). */
+  carousel_slides?: string[]
+  /** X: optional follow-up beats after the lead post (thread outline). */
+  thread_beats?: string[]
+  /** TikTok: hook → demo → recap beats (complements shot timing in `video_concept`). */
+  tiktok_flow?: string
   /** Echo of opportunity intent for QA and UI (same value across variants unless overridden later). */
   conversion_intent?: ConversionIntent
   /** Where this surface expects the click/DM to go (link in bio, DM, booking, etc.). */

@@ -2,12 +2,32 @@ import type { AutonomyAction, RiskLevel } from './autonomy'
 import type { ContentLifecycleStatus, LifecycleDriver } from './contentLifecycle'
 import type { ContentDomain } from './contentDomain'
 import type { ContentFormat } from './contentFormat'
+import type { LearningInfluenceTrace } from './performanceLearning'
 import type { PriorityLabel } from './priorityLabel'
 import type { TrendCategory } from './trendCategory'
 import type { ConversionIntent } from './conversion'
-import type { ExplanationStyle, TeachingExplainabilityEntry, TeachingLevel } from './teaching'
+import type {
+  ClarityPreference,
+  EducationalFraming,
+  ExplanationStyle,
+  TeachingExplainabilityEntry,
+  TeachingLevel,
+} from './teaching'
+import type { OpportunityLearningImpactComparison } from './opportunityLearningImpact'
 
 export type UrgencyLevel = 'low' | 'medium' | 'high'
+
+/** How strongly performance memory is influencing this opportunity (UI + explainability). */
+export type LearningConfidenceBand = 'weak' | 'emerging' | 'strong'
+
+/** Which decision axes were touched by learning rules for this row. */
+export type LearningAffectsFlags = {
+  format: boolean
+  cta: boolean
+  teaching: boolean
+  platform: boolean
+  priority: boolean
+}
 
 /**
  * Human-reviewable unit: trend → angle → format → media direction → drafts (no auto-post).
@@ -29,6 +49,10 @@ export type ContentOpportunity = {
   teaching_level: TeachingLevel
   /** Preferred explanation structure (adapted from performance when data exists). */
   explanation_style: ExplanationStyle
+  /** Terminology density vs accessibility (from level + memory). */
+  clarity_preference: ClarityPreference
+  /** Hook + section order intent (from style + trend + performance). */
+  educational_framing: EducationalFraming
   /** Human-readable log when teaching heuristics adjust level or style. */
   teaching_explainability: TeachingExplainabilityEntry[]
   suggested_content_format: ContentFormat
@@ -50,6 +74,16 @@ export type ContentOpportunity = {
   freshness_summary: string
   /** Plain-language rationale for humans reviewing the queue. */
   selection_reason: string
+  /** Rule-level learning influences applied to this opportunity's decisions. */
+  learning_influence_trace: LearningInfluenceTrace[]
+  /** Coarse learning maturity for the brand’s memory right now (not autonomy confidence). */
+  learning_confidence_band: LearningConfidenceBand
+  /** Friendly “why it adapted” lines for the queue UI. */
+  learning_adaptation_labels: string[]
+  /** Short bullets tying this item to historical performance summaries / insights. */
+  learning_performance_hints: string[]
+  /** Which knobs learning actually moved on this opportunity. */
+  learning_affects: LearningAffectsFlags
   /** Autonomous ops decision for this opportunity. */
   autonomy_action: AutonomyAction
   /** Why {@link autonomy_action} was chosen (rule-based; future: model + audit). */
@@ -65,4 +99,6 @@ export type ContentOpportunity = {
   lifecycle_updated_at: string
   /** What advanced lifecycle (audit trail for future persistence). */
   lifecycle_driver: LifecycleDriver
+  /** Strategy-learning vs editorial-default decision diff (same signal; empty recs baseline). */
+  learning_impact_comparison?: OpportunityLearningImpactComparison
 }

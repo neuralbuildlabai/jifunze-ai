@@ -25,6 +25,8 @@ export type PublishValidation = {
  */
 export type PublishingConnector = {
   platform: SocialPlatformId
+  /** `simulated` = no real post to the vendor; `live` = real network publish. */
+  readonly delivery: 'simulated' | 'live'
   validate(intent: PublishIntent): Promise<PublishValidation>
   publish(intent: PublishIntent): Promise<PublishResult>
 }

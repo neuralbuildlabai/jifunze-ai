@@ -12,6 +12,7 @@ export function createMockPublishingConnector(platform: SocialPlatformId): Publi
 
   return {
     platform,
+    delivery: 'simulated',
     validate,
     async publish(intent: PublishIntent): Promise<PublishResult> {
       const v = await validate(intent)

@@ -23,23 +23,23 @@ export const PLATFORM_ADAPTATION_POLICIES: Record<AdaptationPlatformId, Platform
   x: {
     id: 'x',
     displayName: 'X',
-    preferredToneTendencies: ['concise', 'timely', 'reactive', 'plain-spoken'],
+    preferredToneTendencies: ['concise', 'teaching-forward', 'plain-spoken', 'timely'],
     typicalContentFormats: ['caption_only_post', 'short_form_video_concept', 'carousel_concept'],
     captionStyleGuidance:
-      'Tight sentences; minimal setup; one sharp POV; avoid marketing fluff and hashtag stuffing in-body.',
+      'One sharp insight or numbered mini-thread; define terms once; avoid lifestyle filler and hashtag stuffing in-body.',
     hookStyleGuidance:
-      'Lead with the news or tension in the first line; optional thread split for depth.',
+      'Open with the lesson (“what changed / what to try”) or a contrarian clarification; use replies for optional depth.',
     hashtagBehavior: 'Sparse — 0–3 highly relevant tags or none; discovery via text first.',
-    ctaBehavior: 'Short imperative or question; link or “more in thread” when needed.',
+    ctaBehavior: 'Short imperative (“try this prompt”, “save the thread”); link or “more in thread” when needed.',
     roughMaxCaptionChars: 270,
     maxHashtags: 4,
     mediaExpectations:
-      'Single strong still or short clip; 16:9 or 1:1; alt text required for accessibility on publish.',
+      'Diagram, UI crop, or one-slide explainer still; 16:9 or 1:1; alt text required for accessibility on publish.',
   },
   instagram: {
     id: 'instagram',
     displayName: 'Instagram',
-    preferredToneTendencies: ['polished', 'visual-first', 'expressive', 'aspirational'],
+    preferredToneTendencies: ['visual-first', 'educational', 'clear', 'polished'],
     typicalContentFormats: [
       'short_form_video_concept',
       'carousel_concept',
@@ -47,31 +47,31 @@ export const PLATFORM_ADAPTATION_POLICIES: Record<AdaptationPlatformId, Platform
       'caption_only_post',
     ],
     captionStyleGuidance:
-      'First two lines carry the hook; breathing room with line breaks; save depth for carousel frames.',
+      'Educational hook in line one; carousel-first when teaching — each slide one idea; caption expands with steps or caveats.',
     hookStyleGuidance:
-      'Visual-first promise (“what you’ll see / learn”) then caption supports the frame.',
+      'Promise the skill (“by slide 4 you can…”) or the comparison outcome; avoid vague lifestyle openers.',
     hashtagBehavior: 'Optional cluster at end (discovery) — keep on-brand; avoid banned adjacency.',
-    ctaBehavior: 'Save / share / comment / link in bio — match feed vs Reels intent.',
+    ctaBehavior: 'Save carousel / share with a learner / comment with your stack — match feed vs Reels intent.',
     roughMaxCaptionChars: 1800,
     maxHashtags: 12,
     mediaExpectations:
-      '4:5 feed hero, 9:16 Reels; cover frame matters; motion subtle unless trend calls for energy.',
+      '4:5 carousels with legible type; 9:16 Reels for short demos; cover frame states the lesson title.',
   },
   tiktok: {
     id: 'tiktok',
     displayName: 'TikTok',
-    preferredToneTendencies: ['hook-driven', 'trend-aware', 'fast-energy', 'playful'],
+    preferredToneTendencies: ['demo-first', 'hook-driven', 'plain-spoken', 'trend-aware'],
     typicalContentFormats: ['short_form_video_concept', 'motion_poster', 'animation_concept'],
     captionStyleGuidance:
-      'Very short on-screen story; caption is discovery + tone — not a blog.',
+      'Caption names the tool + outcome; on-screen text carries the steps — keep it a micro-lesson, not a vlog.',
     hookStyleGuidance:
-      '0–1s pattern interrupt; say what the viewer gets before they scroll; trend-native language.',
-    hashtagBehavior: 'Few high-signal tags + one trend tag when authentic to the brand.',
-    ctaBehavior: 'Watch-through / stitch / duet / comment challenge — keep native to TikTok.',
+      'Open on the problem or UI; within 2s show the payoff (before/after, speed run, or “here is the setting”).',
+    hashtagBehavior: 'Few high-signal tags + one trend tag only when the demo truly fits the sound.',
+    ctaBehavior: 'Watch-through for the payoff; comment “template” / stitch with your variant — native to TikTok.',
     roughMaxCaptionChars: 280,
     maxHashtags: 5,
     mediaExpectations:
-      'Vertical 9:16; motion and text-on-screen are primary; audio choice is a publish-time connector concern.',
+      'Vertical 9:16 screen-led demos; punch-in on controls; captions burned in for clarity.',
   },
   facebook: {
     id: 'facebook',

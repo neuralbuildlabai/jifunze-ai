@@ -9,7 +9,10 @@ for (const p of SOCIAL_PLATFORM_IDS) {
   registry.set(p, createMockPublishingConnector(p))
 }
 
-/** Swap a real vendor connector at bootstrap (Edge worker or app init). */
+/**
+ * Register a vendor connector. Set `delivery: "live"` on real SDK-backed implementations so the
+ * system banner can switch out of preview mode when combined with remote content generation.
+ */
 export function registerPublishingConnector(connector: PublishingConnector): void {
   registry.set(connector.platform, connector)
 }
@@ -20,4 +23,9 @@ export function getPublishingConnector(platform: SocialPlatformId): PublishingCo
   const created = createMockPublishingConnector(platform)
   registry.set(platform, created)
   return created
+}
+
+/** True when every registered connector still uses simulated delivery (no real social posts). */
+export function isAllPublishingSimulated(): boolean {
+  return SOCIAL_PLATFORM_IDS.every((p) => getPublishingConnector(p).delivery === 'simulated')
 }

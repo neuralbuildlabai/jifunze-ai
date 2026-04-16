@@ -89,6 +89,13 @@ export function scoreSignalForBrand(input: BrandRelevanceInput): ScoredSignal {
 
   const geoBoost = geoFitBoost(brand, haystack)
 
+  /** Optional connector “velocity” hint — small nudge so high-strength mocks surface sooner. */
+  const strength =
+    signal.signal_strength != null
+      ? Math.min(1, Math.max(0, signal.signal_strength))
+      : null
+  const strengthBoost = strength != null ? (strength - 0.5) * 0.07 : 0
+
   const relevance_score = Math.min(
     1,
     Math.max(
@@ -100,7 +107,8 @@ export function scoreSignalForBrand(input: BrandRelevanceInput): ScoredSignal {
         primaryBoost +
         secondaryBoost +
         categoryBoost +
-        geoBoost -
+        geoBoost +
+        strengthBoost -
         bannedPenalty -
         competitorPenalty -
         trendPenalty -

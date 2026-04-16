@@ -1,3 +1,4 @@
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { mergeBrandConversionProfile } from '../../config/brandConversionDefaults'
 import { getBrandDomains } from '../../config/brandDomains'
 import { getDomainDefinition } from '../../config/domains'
@@ -5,6 +6,7 @@ import { getTrendCategoryBehavior } from '../../config/trendCategoryBehavior'
 import type { BrandProfile } from '../../types/brand'
 import type { ContentDomain } from '../../types/contentDomain'
 import type { ContentFormat } from '../../types/contentFormat'
+import type { LearningInfluenceTrace } from '../../types/performanceLearning'
 import type { ContentOpportunity, UrgencyLevel } from '../../types/opportunity'
 import { priorityLabelFromScore } from '../../types/priorityLabel'
 import type { TrendCategory } from '../../types/trendCategory'
@@ -21,11 +23,19 @@ import { firstAdaptationPlatformFromSuggestions } from '../conversion/mapSuggest
 import {
   adjustFormatWithLearning,
   applyLearningToPriorityScore,
+  applyPositiveFormatPreference,
+  drivingCtaStyleRecommendation,
   learningConfidenceAdjustment,
+  nudgeTeachingWithPositiveLearning,
   resolveCtaLearningEmphasis,
 } from '../learning/applyLearningFeedback'
 import { getBrandLearningState } from '../learning/learningContext'
 import { ensureBrandLearningDemoSeed } from '../learning/seedDemoLearningData'
+import {
+  buildLearningVisibilityFields,
+  reorderSuggestedPlatformsForLearning,
+} from '../learning/buildLearningVisibility'
+import { buildOpportunityLearningImpactComparison } from './buildOpportunityLearningImpactComparison'
 import { resolveTeachingProfile } from '../teaching/resolveTeachingProfile'
 import type { ScoredSignal } from '../relevance/types'
 
@@ -68,6 +78,9 @@ function adjustUrgencyForDomain(
 }
 
 function formatPlatformLabel(slug: string): string {
+  const s = slug.toLowerCase()
+  if (s === 'youtube') return 'YouTube'
+  if (s === 'linkedin') return 'LinkedIn'
   return slug.slice(0, 1).toUpperCase() + slug.slice(1)
 }
 
@@ -78,12 +91,36 @@ function platformsForContext(
 ): string[] {
   const fromDef = getDomainDefinition(domain).platforms.map(formatPlatformLabel)
   const t = tags.join(' ').toLowerCase()
+
+  if (domain === 'ai') {
+    const out = [...fromDef]
+    if (trend === 'viral_audio' || trend === 'viral_trend' || trend === 'meme') {
+      if (!out.some((p) => p.toLowerCase() === 'tiktok')) out.unshift('TikTok')
+    }
+    const order = ['TikTok', 'Instagram', 'X', 'YouTube', 'LinkedIn', 'Threads']
+    const byLower = new Map(out.map((p) => [p.toLowerCase(), p]))
+    const reordered: string[] = []
+    for (const o of order) {
+      const hit = byLower.get(o.toLowerCase())
+      if (hit) {
+        reordered.push(hit)
+        byLower.delete(o.toLowerCase())
+      }
+    }
+    for (const rest of byLower.values()) reordered.push(rest)
+    if (t.includes('linkedin')) {
+      const merged = ['LinkedIn', ...reordered.filter((p) => p.toLowerCase() !== 'linkedin')]
+      return merged.slice(0, 4)
+    }
+    return reordered.slice(0, 4)
+  }
+
   const out = [...fromDef]
 
   if (trend === 'viral_audio' || trend === 'viral_trend' || trend === 'meme') {
     if (!out.some((p) => p.toLowerCase() === 'tiktok')) out.unshift('TikTok')
   }
-  if (trend === 'industry_update' || trend === 'educational_topic' || domain === 'ai') {
+  if (trend === 'industry_update' || trend === 'educational_topic') {
     if (!out.some((p) => p.toLowerCase() === 'linkedin')) out.unshift('LinkedIn')
   }
   if (t.includes('linkedin')) {
@@ -107,6 +144,24 @@ function pickSuggestedFormatForOpportunity(
   if (intersect) {
     if (urgency === 'high') return prefs.includes(trendPrefs[0]) ? trendPrefs[0] : intersect
     return intersect
+  }
+
+  if (domain === 'ai') {
+    if (
+      (trend === 'educational_topic' || trend === 'industry_update') &&
+      prefs.includes('carousel_concept')
+    ) {
+      return 'carousel_concept'
+    }
+    if (
+      (trend === 'viral_trend' || trend === 'viral_audio' || trend === 'product_launch') &&
+      prefs.includes('short_form_video_concept')
+    ) {
+      return 'short_form_video_concept'
+    }
+    if (trend === 'cultural_moment' && prefs.includes('carousel_concept')) {
+      return 'carousel_concept'
+    }
   }
 
   const domainBias: Record<ContentDomain, ContentFormat> = {
@@ -133,7 +188,7 @@ function buildAngleForContext(domain: ContentDomain, topic: string, trend: Trend
   const base = (() => {
     switch (domain) {
       case 'ai':
-        return `Analytical, forward-looking: lead with the insight in “${clip}…”, then proof for builders.`
+        return `Educator-first around “${clip}…”: tutorial, tool walkthrough, comparison, or practical use-case — numbered steps or a demo beat; skip generic lifestyle framing.`
       case 'beauty':
         return `Educational + trust-building: routine-first framing around “${clip}…”.`
       case 'lifestyle':
@@ -157,14 +212,20 @@ function buildMediaDirection(
   const domains = getBrandDomains(brand).join(', ')
   const def = getDomainDefinition(domain)
   const trendLabel = trend.replace(/_/g, ' ')
-  return [
+  const lines = [
     `Jifunze domain: ${def.name}. Trend type: ${trendLabel}. Brand focus: ${domains}.`,
     `Format: ${format.replace(/_/g, ' ')}.`,
     `Tone cues: ${def.tone.join(', ')}.`,
     `Style: ${brand.media_style.reference_mood}; palette: ${brand.media_style.palette_notes}.`,
     `Hero: "${topic.slice(0, 72)}${topic.length > 72 ? '…' : ''}".`,
     `Realism: ${brand.visual_realism_preference}; motion: ${brand.animation_preference}; risk: ${brand.creative_risk_level}.`,
-  ].join(' ')
+  ]
+  if (domain === 'ai') {
+    lines.push(
+      'Educator visual bias: UI capture, diagrams, on-screen steps; TikTok favors a tight demo/use-case; Instagram favors carousel frames or an educational hook; X favors one sharp insight or a thread outline.',
+    )
+  }
+  return lines.join(' ')
 }
 
 function computePriorityScore(
@@ -231,20 +292,22 @@ function buildSelectionReason(
  * Drops signals whose trend category is forbidden for the brand.
  * Attaches autonomy and `lifecycle_status` via `opportunityLifecycleFromAutonomy`.
  */
-export function buildOpportunitiesFromSignals(
+export async function buildOpportunitiesFromSignals(
   signals: ScoredSignal[],
   brand: BrandProfile,
   minRelevance = 0.18,
-): ContentOpportunity[] {
-  ensureBrandLearningDemoSeed(brand)
-  const learningState = getBrandLearningState(brand.id)
+  tenantContext: { tenantId: string; supabase?: SupabaseClient },
+): Promise<ContentOpportunity[]> {
+  await ensureBrandLearningDemoSeed(brand, tenantContext)
+  const learningState = await getBrandLearningState(brand.id, tenantContext.tenantId, tenantContext.supabase)
 
   const hayFor = (s: ScoredSignal) =>
     `${s.title} ${s.summary} ${s.topic_tags.join(' ')}`
 
-  const out = signals
-    .filter((s) => (s.relevance_score ?? 0) >= minRelevance)
-    .map((s) => {
+  const filtered = signals.filter((s) => (s.relevance_score ?? 0) >= minRelevance)
+
+  const out = await Promise.all(
+    filtered.map(async (s) => {
       const trend_category = s.classified_trend_category ?? classifyTrendCategory(s)
       if (brand.forbidden_trend_categories.includes(trend_category)) {
         return null
@@ -257,7 +320,14 @@ export function buildOpportunitiesFromSignals(
       urgency = adjustUrgencyForTrend(trend_category, s.freshness_score ?? 0, urgency)
       urgency = adjustUrgencyForDomain(content_domain, s.freshness_score ?? 0, urgency)
 
-      const suggested_platforms = platformsForContext(content_domain, trend_category, s.topic_tags)
+      const platformsBaseline = platformsForContext(content_domain, trend_category, s.topic_tags)
+      const platformLearning = reorderSuggestedPlatformsForLearning(
+        [...platformsBaseline],
+        content_domain,
+        trend_category,
+        learningState.recommendations,
+      )
+      const suggested_platforms = platformLearning.platforms
       const brandConversion = mergeBrandConversionProfile(brand)
       const conversion_intent = inferConversionIntent({
         primary: brandConversion.primary_conversion_goal,
@@ -266,7 +336,7 @@ export function buildOpportunitiesFromSignals(
         urgency,
       })
       const primarySurface = firstAdaptationPlatformFromSuggestions(suggested_platforms)
-      const ctaEmphasis = resolveCtaLearningEmphasis(learningState.recommendations)
+      const ctaEmphasis = resolveCtaLearningEmphasis(learningState.recommendations, primarySurface)
       const suggested_cta = generateConversionCta({
         domain: content_domain,
         trend: trend_category,
@@ -288,11 +358,39 @@ export function buildOpportunitiesFromSignals(
         content_domain,
         trend_category,
       )
-      const suggested_content_format = adjustFormatWithLearning(
+      const positiveFormat = applyPositiveFormatPreference(
         brand,
         formatPicked,
         trend_category,
+        primarySurface,
+        content_domain,
         learningState.recommendations,
+      )
+      const formatDecision = adjustFormatWithLearning(
+        brand,
+        positiveFormat.format,
+        trend_category,
+        primarySurface,
+        learningState.recommendations,
+      )
+      const suggested_content_format = formatDecision.format
+      const formatLearningTrace = [...positiveFormat.trace, ...formatDecision.trace]
+      const teachingResolved = await resolveTeachingProfile({
+        brandProfileId: brand.id,
+        domain: content_domain,
+        trend: trend_category,
+        urgency,
+        tenantId: tenantContext.tenantId,
+        supabase: tenantContext.supabase,
+      })
+      const { profile: teaching, traces: teachingLearningTraces } = nudgeTeachingWithPositiveLearning(
+        teachingResolved,
+        learningState.recommendations,
+        {
+          domain: content_domain,
+          trend: trend_category,
+          platform: primarySurface,
+        },
       )
       const topic = s.title
       const basePriority = computePriorityScore(
@@ -300,11 +398,18 @@ export function buildOpportunitiesFromSignals(
         s.freshness_score ?? 0,
         trend_category,
       )
-      const { score: priority_score, notes: learningPriorityNotes } = applyLearningToPriorityScore({
+      const {
+        score: priority_score,
+        notes: learningPriorityNotes,
+        trace: priorityTrace,
+      } = applyLearningToPriorityScore({
         base: basePriority,
         domain: content_domain,
         trend: trend_category,
         format: suggested_content_format,
+        platform: primarySurface,
+        explanationStyle: teaching.explanation_style,
+        teachingLevel: teaching.teaching_level,
         recommendations: learningState.recommendations,
       })
       const priority_label = priorityLabelFromScore(priority_score)
@@ -314,6 +419,15 @@ export function buildOpportunitiesFromSignals(
         s.freshness_score ?? 0,
       )
       const matched_domain = matchedDomainLine(brand, content_domain)
+      const { delta: learningConfidenceDelta, reasons: learningReasons, trace: confidenceTrace } =
+        learningConfidenceAdjustment({
+          domain: content_domain,
+          trend: trend_category,
+          platform: primarySurface,
+          teachingLevel: teaching.teaching_level,
+          recommendations: learningState.recommendations,
+        })
+
       let selection_reason = buildSelectionReason(
         brand,
         s,
@@ -325,22 +439,61 @@ export function buildOpportunitiesFromSignals(
         selection_reason += ` Learning: ${learningPriorityNotes.join(' ')}`
       }
       if (suggested_content_format !== formatPicked) {
-        selection_reason += ` Format adjusted by performance memory (${formatPicked.replace(/_/g, ' ')} → ${suggested_content_format.replace(/_/g, ' ')}).`
+        const steeredPositive = formatLearningTrace.some((t) => t.pattern.includes('Prefer format'))
+        selection_reason += steeredPositive
+          ? ` Format steered toward a high-performing pattern (${formatPicked.replace(/_/g, ' ')} → ${suggested_content_format.replace(/_/g, ' ')}).`
+          : ` Format adjusted by performance memory (${formatPicked.replace(/_/g, ' ')} → ${suggested_content_format.replace(/_/g, ' ')}).`
       }
+      const ctaDrivingRec = drivingCtaStyleRecommendation(
+        learningState.recommendations,
+        primarySurface,
+      )
+      const ctaLearningTrace: LearningInfluenceTrace[] =
+        ctaEmphasis !== 'none'
+          ? [
+              {
+                pattern: `CTA shaped by learning (${ctaEmphasis.replace(/_/g, ' ')})`,
+                direction: 'boost',
+                delta: ctaDrivingRec?.weight ?? 0,
+                why:
+                  ctaDrivingRec?.rationale ??
+                  'Past published outcomes on this surface weighted this CTA cluster.',
+                patternStrength: ctaDrivingRec?.sourcePatternStrength,
+              },
+            ]
+          : []
 
-      const { delta: learningConfidenceDelta, reasons: learningReasons } =
-        learningConfidenceAdjustment({
-          domain: content_domain,
-          trend: trend_category,
-          recommendations: learningState.recommendations,
-        })
-
-      const teaching = resolveTeachingProfile({
-        brandProfileId: brand.id,
-        domain: content_domain,
-        trend: trend_category,
-        urgency,
+      const learning_influence_trace = [
+        ...platformLearning.trace,
+        ...ctaLearningTrace,
+        ...formatLearningTrace,
+        ...priorityTrace,
+        ...confidenceTrace,
+        ...teachingLearningTraces,
+      ].slice(0, 14)
+      const learningVisibility = buildLearningVisibilityFields({
+        snapshot: learningState.snapshot,
+        insights: learningState.insights,
+        learnedSummaryLines: learningState.learnedSummaryLines,
+        content_domain,
+        trend_category,
+        suggested_content_format,
+        format_before_learning: formatPicked,
+        explanation_style: teaching.explanation_style,
+        teaching_level: teaching.teaching_level,
+        teaching_explainability: teaching.teaching_explainability,
+        cta_emphasis: ctaEmphasis,
+        priority_trace: priorityTrace,
+        format_trace: formatLearningTrace,
+        platform_trace: platformLearning.trace,
+        confidence_trace: confidenceTrace,
       })
+      if (learning_influence_trace.length) {
+        selection_reason += ` Learning trace: ${learning_influence_trace
+          .map((t) => `${t.direction} ${t.pattern}`)
+          .slice(0, 3)
+          .join(' · ')}.`
+      }
 
       const autonomy = decideAutonomy({
         brand,
@@ -361,6 +514,40 @@ export function buildOpportunitiesFromSignals(
             : undefined,
       })
 
+      const learning_impact_comparison = buildOpportunityLearningImpactComparison({
+        brand,
+        signal: s,
+        topic,
+        trend_category,
+        content_domain,
+        matched_keywords,
+        basePriority,
+        platformsBaseline,
+        formatPicked,
+        teachingResolved,
+        conversion_intent,
+        learned: {
+          suggested_platforms,
+          suggested_content_format,
+          suggested_cta,
+          teaching,
+          priority_score,
+          priority_label,
+          cta_emphasis: ctaEmphasis,
+          autonomy_action: autonomy.autonomy_action,
+          confidence_score: autonomy.confidence_score,
+          risk_level: autonomy.risk_level,
+        },
+        traces: {
+          platform: platformLearning.trace,
+          format: formatLearningTrace,
+          cta: ctaLearningTrace,
+          teaching: teachingLearningTraces,
+          priority: priorityTrace,
+          confidence: confidenceTrace,
+        },
+      })
+
       const lifecycle_status = opportunityLifecycleFromAutonomy(autonomy.autonomy_action)
       const lifecycle_updated_at = new Date().toISOString()
 
@@ -377,6 +564,8 @@ export function buildOpportunitiesFromSignals(
         target_destination,
         teaching_level: teaching.teaching_level,
         explanation_style: teaching.explanation_style,
+        clarity_preference: teaching.clarity_preference,
+        educational_framing: teaching.educational_framing,
         teaching_explainability: teaching.teaching_explainability,
         suggested_content_format,
         suggested_media_direction: buildMediaDirection(
@@ -395,6 +584,8 @@ export function buildOpportunitiesFromSignals(
         matched_keywords,
         freshness_summary,
         selection_reason,
+        learning_influence_trace,
+        ...learningVisibility,
         autonomy_action: autonomy.autonomy_action,
         autonomy_reason: autonomy.autonomy_reason,
         requires_human_review: autonomy.requires_human_review,
@@ -403,9 +594,11 @@ export function buildOpportunitiesFromSignals(
         lifecycle_status,
         lifecycle_updated_at,
         lifecycle_driver: 'autonomy',
-      }
+        learning_impact_comparison,
+      } as ContentOpportunity
     })
-    .filter((o): o is ContentOpportunity => o !== null)
+  )
 
-  return out.sort((a, b) => b.priority_score - a.priority_score)
+  const narrowed = out.filter((o) => o !== null) as ContentOpportunity[]
+  return narrowed.sort((a, b) => b.priority_score - a.priority_score)
 }

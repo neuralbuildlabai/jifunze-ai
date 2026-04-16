@@ -1,3 +1,4 @@
+import type { SupabaseClient } from '@supabase/supabase-js'
 import type { BrandProfile } from '../../types/brand'
 import type { CreativeBrief } from '../../types/creativeBrief'
 import type { ContentOpportunity } from '../../types/opportunity'
@@ -12,6 +13,8 @@ export type AdaptContentForSocialAccountsInput = {
   opportunity: ContentOpportunity
   accounts: SocialAccount[]
   creativeBrief?: CreativeBrief
+  tenantId: string
+  supabase?: SupabaseClient
 }
 
 function isAdaptationPlatform(p: SocialAccount['platform']): p is AdaptationPlatformId {
@@ -21,15 +24,18 @@ function isAdaptationPlatform(p: SocialAccount['platform']): p is AdaptationPlat
 /**
  * Maps shared adaptation variants onto **connected** accounts (same platform = shared variant + handle notes).
  */
-export function adaptContentForSocialAccounts(
+export async function adaptContentForSocialAccounts(
   input: AdaptContentForSocialAccountsInput,
-): PlatformPostVariant[] {
-  const { brand, opportunity, accounts, creativeBrief } = input
-  const base = adaptOpportunityToPlatforms({
+): Promise<PlatformPostVariant[]> {
+  const { brand, opportunity, accounts, creativeBrief, tenantId, supabase } = input
+  const learningNotes = await getLearningAdapterNotes(brand.id, tenantId, supabase)
+  const base = await adaptOpportunityToPlatforms({
     brand,
     opportunity,
     creativeBrief,
-    learningSurfaceNotes: getLearningAdapterNotes(brand.id),
+    learningSurfaceNotes: learningNotes,
+    tenantId,
+    supabase,
   })
   const byPlatform = new Map(base.variants.map((v) => [v.platform, v]))
 

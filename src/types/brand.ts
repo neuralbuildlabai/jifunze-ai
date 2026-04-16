@@ -18,6 +18,8 @@ export type BrandVoice = 'professional' | 'playful' | 'bold' | 'warm' | string
  */
 export type BrandProfile = {
   id: string
+  /** Set when loaded from Supabase — scopes rows via RLS. */
+  tenant_id?: string
   name: string
   industry: string
   audience_summary: string

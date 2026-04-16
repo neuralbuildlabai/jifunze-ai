@@ -75,7 +75,7 @@ export function decideAutonomy(input: AutonomyEngineInput): AutonomyDecision {
   const domainRole = domainMatchRole(input.brand, opp.content_domain)
   const ambiguous = isAmbiguousContent(signal, policy.thresholds)
 
-  let { confidence_score, risk_level } = computeConfidenceAndRisk({
+  const riskResult = computeConfidenceAndRisk({
     brand: input.brand,
     relevance: signal.relevance_score ?? 0,
     freshness: signal.freshness_score ?? 0,
@@ -86,6 +86,8 @@ export function decideAutonomy(input: AutonomyEngineInput): AutonomyDecision {
     safety,
     policy,
   })
+  let confidence_score = riskResult.confidence_score
+  const risk_level = riskResult.risk_level
 
   const learningDelta = input.learning?.confidenceDelta ?? 0
   if (learningDelta !== 0) {
@@ -165,6 +167,7 @@ export function decideAutonomy(input: AutonomyEngineInput): AutonomyDecision {
 
     const canPublish =
       settings.auto_publish_enabled &&
+      settings.automation_enabled &&
       risk_level === 'low' &&
       !safety.sensitive_topic_match &&
       !safety.competitor_mention &&
@@ -178,24 +181,29 @@ export function decideAutonomy(input: AutonomyEngineInput): AutonomyDecision {
       return {
         autonomy_action: 'publish',
         autonomy_reason:
-          'High-confidence, in-policy item — marked ready for autonomous publish path (connector executes later).',
+          'High-confidence, low-risk, and in allowed auto-publish category — routed to autonomous scheduling/publish pipeline.',
         requires_human_review: false,
         risk_level: 'low',
         confidence_score,
       }
     }
 
+    const queueConfidenceFloor = Math.max(
+      0.55,
+      Math.min(0.78, settings.minimum_confidence_for_auto_publish - 0.14),
+    )
     const canQueue =
       settings.auto_queue_enabled &&
+      settings.automation_enabled &&
       prio >= settings.minimum_priority_for_auto_queue &&
-      confidence_score >= 0.55 &&
+      confidence_score >= queueConfidenceFloor &&
       !(safety.sensitive_topic_match && settings.require_review_for_sensitive_topics)
 
     if (canQueue) {
       return {
         autonomy_action: 'queue',
         autonomy_reason:
-          'Meets queue thresholds — scheduled for content ops without human gate (profile allows).',
+          `Meets autonomous queue thresholds (priority, confidence ${queueConfidenceFloor.toFixed(2)}+, and safety gates) — enters pre-publish operations automatically.`,
         requires_human_review: false,
         risk_level,
         confidence_score,
@@ -212,7 +220,7 @@ export function decideAutonomy(input: AutonomyEngineInput): AutonomyDecision {
       return {
         autonomy_action: 'draft',
         autonomy_reason:
-          'Eligible for autonomous draft generation — low-risk match to domain, trend, and freshness.',
+          'Eligible for autonomous draft generation — publish/queue thresholds not met yet, but safe to move into draft production.',
         requires_human_review: false,
         risk_level,
         confidence_score,

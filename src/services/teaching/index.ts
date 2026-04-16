@@ -8,6 +8,7 @@ export type {
   TeachingPerformanceAnalysis,
   TeachingStyleAggregate,
   TeachingLevelAggregate,
+  StyleSavesShareAggregate,
 } from './analyzeTeachingPerformance'
 export { resolveTeachingProfile } from './resolveTeachingProfile'
 export type { ResolvedTeachingProfile } from './resolveTeachingProfile'

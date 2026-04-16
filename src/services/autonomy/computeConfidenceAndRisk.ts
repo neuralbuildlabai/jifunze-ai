@@ -48,6 +48,7 @@ export function computeConfidenceAndRisk(input: {
   if (safety.competitor_mention) c -= 0.05
   if (safety.sensitive_topic_match) c -= 0.11
   if (safety.banned_topic_match) c -= 0.38
+  if (sourceQuality < 0.32 && ambiguousContent) c -= 0.05
 
   c = Math.min(1, Math.max(0, c))
 
@@ -63,6 +64,7 @@ export function computeConfidenceAndRisk(input: {
 
   if (safety.competitor_mention && safety.sensitive_topic_match) risk = 'high'
   if (domainRole === 'cross' && relevance < 0.35) risk = 'high'
+  if (ambiguousContent && sourceQuality < 0.35 && relevance < 0.45) risk = 'high'
 
   return { confidence_score: c, risk_level: risk }
 }

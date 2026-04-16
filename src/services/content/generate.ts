@@ -1,7 +1,9 @@
+import { LOCAL_DEV_TENANT_ID } from '../../persistence/registry'
 import type { BrandProfile } from '../../types/brand'
 import type { SocialContent } from '../../types/content'
 import type { ContentOpportunity } from '../../types/opportunity'
 import type { ExternalSignal } from '../../types/signal'
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { buildLearningContextLines } from '../learning/learningContext'
 import { buildTeachingContextLines } from '../teaching/buildTeachingContextLines'
 import { createContentGenerationAdapter } from './createAdapter'
@@ -42,7 +44,22 @@ function buildOpportunityContext(
     `CTA: ${opportunity.suggested_cta}`,
     `Platforms: ${opportunity.suggested_platforms.join(', ')}`,
     `Sources: ${opportunity.source_links.join(', ')}`,
+    `Learning memory confidence: ${opportunity.learning_confidence_band}`,
+    `Learning adaptation labels: ${opportunity.learning_adaptation_labels.length ? opportunity.learning_adaptation_labels.join(' · ') : '(none — cold start or no matching patterns)'}`,
+    `Past performance hints: ${opportunity.learning_performance_hints.length ? opportunity.learning_performance_hints.join(' · ') : '(none yet)'}`,
+    `Learning touched: format=${opportunity.learning_affects.format} · cta=${opportunity.learning_affects.cta} · teaching=${opportunity.learning_affects.teaching} · platform=${opportunity.learning_affects.platform} · priority=${opportunity.learning_affects.priority}`,
   ]
+  if (opportunity.learning_influence_trace.length) {
+    base.push(
+      `Learning influence detail:\n${opportunity.learning_influence_trace
+        .slice(0, 8)
+        .map(
+          (t) =>
+            `- [${t.direction}] ${t.pattern}${t.patternStrength ? ` (${t.patternStrength})` : ''}: ${t.why}`,
+        )
+        .join('\n')}`,
+    )
+  }
   if (learningLines?.length) {
     base.push(...learningLines)
   }
@@ -50,16 +67,28 @@ function buildOpportunityContext(
   return base.join('\n')
 }
 
-async function generateWithPayload(payload: GenerationPayload): Promise<SocialContent> {
+async function resolveAccessToken(supabase?: SupabaseClient): Promise<string | undefined> {
+  if (!supabase) return undefined
+  const { data } = await supabase.auth.getSession()
+  return data.session?.access_token
+}
+
+async function generateWithPayload(
+  payload: GenerationPayload,
+  supabase?: SupabaseClient,
+): Promise<SocialContent> {
   const trimmedTopic = payload.topic.trim()
   if (!trimmedTopic) {
     throw new Error('Enter a topic to generate content.')
   }
 
+  const accessToken = payload.accessToken ?? (await resolveAccessToken(supabase))
+
   try {
     return await adapter.generate({
       ...payload,
       topic: trimmedTopic,
+      accessToken,
     })
   } catch (error) {
     if (error instanceof Error) {
@@ -72,15 +101,21 @@ async function generateWithPayload(payload: GenerationPayload): Promise<SocialCo
 /**
  * Manual topic path (original Phase 1 flow).
  */
-export async function generateSocialContent(topic: string): Promise<SocialContent> {
+export async function generateSocialContent(
+  topic: string,
+  options?: { supabase?: SupabaseClient },
+): Promise<SocialContent> {
   const trimmed = topic.trim()
   if (!trimmed) {
     throw new Error('Enter a topic to generate content.')
   }
-  return generateWithPayload({
-    topic: trimmed,
-    source: 'manual_topic',
-  })
+  return generateWithPayload(
+    {
+      topic: trimmed,
+      source: 'manual_topic',
+    },
+    options?.supabase,
+  )
 }
 
 /**
@@ -88,13 +123,17 @@ export async function generateSocialContent(topic: string): Promise<SocialConten
  */
 export async function generateFromExternalSignal(
   signal: ExternalSignal,
+  options?: { supabase?: SupabaseClient },
 ): Promise<SocialContent> {
-  return generateWithPayload({
-    topic: signal.title,
-    context: buildSignalContext(signal),
-    source: 'signal',
-    external_signal_id: signal.id,
-  })
+  return generateWithPayload(
+    {
+      topic: signal.title,
+      context: buildSignalContext(signal),
+      source: 'signal',
+      external_signal_id: signal.id,
+    },
+    options?.supabase,
+  )
 }
 
 /**
@@ -102,16 +141,23 @@ export async function generateFromExternalSignal(
  */
 export async function generateFromOpportunity(
   opportunity: ContentOpportunity,
-  options?: { brand?: BrandProfile },
+  options?: { brand?: BrandProfile; tenantId?: string; supabase?: SupabaseClient },
 ): Promise<SocialContent> {
+  const tenantId = options?.tenantId ?? options?.brand?.tenant_id ?? LOCAL_DEV_TENANT_ID
   const learningLines = options?.brand
-    ? buildLearningContextLines(options.brand.id)
+    ? await buildLearningContextLines(options.brand.id, tenantId, options.supabase)
     : undefined
-  return generateWithPayload({
-    topic: opportunity.topic,
-    context: buildOpportunityContext(opportunity, learningLines),
-    source: 'opportunity',
-    content_opportunity_id: opportunity.id,
-    external_signal_id: opportunity.signal_id,
-  })
+  return generateWithPayload(
+    {
+      topic: opportunity.topic,
+      context: buildOpportunityContext(opportunity, learningLines),
+      source: 'opportunity',
+      content_opportunity_id: opportunity.id,
+      external_signal_id: opportunity.signal_id,
+    },
+    options?.supabase,
+  )
 }
+
+/** Stable entrypoint name; same behavior and options as {@link generateSocialContent}. */
+export const generateContent = generateSocialContent

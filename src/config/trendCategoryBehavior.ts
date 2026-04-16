@@ -42,8 +42,9 @@ export const TREND_CATEGORY_BEHAVIOR: Record<TrendCategory, TrendCategoryBehavio
     relevanceBoost: 0.05,
     urgencyMultiplier: 1.18,
     memeNeedsBrandFit: false,
-    viralAudioBoostDomains: ['music', 'entertainment', 'lifestyle'],
-    angleHint: 'Ride the moment fast; pattern-interrupt in line one.',
+    viralAudioBoostDomains: ['music', 'entertainment', 'lifestyle', 'ai'],
+    angleHint:
+      'Ride the moment fast; for AI educators, tie the trend to a teachable demo, comparison, or “here is how to try it” beat — not generic vibes.',
     preferredFormats: ['short_form_video_concept', 'motion_poster', 'carousel_concept'],
   },
   meme: {
@@ -91,7 +92,8 @@ export const TREND_CATEGORY_BEHAVIOR: Record<TrendCategory, TrendCategoryBehavio
     urgencyMultiplier: 0.92,
     memeNeedsBrandFit: false,
     viralAudioBoostDomains: ['ai'],
-    angleHint: 'Teach-first structure; save the CTA for after the insight.',
+    angleHint:
+      'Teach-first: numbered steps or frames, one idea per beat, then CTA; favor beginner breakdowns and tool walkthroughs.',
     preferredFormats: ['carousel_concept', 'caption_only_post', 'short_form_video_concept'],
   },
   industry_update: {

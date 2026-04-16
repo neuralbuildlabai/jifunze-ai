@@ -1,0 +1,6 @@
+# Supabase CLI project config. Set project_id when linking: `supabase link`.
+# https://supabase.com/docs/guides/cli/config
+
+[functions.generate-content]
+# Set true and pass the user JWT from the app when you want auth-only generation.
+verify_jwt = false
