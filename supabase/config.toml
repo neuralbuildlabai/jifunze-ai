@@ -4,3 +4,7 @@
 [functions.generate-content]
 # Keep auth enforced for production/UAT generation.
 verify_jwt = true
+
+[functions.generate-public]
+# Public no-signup trial endpoint.
+verify_jwt = false

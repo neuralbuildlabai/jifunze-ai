@@ -27,6 +27,7 @@ import {
 import { jifunzeCriticalLog } from '../lib/jifunzeTelemetry'
 import { buildTrendPreviewForBrand } from '../services/trendPreview'
 import { loadCachedTrendStateFromPersistence } from '../services/trendPreviewRestore'
+import { readPublicGenerateHandoff } from '../services/content/publicGenerate'
 import type { TrendPreviewBundle } from '../services/trendPreview'
 import { describeFunnelMapping } from '../services/conversion/funnelMap'
 import type { ContentGenerationMode, ContentPackage } from '../types/contentPackage'
@@ -192,6 +193,18 @@ export function ContentGenerator() {
   const [learningRefreshSignal, setLearningRefreshSignal] = useState(0)
 
   const [topic, setTopic] = useState('')
+  useEffect(() => {
+    const fromQuery = new URLSearchParams(window.location.search).get('topic')?.trim() ?? ''
+    if (fromQuery) {
+      setTopic(fromQuery.slice(0, 180))
+      return
+    }
+    const handoff = readPublicGenerateHandoff()
+    if (handoff?.topic) {
+      setTopic(handoff.topic.slice(0, 180))
+    }
+  }, [])
+
   const [result, setResult] = useState<SocialContent | null>(null)
   const [loading, setLoading] = useState(false)
   /** Distinguishes manual topic vs package generation for labels and wait hints. */
