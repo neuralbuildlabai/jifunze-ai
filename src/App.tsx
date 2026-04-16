@@ -32,16 +32,12 @@ function HomeEntryPage() {
   const [previewBusy, setPreviewBusy] = useState(false)
   const [showPreviewResult, setShowPreviewResult] = useState(true)
   const search = new URLSearchParams(location.search)
-  const authMode = search.get('auth') === 'signup' || search.get('signup') === '1' ? 'signup' : search.get('auth') === 'signin' ? 'signin' : null
-  if (user) {
-    return (
-      <div className="min-h-screen w-full bg-zinc-950 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-800/25 via-zinc-950 to-zinc-950 px-4 py-12 text-zinc-100">
-        <div className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-2xl items-center justify-center">
-          <ContentGenerator />
-        </div>
-      </div>
-    )
-  }
+  const authMode =
+    search.get('auth') === 'signup' || search.get('signup') === '1'
+      ? 'signup'
+      : search.get('auth') === 'signin'
+        ? 'signin'
+        : null
 
   const previewCaption = useMemo(() => {
     const topic = previewTopic.trim() || 'launching a new skincare product'
@@ -65,6 +61,16 @@ function HomeEntryPage() {
     if (previewPlatform === 'instagram') return '#skincare #beautycreator #newlaunch'
     return '#brandlaunch #socialstrategy #creatorgrowth'
   }, [previewPlatform])
+
+  if (user) {
+    return (
+      <div className="min-h-screen w-full bg-zinc-950 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-800/25 via-zinc-950 to-zinc-950 px-4 py-12 text-zinc-100">
+        <div className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-2xl items-center justify-center">
+          <ContentGenerator />
+        </div>
+      </div>
+    )
+  }
 
   async function runPreviewGenerate() {
     setPreviewBusy(true)
