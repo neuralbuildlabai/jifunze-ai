@@ -18,12 +18,32 @@ export type PublicGenerateFailureCode =
   | 'invalid_response'
   | 'unavailable'
   | 'network'
+  | 'misconfigured'
+
+export type PublicGenerateFailureReason =
+  | 'missing_openai_key'
+  | 'missing_service_role_key'
+  | 'openai_http_error'
+  | 'openai_empty_response'
+  | 'openai_parse_failed'
+  | 'durable_limiter_rpc_failed'
+  | 'unexpected_exception'
+  | 'usage_limited'
+  | null
 
 export class PublicGenerateError extends Error {
   code: PublicGenerateFailureCode
-  constructor(message: string, code: PublicGenerateFailureCode) {
+  reason: PublicGenerateFailureReason
+  status: number | null
+  constructor(
+    message: string,
+    code: PublicGenerateFailureCode,
+    options?: { reason?: PublicGenerateFailureReason; status?: number | null },
+  ) {
     super(message)
     this.code = code
+    this.reason = options?.reason ?? null
+    this.status = options?.status ?? null
   }
 }
 
@@ -99,7 +119,7 @@ export function persistPublicGenerateHandoff(data: PublicGenerateHandoff): void 
 
 export function buildSignupHandoffQuery(data: PublicGenerateHandoff): string {
   const q = new URLSearchParams({
-    signup: '1',
+    auth: 'signup',
     from: 'generate',
     topic: data.topic,
     platform: data.platform,
@@ -135,9 +155,40 @@ export function readPublicGenerateHandoff(): PublicGenerateHandoff | null {
 function publicFunctionUrl(): string {
   const base = import.meta.env.VITE_SUPABASE_URL?.trim()
   if (!base) {
-    throw new Error('Public generation is unavailable right now. Please create a free account to continue.')
+    throw new PublicGenerateError(
+      'Public generation is not configured yet. Please try again later.',
+      'misconfigured',
+    )
   }
   return `${base.replace(/\/$/, '')}/functions/v1/generate-public`
+}
+
+function mapPublicFailureMessage(
+  reason: PublicGenerateFailureReason,
+  fallback: string,
+): { message: string; code: PublicGenerateFailureCode } {
+  if (reason === 'missing_openai_key' || reason === 'missing_service_role_key') {
+    return {
+      message: 'Public generation is not configured yet. Please try again later.',
+      code: 'misconfigured',
+    }
+  }
+  if (reason === 'openai_http_error' || reason === 'openai_empty_response') {
+    return {
+      message: 'Generation service is busy. Please try again shortly.',
+      code: 'unavailable',
+    }
+  }
+  if (reason === 'openai_parse_failed') {
+    return {
+      message: 'We couldn’t format that result. Please try a different topic.',
+      code: 'invalid_response',
+    }
+  }
+  return {
+    message: fallback || 'Public generation is unavailable right now. Please try again shortly.',
+    code: 'unavailable',
+  }
 }
 
 export async function requestPublicGeneration(input: PublicGenerateRequest): Promise<PublicGenerateResult> {
@@ -171,22 +222,32 @@ export async function requestPublicGeneration(input: PublicGenerateRequest): Pro
   const payload = (await res.json().catch(() => null)) as Record<string, unknown> | null
 
   if (!res.ok) {
+    const reason =
+      typeof payload?.reason === 'string' ? (payload.reason as PublicGenerateFailureReason) : null
     const msg =
       typeof payload?.error === 'string'
         ? payload.error
         : 'Public generation is unavailable right now. Please try again shortly.'
     if (res.status === 429) {
       markPublicGenerateUsedOnce()
-      throw new PublicGenerateError(msg, 'limited')
+      throw new PublicGenerateError(
+        'You’ve used today’s free try. Create a free account to continue.',
+        'limited',
+        { reason: reason ?? 'usage_limited', status: 429 },
+      )
     }
-    throw new PublicGenerateError(msg, 'unavailable')
+    const mapped = mapPublicFailureMessage(reason, msg)
+    throw new PublicGenerateError(mapped.message, mapped.code, { reason, status: res.status })
   }
 
   const caption = typeof payload?.caption === 'string' ? payload.caption.trim() : ''
   const hashtags = typeof payload?.hashtags === 'string' ? payload.hashtags.trim() : ''
   const source = typeof payload?.source === 'string' ? payload.source : 'backend_llm'
   if (!caption || !hashtags) {
-    throw new PublicGenerateError('Generation returned an invalid response. Please try again.', 'invalid_response')
+    throw new PublicGenerateError(
+      'Generation returned an invalid response. Please try again.',
+      'invalid_response',
+    )
   }
 
   markPublicGenerateUsedOnce()

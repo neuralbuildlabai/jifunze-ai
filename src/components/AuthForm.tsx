@@ -1,15 +1,21 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { authFailureMessage } from '../auth/authErrorMessage'
 import { useAuth } from '../auth/AuthContext'
 import { isSupabaseConfigured } from '../config/supabaseEnv'
 
-export function AuthForm() {
+export function AuthForm({ initialMode = 'signin' }: { initialMode?: 'signin' | 'signup' }) {
   const { signIn, signUp, error, authInfo, clearAuthMessages } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin')
+  const [mode, setMode] = useState<'signin' | 'signup'>(initialMode)
   const [localError, setLocalError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
+
+  useEffect(() => {
+    setMode(initialMode)
+    setLocalError(null)
+    clearAuthMessages()
+  }, [clearAuthMessages, initialMode])
 
   if (!isSupabaseConfigured()) {
     return (
@@ -39,11 +45,13 @@ export function AuthForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="w-full max-w-sm space-y-3 rounded-2xl border border-zinc-800 bg-zinc-950/60 p-4 text-left"
+      className="w-full max-w-sm space-y-3 rounded-2xl border border-zinc-800/90 bg-zinc-950/70 p-4 text-left"
     >
-      <h2 className="text-sm font-semibold text-zinc-200">Sign in to your workspace</h2>
-      <p className="text-[11px] text-zinc-500">
-        Each account gets an isolated tenant; brands and learning data are scoped by workspace.
+      <h2 className="text-base font-semibold text-zinc-100">
+        {mode === 'signin' ? 'Sign in to continue' : 'Create your free account'}
+      </h2>
+      <p className="text-[12px] text-zinc-400">
+        Save generated content, unlock automation, and manage your social workflow in one place.
       </p>
       <label className="block space-y-1">
         <span className="text-xs text-zinc-500">Email</span>
@@ -80,7 +88,7 @@ export function AuthForm() {
       <button
         type="submit"
         disabled={busy}
-        className="w-full rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-100 disabled:opacity-40"
+        className="w-full rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-40"
       >
         {busy ? 'Please wait…' : mode === 'signin' ? 'Sign in' : 'Create account'}
       </button>
@@ -91,7 +99,7 @@ export function AuthForm() {
           setLocalError(null)
           clearAuthMessages()
         }}
-        className="w-full text-xs text-violet-300/90 hover:text-violet-200"
+        className="w-full text-xs font-medium text-violet-300/90 hover:text-violet-200"
       >
         {mode === 'signin' ? 'Need an account? Sign up' : 'Have an account? Sign in'}
       </button>

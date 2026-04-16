@@ -16,6 +16,15 @@ type PublicGenerateResponse = {
   source: 'backend_llm'
 }
 
+type PublicFailureReason =
+  | 'missing_openai_key'
+  | 'missing_service_role_key'
+  | 'durable_limiter_rpc_failed'
+  | 'openai_http_error'
+  | 'openai_empty_response'
+  | 'openai_parse_failed'
+  | 'unexpected_exception'
+
 type ParsePath = 'direct' | 'strip_fence' | 'fenced_block' | 'slice_object'
 
 const corsHeaders: Record<string, string> = {
@@ -30,6 +39,24 @@ const DAILY_ANON_CAP = 1
 const HASH_PREFIX = 'sha256:'
 const ipDailyCounter = new Map<string, number>()
 const browserDailyCounter = new Map<string, number>()
+
+class PublicGenerateFailure extends Error {
+  reason: PublicFailureReason
+  status: number
+  detail?: Record<string, unknown>
+
+  constructor(
+    message: string,
+    reason: PublicFailureReason,
+    status = 503,
+    detail?: Record<string, unknown>,
+  ) {
+    super(message)
+    this.reason = reason
+    this.status = status
+    this.detail = detail
+  }
+}
 
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
@@ -96,7 +123,12 @@ async function checkAndBumpDurableDailyCap(
   const supabaseUrl = Deno.env.get('SUPABASE_URL')?.trim()
   const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')?.trim()
   if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error('missing_supabase_service_role')
+    throw new PublicGenerateFailure(
+      'Durable limiter is not configured.',
+      'missing_service_role_key',
+      503,
+      { hasSupabaseUrl: Boolean(supabaseUrl), hasServiceRoleKey: Boolean(serviceRoleKey) },
+    )
   }
 
   const ipHash = await sha256(getClientIp(req))
@@ -113,7 +145,12 @@ async function checkAndBumpDurableDailyCap(
     p_daily_cap: DAILY_ANON_CAP,
   })
   if (error) {
-    throw error
+    throw new PublicGenerateFailure(
+      'Durable limiter RPC failed.',
+      'durable_limiter_rpc_failed',
+      503,
+      { rpcMessage: error.message, rpcCode: 'code' in error ? (error as { code?: string }).code ?? null : null },
+    )
   }
 
   const row = Array.isArray(data) ? (data[0] as { allowed?: boolean; reason?: string } | undefined) : undefined
@@ -213,7 +250,11 @@ function parseAssistantToPublic(rawContent: string): PublicGenerateResponse | nu
 async function generatePublicContent(input: PublicGenerateRequest): Promise<PublicGenerateResponse> {
   const apiKey = Deno.env.get('OPENAI_API_KEY')?.trim()
   if (!apiKey) {
-    throw new Error('Public generation is temporarily unavailable. Please create a free account to continue.')
+    throw new PublicGenerateFailure(
+      'Public generation is temporarily unavailable. Please create a free account to continue.',
+      'missing_openai_key',
+      503,
+    )
   }
   const model = Deno.env.get('OPENAI_MODEL')?.trim() || 'gpt-4o-mini'
 
@@ -242,19 +283,34 @@ async function generatePublicContent(input: PublicGenerateRequest): Promise<Publ
   if (!res.ok) {
     const msg = await res.text().catch(() => '')
     console.error('[JifunzeAI generate-public] OpenAI error', res.status, msg.slice(0, 400))
-    throw new Error('Generation service is busy. Please try again shortly or create a free account.')
+    throw new PublicGenerateFailure(
+      'Generation service is busy. Please try again shortly or create a free account.',
+      'openai_http_error',
+      503,
+      { openaiStatus: res.status },
+    )
   }
 
   const data = (await res.json()) as {
     choices?: Array<{ message?: { content?: string } }>
   }
   const raw = data.choices?.[0]?.message?.content?.trim()
-  if (!raw) throw new Error('Generation service returned an empty response.')
+  if (!raw) {
+    throw new PublicGenerateFailure(
+      'Generation service returned an empty response.',
+      'openai_empty_response',
+      503,
+    )
+  }
 
   const parsed = parseAssistantToPublic(raw)
   if (!parsed) {
     console.error('[JifunzeAI generate-public] parse_failed', { rawAssistant: raw.slice(0, 1200) })
-    throw new Error('Could not parse generation output. Please try again.')
+    throw new PublicGenerateFailure(
+      'Could not parse generation output. Please try again.',
+      'openai_parse_failed',
+      503,
+    )
   }
   return parsed
 }
@@ -269,6 +325,8 @@ Deno.serve(async (req) => {
   } catch (e) {
     console.error('[JifunzeAI generate-public] durable_limiter_failed', {
       error: e instanceof Error ? e.message : String(e),
+      reason: e instanceof PublicGenerateFailure ? e.reason : 'unknown',
+      detail: e instanceof PublicGenerateFailure ? e.detail ?? null : null,
     })
     quota = checkAndBumpInMemoryDailyCap(req)
   }
@@ -299,10 +357,30 @@ Deno.serve(async (req) => {
     const out = await generatePublicContent(body)
     return json(out, 200)
   } catch (e) {
-    const message =
-      e instanceof Error && e.message
-        ? e.message
-        : 'Public generation is unavailable right now. Please try again shortly.'
-    return json({ error: message, reason: 'public_generation_failed', signup_required: true }, 503)
+    const failure =
+      e instanceof PublicGenerateFailure
+        ? e
+        : new PublicGenerateFailure(
+            'Public generation is unavailable right now. Please try again shortly.',
+            'unexpected_exception',
+            503,
+          )
+    console.error('[JifunzeAI generate-public] request_failed', {
+      reason: failure.reason,
+      message: failure.message,
+      detail: failure.detail ?? null,
+    })
+    const userMessage =
+      failure.reason === 'missing_openai_key' || failure.reason === 'missing_service_role_key'
+        ? 'Public generation is not configured yet. Please create a free account or try again later.'
+        : failure.message
+    return json(
+      {
+        error: userMessage,
+        reason: failure.reason,
+        signup_required: true,
+      },
+      failure.status,
+    )
   }
 })

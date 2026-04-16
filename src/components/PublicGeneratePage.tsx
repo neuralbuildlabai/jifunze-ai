@@ -10,6 +10,7 @@ import {
   type PublicTone,
 } from '../services/content/publicGenerate'
 import { jifunzeCriticalLog } from '../lib/jifunzeTelemetry'
+import { PublicSocialLinks } from './PublicSocialLinks'
 
 const PLATFORM_OPTIONS: Array<{ id: PublicPlatform; label: string }> = [
   { id: 'instagram', label: 'Instagram' },
@@ -79,6 +80,16 @@ export function PublicGeneratePage() {
     } catch (e) {
       setCaption('')
       setHashtags('')
+      if (e instanceof PublicGenerateError) {
+        console.error('[Jifunze.AI public generate]', {
+          code: e.code,
+          reason: e.reason,
+          status: e.status,
+          message: e.message,
+        })
+      } else {
+        console.error('[Jifunze.AI public generate]', e)
+      }
       const msg = e instanceof Error ? e.message : 'Something went wrong while generating.'
       setError(msg)
       if (e instanceof PublicGenerateError && e.code === 'limited') {
@@ -116,17 +127,37 @@ export function PublicGeneratePage() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-zinc-950 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-800/25 via-zinc-950 to-zinc-950 px-4 py-12 text-zinc-100">
-      <div className="mx-auto w-full max-w-2xl space-y-6">
-        <header className="space-y-2 text-center">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-violet-300/90">Try Jifunze instantly</p>
-          <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">Generate a social caption in seconds</h1>
-          <p className="text-sm text-zinc-400">
-            No signup needed for your first try. Pick a platform and tone, then generate one optimized caption.
-          </p>
+    <div className="min-h-screen w-full bg-zinc-950 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-800/25 via-zinc-950 to-zinc-950 px-4 py-8 text-zinc-100 sm:py-10">
+      <div className="mx-auto w-full max-w-4xl space-y-5">
+        <header className="flex items-center justify-between">
+          <Link to="/" className="text-sm font-semibold tracking-wide text-zinc-200">
+            Jifunze.AI
+          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/?auth=signin#auth"
+              className="rounded-lg border border-zinc-700 px-3.5 py-2 text-xs font-semibold text-zinc-200 transition hover:border-zinc-600"
+            >
+              Sign in
+            </Link>
+            <Link
+              to="/?auth=signup#auth"
+              className="rounded-lg bg-violet-500/90 px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-violet-500"
+            >
+              Sign up
+            </Link>
+          </div>
         </header>
 
-        <section className="space-y-4 rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-5">
+        <section className="space-y-2 text-center">
+          <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+            Create social content in seconds
+          </h1>
+          <p className="text-sm text-zinc-400">Try Jifunze free — no signup required</p>
+        </section>
+
+        <div className="grid gap-5 lg:grid-cols-[1fr_1fr]">
+          <section className="space-y-4 rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-5">
           <label className="block space-y-1.5">
             <span className="text-xs text-zinc-400">Topic</span>
             <input
@@ -186,39 +217,60 @@ export function PublicGeneratePage() {
               {error}
             </p>
           ) : null}
-        </section>
+          </section>
 
-        <section className="space-y-3 rounded-2xl border border-zinc-800/80 bg-zinc-900/30 p-5">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">Result</h2>
-          {!generated ? (
-            <p className="text-sm text-zinc-500">Your generated caption will appear here.</p>
-          ) : (
-            <>
-              <div className="space-y-2">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">Caption</p>
-                <p className="text-sm leading-relaxed text-zinc-100">{caption}</p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">Hashtags</p>
-                <p className="font-mono text-sm text-violet-200">{hashtags}</p>
-              </div>
-              <div className="flex items-center justify-between">
-                <button
-                  type="button"
-                  onClick={() => void onCopy()}
-                  className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-1.5 text-xs text-zinc-200 transition hover:border-zinc-600"
-                >
-                  {copied ? 'Copied' : 'Copy'}
-                </button>
-                <p className="text-[11px] text-zinc-500">Ready for your next post.</p>
-              </div>
-            </>
-          )}
-        </section>
+          <section className="space-y-3 rounded-2xl border border-zinc-800/80 bg-zinc-900/30 p-5">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">Result</h2>
+            {!generated ? (
+              <p className="text-sm text-zinc-500">Your generated caption will appear here.</p>
+            ) : (
+              <>
+                <div className="space-y-2">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">Caption</p>
+                  <p className="text-sm leading-relaxed text-zinc-100">{caption}</p>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">Hashtags</p>
+                  <p className="font-mono text-sm text-violet-200">{hashtags}</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={() => void onCopy()}
+                    className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-1.5 text-xs text-zinc-200 transition hover:border-zinc-600"
+                  >
+                    {copied ? 'Copied' : 'Copy'}
+                  </button>
+                  <p className="text-[11px] text-zinc-500">Ready for your next post.</p>
+                </div>
+              </>
+            )}
+          </section>
+        </div>
+
+        {!generated ? (
+          <section className="rounded-2xl border border-zinc-800/75 bg-zinc-900/20 p-4 text-center">
+            <p className="text-sm text-zinc-300">Want to save your drafts and unlock more generations?</p>
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                to="/?auth=signup#auth"
+                className="rounded-lg bg-violet-500/85 px-4 py-2 text-sm font-semibold text-white transition hover:bg-violet-500"
+              >
+                Create free account
+              </Link>
+              <Link
+                to="/?auth=signin#auth"
+                className="rounded-lg border border-zinc-700 px-4 py-2 text-sm font-semibold text-zinc-200 transition hover:border-zinc-600"
+              >
+                Sign in
+              </Link>
+            </div>
+          </section>
+        ) : null}
 
         {generated ? (
           <section className="rounded-2xl border border-violet-700/25 bg-violet-950/15 p-5 text-center">
-            <p className="text-sm text-zinc-300">Want to save content history and automate your workflow?</p>
+            <p className="text-sm text-zinc-300">Create a free account to save this and generate more</p>
             <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
               <Link
                 to={signupHref}
@@ -233,22 +285,13 @@ export function PublicGeneratePage() {
               >
                 Create free account
               </Link>
-              <Link
-                to={signupHref}
-                onClick={() =>
-                  jifunzeCriticalLog({
-                    action: 'public_generate_signup_clicked',
-                    status: 'started',
-                    detail: { cta: 'save_and_automate' },
-                  })
-                }
-                className="rounded-lg border border-violet-500/40 bg-transparent px-4 py-2 text-sm font-semibold text-violet-200 transition hover:bg-violet-900/35"
-              >
-                Save and automate with Jifunze
-              </Link>
             </div>
           </section>
         ) : null}
+
+        <footer className="border-t border-zinc-800/75 pt-4">
+          <PublicSocialLinks />
+        </footer>
       </div>
     </div>
   )
