@@ -33,3 +33,18 @@ export function getSupabaseBrowserEnv(): { url: string; anonKey: string } | null
   if (!SUPABASE_CONFIGURED) return null
   return { url, anonKey }
 }
+
+/**
+ * Parses the Supabase project ref from `VITE_SUPABASE_URL` (e.g. `https://abcd.supabase.co` → `abcd`).
+ * Safe for logs and diagnostics — not a secret.
+ */
+export function getSupabaseProjectRefFromUrl(): string | null {
+  if (!url) return null
+  try {
+    const u = new URL(url)
+    const m = /^([a-z0-9]+)\.supabase\.co$/i.exec(u.hostname)
+    return m ? m[1] : null
+  } catch {
+    return null
+  }
+}

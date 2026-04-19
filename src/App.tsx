@@ -15,7 +15,6 @@ import { ForgotPasswordPage } from './components/auth/ForgotPasswordPage'
 import { RequireDisclaimerAcknowledged } from './components/auth/RequireDisclaimerAcknowledged'
 import { RequireEmailVerified } from './components/auth/RequireEmailVerified'
 import { ResetPasswordPage } from './components/auth/ResetPasswordPage'
-import { JifunzeAuthSectionBrandMark } from './components/brand/JifunzeAuthSectionBrandMark'
 import { JifunzeBrandLogo } from './components/brand/JifunzeBrandLogo'
 import { LearningInsightsPage } from './components/LearningInsightsPage'
 import { WorkspaceIdeasPage } from './components/workspace/WorkspaceIdeasPage'
@@ -122,7 +121,7 @@ function LandingSupportLinks() {
       </nav>
       <a
         href={`mailto:${LANDING_CONTACT_EMAIL}`}
-        className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.14em] text-zinc-400/80 transition-colors duration-200 hover:text-zinc-200 focus-visible:rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/35"
+        className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.14em] text-zinc-400/80 transition-colors duration-200 hover:text-zinc-200 focus-visible:rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
       >
         <span className="text-zinc-500/85" aria-hidden>
           <svg
@@ -171,22 +170,21 @@ function HomeEntryPage() {
   return (
     <div className="jf-public-surface min-h-screen w-full bg-[var(--jf-bg-page)] text-[var(--jf-text)]">
       <div className="relative mx-auto max-w-7xl px-5 pb-16 pt-7 sm:px-8 sm:pb-20 sm:pt-9 lg:px-10">
-        <header className="flex flex-wrap items-center justify-between gap-4 pb-8 sm:pb-9">
+        <header className="flex flex-wrap items-center justify-between gap-4 pb-10 sm:pb-12">
           <div className="inline-flex items-center gap-3">
-            <div className="hidden h-10 w-px bg-zinc-200 sm:block" aria-hidden />
-            <JifunzeBrandLogo to="/" size="xxl" className="origin-left scale-[1.04] sm:scale-100" surface="light" />
+            <JifunzeBrandLogo to="/" size="xxl" className="origin-left scale-[1.04] sm:scale-100" surface="dark" />
           </div>
           <nav className="flex flex-wrap items-center justify-end gap-1 sm:gap-2">
             <Link
               to={LEGAL_ROUTES.learn}
-              className="rounded-lg px-3 py-2 text-xs font-semibold text-zinc-600 transition-colors duration-200 hover:bg-zinc-100 hover:text-zinc-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+              className="rounded-full px-3 py-2 text-xs font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:bg-white/[0.06] hover:text-[color:var(--jf-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
               data-testid="home-nav-courses"
             >
               Explore courses
             </Link>
             <Link
               to={LEGAL_ROUTES.pricing}
-              className="rounded-lg px-3 py-2 text-xs font-semibold text-zinc-600 transition-colors duration-200 hover:bg-zinc-100 hover:text-zinc-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+              className="rounded-full px-3 py-2 text-xs font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:bg-white/[0.06] hover:text-[color:var(--jf-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
               data-testid="home-nav-plans"
             >
               View plans
@@ -195,13 +193,13 @@ function HomeEntryPage() {
               <>
                 <Link
                   to="/?auth=signin#auth"
-                  className="rounded-lg px-3 py-2 text-xs font-medium text-zinc-500 transition-colors duration-200 hover:bg-zinc-50 hover:text-zinc-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+                  className="rounded-full px-3 py-2 text-xs font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:bg-white/[0.06] hover:text-[color:var(--jf-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
                 >
                   Sign in
                 </Link>
                 <Link
                   to="/?auth=signup#auth"
-                  className="rounded-lg px-3 py-2 text-xs font-semibold text-zinc-800 transition-colors duration-200 hover:bg-zinc-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+                  className="rounded-full px-3 py-2 text-xs font-semibold text-[color:var(--jf-text)] transition-colors duration-200 hover:bg-white/[0.08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
                 >
                   Sign up
                 </Link>
@@ -210,46 +208,39 @@ function HomeEntryPage() {
           </nav>
         </header>
 
-        <div className="relative overflow-hidden rounded-[2rem] border border-zinc-200/90 bg-[color:var(--jf-surface)] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)] sm:p-6 lg:px-9 lg:pb-10 lg:pt-8">
-          <div className="relative z-10">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.02fr)] lg:items-start lg:gap-12 xl:gap-14">
-            <div className="lg:max-w-xl xl:max-w-2xl lg:pr-2">
-              <div className="space-y-5 sm:space-y-6">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-500">
-                Guided learning · practical writing
+        {/* Hero: learning-platform first — single column, no split-screen tool demo */}
+        <div className="relative">
+          <div
+            className="pointer-events-none absolute inset-x-[-1rem] -top-6 bottom-[-1.5rem] rounded-[2rem] bg-gradient-to-b from-slate-600/[0.12] via-[color-mix(in_oklab,var(--jf-bg-page)_94%,transparent)] to-transparent sm:inset-x-[-1.25rem] sm:-top-8 sm:rounded-[2.25rem]"
+            aria-hidden
+          />
+          <div className="relative z-10 mx-auto max-w-4xl pt-2 text-center lg:max-w-5xl lg:text-left">
+            <div className="mx-auto max-w-3xl space-y-5 lg:mx-0 sm:space-y-6">
+              <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-[color:var(--jf-muted)] sm:text-[14px]">
+                Online learning for practical AI &amp; digital skills
               </p>
-              <h1 className="text-[1.875rem] font-semibold tracking-tight text-zinc-900 sm:text-4xl sm:leading-[1.14] lg:text-[2.35rem] lg:leading-[1.06]">
-                Learn with structure. Write with clarity.
+              <h1 className="text-[1.9rem] font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-[2.25rem] sm:leading-[1.15] lg:text-[2.5rem] lg:leading-[1.1]">
+                Learn practical AI skills and turn what you know into useful work.
               </h1>
-              <p className="max-w-lg text-[15px] leading-relaxed text-zinc-600 sm:text-base">
-                Jifunze helps you explore courses at your pace, practice with intention, and turn ideas into posts you can stand behind—not loud automation, just
-                grounded drafts when they help.
+              <p className="text-[15px] leading-[1.65] text-[color:var(--jf-muted)] sm:text-[17px] sm:leading-relaxed">
+                Structured courses, hands-on practice, and clear progression—then optional drafting help when you need a starting post. You review everything
+                before it ships.
               </p>
-              <div className="flex flex-wrap items-center gap-3 pt-1">
-                <a
-                  href="#try-jifunze"
-                  data-testid="landing-hero-primary-cta"
-                  className="inline-flex items-center justify-center rounded-xl bg-[var(--jf-brand)] px-6 py-3 text-[15px] font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-                >
-                  Try preview
-                </a>
+              <div className="flex flex-wrap items-center justify-center gap-3 pt-1 lg:justify-start">
                 <Link
                   to={LEGAL_ROUTES.learn}
-                  className="inline-flex items-center justify-center rounded-xl border border-zinc-200 bg-white px-6 py-3 text-[15px] font-semibold text-zinc-800 shadow-sm transition-colors duration-200 hover:bg-zinc-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-                  data-testid="landing-hero-explore"
+                  data-testid="landing-hero-primary-cta"
+                  className="inline-flex min-h-[3rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-8 py-3 text-[15px] font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition-colors duration-200 hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
                 >
                   Explore courses
                 </Link>
-              </div>
-              <div className="flex flex-wrap gap-x-6 gap-y-2 pt-2 text-[12px] text-zinc-500">
-                <span className="inline-flex items-center gap-2">
-                  <span className="h-1 w-1 shrink-0 rounded-full bg-zinc-400" aria-hidden />
-                  Browse libraries before you sign up
-                </span>
-                <span className="inline-flex items-center gap-2">
-                  <span className="h-1 w-1 shrink-0 rounded-full bg-zinc-400" aria-hidden />
-                  Caption preview runs in your browser trial
-                </span>
+                <a
+                  href="#try-jifunze"
+                  data-testid="landing-hero-explore"
+                  className="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-white/[0.1] px-7 py-3 text-[15px] font-semibold text-[color:var(--jf-text)] transition-colors duration-200 hover:border-white/[0.14] hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+                >
+                  Try a quick preview
+                </a>
               </div>
               <TrustBoundaryStrip
                 variant="inline"
@@ -257,103 +248,92 @@ function HomeEntryPage() {
                 strip="publicHero"
                 presentation="utility"
                 density="legalLink"
-                className="max-w-xl border-t border-zinc-200/90 pt-4 text-zinc-600"
+                className="mx-auto max-w-xl pt-2 text-[13px] leading-relaxed text-[color:var(--jf-subtle)] sm:pt-3 lg:mx-0"
                 dataTestId="landing-cta-trust-line"
               />
-              </div>
             </div>
-
-            <HomePublicGeneratePanel sectionId="try-jifunze" landingMinimalTrust />
-          </div>
-
-          {isSupabaseConfigured() && authMode ? (
-            <>
-              <div className="relative mt-10 sm:mt-12" aria-hidden>
-                <div className="absolute inset-x-0 top-0 h-px bg-zinc-200/90" />
-              </div>
-              <section
-                id="auth"
-                className="relative z-10 mt-6 overflow-hidden rounded-2xl border border-zinc-200/95 bg-zinc-50/90 p-5 sm:p-6 sm:mt-7 lg:p-6"
-              >
-                <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-zinc-500">
-                  Save your work
-                </p>
-                <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)] lg:items-start lg:gap-6 xl:gap-7">
-                  <div className="flex min-w-0 max-w-lg flex-col gap-3 lg:max-w-none">
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-                      <div className="min-w-0 space-y-1">
-                        <p className="text-[13px] font-medium text-zinc-700">
-                          {authMode === 'signup' ? 'Create your account' : 'Continue where you left off'}
-                        </p>
-                        <p className="text-[12px] leading-relaxed text-zinc-600">
-                          {authMode === 'signup'
-                            ? 'When you’re ready, save drafts and keep everything in one workspace.'
-                            : 'Welcome back—open your workspace and pick up where you left off.'}
-                        </p>
-                      </div>
-                      <div className="flex shrink-0 items-center gap-3 text-[11px]">
-                        <Link
-                          to="/?auth=signin#auth"
-                          className="text-zinc-600 transition-colors duration-200 hover:text-zinc-900"
-                        >
-                          Sign in
-                        </Link>
-                        <Link
-                          to="/?auth=signup#auth"
-                          className="font-medium text-zinc-700 transition-colors duration-200 hover:text-zinc-950"
-                        >
-                          Sign up
-                        </Link>
-                      </div>
-                    </div>
-                    <AuthForm initialMode={authMode} appearance="quiet" />
-                  </div>
-                  <div className="relative flex min-h-[min(14rem,34vh)] flex-col items-center justify-center gap-3 overflow-hidden rounded-xl border border-zinc-200/95 bg-white px-4 py-5 sm:min-h-[min(15rem,36vh)] sm:px-5 sm:py-6">
-                    <div className="relative z-[1] flex w-full flex-1 flex-col items-center justify-center py-1">
-                      <JifunzeAuthSectionBrandMark />
-                    </div>
-                    <p className="relative z-[1] max-w-[16rem] text-center text-[10px] leading-relaxed text-zinc-500">
-                      Updates and support from the Jifunze.AI team.
-                    </p>
-                    <div className="relative z-[1] w-full border-t border-zinc-200/90 pt-2.5">
-                      <LandingSupportLinks />
-                    </div>
-                  </div>
-                </div>
-              </section>
-            </>
-          ) : null}
-
-          {isSupabaseConfigured() && !authMode ? (
-            <section className="relative z-10 mt-10 border-t border-zinc-200/90 pt-8 text-center sm:mt-11 sm:pt-9">
-              <p className="text-[12px] text-zinc-600">
-                Want to keep going?{' '}
-                <Link
-                  to="/?auth=signin#auth"
-                  className="font-medium text-zinc-800 transition-colors duration-200 hover:text-zinc-950"
-                >
-                  Sign in
-                </Link>
-                {' · '}
-                <Link
-                  to="/?auth=signup#auth"
-                  className="font-medium text-zinc-800 transition-colors duration-200 hover:text-zinc-950"
-                >
-                  Sign up
-                </Link>
-                {' · '}
-                <span className="text-zinc-500">Preview first—save when you&apos;re ready.</span>
-              </p>
-            </section>
-          ) : null}
           </div>
         </div>
 
+        {/* Supporting: optional draft preview — narrowed so it does not compete with the learning story */}
+        <section
+          aria-labelledby="landing-preview-heading"
+          className="relative z-10 mx-auto mt-16 max-w-6xl border-t border-[color:var(--jf-border)] pt-14 sm:mt-[4.5rem] sm:pt-16"
+        >
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">Also included for visitors</p>
+            <h2 id="landing-preview-heading" className="mt-2 text-lg font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-xl">
+              Quick preview: draft from a topic
+            </h2>
+            <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+              A small helper for social drafts—not a substitute for the courses above. Edit, verify, then post on your terms.
+            </p>
+          </div>
+          <div className="mx-auto mt-8 max-w-xl">
+            <HomePublicGeneratePanel sectionId="try-jifunze" landingMinimalTrust supportingPlacement />
+          </div>
+        </section>
+
         <LandingMarketingSections />
 
+        {isSupabaseConfigured() && authMode ? (
+          <section
+            id="auth"
+            className="relative z-10 mx-auto mt-16 max-w-md border-t border-[color:var(--jf-border)] pt-10 sm:mt-20 sm:pt-12"
+          >
+            <p className="text-center text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-subtle)]">Account</p>
+            <div className="mt-3 space-y-1 text-center">
+              <p className="text-[15px] font-medium text-[color:var(--jf-text)]">
+                {authMode === 'signup' ? 'Create your account' : 'Welcome back'}
+              </p>
+              <p className="text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
+                {authMode === 'signup'
+                  ? 'Save progress and drafts in your workspace.'
+                  : 'Pick up where you left off.'}
+              </p>
+            </div>
+            <div className="mt-4 flex justify-center gap-5 text-[12px] text-[color:var(--jf-muted)]">
+              <Link to="/?auth=signin#auth" className="hover:text-[color:var(--jf-text)]">
+                Sign in
+              </Link>
+              <Link to="/?auth=signup#auth" className="font-medium hover:text-[color:var(--jf-text)]">
+                Sign up
+              </Link>
+            </div>
+            <div className="mt-6 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/80 px-5 py-6 ring-1 ring-white/[0.03]">
+              <AuthForm initialMode={authMode} appearance="quiet" />
+            </div>
+            <div className="mt-6 text-center">
+              <LandingSupportLinks />
+            </div>
+          </section>
+        ) : null}
+
+        {isSupabaseConfigured() && !authMode ? (
+          <div className="relative z-10 mx-auto mt-14 max-w-xl border-t border-[color:var(--jf-border)] pt-8 text-center sm:mt-16 sm:pt-10">
+            <p className="text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
+              Returning learner?{' '}
+              <Link
+                to="/?auth=signin#auth"
+                className="font-medium text-[color:var(--jf-text)] underline-offset-2 hover:underline"
+              >
+                Sign in
+              </Link>{' '}
+              or{' '}
+              <Link
+                to="/?auth=signup#auth"
+                className="font-medium text-[color:var(--jf-text)] underline-offset-2 hover:underline"
+              >
+                create an account
+              </Link>{' '}
+              to save progress.
+            </p>
+          </div>
+        ) : null}
+
         {!(isSupabaseConfigured() && authMode) ? (
-          <footer className="mt-14 flex flex-col items-center gap-4 pt-2 sm:mt-16">
-            <TrustLegalFooterLinks variant="compact" className="justify-center text-zinc-600" />
+          <footer className="mt-12 flex flex-col items-center gap-4 pt-2 sm:mt-14">
+            <TrustLegalFooterLinks variant="compact" className="justify-center text-[color:var(--jf-subtle)]" />
           </footer>
         ) : null}
       </div>

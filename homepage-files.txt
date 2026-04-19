@@ -1,0 +1,1176 @@
+
+===== FILE: src/App.tsx =====
+import { useEffect, useMemo } from 'react'
+import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { AuthProvider, useAuth } from './auth/AuthContext'
+import { AuthForm } from './components/AuthForm'
+import { JifunzeAuthSectionBrandMark } from './components/brand/JifunzeAuthSectionBrandMark'
+import { JifunzeBrandLogo } from './components/brand/JifunzeBrandLogo'
+import { ContentGenerator } from './components/ContentGenerator'
+import { HomePublicGeneratePanel } from './components/HomePublicGeneratePanel'
+import { InternalUatDiagnostics } from './components/InternalUatDiagnostics'
+import { PublicGeneratePage } from './components/PublicGeneratePage'
+import { SystemStatusBanner } from './components/SystemStatusBanner'
+import { isSupabaseConfigured } from './config/supabaseEnv'
+import { logEnvValidationFailure, validateStartupEnv } from './lib/envCheck'
+import type { EnvCheckResult } from './lib/envCheck'
+
+function AppChrome({ env }: { env: EnvCheckResult }) {
+  const { user, session } = useAuth()
+  if (!user) return null
+  const accessToken = session?.access_token
+  return (
+    <div className="sticky top-0 z-50">
+      <SystemStatusBanner env={env} accessToken={accessToken} />
+      <InternalUatDiagnostics key={user?.id ?? 'guest'} />
+    </div>
+  )
+}
+
+function HomeEntryPage() {
+  const { user } = useAuth()
+  const location = useLocation()
+  const authMode = useMemo(() => {
+    const search = new URLSearchParams(location.search)
+    return search.get('auth') === 'signup' || search.get('signup') === '1'
+      ? 'signup'
+      : search.get('auth') === 'signin'
+        ? 'signin'
+        : null
+  }, [location.search])
+
+  if (user) {
+    return (
+      <div className="min-h-screen w-full bg-zinc-950 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-800/25 via-zinc-950 to-zinc-950 px-4 py-12 text-zinc-100">
+        <div className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-2xl items-center justify-center">
+          <ContentGenerator />
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen w-full bg-[radial-gradient(circle_at_top,_rgba(109,40,217,0.18),_transparent_38%),linear-gradient(180deg,_rgb(30,24,42)_0%,_rgb(21,18,31)_45%,_rgb(18,16,25)_100%)] text-zinc-100">
+      <div className="pointer-events-none absolute left-1/2 top-0 h-[30rem] w-[min(100%,60rem)] -translate-x-1/2 rounded-full bg-violet-500/[0.08] blur-3xl" aria-hidden />
+      <div className="pointer-events-none absolute inset-x-0 top-24 h-64 bg-[radial-gradient(circle_at_center,_rgba(129,140,248,0.08),_transparent_55%)]" aria-hidden />
+      <div className="relative mx-auto max-w-6xl px-4 pb-12 pt-8 sm:pb-14 sm:pt-10">
+        <header className="flex flex-wrap items-center justify-between gap-4 pb-5">
+          <JifunzeBrandLogo to="/" size="xxl" className="origin-left scale-[1.04] sm:scale-100" />
+          <nav className="flex flex-wrap items-center justify-end gap-2.5 sm:gap-3">
+            <a
+              href="#try-jifunze"
+              className="rounded-lg bg-violet-500/95 px-3.5 py-2 text-xs font-semibold text-white shadow-md shadow-violet-950/25 transition-colors duration-200 hover:bg-violet-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/60"
+            >
+              Try free
+            </a>
+            {isSupabaseConfigured() ? (
+              <>
+                <Link
+                  to="/?auth=signin#auth"
+                  className="rounded-lg border border-white/[0.08] bg-white/[0.02] px-3 py-2 text-xs font-medium text-zinc-200 transition-colors duration-200 hover:border-violet-300/25 hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/50"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  to="/?auth=signup#auth"
+                  className="text-xs font-medium text-violet-300/85 transition-colors duration-200 hover:text-violet-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/50"
+                >
+                  Sign up
+                </Link>
+              </>
+            ) : null}
+          </nav>
+        </header>
+
+        <div className="relative overflow-hidden rounded-[1.75rem] border border-white/[0.06] bg-gradient-to-b from-white/[0.035] to-white/[0.01] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.12)] ring-1 ring-white/[0.03] sm:p-7">
+          <div className="relative z-10 pb-[min(7.5rem,14vh)] sm:pb-28">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:items-start lg:gap-14">
+            <div className="space-y-4 lg:pt-2">
+              <h1 className="max-w-lg text-3xl font-semibold tracking-tight text-white sm:text-4xl sm:leading-[1.15]">
+                Caption-ready posts in seconds.
+              </h1>
+              <p className="max-w-sm text-sm leading-relaxed text-zinc-300/95">
+                Jifunze.AI drafts platform-matched captions and hashtags from your topic—free to try,
+                no account required.
+              </p>
+              <div className="flex flex-wrap items-center gap-3 pt-0.5">
+                <a
+                  href="#try-jifunze"
+                  className="inline-flex items-center justify-center rounded-xl bg-violet-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-950/15 transition-colors duration-200 hover:bg-violet-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/60"
+                >
+                  Try it free
+                </a>
+                {isSupabaseConfigured() ? (
+                  <Link
+                    to="/?auth=signin#auth"
+                    className="rounded-xl border border-white/[0.08] bg-white/[0.02] px-4 py-2.5 text-xs font-medium text-zinc-300 transition-colors duration-200 hover:border-violet-300/25 hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/50"
+                  >
+                    Sign in
+                  </Link>
+                ) : null}
+              </div>
+              <div className="flex flex-wrap gap-x-5 gap-y-2 pt-2 text-[11px] text-zinc-400/85">
+                <span className="inline-flex items-center gap-1.5">
+                  <span className="h-1 w-1 rounded-full bg-violet-400/70" aria-hidden />
+                  No signup to try
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <span className="h-1 w-1 rounded-full bg-violet-400/70" aria-hidden />
+                  Built for creators &amp; teams
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <span className="h-1 w-1 rounded-full bg-violet-400/70" aria-hidden />
+                  Full workspace when you upgrade
+                </span>
+              </div>
+            </div>
+
+            <HomePublicGeneratePanel sectionId="try-jifunze" />
+          </div>
+
+          {isSupabaseConfigured() && authMode ? (
+            <>
+              <div className="relative my-9 sm:my-10" aria-hidden>
+                <div className="mx-auto h-px max-w-lg bg-gradient-to-r from-transparent via-white/12 to-transparent" />
+              </div>
+              <section
+                id="auth"
+                className="relative z-10 overflow-hidden rounded-2xl border border-white/[0.05] bg-white/[0.015] p-4 sm:p-5"
+              >
+                <p className="relative z-10 mb-3 text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500/90">
+                  Save &amp; continue
+                </p>
+                <div className="relative z-10 grid gap-4 sm:max-w-none sm:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] sm:items-end">
+                  <div className="max-w-sm">
+                    <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-zinc-200/95">
+                          {authMode === 'signup' ? 'Create your account' : 'Welcome back'}
+                        </p>
+                        <p className="text-xs text-zinc-500/90">
+                          {authMode === 'signup'
+                            ? 'Keep drafts, connect accounts, and automate from one workspace.'
+                            : 'Open your workspace and pick up where you left off.'}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-3 text-xs">
+                        <Link
+                          to="/?auth=signin#auth"
+                          className="text-zinc-500 transition-colors duration-200 hover:text-zinc-200"
+                        >
+                          Sign in
+                        </Link>
+                        <Link
+                          to="/?auth=signup#auth"
+                          className="font-medium text-violet-300/80 transition-colors duration-200 hover:text-violet-200"
+                        >
+                          Sign up
+                        </Link>
+                      </div>
+                    </div>
+                    <AuthForm initialMode={authMode} />
+                  </div>
+                  <div className="hidden sm:block" aria-hidden />
+                </div>
+              </section>
+            </>
+          ) : null}
+
+          {isSupabaseConfigured() && !authMode ? (
+            <section className="relative z-10 mt-8 border-t border-white/[0.05] pt-7 text-center sm:pt-8">
+              <p className="text-xs text-zinc-500/85">
+                Have an account?{' '}
+                <Link
+                  to="/?auth=signin#auth"
+                  className="font-medium text-violet-300/85 transition-colors duration-200 hover:text-violet-200"
+                >
+                  Sign in
+                </Link>
+                {' · '}
+                <Link
+                  to="/?auth=signup#auth"
+                  className="font-medium text-violet-300/85 transition-colors duration-200 hover:text-violet-200"
+                >
+                  Create a free account
+                </Link>
+              </p>
+            </section>
+          ) : null}
+
+          <JifunzeAuthSectionBrandMark />
+          </div>
+        </div>
+
+        <footer className="mt-12 pt-1 sm:mt-14" />
+      </div>
+    </div>
+  )
+}
+
+export default function App() {
+  const env = useMemo(() => validateStartupEnv(), [])
+  useEffect(() => {
+    if (!env.ok) logEnvValidationFailure(env)
+  }, [env])
+
+  return (
+    <Routes>
+      <Route path="/generate" element={<PublicGeneratePage />} />
+      <Route
+        path="/"
+        element={
+          <AuthProvider>
+            <AppChrome env={env} />
+            <HomeEntryPage />
+          </AuthProvider>
+        }
+      />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  )
+}
+
+===== FILE: src/components/AuthForm.tsx =====
+import { useEffect, useState, type FormEvent } from 'react'
+import { authFailureMessage } from '../auth/authErrorMessage'
+import { useAuth } from '../auth/AuthContext'
+import { isSupabaseConfigured } from '../config/supabaseEnv'
+
+export function AuthForm({ initialMode = 'signin' }: { initialMode?: 'signin' | 'signup' }) {
+  const { signIn, signUp, error, authInfo, clearAuthMessages } = useAuth()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [mode, setMode] = useState<'signin' | 'signup'>(initialMode)
+  const [localError, setLocalError] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+
+  useEffect(() => {
+    setMode(initialMode)
+    setLocalError(null)
+    clearAuthMessages()
+  }, [clearAuthMessages, initialMode])
+
+  if (!isSupabaseConfigured()) {
+    return (
+      <p className="text-xs text-zinc-500">
+        Supabase env not set — running in local demo mode (no login).
+      </p>
+    )
+  }
+
+  async function onSubmit(e: FormEvent) {
+    e.preventDefault()
+    setLocalError(null)
+    setBusy(true)
+    try {
+      if (mode === 'signin') {
+        await signIn(email, password)
+      } else {
+        await signUp(email, password)
+      }
+    } catch (err) {
+      setLocalError(authFailureMessage(err))
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <form
+      onSubmit={onSubmit}
+      className="w-full max-w-sm space-y-3 rounded-2xl border border-zinc-800/90 bg-zinc-950/70 p-4 text-left"
+    >
+      <h2 className="text-base font-semibold text-zinc-100">
+        {mode === 'signin' ? 'Sign in to continue' : 'Create your free account'}
+      </h2>
+      <p className="text-[12px] text-zinc-400">
+        Save generated content, unlock automation, and manage your social workflow in one place.
+      </p>
+      <label className="block space-y-1">
+        <span className="text-xs text-zinc-500">Email</span>
+        <input
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-violet-500/50"
+          autoComplete="email"
+        />
+      </label>
+      <label className="block space-y-1">
+        <span className="text-xs text-zinc-500">Password</span>
+        <input
+          type="password"
+          required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-violet-500/50"
+          autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+        />
+      </label>
+      {(localError || error) ? (
+        <p className="text-xs text-rose-400" role="alert">
+          {localError ?? error}
+        </p>
+      ) : null}
+      {authInfo ? (
+        <p className="text-xs text-emerald-300/95" role="status">
+          {authInfo}
+        </p>
+      ) : null}
+      <button
+        type="submit"
+        disabled={busy}
+        className="w-full rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        {busy ? 'Please wait…' : mode === 'signin' ? 'Sign in' : 'Create account'}
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          setMode(mode === 'signin' ? 'signup' : 'signin')
+          setLocalError(null)
+          clearAuthMessages()
+        }}
+        className="w-full text-xs font-medium text-violet-300/90 hover:text-violet-200"
+      >
+        {mode === 'signin' ? 'Need an account? Sign up' : 'Have an account? Sign in'}
+      </button>
+    </form>
+  )
+}
+
+===== FILE: src/components/HomePublicGeneratePanel.tsx =====
+import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { PUBLIC_PLATFORM_OPTIONS, PUBLIC_TONE_OPTIONS } from '../constants/publicGenerateUi'
+import { jifunzeCriticalLog } from '../lib/jifunzeTelemetry'
+import {
+  buildSignupHandoffQuery,
+  getPublicGenerateUsageStatus,
+  persistPublicGenerateHandoff,
+  PublicGenerateError,
+  requestPublicGeneration,
+  type PublicPlatform,
+  type PublicTone,
+} from '../services/content/publicGenerate'
+
+const EXAMPLE_PROMPTS = [
+  'Launching a new skincare product',
+  'How AI tutors can improve revision outcomes',
+  'Announcing a new business opening',
+  'Tips for creators growing on social media',
+] as const
+
+type Props = {
+  /** Anchor id for in-page “Try” links */
+  sectionId?: string
+}
+
+export function HomePublicGeneratePanel({ sectionId = 'try-jifunze' }: Props) {
+  const [topic, setTopic] = useState('')
+  const [platform, setPlatform] = useState<PublicPlatform>('instagram')
+  const [tone, setTone] = useState<PublicTone>('professional')
+  const [caption, setCaption] = useState('')
+  const [hashtags, setHashtags] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+  const [generated, setGenerated] = useState(false)
+  const [usageTick, setUsageTick] = useState(0)
+
+  const usage = useMemo(() => {
+    void usageTick
+    return getPublicGenerateUsageStatus()
+  }, [usageTick])
+
+  const canGenerate = topic.trim().length >= 3 && !loading && usage.remaining > 0
+
+  async function onGenerate() {
+    const trimmedTopic = topic.trim()
+    setError(null)
+    setCopied(false)
+    setGenerated(false)
+    setLoading(true)
+    jifunzeCriticalLog({
+      action: 'public_generate_started',
+      status: 'started',
+      detail: { platform, tone, topicLength: trimmedTopic.length, surface: 'homepage' },
+    })
+    try {
+      const out = await requestPublicGeneration({
+        topic: trimmedTopic,
+        platform,
+        tone,
+      })
+      setCaption(out.caption)
+      setHashtags(out.hashtags)
+      setGenerated(true)
+      setUsageTick((n) => n + 1)
+      persistPublicGenerateHandoff({
+        topic: trimmedTopic,
+        platform,
+        tone,
+        createdAt: new Date().toISOString(),
+      })
+      jifunzeCriticalLog({
+        action: 'public_generate_succeeded',
+        status: 'ok',
+        detail: { platform, tone, source: out.source, surface: 'homepage' },
+      })
+    } catch (e) {
+      setCaption('')
+      setHashtags('')
+      if (e instanceof PublicGenerateError) {
+        console.error('[Jifunze.AI public generate]', {
+          code: e.code,
+          reason: e.reason,
+          status: e.status,
+          message: e.message,
+          surface: 'homepage',
+        })
+      } else {
+        console.error('[Jifunze.AI public generate]', e)
+      }
+      const msg = e instanceof Error ? e.message : 'Something went wrong while generating.'
+      setError(msg)
+      if (e instanceof PublicGenerateError && e.code === 'limited') {
+        jifunzeCriticalLog({
+          action: 'public_generate_limited',
+          status: 'error',
+          detail: { platform, tone, reason: e.code, surface: 'homepage' },
+        })
+      }
+      setUsageTick((n) => n + 1)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const signupHref = useMemo(
+    () =>
+      buildSignupHandoffQuery({
+        topic: topic.trim(),
+        platform,
+        tone,
+        createdAt: new Date().toISOString(),
+      }),
+    [platform, tone, topic],
+  )
+
+  async function onCopy() {
+    try {
+      await navigator.clipboard.writeText(`${caption}\n\n${hashtags}`)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1600)
+    } catch {
+      setError('Copy failed. Please copy manually.')
+    }
+  }
+
+  return (
+    <section
+      id={sectionId}
+      className="relative scroll-mt-24 rounded-[1.5rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))] p-5 shadow-[0_16px_48px_rgba(0,0,0,0.12)] ring-1 ring-white/[0.03] backdrop-blur-sm transition-shadow duration-300 sm:p-6"
+      aria-labelledby="home-generate-heading"
+    >
+      <div className="pointer-events-none absolute -inset-px rounded-[1.5rem] bg-gradient-to-b from-violet-400/14 via-transparent to-transparent opacity-90" aria-hidden />
+      <div className="relative">
+        <div className="mb-4 flex flex-col gap-1.5 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 id="home-generate-heading" className="text-base font-semibold text-white">
+              Try it now
+            </h2>
+            <p className="text-sm text-zinc-400/80">Real generation, ready to copy.</p>
+          </div>
+          <p className="text-[11px] text-zinc-400/75">
+            Free tries left today (this browser):{' '}
+            <span className="font-medium text-zinc-300">{usage.remaining}</span>
+          </p>
+        </div>
+
+        <div className="mb-3 flex flex-wrap gap-2">
+          {EXAMPLE_PROMPTS.map((p) => (
+            <button
+              key={p}
+              type="button"
+              onClick={() => {
+                setTopic(p)
+                setError(null)
+              }}
+              className="rounded-full border border-white/[0.08] bg-white/[0.04] px-3 py-1 text-left text-[11px] text-zinc-300 transition-colors duration-200 hover:border-violet-400/35 hover:text-violet-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/45"
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+
+        <label className="mb-3 block space-y-1.5">
+          <span className="text-xs text-zinc-400">What do you want to post about?</span>
+          <input
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            placeholder="e.g. launching a new skincare product…"
+            maxLength={180}
+            className="w-full rounded-xl border border-white/[0.1] bg-[rgba(13,12,19,0.78)] px-3 py-2.5 text-[15px] text-zinc-100 outline-none transition-colors duration-200 focus:border-violet-400/45 focus-visible:ring-2 focus-visible:ring-violet-500/25"
+          />
+        </label>
+
+        <div className="mb-4 grid gap-3 sm:grid-cols-2">
+          <label className="block space-y-1.5">
+            <span className="text-xs text-zinc-400">Platform</span>
+            <select
+              value={platform}
+              onChange={(e) => setPlatform(e.target.value as PublicPlatform)}
+              className="w-full rounded-lg border border-white/[0.1] bg-[rgba(13,12,19,0.78)] px-3 py-2 text-sm text-zinc-100 outline-none transition-colors duration-200 focus:border-violet-400/45 focus-visible:ring-2 focus-visible:ring-violet-500/25"
+            >
+              {PUBLIC_PLATFORM_OPTIONS.map((opt) => (
+                <option key={opt.id} value={opt.id}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="block space-y-1.5">
+            <span className="text-xs text-zinc-400">Tone</span>
+            <select
+              value={tone}
+              onChange={(e) => setTone(e.target.value as PublicTone)}
+              className="w-full rounded-lg border border-white/[0.1] bg-[rgba(13,12,19,0.78)] px-3 py-2 text-sm text-zinc-100 outline-none transition-colors duration-200 focus:border-violet-400/45 focus-visible:ring-2 focus-visible:ring-violet-500/25"
+            >
+              {PUBLIC_TONE_OPTIONS.map((opt) => (
+                <option key={opt.id} value={opt.id}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            disabled={!canGenerate}
+            onClick={() => void onGenerate()}
+            className="rounded-xl bg-violet-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-950/25 transition-colors duration-200 hover:bg-violet-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/60 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            {loading ? 'Generating…' : 'Generate'}
+          </button>
+          <Link
+            to="/generate"
+            className="text-sm font-medium text-zinc-400/75 underline-offset-4 transition-colors duration-200 hover:text-zinc-200 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/50"
+          >
+            Open full-screen trial
+          </Link>
+        </div>
+
+        {error ? (
+          <p
+            className="mb-4 rounded-xl border border-rose-400/20 bg-rose-950/20 px-3 py-2.5 text-sm text-rose-100"
+            role="alert"
+          >
+            {error}
+          </p>
+        ) : null}
+
+        <div className="rounded-xl border border-white/[0.06] bg-[rgba(255,255,255,0.025)] p-4">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500/90">Result</p>
+          {loading ? (
+            <div className="mt-3 space-y-2">
+              <div className="h-3 w-full max-w-md animate-pulse rounded bg-zinc-700/60" />
+              <div className="h-3 max-w-lg animate-pulse rounded bg-zinc-700/50" style={{ width: '92%' }} />
+              <p className="text-sm text-zinc-400/80">Writing your caption…</p>
+            </div>
+          ) : !generated ? (
+            <div className="mt-3 rounded-lg border border-dashed border-white/[0.08] bg-[rgba(0,0,0,0.12)] px-3 py-3.5">
+              <p className="text-sm leading-relaxed text-zinc-300/90">
+                Generate to preview your caption and hashtags here—ready to copy in one tap.
+              </p>
+              <p className="mt-2 text-[11px] leading-relaxed text-zinc-500/90">
+                Tip: pick a platform and tone first, or tap an example topic above to get started fast.
+              </p>
+            </div>
+          ) : (
+            <>
+              <p className="mt-1 text-xs font-medium text-violet-200/90">Caption</p>
+              <p className="mt-1 text-[15px] leading-relaxed text-zinc-100">{caption}</p>
+              <p className="mt-3 text-xs font-medium text-violet-200/90">Hashtags</p>
+              <p className="mt-1 font-mono text-sm text-violet-200/90">{hashtags}</p>
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => void onCopy()}
+                  className="rounded-lg border border-zinc-600 bg-zinc-950 px-3 py-1.5 text-xs font-medium text-zinc-200 transition-colors duration-200 hover:border-zinc-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/45"
+                >
+                  {copied ? 'Copied' : 'Copy all'}
+                </button>
+                <Link
+                  to={signupHref}
+                  onClick={() =>
+                    jifunzeCriticalLog({
+                      action: 'public_generate_signup_clicked',
+                      status: 'started',
+                      detail: { cta: 'create_free_account', surface: 'homepage' },
+                    })
+                  }
+                  className="text-xs font-semibold text-violet-300/95 hover:text-violet-200"
+                >
+                  Save &amp; generate more →
+                </Link>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+===== FILE: src/components/PublicGeneratePage.tsx =====
+import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { PUBLIC_PLATFORM_OPTIONS, PUBLIC_TONE_OPTIONS } from '../constants/publicGenerateUi'
+import {
+  buildSignupHandoffQuery,
+  getPublicGenerateUsageStatus,
+  persistPublicGenerateHandoff,
+  PublicGenerateError,
+  requestPublicGeneration,
+  type PublicPlatform,
+  type PublicTone,
+} from '../services/content/publicGenerate'
+import { jifunzeCriticalLog } from '../lib/jifunzeTelemetry'
+import { JifunzeBrandLogo } from './brand/JifunzeBrandLogo'
+import { PublicSocialLinks } from './PublicSocialLinks'
+
+export function PublicGeneratePage() {
+  const [topic, setTopic] = useState('')
+  const [platform, setPlatform] = useState<PublicPlatform>('instagram')
+  const [tone, setTone] = useState<PublicTone>('professional')
+  const [caption, setCaption] = useState('')
+  const [hashtags, setHashtags] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+  const [generated, setGenerated] = useState(false)
+  const [usageTick, setUsageTick] = useState(0)
+
+  const usage = useMemo(() => {
+    void usageTick
+    return getPublicGenerateUsageStatus()
+  }, [usageTick])
+
+  const canGenerate = topic.trim().length >= 3 && !loading && usage.remaining > 0
+
+  async function onGenerate() {
+    const trimmedTopic = topic.trim()
+    setError(null)
+    setCopied(false)
+    setGenerated(false)
+    setLoading(true)
+    jifunzeCriticalLog({
+      action: 'public_generate_started',
+      status: 'started',
+      detail: { platform, tone, topicLength: trimmedTopic.length },
+    })
+    try {
+      const out = await requestPublicGeneration({
+        topic: trimmedTopic,
+        platform,
+        tone,
+      })
+      setCaption(out.caption)
+      setHashtags(out.hashtags)
+      setGenerated(true)
+      setUsageTick((n) => n + 1)
+      persistPublicGenerateHandoff({
+        topic: trimmedTopic,
+        platform,
+        tone,
+        createdAt: new Date().toISOString(),
+      })
+      jifunzeCriticalLog({
+        action: 'public_generate_succeeded',
+        status: 'ok',
+        detail: { platform, tone, source: out.source },
+      })
+    } catch (e) {
+      setCaption('')
+      setHashtags('')
+      if (e instanceof PublicGenerateError) {
+        console.error('[Jifunze.AI public generate]', {
+          code: e.code,
+          reason: e.reason,
+          status: e.status,
+          message: e.message,
+        })
+      } else {
+        console.error('[Jifunze.AI public generate]', e)
+      }
+      const msg = e instanceof Error ? e.message : 'Something went wrong while generating.'
+      setError(msg)
+      if (e instanceof PublicGenerateError && e.code === 'limited') {
+        jifunzeCriticalLog({
+          action: 'public_generate_limited',
+          status: 'error',
+          detail: { platform, tone, reason: e.code },
+        })
+      }
+      setUsageTick((n) => n + 1)
+    } finally {
+      setLoading(false)
+    }
+  }
+  const signupHref = useMemo(
+    () =>
+      buildSignupHandoffQuery({
+        topic: topic.trim(),
+        platform,
+        tone,
+        createdAt: new Date().toISOString(),
+      }),
+    [platform, tone, topic],
+  )
+
+
+  async function onCopy() {
+    try {
+      await navigator.clipboard.writeText(`${caption}\n\n${hashtags}`)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1600)
+    } catch {
+      setError('Copy failed. Please copy manually.')
+    }
+  }
+
+  return (
+    <div className="min-h-screen w-full bg-zinc-950 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-800/25 via-zinc-950 to-zinc-950 px-4 py-8 text-zinc-100 sm:py-10">
+      <div className="mx-auto w-full max-w-4xl space-y-5">
+        <header className="flex items-center justify-between gap-3">
+          <JifunzeBrandLogo to="/" size="sm" variant="compact" />
+          <div className="flex items-center gap-2">
+            <Link
+              to="/?auth=signin#auth"
+              className="rounded-lg border border-zinc-700 px-3.5 py-2 text-xs font-semibold text-zinc-200 transition hover:border-zinc-600"
+            >
+              Sign in
+            </Link>
+            <Link
+              to="/?auth=signup#auth"
+              className="rounded-lg bg-violet-500/90 px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-violet-500"
+            >
+              Sign up
+            </Link>
+          </div>
+        </header>
+
+        <section className="space-y-2 text-center">
+          <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+            Create social content in seconds
+          </h1>
+          <p className="text-sm text-zinc-400">Try Jifunze free — no signup required</p>
+        </section>
+
+        <div className="grid gap-5 lg:grid-cols-[1fr_1fr]">
+          <section className="space-y-4 rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-5">
+          <label className="block space-y-1.5">
+            <span className="text-xs text-zinc-400">Topic</span>
+            <input
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
+              placeholder="e.g. How AI tutors can improve revision outcomes"
+              maxLength={180}
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-violet-500/50"
+            />
+          </label>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="block space-y-1.5">
+              <span className="text-xs text-zinc-400">Platform</span>
+              <select
+                value={platform}
+                onChange={(e) => setPlatform(e.target.value as PublicPlatform)}
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-violet-500/50"
+              >
+                {PUBLIC_PLATFORM_OPTIONS.map((opt) => (
+                  <option key={opt.id} value={opt.id}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="block space-y-1.5">
+              <span className="text-xs text-zinc-400">Tone</span>
+              <select
+                value={tone}
+                onChange={(e) => setTone(e.target.value as PublicTone)}
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-violet-500/50"
+              >
+                {PUBLIC_TONE_OPTIONS.map((opt) => (
+                  <option key={opt.id} value={opt.id}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-[11px] text-zinc-500">Free daily tries left (this browser): {usage.remaining}</p>
+            <button
+              type="button"
+              disabled={!canGenerate}
+              onClick={() => void onGenerate()}
+              className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-zinc-900 transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              {loading ? 'Generating…' : 'Generate'}
+            </button>
+          </div>
+
+          {error ? (
+            <p className="rounded-lg border border-rose-700/30 bg-rose-950/20 px-3 py-2 text-sm text-rose-300" role="alert">
+              {error}
+            </p>
+          ) : null}
+          </section>
+
+          <section className="space-y-3 rounded-2xl border border-zinc-800/80 bg-zinc-900/30 p-5">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">Result</h2>
+            {!generated ? (
+              <p className="text-sm text-zinc-500">Your generated caption will appear here.</p>
+            ) : (
+              <>
+                <div className="space-y-2">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">Caption</p>
+                  <p className="text-sm leading-relaxed text-zinc-100">{caption}</p>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">Hashtags</p>
+                  <p className="font-mono text-sm text-violet-200">{hashtags}</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={() => void onCopy()}
+                    className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-1.5 text-xs text-zinc-200 transition hover:border-zinc-600"
+                  >
+                    {copied ? 'Copied' : 'Copy'}
+                  </button>
+                  <p className="text-[11px] text-zinc-500">Ready for your next post.</p>
+                </div>
+              </>
+            )}
+          </section>
+        </div>
+
+        {!generated ? (
+          <section className="rounded-2xl border border-zinc-800/75 bg-zinc-900/20 p-4 text-center">
+            <p className="text-sm text-zinc-300">Want to save your drafts and unlock more generations?</p>
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                to="/?auth=signup#auth"
+                className="rounded-lg bg-violet-500/85 px-4 py-2 text-sm font-semibold text-white transition hover:bg-violet-500"
+              >
+                Create free account
+              </Link>
+              <Link
+                to="/?auth=signin#auth"
+                className="rounded-lg border border-zinc-700 px-4 py-2 text-sm font-semibold text-zinc-200 transition hover:border-zinc-600"
+              >
+                Sign in
+              </Link>
+            </div>
+          </section>
+        ) : null}
+
+        {generated ? (
+          <section className="rounded-2xl border border-violet-700/25 bg-violet-950/15 p-5 text-center">
+            <p className="text-sm text-zinc-300">Create a free account to save this and generate more</p>
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                to={signupHref}
+                onClick={() =>
+                  jifunzeCriticalLog({
+                    action: 'public_generate_signup_clicked',
+                    status: 'started',
+                    detail: { cta: 'create_free_account' },
+                  })
+                }
+                className="rounded-lg bg-violet-500/85 px-4 py-2 text-sm font-semibold text-white transition hover:bg-violet-500"
+              >
+                Create free account
+              </Link>
+            </div>
+          </section>
+        ) : null}
+
+        <footer className="border-t border-zinc-800/75 pt-4">
+          <PublicSocialLinks />
+        </footer>
+      </div>
+    </div>
+  )
+}
+
+===== FILE: src/components/PublicSocialLinks.tsx =====
+const SOCIALS = [
+  { name: 'TikTok', handle: '@jifunze_ai', href: 'https://www.tiktok.com/@jifunze_ai' },
+  { name: 'Instagram', handle: '@jifunze.ai', href: 'https://www.instagram.com/jifunze.ai' },
+  { name: 'X', handle: '@Jifunze.AI', href: 'https://x.com/JifunzeAI' },
+] as const
+
+function DotIcon() {
+  return <span className="inline-block h-1.5 w-1.5 rounded-full bg-violet-300/80" aria-hidden />
+}
+
+export function PublicSocialLinks({ compact = false }: { compact?: boolean }) {
+  return (
+    <div className={compact ? 'flex flex-wrap items-center gap-2.5' : 'flex flex-wrap items-center justify-center gap-2.5'}>
+      {SOCIALS.map((s) => (
+        <a
+          key={s.name}
+          href={s.href}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-full border border-zinc-800 bg-zinc-900/35 px-2.5 py-0.5 text-[10px] text-zinc-400 transition hover:border-violet-500/35 hover:text-violet-200"
+          aria-label={`${s.name} ${s.handle}`}
+        >
+          <DotIcon />
+          <span className="text-zinc-400">{s.name}:</span>
+          <span>{s.handle}</span>
+        </a>
+      ))}
+    </div>
+  )
+}
+
+===== FILE: src/components/brand/JifunzeAuthSectionBrandMark.tsx =====
+import { Fragment } from 'react'
+import logoLight from '../../assets/branding/jifunze-logo-light.png'
+
+const SOCIAL_LINKS = [
+  {
+    label: 'TikTok',
+    handle: '@jifunze_ai',
+    href: 'https://www.tiktok.com/@jifunze_ai',
+  },
+  {
+    label: 'Instagram',
+    handle: '@jifunze.ai',
+    href: 'https://www.instagram.com/jifunze.ai/',
+  },
+  {
+    label: 'X',
+    handle: '@Jifunze.AI',
+    href: 'https://x.com/Jifunze_AI',
+  },
+] as const
+
+type SocialHandlesRowProps = {
+  className?: string
+}
+
+function SocialHandlesRow({ className = '' }: SocialHandlesRowProps) {
+  return (
+    <nav
+      className={`flex flex-wrap items-center justify-end gap-x-2 gap-y-1 text-[10px] leading-snug tracking-wide text-zinc-500/70 ${className}`.trim()}
+      aria-label="Jifunze.AI on social"
+    >
+      {SOCIAL_LINKS.map((item, i) => (
+        <span key={item.href} className="inline-flex items-center gap-x-2">
+          {i > 0 ? (
+            <span className="text-zinc-600/60" aria-hidden>
+              ·
+            </span>
+          ) : null}
+          <a
+            href={item.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors duration-200 hover:text-zinc-400/90 focus-visible:rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/40"
+          >
+            <span className="sr-only">{item.label}: </span>
+            {item.handle}
+          </a>
+        </span>
+      ))}
+    </nav>
+  )
+}
+
+/**
+ * Ambient bottom-right brand canvas for the homepage card: large muted logo with social
+ * handles directly beneath. Positioned relative to a `relative` ancestor (the main shell).
+ */
+export function JifunzeAuthSectionBrandMark() {
+  return (
+    <Fragment>
+      <div
+        className="pointer-events-none absolute bottom-0 right-0 z-0 h-[min(15rem,34vh)] w-[min(92%,30rem)] select-none overflow-hidden sm:h-[min(16rem,36vh)] sm:w-[min(88%,32rem)]"
+        aria-hidden
+      >
+        <div className="jifunze-auth-brand-glow absolute bottom-[-6rem] right-[-6rem] h-[22rem] w-[22rem] rounded-full bg-violet-500/14 blur-[3.25rem]" />
+        <div className="jifunze-auth-brand-glow-delayed absolute bottom-[-1rem] right-[1rem] h-[16rem] w-[16rem] rounded-full bg-indigo-400/10 blur-[2.75rem]" />
+
+        <div className="relative flex h-full min-h-[10rem] items-end justify-end overflow-hidden sm:min-h-[11rem]">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_85%_70%_at_88%_92%,rgba(139,92,246,0.06),transparent_55%)]" />
+          <div className="absolute inset-y-0 left-0 w-[min(40%,12rem)] bg-gradient-to-r from-[rgba(18,16,24,0.92)] via-[rgba(18,16,24,0.35)] to-transparent" />
+          <img
+            src={logoLight}
+            alt=""
+            width={760}
+            height={220}
+            className="jifunze-auth-brand-mark relative -mb-5 mr-[-36%] w-[min(135%,40rem)] max-w-none scale-[1.08] opacity-[0.055] mix-blend-screen blur-[0.7px] contrast-110 sm:-mb-6 sm:mr-[-40%] sm:w-[min(145%,46rem)] sm:opacity-[0.065] sm:blur-[0.5px]"
+            decoding="async"
+          />
+        </div>
+      </div>
+
+      <div className="pointer-events-auto absolute bottom-2 right-4 z-10 max-w-[min(100%,22rem)] sm:bottom-3 sm:right-6">
+        <SocialHandlesRow />
+      </div>
+    </Fragment>
+  )
+}
+
+===== FILE: src/components/brand/JifunzeBrandLogo.tsx =====
+import { Link } from 'react-router-dom'
+import logoIcon from '../../assets/branding/jifunze-logo-icon.png'
+import logoLight from '../../assets/branding/jifunze-logo-light.png'
+
+type Props = {
+  /** Link target; use `null` for non-link (e.g. header title only). */
+  to?: string | null
+  className?: string
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
+  variant?: 'full' | 'compact'
+}
+
+const sizeClasses = {
+  sm: {
+    full: 'h-8',
+    compact: 'h-8 w-8',
+  },
+  md: {
+    full: 'h-9 sm:h-10',
+    compact: 'h-9 w-9 sm:h-10 sm:w-10',
+  },
+  lg: {
+    full: 'h-10 sm:h-11',
+    compact: 'h-11 w-11 sm:h-12 sm:w-12',
+  },
+  xl: {
+    full: 'h-12 sm:h-14',
+    compact: 'h-12 w-12 sm:h-14 sm:w-14',
+  },
+  xxl: {
+    full: 'h-14 sm:h-16',
+    compact: 'h-14 w-14 sm:h-16 sm:w-16',
+  },
+} as const
+
+/**
+ * Public brand lockup using the production logo assets.
+ */
+export function JifunzeBrandLogo({
+  to = '/',
+  className = '',
+  size = 'md',
+  variant = 'full',
+}: Props) {
+  const isCompact = variant === 'compact'
+  const inner = (
+    <span className={`inline-flex items-center gap-2.5 ${className}`}>
+      {isCompact ? (
+        <>
+          <img
+            src={logoIcon}
+            alt=""
+            width={48}
+            height={48}
+            className={`${sizeClasses[size].compact} shrink-0 rounded-xl shadow-sm shadow-violet-950/40 ring-1 ring-white/10`}
+            decoding="async"
+          />
+          <span className="font-semibold tracking-tight text-zinc-100">
+            Jifunze<span className="text-violet-300/95">.AI</span>
+          </span>
+        </>
+      ) : (
+        <img
+          src={logoLight}
+          alt="Jifunze.AI"
+          height={40}
+          className={`${sizeClasses[size].full} w-auto shrink-0`}
+          decoding="async"
+        />
+      )}
+    </span>
+  )
+
+  if (to === null) {
+    return <span className="inline-flex items-center">{inner}</span>
+  }
+
+  return (
+    <Link
+      to={to}
+      aria-label="Jifunze.AI home"
+      className="inline-flex items-center outline-none ring-violet-500/40 focus-visible:ring-2"
+    >
+      {inner}
+    </Link>
+  )
+}
+
+===== FILE: src/index.css =====
+@import "tailwindcss";
+
+/* Subtle homepage auth-section brand motion (no spin / bounce) */
+@keyframes jifunze-auth-brand-breathe {
+  0%,
+  100% {
+    opacity: 0.1;
+    transform: translate3d(0, 6px, 0) scale(1);
+  }
+  50% {
+    opacity: 0.16;
+    transform: translate3d(0, 0, 0) scale(1.02);
+  }
+}
+
+@keyframes jifunze-auth-brand-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes jifunze-auth-brand-glow-pulse-delayed {
+  0%,
+  100% {
+    opacity: 0.22;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.38;
+    transform: scale(1.08);
+  }
+}
+
+.jifunze-auth-brand-mark {
+  animation: jifunze-auth-brand-breathe 16s ease-in-out infinite;
+}
+
+.jifunze-auth-brand-glow {
+  animation: jifunze-auth-brand-glow-pulse 14s ease-in-out infinite;
+}
+
+.jifunze-auth-brand-glow-delayed {
+  animation: jifunze-auth-brand-glow-pulse-delayed 18s ease-in-out infinite;
+  animation-delay: 2.5s;
+}

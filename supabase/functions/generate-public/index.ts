@@ -10,10 +10,16 @@ type PublicGenerateRequest = {
   tone: PublicTone
 }
 
+type PublicGrounding = 'grounded' | 'generic_fallback'
+
 type PublicGenerateResponse = {
   caption: string
   hashtags: string
   source: 'backend_llm'
+  grounding: PublicGrounding
+  signals_summary: string
+  signal_items: string[]
+  suggested_angle: string
 }
 
 type PublicFailureReason =
@@ -98,7 +104,7 @@ function checkAndBumpInMemoryDailyCap(req: Request): { ok: true } | { ok: false;
   if (ipCount >= DAILY_ANON_CAP || browserCount >= DAILY_ANON_CAP) {
     return {
       ok: false,
-      error: 'Free daily limit reached. Create a free account to save and automate with Jifunze.',
+      error: 'You’ve used today’s free preview. Sign in or create a free account to continue.',
     }
   }
 
@@ -157,7 +163,7 @@ async function checkAndBumpDurableDailyCap(
   if (!row?.allowed) {
     return {
       ok: false,
-      error: 'Free daily limit reached. Create a free account to save and automate with Jifunze.',
+      error: 'You’ve used today’s free preview. Sign in or create a free account to continue.',
     }
   }
   return { ok: true }
@@ -214,6 +220,57 @@ function normalizeHashtags(value: unknown): string | null {
   return null
 }
 
+function detectTrendIntent(topic: string): boolean {
+  const t = topic.toLowerCase()
+  const cues = [
+    /\btrending\b/,
+    /\bthis week\b/,
+    /\bright now\b/,
+    /\btoday\b/,
+    /\bhottest\b/,
+    /\btop\s+\d+\b/,
+    /\bcharts?\b/,
+    /\bviral\b/,
+    /\bnews today\b/,
+    /\bai news\b/,
+    /\bnow on\b/,
+    /\bat the moment\b/,
+    /\bthis month\b/,
+  ]
+  return cues.some((re) => re.test(t))
+}
+
+async function fetchWikipediaTitles(query: string): Promise<string[]> {
+  const q = query.trim().slice(0, 140)
+  if (!q) return []
+  const url = new URL('https://en.wikipedia.org/w/api.php')
+  url.searchParams.set('action', 'opensearch')
+  url.searchParams.set('search', q)
+  url.searchParams.set('limit', '6')
+  url.searchParams.set('namespace', '0')
+  url.searchParams.set('format', 'json')
+
+  try {
+    const res = await fetch(url.toString(), {
+      headers: {
+        // Wikimedia asks for a descriptive UA for API consumers.
+        'User-Agent': 'JifunzePublicCaptionPreview/1.0 (mailto:neuralbuildlab.ai@gmail.com)',
+        Accept: 'application/json',
+      },
+    })
+    if (!res.ok) return []
+    const data = (await res.json()) as unknown
+    if (!Array.isArray(data) || data.length < 2 || !Array.isArray(data[1])) return []
+    const titles = (data[1] as unknown[])
+      .filter((x): x is string => typeof x === 'string')
+      .map((x) => x.trim())
+      .filter(Boolean)
+    return titles.slice(0, 5)
+  } catch {
+    return []
+  }
+}
+
 function deriveHashtags(caption: string): string {
   const words = caption
     .toLowerCase()
@@ -226,7 +283,7 @@ function deriveHashtags(caption: string): string {
   return uniq.map((w) => `#${w}`).join(' ')
 }
 
-function parseAssistantToPublic(rawContent: string): PublicGenerateResponse | null {
+function parseAssistantToPublic(rawContent: string): Omit<PublicGenerateResponse, 'grounding' | 'signals_summary' | 'signal_items'> | null {
   for (const c of extractJsonCandidates(rawContent)) {
     let parsed: unknown
     try {
@@ -242,7 +299,10 @@ function parseAssistantToPublic(rawContent: string): PublicGenerateResponse | nu
     const tagsRaw = obj.hashtags ?? obj.tags ?? obj.hashtag_list
     const hashtags = normalizeHashtags(tagsRaw) ?? deriveHashtags(caption)
     if (!hashtags.trim()) continue
-    return { caption, hashtags: hashtags.trim(), source: 'backend_llm' }
+    const suggestedAngleRaw = obj.suggested_angle ?? obj.angle ?? obj.hook
+    const suggested_angle =
+      typeof suggestedAngleRaw === 'string' && suggestedAngleRaw.trim() ? suggestedAngleRaw.trim() : ''
+    return { caption, hashtags: hashtags.trim(), source: 'backend_llm', suggested_angle }
   }
   return null
 }
@@ -251,30 +311,65 @@ async function generatePublicContent(input: PublicGenerateRequest): Promise<Publ
   const apiKey = Deno.env.get('OPENAI_API_KEY')?.trim()
   if (!apiKey) {
     throw new PublicGenerateFailure(
-      'Public generation is temporarily unavailable. Please create a free account to continue.',
+      'Public generation is temporarily unavailable. Please sign in or try again later.',
       'missing_openai_key',
       503,
     )
   }
   const model = Deno.env.get('OPENAI_MODEL')?.trim() || 'gpt-4o-mini'
 
+  const trendIntent = detectTrendIntent(input.topic)
+  const wikiTitles = trendIntent ? [] : await fetchWikipediaTitles(input.topic)
+
+  const referenceBlock =
+    wikiTitles.length > 0
+      ? `Reference topics (Wikipedia public search — contextual only; not live trends):\n- ${wikiTitles.join('\n- ')}`
+      : 'No Wikipedia reference titles were confidently matched for this wording.'
+
+  const trendRules = trendIntent
+    ? [
+        'This prompt looks like it requests live rankings, charts, breaking news, or “what is trending”.',
+        'Do NOT invent songs, artists, statistics, rankings, viral moments, or dated claims.',
+        'Write a cautious caption that asks a question, invites discussion, or frames the post as opinion/reflection—not reporting current charts.',
+      ].join('\n')
+    : [
+        'If reference topics help, weave them naturally; if they feel unrelated, ignore them.',
+        'Do not invent precise statistics or imply verified breaking news.',
+      ].join('\n')
+
+  const temperature = trendIntent ? 0.35 : 0.55
+
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model,
-      temperature: 0.6,
-      max_tokens: 220,
+      temperature,
+      max_tokens: 320,
       response_format: { type: 'json_object' },
       messages: [
         {
           role: 'system',
-          content:
-            'Write one high-quality social caption. Return ONLY JSON: {"caption":"...","hashtags":"#a #b #c"}. Keep caption concise and practical. Match requested platform and tone.',
+          content: [
+            'You write social captions for Jifunze’s public preview.',
+            'Return ONLY JSON with keys: caption (string), hashtags (string or array), suggested_angle (one concise sentence describing the angle).',
+            'Keep the caption practical for the requested platform + tone.',
+            trendIntent
+              ? 'When live trend verification is unavailable, label outputs as reflective prompts—not factual reporting.'
+              : 'Prefer grounded wording when reference topics are relevant.',
+          ].join(' '),
         },
         {
           role: 'user',
-          content: `Topic: ${input.topic}\nPlatform: ${input.platform}\nTone: ${input.tone}`,
+          content: [
+            `Topic: ${input.topic}`,
+            `Platform: ${input.platform}`,
+            `Tone: ${input.tone}`,
+            '',
+            referenceBlock,
+            '',
+            trendRules,
+          ].join('\n'),
         },
       ],
     }),
@@ -284,7 +379,7 @@ async function generatePublicContent(input: PublicGenerateRequest): Promise<Publ
     const msg = await res.text().catch(() => '')
     console.error('[JifunzeAI generate-public] OpenAI error', res.status, msg.slice(0, 400))
     throw new PublicGenerateFailure(
-      'Generation service is busy. Please try again shortly or create a free account.',
+      'Generation service is busy. Please try again shortly.',
       'openai_http_error',
       503,
       { openaiStatus: res.status },
@@ -312,7 +407,33 @@ async function generatePublicContent(input: PublicGenerateRequest): Promise<Publ
       503,
     )
   }
-  return parsed
+
+  const grounding: PublicGrounding = trendIntent || wikiTitles.length === 0 ? 'generic_fallback' : 'grounded'
+
+  const signals_summary = trendIntent
+    ? "We couldn’t verify live trend signals from public feeds in this preview. The caption is a labeled practice draft—double-check anything time-sensitive before posting."
+    : wikiTitles.length > 0
+      ? `Signals found (Wikipedia open search — reference topics, not live trends): ${wikiTitles.slice(0, 4).join(' · ')}`
+      : "We couldn’t match enough reference topics from Wikipedia for this wording, so this is a generic draft anchored to your idea."
+
+  const suggested_angle =
+    parsed.suggested_angle.trim().length > 0
+      ? parsed.suggested_angle.trim()
+      : trendIntent
+        ? 'Invite conversation without claiming verified rankings or breaking updates.'
+        : wikiTitles.length > 0
+          ? `Lean on the clearest shared reference: ${wikiTitles[0]}.`
+          : 'Lead with your takeaway, then invite responses.'
+
+  return {
+    caption: parsed.caption,
+    hashtags: parsed.hashtags,
+    source: parsed.source,
+    grounding,
+    signals_summary,
+    signal_items: wikiTitles,
+    suggested_angle,
+  }
 }
 
 Deno.serve(async (req) => {
@@ -372,7 +493,7 @@ Deno.serve(async (req) => {
     })
     const userMessage =
       failure.reason === 'missing_openai_key' || failure.reason === 'missing_service_role_key'
-        ? 'Public generation is not configured yet. Please create a free account or try again later.'
+        ? 'Public generation is not configured yet. Please try again later.'
         : failure.message
     return json(
       {

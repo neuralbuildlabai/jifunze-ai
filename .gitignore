@@ -1,5 +1,7 @@
 .env
 .env.*
+!.env.example
+.env.smoke.local
 .env.localy
 
 # Logs
@@ -26,3 +28,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Playwright demo recordings (large); keep folders via .gitkeep
+e2e/demo-artifacts/videos/*.webm
+e2e/demo-artifacts/screenshots/*.png
+
+# Playwright test runner output
+/playwright-report/
+/test-results/

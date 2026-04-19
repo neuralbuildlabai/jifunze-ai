@@ -19,6 +19,23 @@ interface ImportMetaEnv {
   readonly VITE_ENABLE_TREND_OPPORTUNITIES?: string
   /** When `true`, shows DB health RPC warnings in the shell (INTERNAL UAT / debug). */
   readonly VITE_INTERNAL_UAT_DIAGNOSTICS?: string
+  /**
+   * When `true`, or in dev unless `false`: use email allowlists for tier if `my_effective_access_tier` fails.
+   */
+  readonly VITE_ACCESS_TIER_EMAIL_FALLBACK?: string
+  /**
+   * When `true`, client shows live Checkout / Customer Portal actions (Edge Functions must be deployed with secrets).
+   */
+  readonly VITE_BILLING_CHECKOUT_ENABLED?: string
+  /** Comma-separated domain suffixes for student-discount eligibility (e.g. ".edu,.ac.uk,.ac.ke"). */
+  readonly VITE_BILLING_STUDENT_DOMAIN_SUFFIXES?: string
+  /** Comma-separated domain suffixes for team/org discount eligibility. */
+  readonly VITE_BILLING_TEAM_ORG_DOMAIN_SUFFIXES?: string
+  /**
+   * When `true`, `startStripeCheckout` returns synthetic URLs for Playwright (no Edge Function / Stripe network).
+   * Must remain `false`/unset in production builds.
+   */
+  readonly VITE_E2E_BILLING_INVOKE_MOCK?: string
 }
 
 interface ImportMeta {

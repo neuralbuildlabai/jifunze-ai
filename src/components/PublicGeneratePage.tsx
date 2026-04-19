@@ -24,13 +24,13 @@ import { PublicSocialLinks } from './PublicSocialLinks'
 function GroundingPill({ result }: { result: PublicGenerateResult }) {
   if (result.grounding === 'grounded') {
     return (
-      <span className="inline-flex items-center rounded-full border border-zinc-300/90 bg-zinc-100/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-zinc-700">
+      <span className="inline-flex items-center rounded-full border border-white/14 bg-[color:var(--jf-surface-elevated)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-zinc-200">
         Grounded in public reference topics
       </span>
     )
   }
   return (
-    <span className="inline-flex items-center rounded-full border border-zinc-200/95 bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-zinc-600">
+    <span className="inline-flex items-center rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-[color:var(--jf-muted)]">
       General draft · limited public signals
     </span>
   )
@@ -136,17 +136,17 @@ export function PublicGeneratePage() {
     <div className="jf-public-surface min-h-screen w-full bg-[var(--jf-bg-page)] px-4 py-8 text-[var(--jf-text)] sm:py-10">
       <div className="mx-auto w-full max-w-4xl space-y-6">
         <header className="flex items-center justify-between gap-3">
-          <JifunzeBrandLogo to="/" size="sm" variant="compact" surface="light" />
+          <JifunzeBrandLogo to="/" size="sm" variant="compact" surface="dark" />
           <div className="flex items-center gap-2">
             <Link
               to="/?auth=signin#auth"
-              className="rounded-lg border border-zinc-200/95 bg-white px-3.5 py-2 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-50"
+              className="rounded-lg border border-white/[0.1] bg-white/[0.04] px-3.5 py-2 text-xs font-semibold text-zinc-200 transition hover:bg-white/[0.08]"
             >
               Sign in
             </Link>
             <Link
               to="/?auth=signup#auth"
-              className="rounded-lg bg-zinc-900 px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-zinc-800"
+              className="rounded-lg bg-[var(--jf-brand)] px-3.5 py-2 text-xs font-semibold text-zinc-950 transition hover:bg-[var(--jf-brand-hover)]"
             >
               Sign up
             </Link>
@@ -154,31 +154,31 @@ export function PublicGeneratePage() {
         </header>
 
         <section className="space-y-2 text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-500">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">
             Caption preview
           </p>
-          <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
+          <h1 className="text-3xl font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-4xl">
             Start from context you can verify
           </h1>
-          <p className="mx-auto max-w-xl text-sm text-zinc-600">
-            When public reference topics exist, we use them to shape a draft you still own: edit tone, check facts, and decide what ships.
+          <p className="mx-auto max-w-xl text-sm text-[color:var(--jf-muted)]">
+            When public references exist, we shape a draft you still own—edit tone, verify facts, and publish only what you approve.
           </p>
         </section>
 
-        <p className="text-left text-[11px] leading-snug text-zinc-600" data-testid="public-generate-trust-boundary">
+        <p className="text-left text-[11px] leading-snug text-[color:var(--jf-muted)]" data-testid="public-generate-trust-boundary">
           {TRUST_COPY.publicGeneratorTrustLine}{' '}
           <Link
             to={LEGAL_ROUTES.disclaimer}
-            className="font-medium text-zinc-800 underline-offset-2 hover:text-zinc-950 hover:underline"
+            className="font-medium text-zinc-100 underline-offset-2 hover:text-white hover:underline"
           >
             Full disclaimer
           </Link>
         </p>
 
         <div className="grid gap-5 lg:grid-cols-[1fr_1fr]">
-          <section className="space-y-4 rounded-2xl border border-zinc-200/95 bg-white p-5 shadow-sm">
+          <section className="space-y-4 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-5 shadow-[var(--jf-shadow-soft)] ring-1 ring-white/[0.03]">
             <div className="space-y-2">
-              <p className="text-[11px] font-medium text-zinc-500">Try a sample topic</p>
+              <p className="text-[11px] font-medium text-[color:var(--jf-muted)]">Try a sample topic</p>
               <div className="flex flex-wrap gap-2">
                 {PUBLIC_SAMPLE_TOPICS.map((p) => (
                   <button
@@ -188,7 +188,7 @@ export function PublicGeneratePage() {
                       setTopic(p)
                       setError(null)
                     }}
-                    className="rounded-full border border-zinc-200/95 bg-zinc-50 px-3 py-1.5 text-left text-[11px] text-zinc-700 transition hover:border-zinc-300 hover:bg-white"
+                    className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)] px-3 py-1.5 text-left text-[11px] text-[color:var(--jf-text)] transition hover:border-white/[0.12] hover:bg-[color:var(--jf-surface)]"
                   >
                     {p}
                   </button>
@@ -197,23 +197,23 @@ export function PublicGeneratePage() {
             </div>
 
             <label className="block space-y-1.5">
-              <span className="text-xs text-zinc-500">Topic</span>
+              <span className="text-xs text-[color:var(--jf-muted)]">Topic</span>
               <input
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 placeholder="What is the post about?"
                 maxLength={180}
-                className="w-full rounded-lg border border-zinc-200/95 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-300/40"
+                className="w-full rounded-lg border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)] px-3 py-2 text-sm text-[color:var(--jf-text)] outline-none placeholder:text-[color:var(--jf-subtle)] focus:border-white/[0.14] focus:ring-2 focus:ring-[color:var(--jf-focus-ring)]"
               />
             </label>
 
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="block space-y-1.5">
-                <span className="text-xs text-zinc-500">Platform</span>
+                <span className="text-xs text-[color:var(--jf-muted)]">Platform</span>
                 <select
                   value={platform}
                   onChange={(e) => setPlatform(e.target.value as PublicPlatform)}
-                  className="w-full rounded-lg border border-zinc-200/95 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-300/40"
+                  className="w-full rounded-lg border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)] px-3 py-2 text-sm text-[color:var(--jf-text)] outline-none focus:border-white/[0.14] focus:ring-2 focus:ring-[color:var(--jf-focus-ring)]"
                 >
                   {PUBLIC_PLATFORM_OPTIONS.map((opt) => (
                     <option key={opt.id} value={opt.id}>
@@ -223,11 +223,11 @@ export function PublicGeneratePage() {
                 </select>
               </label>
               <label className="block space-y-1.5">
-                <span className="text-xs text-zinc-500">Tone</span>
+                <span className="text-xs text-[color:var(--jf-muted)]">Tone</span>
                 <select
                   value={tone}
                   onChange={(e) => setTone(e.target.value as PublicTone)}
-                  className="w-full rounded-lg border border-zinc-200/95 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-300/40"
+                  className="w-full rounded-lg border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)] px-3 py-2 text-sm text-[color:var(--jf-text)] outline-none focus:border-white/[0.14] focus:ring-2 focus:ring-[color:var(--jf-focus-ring)]"
                 >
                   {PUBLIC_TONE_OPTIONS.map((opt) => (
                     <option key={opt.id} value={opt.id}>
@@ -239,81 +239,81 @@ export function PublicGeneratePage() {
             </div>
 
             <div className="flex items-center justify-between gap-3">
-              <p className="text-[11px] text-zinc-600">Free previews left today (this browser): {usage.remaining}</p>
+              <p className="text-[11px] text-[color:var(--jf-muted)]">Free previews left today (this browser): {usage.remaining}</p>
               <button
                 type="button"
                 disabled={!canGenerate}
                 onClick={() => void onGenerate()}
-                className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-40"
+                className="rounded-lg bg-[var(--jf-brand)] px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:bg-[var(--jf-brand-hover)] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {loading ? 'Working…' : 'Try preview'}
               </button>
             </div>
 
             {error ? (
-              <p className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-900" role="alert">
+              <p className="rounded-lg border border-rose-500/25 bg-rose-950/35 px-3 py-2 text-sm text-rose-100 ring-1 ring-rose-400/15" role="alert">
                 {error}
               </p>
             ) : null}
           </section>
 
-          <section className="space-y-4 rounded-2xl border border-zinc-200/95 bg-zinc-50/80 p-5 shadow-sm">
+          <section className="space-y-4 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)] p-5 shadow-inner shadow-[rgba(18,20,26,0.22)] ring-1 ring-white/[0.03]">
             <div className="flex items-center justify-between gap-3">
-              <h2 className="text-sm font-semibold text-zinc-900">Suggested post</h2>
+              <h2 className="text-sm font-semibold text-zinc-50">Suggested post</h2>
               {result ? <GroundingPill result={result} /> : null}
             </div>
             {loading ? (
               <div className="space-y-2">
-                <div className="h-3 w-full max-w-md animate-pulse rounded bg-zinc-200" />
-                <div className="h-3 max-w-lg animate-pulse rounded bg-zinc-200/90" style={{ width: '92%' }} />
-                <p className="text-sm text-zinc-600">Gathering reference signals and drafting…</p>
+                <div className="h-3 w-full max-w-md animate-pulse rounded bg-zinc-600/45" />
+                <div className="h-3 max-w-lg animate-pulse rounded bg-zinc-600/35" style={{ width: '92%' }} />
+                <p className="text-sm text-zinc-400">Gathering reference signals and drafting…</p>
               </div>
             ) : result ? (
               <div className="space-y-5">
-                <div className="space-y-2 rounded-xl border border-zinc-200/90 bg-white p-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-zinc-500">Reference summary</p>
-                  <p className="text-sm leading-relaxed text-zinc-800">{result.signals_summary}</p>
+                <div className="space-y-2 rounded-xl border border-white/[0.08] bg-[color:var(--jf-surface-elevated)] p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-zinc-400">Reference summary</p>
+                  <p className="text-sm leading-relaxed text-zinc-200">{result.signals_summary}</p>
                   {result.signal_items.length ? (
-                    <ul className="mt-2 list-disc space-y-1 pl-5 text-[13px] text-zinc-700">
+                    <ul className="mt-2 list-disc space-y-1 pl-5 text-[13px] text-zinc-300">
                       {result.signal_items.map((item) => (
                         <li key={item}>{item}</li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="mt-2 text-[13px] text-zinc-500">No extra bullet list—details are in the summary.</p>
+                    <p className="mt-2 text-[13px] text-zinc-400">No extra bullet list—details are in the summary.</p>
                   )}
                 </div>
 
                 <div className="space-y-2">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-zinc-500">Suggested angle</p>
-                  <p className="text-sm leading-relaxed text-zinc-800">{result.suggested_angle}</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-zinc-400">Suggested angle</p>
+                  <p className="text-sm leading-relaxed text-zinc-200">{result.suggested_angle}</p>
                 </div>
 
                 <div className="space-y-2">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-zinc-500">Caption draft</p>
-                  <p className="text-sm leading-relaxed text-zinc-900">{result.caption}</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-zinc-400">Caption draft</p>
+                  <p className="text-sm leading-relaxed text-zinc-50">{result.caption}</p>
                 </div>
 
                 <div className="space-y-2">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-zinc-500">Hashtags</p>
-                  <p className="font-mono text-sm text-zinc-200/90">{result.hashtags}</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-zinc-400">Hashtags</p>
+                  <p className="font-mono text-sm text-zinc-300">{result.hashtags}</p>
                 </div>
 
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <button
                     type="button"
                     onClick={() => void onCopy()}
-                    className="rounded-lg border border-zinc-200/95 bg-white px-3 py-1.5 text-xs text-zinc-800 transition hover:bg-zinc-50"
+                    className="rounded-lg border border-white/[0.12] bg-white/[0.06] px-3 py-1.5 text-xs text-zinc-100 transition hover:bg-white/[0.1]"
                   >
                     {copied ? 'Copied' : 'Copy caption + hashtags'}
                   </button>
-                  <p className="text-[11px] text-zinc-500">Verify facts and tone before publishing.</p>
+                  <p className="text-[11px] text-zinc-400">Verify facts and tone before publishing.</p>
                 </div>
               </div>
             ) : (
-              <div className="space-y-2 rounded-xl border border-dashed border-zinc-300/95 bg-white/80 px-4 py-6 text-left">
-                <p className="text-sm text-zinc-700">Output will show a short reference summary, a suggested angle, caption, and hashtags.</p>
-                <p className="text-[13px] text-zinc-500">
+              <div className="space-y-2 rounded-xl border border-dashed border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-4 py-6 text-left">
+                <p className="text-sm text-[color:var(--jf-muted)]">Output will show a short reference summary, a suggested angle, caption, and hashtags.</p>
+                <p className="text-[13px] text-[color:var(--jf-subtle)]">
                   Add a topic (three or more characters) or tap a sample above, then choose platform and tone.
                 </p>
               </div>
@@ -322,19 +322,19 @@ export function PublicGeneratePage() {
         </div>
 
         {!result && !loading ? (
-          <section className="rounded-2xl border border-zinc-200/95 bg-white p-5 text-center shadow-sm">
-            <p className="text-sm text-zinc-800">Want to save drafts and go further?</p>
-            <p className="mt-2 text-[13px] text-zinc-500">Create a free account when you&apos;re ready—no pressure to sign up before you preview.</p>
+          <section className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-5 text-center shadow-[var(--jf-shadow-soft)] ring-1 ring-white/[0.03]">
+            <p className="text-sm text-[color:var(--jf-text)]">Want to save drafts and go further?</p>
+            <p className="mt-2 text-[13px] text-[color:var(--jf-muted)]">Create a free account when you&apos;re ready—no pressure to sign up before you preview.</p>
             <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
               <Link
                 to="/?auth=signup#auth"
-                className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-zinc-800"
+                className="rounded-lg bg-[var(--jf-brand)] px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:bg-[var(--jf-brand-hover)]"
               >
                 Sign up
               </Link>
               <Link
                 to="/?auth=signin#auth"
-                className="rounded-lg border border-zinc-200/95 px-4 py-2 text-sm font-semibold text-zinc-800 transition hover:bg-zinc-50"
+                className="rounded-lg border border-white/[0.12] px-4 py-2 text-sm font-semibold text-zinc-200 transition hover:bg-white/[0.06]"
               >
                 Sign in
               </Link>
@@ -343,9 +343,9 @@ export function PublicGeneratePage() {
         ) : null}
 
         {result && !loading ? (
-          <section className="rounded-2xl border border-zinc-200/95 bg-white p-5 text-center shadow-sm">
-            <p className="text-sm text-zinc-800">Want to keep going?</p>
-            <p className="mt-2 text-[13px] text-zinc-500">Save your draft and open the workspace when you&apos;re ready for more previews.</p>
+          <section className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-5 text-center shadow-[var(--jf-shadow-soft)] ring-1 ring-white/[0.03]">
+            <p className="text-sm text-[color:var(--jf-text)]">Want to keep going?</p>
+            <p className="mt-2 text-[13px] text-[color:var(--jf-muted)]">Save your draft and open the workspace when you&apos;re ready for more previews.</p>
             <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
               <Link
                 to={signupHref}
@@ -356,19 +356,19 @@ export function PublicGeneratePage() {
                     detail: { cta: 'continue_workspace' },
                   })
                 }
-                className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-zinc-800"
+                className="rounded-lg bg-[var(--jf-brand)] px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:bg-[var(--jf-brand-hover)]"
               >
                 Save your work
               </Link>
-              <Link to="/?auth=signin#auth" className="text-sm font-semibold text-zinc-600 hover:text-zinc-900">
+              <Link to="/?auth=signin#auth" className="text-sm font-semibold text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]">
                 Sign in
               </Link>
             </div>
           </section>
         ) : null}
 
-        <footer className="border-t border-zinc-200/90 pt-4">
-          <TrustLegalFooterLinks variant="compact" className="mb-4 justify-center text-zinc-500" />
+        <footer className="border-t border-[color:var(--jf-border)] pt-4">
+          <TrustLegalFooterLinks variant="compact" className="mb-4 justify-center text-[color:var(--jf-subtle)]" />
           <PublicSocialLinks />
         </footer>
       </div>

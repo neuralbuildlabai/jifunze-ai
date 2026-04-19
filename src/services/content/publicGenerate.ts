@@ -7,10 +7,16 @@ export type PublicGenerateRequest = {
   tone: PublicTone
 }
 
+export type PublicGenerateGrounding = 'grounded' | 'generic_fallback'
+
 export type PublicGenerateResult = {
   caption: string
   hashtags: string
   source: string
+  grounding: PublicGenerateGrounding
+  signals_summary: string
+  signal_items: string[]
+  suggested_angle: string
 }
 
 export type PublicGenerateFailureCode =
@@ -195,7 +201,7 @@ export async function requestPublicGeneration(input: PublicGenerateRequest): Pro
   const status = getPublicGenerateUsageStatus()
   if (status.remaining <= 0) {
     throw new PublicGenerateError(
-      'Free daily limit reached. Create a free account to keep generating.',
+      'You’ve used today’s free preview. Sign in or create a free account to continue.',
       'limited',
     )
   }
@@ -231,7 +237,7 @@ export async function requestPublicGeneration(input: PublicGenerateRequest): Pro
     if (res.status === 429) {
       markPublicGenerateUsedOnce()
       throw new PublicGenerateError(
-        'You’ve used today’s free try. Create a free account to continue.',
+        'You’ve used today’s free preview. Sign in or create a free account to continue.',
         'limited',
         { reason: reason ?? 'usage_limited', status: 429 },
       )
@@ -243,6 +249,25 @@ export async function requestPublicGeneration(input: PublicGenerateRequest): Pro
   const caption = typeof payload?.caption === 'string' ? payload.caption.trim() : ''
   const hashtags = typeof payload?.hashtags === 'string' ? payload.hashtags.trim() : ''
   const source = typeof payload?.source === 'string' ? payload.source : 'backend_llm'
+  const groundingRaw = payload?.grounding
+  const grounding: PublicGenerateGrounding =
+    groundingRaw === 'grounded' || groundingRaw === 'generic_fallback' ? groundingRaw : 'generic_fallback'
+  const signals_summary =
+    typeof payload?.signals_summary === 'string' && payload.signals_summary.trim()
+      ? payload.signals_summary.trim()
+      : grounding === 'grounded'
+        ? 'Public reference topics were available; the draft reflects that context. Verify facts before you post.'
+        : 'Few strong public reference lines were available—this is a general draft. Check tone and accuracy yourself.'
+  const suggested_angle =
+    typeof payload?.suggested_angle === 'string' && payload.suggested_angle.trim()
+      ? payload.suggested_angle.trim()
+      : ''
+  const signal_items = Array.isArray(payload?.signal_items)
+    ? (payload?.signal_items as unknown[])
+        .filter((x): x is string => typeof x === 'string')
+        .map((x) => x.trim())
+        .filter(Boolean)
+    : []
   if (!caption || !hashtags) {
     throw new PublicGenerateError(
       'Generation returned an invalid response. Please try again.',
@@ -251,5 +276,5 @@ export async function requestPublicGeneration(input: PublicGenerateRequest): Pro
   }
 
   markPublicGenerateUsedOnce()
-  return { caption, hashtags, source }
+  return { caption, hashtags, source, grounding, signals_summary, signal_items, suggested_angle }
 }

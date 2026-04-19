@@ -53,7 +53,7 @@ export function persistenceBackendForTenant(
  * **Demo tenants** (`isDemoPersistenceTenantId`): in-memory or browser JSON; pass `supabase` only
  * when you intentionally use the anon client for non-workspace flows.
  */
-function useBrowserBackedMemory(): boolean {
+function browserBackedMemoryEnabled(): boolean {
   if (typeof window === 'undefined' || typeof localStorage === 'undefined') return false
   if (import.meta.env.MODE === 'test') return false
   return import.meta.env.VITE_BROWSER_PERSISTENCE !== 'false'
@@ -77,7 +77,7 @@ export function getPersistence(tenantId: string, supabase?: SupabaseClient): Per
   let layer = memoryByTenant.get(tenantId)
   if (!layer) {
     const seed = tenantId === LOCAL_DEV_TENANT_ID ? demoBrands : []
-    layer = useBrowserBackedMemory()
+    layer = browserBackedMemoryEnabled()
       ? createBrowserBackedPersistenceLayer(tenantId, seed)
       : createInMemoryPersistenceLayer(seed)
     memoryByTenant.set(tenantId, layer)

@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { useAuth } from '../auth/AuthContext'
+import { TrustBoundaryStrip } from './TrustBoundaryStrip'
 
 function verifyLog(checkpoint: string, detail?: Record<string, unknown>) {
   console.log('[JifunzeAI verify]', detail != null ? { checkpoint, ...detail } : { checkpoint })
@@ -7,7 +8,7 @@ function verifyLog(checkpoint: string, detail?: Record<string, unknown>) {
 import { isWorkspaceTenantId } from '../persistence/tenantPersistenceMode'
 import { insertFirstBrandProfile, validateFirstBrandName } from '../services/brands/insertFirstBrandProfile'
 
-/** Matches {@link ContentGenerator} shell branch when this screen is shown (Supabase + user + 0 brands). */
+/** Shown when Supabase + signed-in user + zero brand profiles (workspace not ready for Ideas/Studio). */
 export type EmptyWorkspaceShellGate = 'empty_brands'
 
 /** Direct brand reload should be fast; full `refreshBrands` can take up to workspace bootstrap timeout. */
@@ -190,6 +191,8 @@ export function EmptyWorkspaceCreateBrand({ gate }: { gate: EmptyWorkspaceShellG
         </p>
       ) : null}
       <p className="text-xs text-zinc-500">Create your first brand to start generating content.</p>
+
+      <TrustBoundaryStrip className="mx-auto max-w-lg text-left" dataTestId="first-brand-trust-boundary" />
 
       {showForm && canCreate ? (
         <form onSubmit={onSubmit} className="mx-auto max-w-sm space-y-3 text-left">

@@ -24,10 +24,13 @@ import { authFailureMessage } from './authErrorMessage'
 import { loadBrandsForTenant } from './bootstrapTenant'
 import { registerAuthWriteGuards, safeSupabaseWrite } from '../lib/safeSupabaseWrite'
 import { jifunzeCriticalLog } from '../lib/jifunzeTelemetry'
+import { pickDefaultWorkspaceName } from '../workspace/workspaceIdentity'
 
 export type AuthContextValue = {
   supabase: SupabaseClient | null
   user: User | null
+  /** True when `user.email_confirmed_at` is set (required for workspace bootstrap and protected app areas). */
+  emailVerified: boolean
   session: Session | null
   tenantId: string
   /** True when signed in with Supabase and `tenantId` is a workspace UUID — Postgres persistence only. */
@@ -71,6 +74,10 @@ export type AuthContextValue = {
   retryWorkspaceBootstrap: () => Promise<number | undefined>
   /** Clears `error` and `authInfo` (e.g. when switching sign-in / sign-up in the form). */
   clearAuthMessages: () => void
+  /** Resend signup confirmation email (requires `user.email`). */
+  resendConfirmationEmail: () => Promise<void>
+  /** Request password reset email (`redirectTo` points at `/reset-password`). */
+  requestPasswordReset: (email: string) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
@@ -78,14 +85,12 @@ const AuthContext = createContext<AuthContextValue | null>(null)
 /** Lane B (`manual_retry`): `bootstrap_my_workspace` repair only — short wall-clock cap. */
 const WORKSPACE_REPAIR_TIMEOUT_MS = 20_000
 
-/** Default label for idempotent `bootstrap_my_workspace` — never pass `null` (avoids PostgREST / RPC edge cases). */
-const DEFAULT_WORKSPACE_NAME = 'Jifunze AI Workspace'
-
 /**
  * Always pass a non-null `workspace_name` so PostgREST targets `bootstrap_my_workspace(text)` predictably.
+ * New workspaces get a friendly default label (stable per user id for repair retries).
  */
-function bootstrapMyWorkspaceRpcArgs() {
-  return { workspace_name: DEFAULT_WORKSPACE_NAME }
+function bootstrapMyWorkspaceRpcArgs(uid: string) {
+  return { workspace_name: pickDefaultWorkspaceName(uid) }
 }
 
 async function loadTenantIdsFromMembershipTable(
@@ -727,6 +732,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           restoreGen !== workspaceRestoreGenerationRef.current)
 
       if (workAborted()) return undefined
+
+      const { data: gateUserData, error: gateUserErr } = await supabase.auth.getUser()
+      if (gateUserErr) {
+        console.error('[JifunzeAI Auth] bootstrapWorkspaceForUser getUser', gateUserErr)
+        if (!workAborted()) {
+          setLoading(false)
+          setWorkspaceTenantResolved(false)
+          setError(authFailureMessage(gateUserErr))
+        }
+        return undefined
+      }
+      const authUser = gateUserData.user
+      if (!authUser || authUser.id !== uid) {
+        console.error('[JifunzeAI Auth] bootstrapWorkspaceForUser session uid mismatch', {
+          expected: uid,
+          got: authUser?.id ?? null,
+        })
+        if (!workAborted()) {
+          setLoading(false)
+        }
+        return undefined
+      }
+      if (!authUser.email_confirmed_at) {
+        if (!workAborted()) {
+          setWorkspaceTenantResolved(false)
+          workspaceShellReadyRef.current = false
+          setWorkspaceShellReady(false)
+          setTenantId(LOCAL_DEV_TENANT_ID)
+          setBrands([])
+          setAuthInfo(
+            'Confirm your email to access your workspace. After you confirm, refresh this page or sign in again.',
+          )
+          setLoading(false)
+        }
+        return undefined
+      }
 
       try {
         const bootstrapT0 = perfNow()
@@ -1383,7 +1424,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const repairBootstrapMyWorkspace = useCallback(
     async (uid: string): Promise<void> => {
       if (!supabase) throw new Error('Supabase client missing')
-      const rpcArgs = bootstrapMyWorkspaceRpcArgs()
+      const rpcArgs = bootstrapMyWorkspaceRpcArgs(uid)
       console.log('[JifunzeAI workspace]', {
         bootstrap_rpc_lane_b_repair: { workspace_name: rpcArgs.workspace_name, userId: uid },
       })
@@ -1687,16 +1728,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           id: u.id,
           email: u.email ?? null,
           hasAccessToken: Boolean(sess?.access_token),
+          emailConfirmed: Boolean(u.email_confirmed_at),
         },
       })
-
-      if (event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
-        return
-      }
-
-      if (event !== 'SIGNED_IN' && event !== 'INITIAL_SESSION') {
-        return
-      }
 
       const runCoalescedSessionRestore = async () => {
         if (bootstrapInflightRef.current) {
@@ -1713,8 +1747,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           })
           try {
             await bootstrapInflightRef.current
-          } catch {
-            /* surfaced in bootstrap */
+          } catch (e) {
+            console.error('[JifunzeAI Auth] await inflight bootstrap', e)
           }
           return
         }
@@ -1739,21 +1773,55 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         try {
           await runWorkspaceBootstrap(u.id, 'session_restore')
-        } catch {
-          /* error surfaced in runWorkspaceBootstrap */
+        } catch (e) {
+          console.error('[JifunzeAI Auth] runWorkspaceBootstrap from listener', e)
         }
       }
 
-      if (sessionRestoreCoalesceTimer) {
-        clearTimeout(sessionRestoreCoalesceTimer)
+      const scheduleCoalescedSessionRestore = () => {
+        if (sessionRestoreCoalesceTimer) {
+          clearTimeout(sessionRestoreCoalesceTimer)
+        }
+        sessionRestoreCoalesceTimer = setTimeout(() => {
+          sessionRestoreCoalesceTimer = null
+          void runCoalescedSessionRestore()
+        }, 50)
       }
-      sessionRestoreCoalesceTimer = setTimeout(() => {
-        sessionRestoreCoalesceTimer = null
-        void runCoalescedSessionRestore()
-      }, 50)
+
+      if (event === 'TOKEN_REFRESHED') {
+        return
+      }
+
+      if (event === 'USER_UPDATED') {
+        if (u.email_confirmed_at) {
+          scheduleCoalescedSessionRestore()
+        }
+        return
+      }
+
+      if (event !== 'SIGNED_IN' && event !== 'INITIAL_SESSION') {
+        return
+      }
+
+      if (!u.email_confirmed_at) {
+        setLoading(false)
+        setWorkspaceTenantResolved(false)
+        workspaceShellReadyRef.current = false
+        setWorkspaceShellReady(false)
+        setBrands([])
+        setTenantId(LOCAL_DEV_TENANT_ID)
+        setAuthInfo(
+          'Confirm your email to access your workspace. After you confirm, refresh this page or sign in again.',
+        )
+        return
+      }
+
+      scheduleCoalescedSessionRestore()
     })
 
-    void supabase.auth.getSession().catch(() => undefined)
+    void supabase.auth.getSession().catch((err) => {
+      console.error('[JifunzeAI Auth] getSession failed', err)
+    })
 
     return () => {
       if (sessionRestoreCoalesceTimer) {
@@ -1826,6 +1894,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAuthInfo(null)
   }, [])
 
+  const resendConfirmationEmail = useCallback(async () => {
+    if (!supabase) {
+      const msg = 'Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.'
+      setError(msg)
+      throw new Error(msg)
+    }
+    const email = user?.email?.trim()
+    if (!email) {
+      const msg = 'No email on file to resend confirmation.'
+      setError(msg)
+      throw new Error(msg)
+    }
+    const { error: e } = await supabase.auth.resend({ type: 'signup', email })
+    if (e) {
+      setError(authFailureMessage(e))
+      throw e
+    }
+    setAuthInfo('Confirmation email sent. Check your inbox and spam folder.')
+  }, [supabase, user])
+
+  const requestPasswordReset = useCallback(
+    async (email: string) => {
+      if (!supabase) {
+        const msg = 'Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.'
+        setError(msg)
+        throw new Error(msg)
+      }
+      const redirectTo = `${window.location.origin}/reset-password`
+      const { error: e } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo })
+      if (e) {
+        setError(authFailureMessage(e))
+        throw e
+      }
+      setAuthInfo('If an account exists for that email, you will receive a password reset link.')
+    },
+    [supabase],
+  )
+
   const signOut = useCallback(async () => {
     if (!supabase) return
     const existing = signOutInFlightRef.current
@@ -1881,6 +1987,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value: AuthContextValue = {
     supabase,
     user,
+    emailVerified: Boolean(user?.email_confirmed_at),
     session,
     tenantId,
     usesWorkspacePersistence,
@@ -1899,11 +2006,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     reloadBrandsOnly,
     retryWorkspaceBootstrap,
     clearAuthMessages,
+    resendConfirmationEmail,
+    requestPasswordReset,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
+/** Auth consumer hook (exported alongside {@link AuthProvider} for ergonomics). */
+// eslint-disable-next-line react-refresh/only-export-components -- hook is intentionally co-located with provider
 export function useAuth(): AuthContextValue {
   const ctx = useContext(AuthContext)
   if (!ctx) throw new Error('useAuth must be used within AuthProvider')

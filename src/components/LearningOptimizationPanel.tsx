@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   getBrandLearningState,
@@ -24,6 +25,10 @@ type Props = {
   supabase: SupabaseClient | null
   /** Increment to refetch learning after external simulation writes. */
   refreshSignal?: number
+  /** `compact`: short snapshot + link to full insights page. `full`: complete readout (default). */
+  variant?: 'full' | 'compact'
+  /** Route for “full learning insights” (compact variant). */
+  insightsHref?: string
 }
 
 const emptyTeaching: TeachingPerformanceAnalysis = {
@@ -43,7 +48,14 @@ const emptyTeaching: TeachingPerformanceAnalysis = {
 /**
  * Lightweight readout of performance memory + derived insights (tenant-scoped Supabase or in-memory).
  */
-export function LearningOptimizationPanel({ brand, tenantId, supabase, refreshSignal = 0 }: Props) {
+export function LearningOptimizationPanel({
+  brand,
+  tenantId,
+  supabase,
+  refreshSignal = 0,
+  variant = 'full',
+  insightsHref = '/insights',
+}: Props) {
   const { user, session, signOutPending } = useAuth()
   const [refresh, setRefresh] = useState(0)
   const [state, setState] = useState<BrandLearningState | undefined>(undefined)
@@ -238,7 +250,110 @@ export function LearningOptimizationPanel({ brand, tenantId, supabase, refreshSi
   }
 
   const strong = state.insights.filter((i) => i.kind.startsWith('strong')).slice(0, 4)
+  const weakWatch = state.insights.filter((i) => i.kind.startsWith('weak')).slice(0, 4)
   const recs = state.recommendations.slice(0, 5)
+
+  if (variant === 'compact') {
+    const strongTop = strong.slice(0, 3)
+    const weakTop = weakWatch.slice(0, 2)
+    const summaryLine =
+      state.learnedSummaryLines[0] ??
+      (state.snapshot.sampleCount > 0
+        ? `Learning from ${state.snapshot.sampleCount} performance row(s).`
+        : 'Performance memory is warming up—publish or record outcomes to build patterns.')
+
+    return (
+      <section className="rounded-2xl border border-zinc-800/80 bg-gradient-to-b from-zinc-900/50 to-zinc-950/80 p-4 space-y-3">
+        <div className="flex flex-wrap items-start justify-between gap-2">
+          <div>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-400">
+              Learning snapshot
+            </h2>
+            <p className="mt-1 text-[11px] leading-relaxed text-zinc-500">
+              Strongest signals and watch-outs from your workspace memory—details on the insights
+              page.
+            </p>
+          </div>
+          <Link
+            to={insightsHref}
+            className="shrink-0 rounded-lg border border-violet-500/35 bg-violet-950/30 px-2.5 py-1.5 text-[11px] font-semibold text-violet-100/95 transition hover:border-violet-400/50 hover:bg-violet-950/45"
+          >
+            Full insights
+          </Link>
+        </div>
+
+        <div className="rounded-xl border border-zinc-800/70 bg-zinc-950/40 px-3 py-2 text-[11px] text-zinc-400">
+          <span className="text-zinc-500">Memory · </span>
+          {state.snapshot.sampleCount} rows
+          {state.snapshot.weightedAvgEngagementRate != null
+            ? ` · weighted avg ER ${(state.snapshot.weightedAvgEngagementRate * 100).toFixed(2)}%`
+            : null}
+        </div>
+
+        <p className="text-[11px] leading-relaxed text-zinc-300/90">{summaryLine}</p>
+
+        {strongTop.length > 0 ? (
+          <div className="space-y-2">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-emerald-300/85">
+              Strongest patterns
+            </p>
+            <ul className="space-y-2">
+              {strongTop.map((ins) => (
+                <li
+                  key={ins.id}
+                  className="rounded-lg border border-emerald-900/40 bg-emerald-950/15 px-3 py-2 text-[11px] text-emerald-100/90"
+                >
+                  <p className="font-medium text-emerald-50/95">{ins.subject}</p>
+                  <p className="mt-0.5 text-emerald-200/70">
+                    {ins.kind.replace(/_/g, ' ')}
+                    {ins.value != null ? ` · ~${(ins.value * 100).toFixed(2)}% ER` : ''} · n=
+                    {ins.sampleSize}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <p className="text-[11px] text-zinc-500">No strong patterns yet—add performance rows or run the lab.</p>
+        )}
+
+        {weakTop.length > 0 ? (
+          <div className="space-y-2">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-amber-300/85">
+              Watch-outs
+            </p>
+            <ul className="space-y-2">
+              {weakTop.map((ins) => (
+                <li
+                  key={ins.id}
+                  className="rounded-lg border border-amber-900/35 bg-amber-950/15 px-3 py-2 text-[11px] text-amber-100/90"
+                >
+                  <p className="font-medium text-amber-50/95">{ins.subject}</p>
+                  <p className="mt-0.5 text-amber-200/75">
+                    {ins.kind.replace(/_/g, ' ')}
+                    {ins.value != null ? ` · ~${(ins.value * 100).toFixed(2)}% ER` : ''} · n=
+                    {ins.sampleSize}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <p className="text-[11px] text-zinc-500">No watch-out patterns flagged yet.</p>
+        )}
+
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          <Link
+            to={insightsHref}
+            className="inline-flex items-center justify-center rounded-xl bg-violet-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-violet-500"
+          >
+            View full learning insights
+          </Link>
+          <span className="text-[10px] text-zinc-600">Teaching detail, recommendations, lab history</span>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="rounded-2xl border border-zinc-800/80 bg-gradient-to-b from-zinc-900/50 to-zinc-950/80 p-4 space-y-4">

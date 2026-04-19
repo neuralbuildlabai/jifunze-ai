@@ -49,6 +49,7 @@ function platformFirstLine(
 }
 
 function domainIntentLine(domain: ContentDomain, intent: ConversionIntent): string {
+  /* eslint-disable no-fallthrough -- each `case` owns a nested `switch` that returns on every path */
   switch (domain) {
     case 'beauty':
       switch (intent) {
@@ -116,6 +117,7 @@ function domainIntentLine(domain: ContentDomain, intent: ConversionIntent): stri
           return 'Secure your ticket or table now — capacity is real, not marketing.'
       }
   }
+  /* eslint-enable no-fallthrough */
 }
 
 /**

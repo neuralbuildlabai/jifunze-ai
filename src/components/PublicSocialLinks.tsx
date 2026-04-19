@@ -5,7 +5,7 @@ const SOCIALS = [
 ] as const
 
 function DotIcon() {
-  return <span className="inline-block h-1.5 w-1.5 rounded-full bg-violet-300/80" aria-hidden />
+  return <span className="inline-block h-1.5 w-1.5 rounded-full bg-zinc-500/90" aria-hidden />
 }
 
 export function PublicSocialLinks({ compact = false }: { compact?: boolean }) {
@@ -17,7 +17,7 @@ export function PublicSocialLinks({ compact = false }: { compact?: boolean }) {
           href={s.href}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-full border border-zinc-800 bg-zinc-900/35 px-2.5 py-0.5 text-[10px] text-zinc-400 transition hover:border-violet-500/35 hover:text-violet-200"
+          className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.1] bg-white/[0.04] px-2.5 py-0.5 text-[10px] text-zinc-300 transition hover:border-white/[0.18] hover:bg-white/[0.07] hover:text-zinc-100"
           aria-label={`${s.name} ${s.handle}`}
         >
           <DotIcon />

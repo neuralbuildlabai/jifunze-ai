@@ -23,6 +23,15 @@ export function getSystemSurfaceMode(): SystemSurfaceMode {
   return remoteContent && anyLivePublish ? 'live' : 'preview'
 }
 
+/**
+ * True when caption generation is still on the in-browser / mock path (not the configured backend).
+ * Used to show a clear demo banner; normal signed-in workspaces with backend generation skip “preview mode”.
+ */
+export function isStrictDemoContentGeneration(): boolean {
+  if (getContentAdapterMode() === 'mock') return true
+  return getContentGenerationRuntimeSnapshot().mode !== 'backend'
+}
+
 export function getPublishingSimulatedNotice(): string | null {
   return isAllPublishingSimulated() ? PUBLISHING_SIMULATED_NOTICE : null
 }

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /*
-  Workspace: neutral dark chrome. Public marketing: `.jf-public-surface` — soft white, calm accents.
+  Workspace: neutral dark chrome. Public marketing: `.jf-public-surface` — warm slate / graphite (premium learning UX, not black).
 */
 :root {
   color-scheme: dark;
@@ -25,27 +25,32 @@
   --jf-accent-insights: #94a3b8;
 }
 
-/* Public landing / legal / guest flows — breathable, low saturation */
+/*
+  Public landing — deep warm slate (layered graphite). Page is visibly lighter than pure black;
+  surfaces step up for hierarchy without harsh slabs or void-like contrast.
+*/
 .jf-public-surface {
-  color-scheme: light;
-  --jf-bg-page: #fafaf9;
-  --jf-surface: #ffffff;
-  --jf-surface-elevated: #f4f4f5;
-  --jf-border: rgba(24, 24, 27, 0.1);
-  --jf-text: #18181b;
-  --jf-muted: #71717a;
-  --jf-brand: #27272f;
-  --jf-brand-hover: #18181b;
-  --jf-focus-ring: rgba(39, 39, 42, 0.35);
-  --jf-accent-training: #52525b;
-  --jf-accent-labs: #64748b;
-  --jf-accent-library: #3f3f46;
-  --jf-accent-ai-lib: #475569;
-  --jf-accent-ml: #3f6212;
-  --jf-accent-chatbots: #92400e;
-  --jf-accent-trends: #1e40af;
-  --jf-accent-studio: #9f1239;
-  --jf-accent-insights: #64748b;
+  color-scheme: dark;
+  --jf-bg-page: #252830;
+  --jf-surface: #303642;
+  --jf-surface-elevated: #3c434f;
+  --jf-border: rgba(250, 250, 252, 0.09);
+  --jf-text: #f1f2f4;
+  --jf-muted: #b9bcc6;
+  --jf-subtle: #9ea3ae;
+  --jf-brand: #ebecef;
+  --jf-brand-hover: #ffffff;
+  --jf-focus-ring: rgba(228, 230, 235, 0.42);
+  --jf-shadow-soft: 0 18px 44px -16px rgba(18, 20, 26, 0.38);
+  --jf-accent-training: #78716c;
+  --jf-accent-labs: #78716c;
+  --jf-accent-library: #78716c;
+  --jf-accent-ai-lib: #78716c;
+  --jf-accent-ml: #78716c;
+  --jf-accent-chatbots: #78716c;
+  --jf-accent-trends: #78716c;
+  --jf-accent-studio: #a8a29e;
+  --jf-accent-insights: #78716c;
 }
 
 /* Subtle homepage auth-section brand motion (no spin / bounce) */

@@ -11,6 +11,9 @@ import type { SocialAccount } from './socialAccount'
 import type { TrendCategory } from './trendCategory'
 import type { BrandConversionProfile } from './brandConversion'
 
+/** Drives signed-in home engagement copy when set; otherwise inferred from profile text and domain. */
+export type WorkspaceEngagementFocus = 'educator' | 'creator' | 'brand' | 'explorer'
+
 export type BrandVoice = 'professional' | 'playful' | 'bold' | 'warm' | string
 
 /**
@@ -20,6 +23,8 @@ export type BrandProfile = {
   id: string
   /** Set when loaded from Supabase — scopes rows via RLS. */
   tenant_id?: string
+  /** When present (e.g. future workspace setting), pins welcome/engagement personalization. */
+  workspace_engagement_focus?: WorkspaceEngagementFocus
   name: string
   industry: string
   audience_summary: string

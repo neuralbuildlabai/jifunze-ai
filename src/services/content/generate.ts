@@ -103,7 +103,7 @@ async function generateWithPayload(
  */
 export async function generateSocialContent(
   topic: string,
-  options?: { supabase?: SupabaseClient },
+  options?: { supabase?: SupabaseClient; context?: string },
 ): Promise<SocialContent> {
   const trimmed = topic.trim()
   if (!trimmed) {
@@ -112,6 +112,7 @@ export async function generateSocialContent(
   return generateWithPayload(
     {
       topic: trimmed,
+      context: options?.context?.trim() ? options.context.trim() : undefined,
       source: 'manual_topic',
     },
     options?.supabase,
