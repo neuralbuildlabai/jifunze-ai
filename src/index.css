@@ -1,1 +1,108 @@
 @import "tailwindcss";
+
+/*
+  Workspace: neutral dark chrome. Public marketing: `.jf-public-surface` — soft white, calm accents.
+*/
+:root {
+  color-scheme: dark;
+  --jf-bg-page: #09090b;
+  --jf-surface: #121214;
+  --jf-surface-elevated: #18181b;
+  --jf-border: rgba(255, 255, 255, 0.07);
+  --jf-text: #fafafa;
+  --jf-muted: #a1a1aa;
+  --jf-brand: #7c3aed;
+  --jf-brand-hover: #8b5cf6;
+  --jf-focus-ring: rgba(139, 92, 246, 0.35);
+  --jf-accent-training: #6366f1;
+  --jf-accent-labs: #a855f7;
+  --jf-accent-library: #14b8a6;
+  --jf-accent-ai-lib: #06b6d4;
+  --jf-accent-ml: #10b981;
+  --jf-accent-chatbots: #f59e0b;
+  --jf-accent-trends: #38bdf8;
+  --jf-accent-studio: #f43f5e;
+  --jf-accent-insights: #94a3b8;
+}
+
+/* Public landing / legal / guest flows — breathable, low saturation */
+.jf-public-surface {
+  color-scheme: light;
+  --jf-bg-page: #fafaf9;
+  --jf-surface: #ffffff;
+  --jf-surface-elevated: #f4f4f5;
+  --jf-border: rgba(24, 24, 27, 0.1);
+  --jf-text: #18181b;
+  --jf-muted: #71717a;
+  --jf-brand: #27272f;
+  --jf-brand-hover: #18181b;
+  --jf-focus-ring: rgba(39, 39, 42, 0.35);
+  --jf-accent-training: #52525b;
+  --jf-accent-labs: #64748b;
+  --jf-accent-library: #3f3f46;
+  --jf-accent-ai-lib: #475569;
+  --jf-accent-ml: #3f6212;
+  --jf-accent-chatbots: #92400e;
+  --jf-accent-trends: #1e40af;
+  --jf-accent-studio: #9f1239;
+  --jf-accent-insights: #64748b;
+}
+
+/* Subtle homepage auth-section brand motion (no spin / bounce) */
+@keyframes jifunze-auth-brand-breathe {
+  0%,
+  100% {
+    opacity: 0.1;
+    transform: translate3d(0, 6px, 0) scale(1);
+  }
+  50% {
+    opacity: 0.16;
+    transform: translate3d(0, 0, 0) scale(1.02);
+  }
+}
+
+@keyframes jifunze-auth-brand-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.18;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.28;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes jifunze-auth-brand-glow-pulse-delayed {
+  0%,
+  100% {
+    opacity: 0.12;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.2;
+    transform: scale(1.04);
+  }
+}
+
+.jifunze-auth-brand-mark {
+  animation: jifunze-auth-brand-breathe 16s ease-in-out infinite;
+}
+
+.jifunze-auth-brand-glow {
+  animation: jifunze-auth-brand-glow-pulse 14s ease-in-out infinite;
+}
+
+.jifunze-auth-brand-glow-delayed {
+  animation: jifunze-auth-brand-glow-pulse-delayed 18s ease-in-out infinite;
+  animation-delay: 2.5s;
+}
+
+/* Instructional / training surfaces — soft neutral blend on dark chrome */
+.jf-instruction-surface {
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+}
+
