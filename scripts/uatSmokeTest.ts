@@ -10,21 +10,30 @@ import { createClient } from '@supabase/supabase-js'
 import { readFileSync, existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 
+import { assertUatSupabaseTarget } from './guardUatSupabaseTarget.ts'
+
 function loadDotEnv(): void {
-  const p = resolve(process.cwd(), '.env')
-  if (!existsSync(p)) return
-  const raw = readFileSync(p, 'utf8')
-  for (const line of raw.split('\n')) {
-    const t = line.trim()
-    if (!t || t.startsWith('#')) continue
-    const eq = t.indexOf('=')
-    if (eq <= 0) continue
-    const k = t.slice(0, eq).trim()
-    let v = t.slice(eq + 1).trim()
-    if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
-      v = v.slice(1, -1)
+  for (const rel of ['.env', '.env.smoke.local']) {
+    const p = resolve(process.cwd(), rel)
+    if (!existsSync(p)) continue
+    const raw = readFileSync(p, 'utf8')
+    for (const line of raw.split('\n')) {
+      const t = line.trim()
+      if (!t || t.startsWith('#')) continue
+      const eq = t.indexOf('=')
+      if (eq <= 0) continue
+      const k = t.slice(0, eq).trim()
+      let v = t.slice(eq + 1).trim()
+      if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
+        v = v.slice(1, -1)
+      }
+      // `.env.smoke.local` wins for SMOKE_* so `uat:provision` output is picked up without exporting vars.
+      if (rel === '.env.smoke.local' && (k === 'SMOKE_EMAIL' || k === 'SMOKE_PASSWORD')) {
+        process.env[k] = v
+      } else if (!process.env[k]) {
+        process.env[k] = v
+      }
     }
-    if (!process.env[k]) process.env[k] = v
   }
 }
 
@@ -42,6 +51,7 @@ function isoNow(): string {
 
 async function main(): Promise<void> {
   loadDotEnv()
+  assertUatSupabaseTarget('uatSmokeTest')
 
   const url = supabaseUrl()
   const anon = supabaseAnon()
