@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
 import { useAuth } from '../../auth/AuthContext'
+import { useAppAccess } from '../../access/useAppAccess'
 import { useTrainingDashboardSummary } from '../../training/trainingHooks'
 import { TRUST_COPY } from '../../training/trustCopy'
 import { TrainingInlineAlert } from './TrainingInlineAlert'
@@ -10,6 +11,7 @@ const cardClass =
 
 export function DashboardTrainingWidget() {
   const { workspaceShellReady } = useAuth()
+  const { canManageInstitutionTrainingPlans } = useAppAccess()
   const { summary, loading, error, refetch } = useTrainingDashboardSummary()
 
   if (isSupabaseConfigured() && !workspaceShellReady) {
@@ -44,14 +46,36 @@ export function DashboardTrainingWidget() {
   if (!summary.plan) {
     return (
       <section className={cardClass}>
-        <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Training</h2>
-        <p className="mt-2 text-sm text-zinc-400">No training plans yet.</p>
-        <Link
-          to="/training/new"
-          className="mt-3 inline-flex rounded-lg bg-violet-600/90 px-3 py-1.5 text-xs font-semibold text-white hover:bg-violet-500"
-        >
-          Create training plan
-        </Link>
+        <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">
+          {canManageInstitutionTrainingPlans ? 'Training administration' : 'Learning'}
+        </h2>
+        <p className="mt-2 text-sm text-zinc-400">
+          {canManageInstitutionTrainingPlans
+            ? 'No workspace training plans yet—create one to assign catalog-backed paths.'
+            : 'Start from the catalog or open My Learning to track flagship courses.'}
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Link
+            to="/my-learning"
+            className="inline-flex rounded-lg bg-violet-600/90 px-3 py-1.5 text-xs font-semibold text-white hover:bg-violet-500"
+          >
+            My Learning
+          </Link>
+          <Link
+            to="/learn"
+            className="inline-flex rounded-lg border border-zinc-600 bg-zinc-800/80 px-3 py-1.5 text-xs text-zinc-200 hover:bg-zinc-800"
+          >
+            Browse courses
+          </Link>
+          {canManageInstitutionTrainingPlans ? (
+            <Link
+              to="/training/new"
+              className="inline-flex rounded-lg border border-violet-500/40 bg-violet-950/40 px-3 py-1.5 text-xs font-semibold text-violet-100 hover:bg-violet-950/55"
+            >
+              New training plan
+            </Link>
+          ) : null}
+        </div>
       </section>
     )
   }
@@ -103,12 +127,21 @@ export function DashboardTrainingWidget() {
             {summary.planDone ? 'Plan complete.' : 'Nothing to resume yet.'}
           </span>
         )}
-        <Link
-          to="/training"
-          className="inline-flex rounded-lg border border-zinc-600 bg-zinc-800/80 px-3 py-1.5 text-xs text-zinc-200 hover:bg-zinc-800"
-        >
-          My training plans
-        </Link>
+        {canManageInstitutionTrainingPlans ? (
+          <Link
+            to="/training"
+            className="inline-flex rounded-lg border border-zinc-600 bg-zinc-800/80 px-3 py-1.5 text-xs text-zinc-200 hover:bg-zinc-800"
+          >
+            Training plans
+          </Link>
+        ) : (
+          <Link
+            to="/my-learning"
+            className="inline-flex rounded-lg border border-zinc-600 bg-zinc-800/80 px-3 py-1.5 text-xs text-zinc-200 hover:bg-zinc-800"
+          >
+            My Learning
+          </Link>
+        )}
       </div>
       <p className="mt-3 text-[10px] leading-relaxed text-zinc-600">{TRUST_COPY.readinessCompositeShort}</p>
     </section>

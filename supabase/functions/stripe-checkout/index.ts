@@ -28,6 +28,8 @@ function json(data: unknown, status = 200): Response {
 type SkuCfg = {
   mode: 'subscription' | 'payment'
   env: string
+  /** Optional fallback env if primary Stripe Price ID is not set (migration continuity). */
+  fallbackEnv?: string
   productKind: string
   billingInterval: string
   accessScope: string
@@ -35,97 +37,9 @@ type SkuCfg = {
   modulesCsv?: string
 }
 
-/** Price env names align with pricingSkuRegistry.ts (`VITE_…` stripped on server). */
+/** Three customer-facing SKUs — env names match server secrets (no VITE_ prefix). */
 const SKU_CONFIG: Record<string, SkuCfg> = {
-  creator: {
-    mode: 'subscription',
-    env: 'STRIPE_PRICE_CREATOR_USD_MONTHLY',
-    productKind: 'legacy_creator_team',
-    billingInterval: 'month',
-    accessScope: 'all_library',
-    discountTag: 'none',
-  },
-  team: {
-    mode: 'subscription',
-    env: 'STRIPE_PRICE_TEAM_USD_MONTHLY',
-    productKind: 'legacy_creator_team',
-    billingInterval: 'month',
-    accessScope: 'workspace_team',
-    discountTag: 'none',
-  },
-  module_ai_foundations_once: {
-    mode: 'payment',
-    env: 'STRIPE_PRICE_MODULE_AI_FOUNDATIONS_ONCE',
-    productKind: 'one_time_module',
-    billingInterval: 'once',
-    accessScope: 'single_module',
-    discountTag: 'none',
-    modulesCsv: 'ai_foundations',
-  },
-  module_ml_once: {
-    mode: 'payment',
-    env: 'STRIPE_PRICE_MODULE_ML_ONCE',
-    productKind: 'one_time_module',
-    billingInterval: 'once',
-    accessScope: 'single_module',
-    discountTag: 'none',
-    modulesCsv: 'machine_learning',
-  },
-  module_chatbots_once: {
-    mode: 'payment',
-    env: 'STRIPE_PRICE_MODULE_CHATBOTS_ONCE',
-    productKind: 'one_time_module',
-    billingInterval: 'once',
-    accessScope: 'single_module',
-    discountTag: 'none',
-    modulesCsv: 'everyday_chatbots',
-  },
-  module_ai_foundations_monthly: {
-    mode: 'subscription',
-    env: 'STRIPE_PRICE_MODULE_AI_FOUNDATIONS_MONTHLY',
-    productKind: 'subscription_module',
-    billingInterval: 'month',
-    accessScope: 'single_module',
-    discountTag: 'none',
-    modulesCsv: 'ai_foundations',
-  },
-  module_ml_monthly: {
-    mode: 'subscription',
-    env: 'STRIPE_PRICE_MODULE_ML_MONTHLY',
-    productKind: 'subscription_module',
-    billingInterval: 'month',
-    accessScope: 'single_module',
-    discountTag: 'none',
-    modulesCsv: 'machine_learning',
-  },
-  module_chatbots_monthly: {
-    mode: 'subscription',
-    env: 'STRIPE_PRICE_MODULE_CHATBOTS_MONTHLY',
-    productKind: 'subscription_module',
-    billingInterval: 'month',
-    accessScope: 'single_module',
-    discountTag: 'none',
-    modulesCsv: 'everyday_chatbots',
-  },
-  bundle_two_flagship_monthly: {
-    mode: 'subscription',
-    env: 'STRIPE_PRICE_BUNDLE_TWO_FLAGSHIP_MONTHLY',
-    productKind: 'subscription_bundle',
-    billingInterval: 'month',
-    accessScope: 'module_bundle',
-    discountTag: 'none',
-    modulesCsv: 'cybersecurity,cloud_devops',
-  },
-  bundle_three_core_monthly: {
-    mode: 'subscription',
-    env: 'STRIPE_PRICE_BUNDLE_THREE_CORE_MONTHLY',
-    productKind: 'subscription_bundle',
-    billingInterval: 'month',
-    accessScope: 'module_bundle',
-    discountTag: 'none',
-    modulesCsv: 'ai_foundations,machine_learning,everyday_chatbots',
-  },
-  all_access_monthly: {
+  jifunze_monthly: {
     mode: 'subscription',
     env: 'STRIPE_PRICE_ALL_ACCESS_MONTHLY',
     productKind: 'subscription_all_access',
@@ -133,7 +47,7 @@ const SKU_CONFIG: Record<string, SkuCfg> = {
     accessScope: 'all_library',
     discountTag: 'none',
   },
-  all_access_annual: {
+  jifunze_annual: {
     mode: 'subscription',
     env: 'STRIPE_PRICE_ALL_ACCESS_ANNUAL',
     productKind: 'subscription_all_access',
@@ -141,21 +55,14 @@ const SKU_CONFIG: Record<string, SkuCfg> = {
     accessScope: 'all_library',
     discountTag: 'none',
   },
-  all_access_student_monthly: {
-    mode: 'subscription',
-    env: 'STRIPE_PRICE_ALL_ACCESS_STUDENT_MONTHLY',
-    productKind: 'subscription_all_access',
-    billingInterval: 'month',
-    accessScope: 'all_library',
-    discountTag: 'student',
-  },
-  all_access_team_workspace_monthly: {
-    mode: 'subscription',
-    env: 'STRIPE_PRICE_ALL_ACCESS_TEAM_WORKSPACE_MONTHLY',
-    productKind: 'subscription_all_access',
-    billingInterval: 'month',
-    accessScope: 'workspace_team',
-    discountTag: 'team_org',
+  jifunze_single_course: {
+    mode: 'payment',
+    env: 'STRIPE_PRICE_SINGLE_COURSE_ONCE',
+    fallbackEnv: 'STRIPE_PRICE_MODULE_AI_FOUNDATIONS_ONCE',
+    productKind: 'single_course_once',
+    billingInterval: 'once',
+    accessScope: 'single_course',
+    discountTag: 'none',
   },
 }
 
@@ -236,10 +143,11 @@ Deno.serve(async (req) => {
     }
   }
 
-  const priceId = Deno.env.get(cfg.env)?.trim()
+  const priceId =
+    Deno.env.get(cfg.env)?.trim() ?? (cfg.fallbackEnv ? Deno.env.get(cfg.fallbackEnv)?.trim() : undefined)
   if (!priceId) {
-    console.error('[stripe-checkout] Missing env price for SKU', skuKey, cfg.env)
-    return json({ error: `Stripe price not configured for SKU (${cfg.env}).` }, 503)
+    console.error('[stripe-checkout] Missing env price for SKU', skuKey, cfg.env, cfg.fallbackEnv)
+    return json({ error: 'Stripe price is not configured for this plan yet.' }, 503)
   }
 
   const stripe = new Stripe(stripeSecret)

@@ -12,6 +12,8 @@ export const LEGAL_ROUTES = {
   pricing: '/pricing',
   learn: '/learn',
   workspaceSubscription: '/settings/subscription',
+  authSignIn: '/auth/sign-in',
+  authSignUp: '/auth/sign-up',
 } as const
 
 /** Operational support inbox (shown on legal/disclaimer surfaces; not legal advice). */

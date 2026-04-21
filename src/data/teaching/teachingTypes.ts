@@ -174,6 +174,16 @@ export type TeachingSignalKind =
   | 'help_low_confidence_match'
   /** Concept-first help answer was shown (materials access ≠ outcomes). */
   | 'help_concept_answer'
+  /** Flagship module quiz attempt submitted (integrity / analytics). */
+  | 'quiz_module_submit'
+  /** Heuristic: unusually fast quiz completion vs question count. */
+  | 'quiz_suspicious_timing'
+  /** Learner confirmed post-failure module review before retry (paired with cooldown). */
+  | 'quiz_review_acknowledged'
+  /** Cooldown applied after a failed module quiz attempt. */
+  | 'quiz_lock_applied'
+  /** Elevated copy/context-menu activity during a quiz attempt (deterrence telemetry). */
+  | 'quiz_integrity_ui_activity'
 
 export type TeachingSignal = {
   id: string

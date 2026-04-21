@@ -2,7 +2,7 @@ import { useMemo, useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../auth/AuthContext'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
-import { buildDiagnosticQuizSeed } from '../../knowledge/diagnosticQuiz'
+import { resolveTopicToCourses } from '../../lib/courseTopicResolver'
 import { validationTrainingError, type TrainingError } from '../../training/trainingErrors'
 import { createTrainingPlanMvp } from '../../training/trainingHooks'
 import { useTrainingWorkspace } from '../../training/useTrainingWorkspace'
@@ -40,19 +40,8 @@ export function TrainingPlanCreatePage() {
   const [skillLevel, setSkillLevel] = useState<string>('beginner')
   const [paceChoice, setPaceChoice] = useState<string>(PACE_OPTIONS_FREE[0].id)
 
-  const [selfConfidence, setSelfConfidence] = useState(3)
-  const [includeDiagnosticQuiz, setIncludeDiagnosticQuiz] = useState(false)
-  const [quickCheck, setQuickCheck] = useState<(number | null)[]>([null, null, null])
-  const [placementExpanded, setPlacementExpanded] = useState(false)
-
   const [busy, setBusy] = useState(false)
   const [localError, setLocalError] = useState<TrainingError | null>(null)
-
-  const quickQuestions = useMemo(() => {
-    const topicText = topic.trim() || title.trim() || 'your topic'
-    const objectiveText = objective.trim() || 'your objective'
-    return buildDiagnosticQuizSeed({ topic: topicText, objective: objectiveText }).questions.slice(0, 3)
-  }, [topic, title, objective])
 
   const paceOptions = planType === 'free_starter' ? PACE_OPTIONS_FREE : PACE_OPTIONS_GUIDED
 
@@ -81,10 +70,12 @@ export function TrainingPlanCreatePage() {
       return
     }
 
-    const placementEnabled =
-      planType === 'guided_subscription' || (planType === 'free_starter' && placementExpanded)
-
-    const allQuickAnswered = quickCheck.every((x) => x != null)
+    const seedTopic = topic.trim() || title.trim()
+    const catalogHit = seedTopic ? resolveTopicToCourses(seedTopic) : null
+    if (catalogHit && catalogHit.confidence >= 0.72) {
+      navigate(catalogHit.primaryHref, { replace: true })
+      return
+    }
 
     setBusy(true)
     try {
@@ -97,9 +88,9 @@ export function TrainingPlanCreatePage() {
         durationLabel,
         placement: {
           statedSkillLevel: skillLevel.trim() || null,
-          selfConfidence1To5: selfConfidence,
-          diagnosticOptionIndices: placementEnabled && allQuickAnswered ? (quickCheck as number[]) : null,
-          includeDiagnosticQuiz: planType === 'guided_subscription' ? includeDiagnosticQuiz : false,
+          selfConfidence1To5: 3,
+          diagnosticOptionIndices: null,
+          includeDiagnosticQuiz: false,
         },
       })
       if (error) {
@@ -120,7 +111,7 @@ export function TrainingPlanCreatePage() {
       setLocalError(validationTrainingError('Add a title before continuing.'))
       return
     }
-    setStep((s) => Math.min(4, s + 1))
+    setStep((s) => Math.min(3, s + 1))
   }
 
   function prevStep() {
@@ -133,7 +124,7 @@ export function TrainingPlanCreatePage() {
       <header className="jf-instruction-surface border border-black/10 bg-white/[0.94] p-6 text-zinc-900 shadow-sm">
         <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-indigo-700">Training</p>
         <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-950">
-          Take the first step toward a smarter learning path
+          Assign or scaffold a training plan from catalog-backed goals
         </h1>
         <p className="mt-3 text-sm leading-relaxed text-zinc-700">{TRUST_COPY.trainingPlanGenerationIntro}</p>
       </header>
@@ -151,9 +142,8 @@ export function TrainingPlanCreatePage() {
       <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-600">
         {[
           { id: 1, label: 'Plan type' },
-          { id: 2, label: 'Your goals' },
-          { id: 3, label: 'Placement help' },
-          { id: 4, label: 'Build plan' },
+          { id: 2, label: 'Goals & topic' },
+          { id: 3, label: 'Review & create' },
         ].map((s) => (
           <span
             key={s.id}
@@ -296,104 +286,10 @@ export function TrainingPlanCreatePage() {
               </label>
             </div>
 
-            {planType === 'guided_subscription' ? (
-              <label className="flex items-start gap-3 rounded-xl border border-[var(--jf-border)] bg-black/10 p-4 text-sm text-zinc-200">
-                <input
-                  type="checkbox"
-                  checked={includeDiagnosticQuiz}
-                  onChange={(e) => setIncludeDiagnosticQuiz(e.target.checked)}
-                  className="mt-1 rounded border-zinc-600"
-                />
-                <span>
-                  <span className="font-semibold text-white">Include a short diagnostic quiz at plan start</span>
-                  <span className="mt-1 block text-xs text-zinc-500">
-                    Useful when you want Jifunze to compare confidence with quick retrieval checks.
-                  </span>
-                </span>
-              </label>
-            ) : null}
           </section>
         ) : null}
 
         {step === 3 ? (
-          <section className="jf-instruction-surface space-y-5 bg-white/[0.94] p-6 text-zinc-900">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-zinc-500">Optional starting-point help</p>
-              <p className="mt-2 text-sm leading-relaxed text-zinc-700">
-                Three quick signals help us recommend a sensible first module emphasis: your confidence slider, and (optionally) three lightweight
-                checks. Skip anything you don’t want—this is not scored like an exam.
-              </p>
-              <p className="mt-2 text-[12px] leading-relaxed text-zinc-600">{TRUST_COPY.placementSignalsHeuristic}</p>
-            </div>
-
-            <label className="block space-y-2">
-              <span className="text-xs text-zinc-500">Self-confidence with this topic (1–5)</span>
-              <input
-                type="range"
-                min={1}
-                max={5}
-                step={1}
-                value={selfConfidence}
-                onChange={(e) => setSelfConfidence(Number(e.target.value))}
-                className="w-full accent-[color:var(--jf-accent-training)]"
-              />
-              <p className="text-xs text-zinc-400">{selfConfidence} / 5</p>
-            </label>
-
-            {planType === 'free_starter' ? (
-              <div className="rounded-xl border border-black/10 bg-white/70 p-4">
-                <button
-                  type="button"
-                  onClick={() => setPlacementExpanded((v) => !v)}
-                  className="flex w-full items-center justify-between text-left text-sm font-semibold text-zinc-900"
-                >
-                  Add a 3-question placement check (optional)
-                  <span className="text-xs text-zinc-500">{placementExpanded ? 'Hide' : 'Show'}</span>
-                </button>
-                {!placementExpanded ? (
-                  <p className="mt-2 text-[12px] text-zinc-600">
-                    Skip this for a fastest start—come back anytime you want finer calibration.
-                  </p>
-                ) : null}
-              </div>
-            ) : null}
-
-            {(planType === 'guided_subscription' || placementExpanded) ? (
-              <div className="space-y-4 border-t border-black/10 pt-4">
-                <p className="text-xs font-semibold text-zinc-700">Quick check — answer all three if you want this signal</p>
-                <p className="text-[12px] text-zinc-600">Leave any unanswered to skip this signal entirely.</p>
-                {quickQuestions.map((q, qi) => (
-                  <fieldset key={q.sort_order} className="space-y-2 rounded-lg border border-black/10 bg-white/80 p-3">
-                    <legend className="sr-only">Question {qi + 1}</legend>
-                    <p className="text-sm text-zinc-900">{q.prompt}</p>
-                    <div className="space-y-2">
-                      {q.options_json.map((opt, oi) => (
-                        <label key={oi} className="flex cursor-pointer items-start gap-2 text-xs text-zinc-700">
-                          <input
-                            type="radio"
-                            name={`qc-${qi}`}
-                            checked={quickCheck[qi] === oi}
-                            onChange={() => {
-                              setQuickCheck((prev) => {
-                                const next = [...prev]
-                                next[qi] = oi
-                                return next
-                              })
-                            }}
-                            className="mt-0.5"
-                          />
-                          <span>{opt}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </fieldset>
-                ))}
-              </div>
-            ) : null}
-          </section>
-        ) : null}
-
-        {step === 4 ? (
           <section className="space-y-4 rounded-2xl border border-[var(--jf-border)] bg-[color:var(--jf-surface)] p-6">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-zinc-500">Build your plan</p>
@@ -442,7 +338,7 @@ export function TrainingPlanCreatePage() {
                 Back
               </button>
             ) : null}
-            {step < 4 ? (
+            {step < 3 ? (
               <button
                 type="button"
                 data-testid="training-wizard-continue"

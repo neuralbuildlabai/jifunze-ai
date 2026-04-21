@@ -4,6 +4,7 @@ import { TrustLegalFooterLinks } from './TrustLegalFooterLinks'
 import { authFailureMessage } from '../auth/authErrorMessage'
 import { useAuth } from '../auth/AuthContext'
 import { isSupabaseConfigured } from '../config/supabaseEnv'
+import { passwordPolicyErrorMessage, passwordPolicyHint } from '../auth/passwordPolicy'
 import { LEGAL_ROUTES, TRUST_COPY } from '../training/trustCopy'
 
 type AuthFormProps = {
@@ -31,7 +32,7 @@ export function AuthForm({ initialMode = 'signin', appearance = 'default' }: Aut
   if (!isSupabaseConfigured()) {
     return (
       <p className="text-xs text-zinc-500">
-        Supabase env not set — running in local demo mode (no login).
+        Sign-in isn&apos;t available in this environment. Use a configured deployment to create an account.
       </p>
     )
   }
@@ -42,6 +43,13 @@ export function AuthForm({ initialMode = 'signin', appearance = 'default' }: Aut
     if (mode === 'signup' && !disclaimerAck) {
       setLocalError('Please confirm you have reviewed the disclaimer before continuing.')
       return
+    }
+    if (mode === 'signup') {
+      const pwErr = passwordPolicyErrorMessage(password)
+      if (pwErr) {
+        setLocalError(pwErr)
+        return
+      }
     }
     setBusy(true)
     try {
@@ -75,7 +83,7 @@ export function AuthForm({ initialMode = 'signin', appearance = 'default' }: Aut
         {mode === 'signin' ? 'Sign in to continue' : 'Create your free account'}
       </h2>
       <p className="text-[12px] text-zinc-400">
-        Save generated content, unlock automation, and manage your social workflow in one place.
+        Continue courses, preserve progress across sessions, and pick up lessons where you left off.
       </p>
       <div className="space-y-2" data-testid="auth-trust-boundary">
         <TrustLegalFooterLinks variant="compact" className="justify-start text-zinc-500 [&_a]:text-zinc-400 [&_a]:hover:text-zinc-200" />
@@ -132,9 +140,15 @@ export function AuthForm({ initialMode = 'signin', appearance = 'default' }: Aut
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          minLength={mode === 'signup' ? 12 : 8}
           className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-violet-500/50"
           autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
         />
+        {mode === 'signup' ? (
+          <p className="text-[11px] leading-relaxed text-zinc-500" data-testid="password-policy-hint">
+            Password: {passwordPolicyHint()}
+          </p>
+        ) : null}
       </div>
       {(localError || error) ? (
         <p className="text-xs text-rose-400" role="alert">

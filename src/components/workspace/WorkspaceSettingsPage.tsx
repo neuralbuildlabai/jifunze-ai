@@ -1,13 +1,13 @@
-import { useAppAccess } from '../../access/useAppAccess'
-import { isSupabaseConfigured } from '../../config/supabaseEnv'
 import { Link } from 'react-router-dom'
+import { useAppAccess } from '../../access/useAppAccess'
 import { LEGAL_ROUTES, TRUST_COPY } from '../../training/trustCopy'
 import { TrustBoundaryStrip } from '../TrustBoundaryStrip'
 import { useWorkspaceGeneratorReady } from '../../workspace/WorkspaceGeneratorContext'
 import { WorkspaceRouteReady, WorkspaceRouteShell } from './WorkspaceRouteReady'
+import { LearnerAccountPage } from './LearnerAccountPage'
 
-function WorkspaceSettingsPageInner({ showWorkspaceAdminSettings }: { showWorkspaceAdminSettings: boolean }) {
-  const { user, tenantId, brands, brandId, setBrandId, brand, socialAccounts } =
+function WorkspaceSettingsPageInner() {
+  const { brands, brandId, setBrandId, brand, socialAccounts } =
     useWorkspaceGeneratorReady()
 
   return (
@@ -80,28 +80,23 @@ function WorkspaceSettingsPageInner({ showWorkspaceAdminSettings }: { showWorksp
           <p className="text-[11px] leading-relaxed text-zinc-600">{TRUST_COPY.selfServeAgeGuidance}</p>
         </section>
 
-        {showWorkspaceAdminSettings && isSupabaseConfigured() && user ? (
-          <section className="rounded-2xl border border-amber-500/25 bg-amber-950/15 p-4 space-y-2">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-amber-200/90">
-              Workspace admin
-            </h2>
-            <p className="text-[12px] leading-relaxed text-zinc-500">
-              Operator-only identifiers for this workspace tenant. Not shown to standard members.
-            </p>
-            <p className="text-[11px] text-zinc-600">
-              Tenant <span className="font-mono text-zinc-400">{tenantId.slice(0, 10)}…</span>
-            </p>
-          </section>
-        ) : null}
     </WorkspaceRouteShell>
   )
 }
 
 export function WorkspaceSettingsPage() {
-  const { showWorkspaceAdminSettings } = useAppAccess()
   return (
     <WorkspaceRouteReady>
-      <WorkspaceSettingsPageInner showWorkspaceAdminSettings={showWorkspaceAdminSettings} />
+      <WorkspaceSettingsPageInner />
     </WorkspaceRouteReady>
   )
+}
+
+/** Operators see full workspace settings; learners get the lighter Account surface. */
+export function WorkspaceSettingsOrAccountPage() {
+  const { navVariant } = useAppAccess()
+  if (navVariant === 'learner') {
+    return <LearnerAccountPage />
+  }
+  return <WorkspaceSettingsPage />
 }

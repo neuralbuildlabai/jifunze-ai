@@ -1,9 +1,15 @@
 import { useEffect, useMemo } from 'react'
 import { Link, Navigate, Outlet, Route, Routes, useLocation, useParams } from 'react-router-dom'
+import { AuthSignInPage } from './components/auth/AuthSignInPage'
+import { AuthSignUpPage } from './components/auth/AuthSignUpPage'
+import { MyLearningPage } from './components/learning/MyLearningPage'
+import { LearnerCommerceProvider } from './learner/LearnerCommerceContext'
+import { LearnerDeviceLimitModal } from './components/learn/LearnerDeviceLimitModal'
+import { LearnerCheckoutPage } from './components/learn/LearnerCheckoutPage'
+import { ReadinessChallengePage } from './components/learn/ReadinessChallengePage'
 import { AccessTierProvider } from './access/AccessTierProvider'
 import { LearningAccessProvider } from './learning/LearningAccessContext'
 import { AuthProvider, useAuth } from './auth/AuthContext'
-import { AuthForm } from './components/AuthForm'
 import { FullDisclaimerPage } from './components/legal/FullDisclaimerPage'
 import { PrivacyPolicyPage } from './components/legal/PrivacyPolicyPage'
 import { PublicPricingPage } from './components/legal/PublicPricingPage'
@@ -18,13 +24,12 @@ import { ResetPasswordPage } from './components/auth/ResetPasswordPage'
 import { JifunzeBrandLogo } from './components/brand/JifunzeBrandLogo'
 import { LearningInsightsPage } from './components/LearningInsightsPage'
 import { WorkspaceIdeasPage } from './components/workspace/WorkspaceIdeasPage'
-import { WorkspaceLabPage } from './components/workspace/WorkspaceLabPage'
-import { WorkspaceSettingsPage } from './components/workspace/WorkspaceSettingsPage'
+import { LearnerAccountPage } from './components/workspace/LearnerAccountPage'
+import { WorkspaceSettingsOrAccountPage } from './components/workspace/WorkspaceSettingsPage'
 import { WorkspaceSubscriptionPage } from './components/workspace/WorkspaceSubscriptionPage'
 import { WorkspaceAiLibraryPage } from './components/workspace/WorkspaceAiLibraryPage'
 import { WorkspaceChatbotLibraryPage } from './components/workspace/WorkspaceChatbotLibraryPage'
 import { WorkspaceMlLibraryPage } from './components/workspace/WorkspaceMlLibraryPage'
-import { WorkspaceTeachingLabsPage } from './components/workspace/WorkspaceTeachingLabsPage'
 import { WorkspaceLibraryPage } from './components/workspace/WorkspaceLibraryPage'
 import { WorkspaceShell } from './components/workspace/WorkspaceShell'
 import { WorkspaceStudioPage } from './components/workspace/WorkspaceStudioPage'
@@ -35,6 +40,8 @@ import { TrainingPlanDetailPage } from './components/training/TrainingPlanDetail
 import { TeamAssignmentsPage } from './components/team/TeamAssignmentsPage'
 import { TeamMembersPage } from './components/team/TeamMembersPage'
 import { TrendInsightsPage } from './components/trends/TrendInsightsPage'
+import { LearnerReportsPage } from './components/reports/LearnerReportsPage'
+import { TeamLearningReportsPage } from './components/reports/TeamLearningReportsPage'
 import { TrainingPlansPage } from './components/training/TrainingPlansPage'
 import { TrainingQuizPage } from './components/training/TrainingQuizPage'
 import { SignedInHomePage } from './components/SignedInHomePage'
@@ -53,6 +60,9 @@ import { WorkspaceExtendedLibraryPage } from './components/workspace/WorkspaceEx
 import { PublicStandaloneCourseLandingPage } from './components/courses/PublicStandaloneCourseLandingPage'
 import { LearningCategoryPage } from './components/learn/LearningCategoryPage'
 import { LearningDiscoveryHubPage } from './components/learn/LearningDiscoveryHubPage'
+import { LearningSchoolCatalogPage } from './components/learn/LearningSchoolCatalogPage'
+import { FlagshipCourseDetailPage } from './components/learn/FlagshipCourseDetailPage'
+import { FlagshipCourseSessionPage } from './components/learn/FlagshipCourseSessionPage'
 import { EXTENDED_PUBLIC_LIBRARY_CONFIGS } from './data/learning/extendedPublicLibraryConfigs'
 import {
   AGENTIC_AI_REAL_WORK_LANDING_PATH,
@@ -66,7 +76,12 @@ import {
   PROMPT_ENGINEERING_MODELS_LANDING_PATH,
   PROMPT_ENGINEERING_MODELS_PUBLIC_BASE_PATH,
 } from './data/learning/standaloneCoursesCatalog'
-import { RequirePlatformSurface, RequireProLab } from './components/access/RequireAccess'
+import {
+  RequireInstitutionOperatorSurface,
+  RequirePlatformInsights,
+  RequireSuperAdminSurface,
+  RequireTrainingPlanAdminSurface,
+} from './components/access/RequireAccess'
 import { PlatformSurfacePage } from './components/PlatformSurfacePage'
 import { PublicGeneratePage } from './components/PublicGeneratePage'
 import { SystemStatusBanner } from './components/SystemStatusBanner'
@@ -85,61 +100,6 @@ function RedirectLegacyLibrariesAiFoundationsLessonToCanonical() {
   return <Navigate to={`${PUBLIC_AI_FOUNDATIONS_BASE_PATH}/${lessonSlug}`} replace />
 }
 
-const LANDING_SUPPORT_SOCIAL = [
-  { label: 'TikTok', handle: '@jifunze_ai', href: 'https://www.tiktok.com/@jifunze_ai' },
-  { label: 'Instagram', handle: '@jifunze.ai', href: 'https://www.instagram.com/jifunze.ai/' },
-  { label: 'X', handle: '@Jifunze.AI', href: 'https://x.com/JifunzeAI' },
-] as const
-
-const LANDING_CONTACT_EMAIL = 'neuralbuildlab.ai@gmail.com'
-
-function LandingSupportLinks() {
-  return (
-    <div className="flex w-full max-w-sm flex-col items-center gap-3 text-center">
-      <nav
-        className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-[10px] leading-snug tracking-[0.16em] text-zinc-400/85"
-        aria-label="Jifunze.AI on social"
-      >
-        {LANDING_SUPPORT_SOCIAL.map((item, i) => (
-          <span key={item.href} className="inline-flex items-center gap-x-2">
-            {i > 0 ? (
-              <span className="text-zinc-600/55" aria-hidden>
-                ·
-              </span>
-            ) : null}
-            <a
-              href={item.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors duration-200 hover:text-zinc-200 focus-visible:rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-            >
-              <span className="sr-only">{item.label}: </span>
-              {item.handle}
-            </a>
-          </span>
-        ))}
-      </nav>
-      <a
-        href={`mailto:${LANDING_CONTACT_EMAIL}`}
-        className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.14em] text-zinc-400/80 transition-colors duration-200 hover:text-zinc-200 focus-visible:rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-      >
-        <span className="text-zinc-500/85" aria-hidden>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            className="h-3.5 w-3.5 shrink-0 opacity-90"
-            aria-hidden
-          >
-            <path d="M3 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1.09l-6.55 4.37a1 1 0 0 1-1.1 0L3 5.09V4Zm0 3.82V16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7.82l-5.72 3.81a2.5 2.5 0 0 1-2.56 0L3 7.82Z" />
-          </svg>
-        </span>
-        <span className="break-all">{LANDING_CONTACT_EMAIL}</span>
-      </a>
-    </div>
-  )
-}
-
 function AppChrome({ env }: { env: EnvCheckResult }) {
   const { user, session } = useAuth()
   if (!user) return null
@@ -154,17 +114,19 @@ function AppChrome({ env }: { env: EnvCheckResult }) {
 function HomeEntryPage() {
   const { user } = useAuth()
   const location = useLocation()
-  const authMode = useMemo(() => {
+  const legacyAuthRedirect = useMemo(() => {
     const search = new URLSearchParams(location.search)
-    return search.get('auth') === 'signup' || search.get('signup') === '1'
-      ? 'signup'
-      : search.get('auth') === 'signin'
-        ? 'signin'
-        : null
+    if (search.get('auth') === 'signup' || search.get('signup') === '1') return LEGAL_ROUTES.authSignUp
+    if (search.get('auth') === 'signin') return LEGAL_ROUTES.authSignIn
+    return null
   }, [location.search])
 
   if (user) {
     return <SignedInHomePage />
+  }
+
+  if (legacyAuthRedirect) {
+    return <Navigate to={legacyAuthRedirect} replace />
   }
 
   return (
@@ -192,13 +154,13 @@ function HomeEntryPage() {
             {isSupabaseConfigured() ? (
               <>
                 <Link
-                  to="/?auth=signin#auth"
+                  to={LEGAL_ROUTES.authSignIn}
                   className="rounded-full px-3 py-2 text-xs font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:bg-white/[0.06] hover:text-[color:var(--jf-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
                 >
                   Sign in
                 </Link>
                 <Link
-                  to="/?auth=signup#auth"
+                  to={LEGAL_ROUTES.authSignUp}
                   className="rounded-full px-3 py-2 text-xs font-semibold text-[color:var(--jf-text)] transition-colors duration-200 hover:bg-white/[0.08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
                 >
                   Sign up
@@ -217,14 +179,14 @@ function HomeEntryPage() {
           <div className="relative z-10 mx-auto max-w-4xl pt-2 text-center lg:max-w-5xl lg:text-left">
             <div className="mx-auto max-w-3xl space-y-5 lg:mx-0 sm:space-y-6">
               <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-[color:var(--jf-muted)] sm:text-[14px]">
-                Online learning for practical AI &amp; digital skills
+                Jifunze · premium learning paths
               </p>
               <h1 className="text-[1.9rem] font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-[2.25rem] sm:leading-[1.15] lg:text-[2.5rem] lg:leading-[1.1]">
-                Learn practical AI skills and turn what you know into useful work.
+                Deep learning paths for real growth
               </h1>
               <p className="text-[15px] leading-[1.65] text-[color:var(--jf-muted)] sm:text-[17px] sm:leading-relaxed">
-                Structured courses, hands-on practice, and clear progression—then optional drafting help when you need a starting post. You review everything
-                before it ships.
+                Explore Jifunze&apos;s flagship learning paths across AI, business, digital skills, career growth, communication, leadership, and more. Each course is
+                designed as a deep track with guided learning, practice, real-world application, and useful outputs you can carry into work, study, and life.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-3 pt-1 lg:justify-start">
                 <Link
@@ -276,52 +238,19 @@ function HomeEntryPage() {
 
         <LandingMarketingSections />
 
-        {isSupabaseConfigured() && authMode ? (
-          <section
-            id="auth"
-            className="relative z-10 mx-auto mt-16 max-w-md border-t border-[color:var(--jf-border)] pt-10 sm:mt-20 sm:pt-12"
-          >
-            <p className="text-center text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-subtle)]">Account</p>
-            <div className="mt-3 space-y-1 text-center">
-              <p className="text-[15px] font-medium text-[color:var(--jf-text)]">
-                {authMode === 'signup' ? 'Create your account' : 'Welcome back'}
-              </p>
-              <p className="text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-                {authMode === 'signup'
-                  ? 'Save progress and drafts in your workspace.'
-                  : 'Pick up where you left off.'}
-              </p>
-            </div>
-            <div className="mt-4 flex justify-center gap-5 text-[12px] text-[color:var(--jf-muted)]">
-              <Link to="/?auth=signin#auth" className="hover:text-[color:var(--jf-text)]">
-                Sign in
-              </Link>
-              <Link to="/?auth=signup#auth" className="font-medium hover:text-[color:var(--jf-text)]">
-                Sign up
-              </Link>
-            </div>
-            <div className="mt-6 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/80 px-5 py-6 ring-1 ring-white/[0.03]">
-              <AuthForm initialMode={authMode} appearance="quiet" />
-            </div>
-            <div className="mt-6 text-center">
-              <LandingSupportLinks />
-            </div>
-          </section>
-        ) : null}
-
-        {isSupabaseConfigured() && !authMode ? (
+        {isSupabaseConfigured() ? (
           <div className="relative z-10 mx-auto mt-14 max-w-xl border-t border-[color:var(--jf-border)] pt-8 text-center sm:mt-16 sm:pt-10">
             <p className="text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
               Returning learner?{' '}
               <Link
-                to="/?auth=signin#auth"
+                to={LEGAL_ROUTES.authSignIn}
                 className="font-medium text-[color:var(--jf-text)] underline-offset-2 hover:underline"
               >
                 Sign in
               </Link>{' '}
               or{' '}
               <Link
-                to="/?auth=signup#auth"
+                to={LEGAL_ROUTES.authSignUp}
                 className="font-medium text-[color:var(--jf-text)] underline-offset-2 hover:underline"
               >
                 create an account
@@ -331,11 +260,9 @@ function HomeEntryPage() {
           </div>
         ) : null}
 
-        {!(isSupabaseConfigured() && authMode) ? (
-          <footer className="mt-12 flex flex-col items-center gap-4 pt-2 sm:mt-14">
-            <TrustLegalFooterLinks variant="compact" className="justify-center text-[color:var(--jf-subtle)]" />
-          </footer>
-        ) : null}
+        <footer className="mt-12 flex flex-col items-center gap-4 pt-2 sm:mt-14">
+          <TrustLegalFooterLinks variant="compact" className="justify-center text-[color:var(--jf-subtle)]" />
+        </footer>
       </div>
     </div>
   )
@@ -348,7 +275,9 @@ export default function App() {
   }, [env])
 
   return (
-    <Routes>
+    <LearnerCommerceProvider>
+      <LearnerDeviceLimitModal />
+      <Routes>
       <Route path="/generate" element={<PublicGeneratePage />} />
       <Route path="/disclaimer" element={<FullDisclaimerPage />} />
       <Route path="/terms" element={<TermsOfServicePage />} />
@@ -356,6 +285,7 @@ export default function App() {
       <Route path="/refunds" element={<RefundPolicyPage />} />
       <Route path="/pricing" element={<PublicPricingPage />} />
       <Route path="/learn" element={<LearningDiscoveryHubPage />} />
+      <Route path="/learn/school/:schoolId" element={<LearningSchoolCatalogPage />} />
       <Route path="/learn/category/:slug" element={<LearningCategoryPage />} />
       <Route
         element={
@@ -371,7 +301,13 @@ export default function App() {
       >
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/auth/sign-in" element={<AuthSignInPage />} />
+        <Route path="/auth/sign-up" element={<AuthSignUpPage />} />
         <Route path="/" element={<HomeEntryPage />} />
+        <Route path="/learn/courses/:slug/session/:sessionId" element={<FlagshipCourseSessionPage />} />
+        <Route path="/learn/courses/:slug" element={<FlagshipCourseDetailPage />} />
+        <Route path="/learn/checkout" element={<LearnerCheckoutPage />} />
+        <Route path="/learn/readiness/:slug" element={<ReadinessChallengePage />} />
         <Route path="/library/ai-foundations" element={<PublicAiFoundationsLibraryPage />} />
         <Route path="/library/ai-foundations/:lessonSlug" element={<PublicAiFoundationsLessonPage />} />
         <Route path="/library/ai-labs" element={<PublicAiTeachingLabsPage />} />
@@ -494,6 +430,8 @@ export default function App() {
           <Route element={<RequireDisclaimerAcknowledged />}>
             <Route element={<WorkspaceShell />}>
               <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/reports" element={<LearnerReportsPage />} />
+              <Route path="/my-learning" element={<MyLearningPage />} />
               <Route path="/library" element={<WorkspaceLibraryPage />} />
               <Route path="/library/ai" element={<WorkspaceAiLibraryPage />} />
               <Route path="/library/ml" element={<WorkspaceMlLibraryPage />} />
@@ -538,41 +476,93 @@ export default function App() {
                 path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_agentic_ai_real_work.workspacePath}
                 element={<WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_agentic_ai_real_work} />}
               />
-              <Route path="/learning/labs" element={<WorkspaceTeachingLabsPage />} />
-              <Route path="/team/members" element={<TeamMembersPage />} />
+              <Route path="/learning/labs" element={<Navigate to="/learn" replace />} />
+              <Route
+                path="/team/members"
+                element={
+                  <RequireInstitutionOperatorSurface>
+                    <TeamMembersPage />
+                  </RequireInstitutionOperatorSurface>
+                }
+              />
               <Route path="/team/assignments" element={<TeamAssignmentsPage />} />
-              <Route path="/training" element={<TrainingPlansPage />} />
-              <Route path="/training/new" element={<TrainingPlanCreatePage />} />
+              <Route
+                path="/team/learning-reports"
+                element={
+                  <RequireInstitutionOperatorSurface>
+                    <TeamLearningReportsPage />
+                  </RequireInstitutionOperatorSurface>
+                }
+              />
+              <Route
+                path="/training"
+                element={
+                  <RequireTrainingPlanAdminSurface>
+                    <TrainingPlansPage />
+                  </RequireTrainingPlanAdminSurface>
+                }
+              />
+              <Route
+                path="/training/new"
+                element={
+                  <RequireTrainingPlanAdminSurface>
+                    <TrainingPlanCreatePage />
+                  </RequireTrainingPlanAdminSurface>
+                }
+              />
               <Route path="/training/:planId" element={<TrainingPlanDetailPage />} />
               <Route path="/training/:planId/lessons/:lessonId" element={<TrainingLessonPage />} />
               <Route path="/training/:planId/quizzes/:quizId" element={<TrainingQuizPage />} />
-              <Route path="/trends" element={<TrendInsightsPage />} />
-              <Route path="/ideas" element={<WorkspaceIdeasPage />} />
-              <Route path="/studio" element={<WorkspaceStudioPage />} />
               <Route
-                path="/lab"
+                path="/trends"
                 element={
-                  <RequireProLab>
-                    <WorkspaceLabPage />
-                  </RequireProLab>
+                  <RequireInstitutionOperatorSurface>
+                    <TrendInsightsPage />
+                  </RequireInstitutionOperatorSurface>
                 }
               />
-              <Route path="/settings" element={<WorkspaceSettingsPage />} />
+              <Route
+                path="/ideas"
+                element={
+                  <RequireInstitutionOperatorSurface>
+                    <WorkspaceIdeasPage />
+                  </RequireInstitutionOperatorSurface>
+                }
+              />
+              <Route
+                path="/studio"
+                element={
+                  <RequireInstitutionOperatorSurface>
+                    <WorkspaceStudioPage />
+                  </RequireInstitutionOperatorSurface>
+                }
+              />
+              <Route path="/lab" element={<Navigate to="/learn" replace />} />
+              <Route
+                path="/insights"
+                element={
+                  <RequirePlatformInsights>
+                    <LearningInsightsPage />
+                  </RequirePlatformInsights>
+                }
+              />
+              <Route path="/account" element={<LearnerAccountPage />} />
+              <Route path="/settings" element={<WorkspaceSettingsOrAccountPage />} />
               <Route path="/settings/subscription" element={<WorkspaceSubscriptionPage />} />
             </Route>
-            <Route path="/insights" element={<LearningInsightsPage />} />
             <Route
               path="/platform"
               element={
-                <RequirePlatformSurface>
+                <RequireSuperAdminSurface>
                   <PlatformSurfacePage />
-                </RequirePlatformSurface>
+                </RequireSuperAdminSurface>
               }
             />
           </Route>
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+      </Routes>
+    </LearnerCommerceProvider>
   )
 }

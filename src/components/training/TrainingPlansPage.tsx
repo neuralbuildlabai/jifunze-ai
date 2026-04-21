@@ -18,10 +18,10 @@ export function TrainingPlansPage() {
     <div className="mx-auto w-full max-w-3xl space-y-8 px-4 py-10 text-zinc-100">
       <header className="flex flex-wrap items-start justify-between gap-4 border-b border-white/[0.06] pb-6">
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">Training</p>
-          <h1 className="mt-1 text-xl font-semibold text-white">My training plans</h1>
+          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">Workspace training</p>
+          <h1 className="mt-1 text-xl font-semibold text-white">Plans &amp; cohort assignments</h1>
           <p className="mt-2 max-w-xl text-sm text-zinc-400">
-            Create a plan, follow lessons in order, and track completion in your workspace.
+            Base plans on existing catalog courses—assign paths to learners instead of inventing synthetic curricula when the catalog already covers the topic.
           </p>
           <p className="mt-3 max-w-xl text-[11px] leading-relaxed text-zinc-600">{TRUST_COPY.trainingSurfaceHeuristic}</p>
         </div>
@@ -29,7 +29,7 @@ export function TrainingPlansPage() {
           to="/training/new"
           className="rounded-lg bg-violet-600/90 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-violet-950/25 transition hover:bg-violet-500"
         >
-          Create training plan
+          New training plan
         </Link>
       </header>
 

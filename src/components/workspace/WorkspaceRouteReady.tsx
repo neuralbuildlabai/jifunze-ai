@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
 import { AuthForm } from '../AuthForm'
 import { EmptyWorkspaceCreateBrand } from '../EmptyWorkspaceCreateBrand'
-import { useAppAccess } from '../../access/useAppAccess'
 import { useWorkspaceGenerator } from '../../workspace/WorkspaceGeneratorContext'
 
 export function WorkspaceRouteReady({ children }: { children: React.ReactNode }) {
@@ -88,8 +87,7 @@ export function WorkspaceRouteShell({
   subtitle?: string
   children: React.ReactNode
 }) {
-  const { tenantId, user, signOut, signOutPending } = useWorkspaceGenerator()
-  const { showTenantMetadata } = useAppAccess()
+  const { user, signOut, signOutPending } = useWorkspaceGenerator()
 
   return (
     <div className="mx-auto w-full max-w-2xl space-y-8 px-4 py-10 text-zinc-100">
@@ -99,11 +97,6 @@ export function WorkspaceRouteShell({
         {subtitle ? <p className="max-w-2xl text-sm leading-relaxed text-zinc-500">{subtitle}</p> : null}
         {isSupabaseConfigured() && user ? (
           <div className="flex flex-wrap items-center gap-2 pt-1">
-            {showTenantMetadata ? (
-              <span className="rounded-full border border-zinc-700/80 bg-zinc-900/50 px-2 py-0.5 text-[10px] text-zinc-500">
-                Tenant <span className="font-mono text-zinc-400">{tenantId.slice(0, 8)}…</span>
-              </span>
-            ) : null}
             <button
               type="button"
               disabled={signOutPending}

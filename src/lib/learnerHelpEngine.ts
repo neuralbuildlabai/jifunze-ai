@@ -19,11 +19,18 @@ import { PUBLIC_AI_FOUNDATIONS_BASE_PATH } from '../data/publicStarterLibraries/
 import { PUBLIC_ML_LIBRARY_BASE_PATH } from '../data/learning/machineLearningCurriculum'
 import { PUBLIC_AI_LABS_BASE_PATH } from '../data/teaching/aiLabsCurriculum'
 import { TEACHING_CONCEPTS, teachingConceptById } from '../data/teaching/teachingKnowledgeBase'
-import { conceptsForLessonSlug, conceptsLinkedToLab, kbPlacementSentenceForLessonSlug } from '../data/teaching/teachingKbIndex'
+import {
+  conceptsForLessonSlug,
+  conceptsLinkedToLab,
+  kbPlacementSentenceForFlagshipSession,
+  kbPlacementSentenceForLessonSlug,
+} from '../data/teaching/teachingKbIndex'
 import { teachingLabById } from '../data/teaching/teachingLabsCatalog'
 import type { TeachingConcept } from '../data/teaching/teachingTypes'
 import { recordTeachingSignal } from '../data/teaching/teachingSignals'
-import { recentHelpQueries } from './teachingKbSignals'
+import { getFlagshipCurriculum } from '../data/learning/flagshipCourseCurricula'
+import { curriculumOutlineSnippet, resolveTopicToCourses } from './courseTopicResolver'
+import { LEGAL_ROUTES } from '../training/trustCopy'
 
 export type LearnerHelpCitation = {
   label: string
@@ -43,6 +50,14 @@ export type LearnerHelpQueryParams = {
   currentLessonSlug?: string
   /** When embedded near a lab surface—narrows hints without dumping answers. */
   labId?: string
+  /** Flagship course player: deep-link context for exact chapter routing. */
+  currentCourseSlug?: string
+  currentSessionId?: string
+  /**
+   * When the purchase gate is on and the learner lacks access, citations stay entitlement-aware
+   * (pricing / catalog) instead of implying full chapter bodies here.
+   */
+  flagshipCourseAccess?: 'open' | 'locked'
 }
 
 function tokenize(q: string): string[] {
@@ -99,7 +114,7 @@ function citationsFromConcept(concept: TeachingConcept): LearnerHelpCitation[] {
   for (const labId of concept.relatedLabIds.slice(0, 2)) {
     const lab = teachingLabById(labId)
     const href =
-      lab?.labAccess === 'public' ? `${PUBLIC_AI_LABS_BASE_PATH}#${labId}` : `/learning/labs#${labId}`
+      lab?.labAccess === 'public' ? `${PUBLIC_AI_LABS_BASE_PATH}#${labId}` : `/learn#lab-${labId}`
     citations.push({ label: `Teaching lab · ${lab?.title ?? labId}`, href })
   }
   return citations
@@ -142,31 +157,26 @@ function weakAreaEchoLine(query: string): string | null {
   return `Related KB concepts to revisit: ${hits.map((h) => h.title).join(' · ')}.`
 }
 
-function recentQueriesEcho(): string | null {
-  const recent = recentHelpQueries(25)
-  if (!recent.length) return null
-  const joined = recent.slice(0, 3).join(' · ')
-  return `Recent local help queries on this device (telemetry only): ${joined}`
+function clipSnippet(s: string, max: number): string {
+  const t = s.trim()
+  if (t.length <= max) return t
+  return `${t.slice(0, max - 1)}…`
 }
 
+/** Snippet-only concept answers for the help FAB — full threads stay in library/course readers. */
 function conceptAnswerBody(concept: TeachingConcept): string[] {
-  const lines: string[] = [concept.explanation]
-  if (concept.misconceptions[0]) {
-    lines.push(`Common confusion to avoid: ${concept.misconceptions[0]}`)
-  }
-  lines.push(`Revision anchor: ${concept.revisionAnchor}`)
-  lines.push(`Worked example: ${concept.workedExample}`)
+  const lines: string[] = [
+    clipSnippet(concept.explanation, 320),
+    concept.misconceptions[0] ? `Common confusion: ${clipSnippet(concept.misconceptions[0], 200)}` : '',
+    `Revision anchor: ${clipSnippet(concept.revisionAnchor, 220)}`,
+    `Worked example: ${clipSnippet(concept.workedExample, 220)}`,
+  ].filter(Boolean)
   if (concept.goodUnderstandingMarkers?.length) {
-    lines.push(`What “good understanding” often looks like: ${concept.goodUnderstandingMarkers.join(' · ')}`)
+    lines.push(`Solid grasp often looks like: ${clipSnippet(concept.goodUnderstandingMarkers.join(' · '), 200)}`)
   }
-  if (concept.weakUnderstandingMarkers?.length) {
-    lines.push(`Weak understanding often looks like: ${concept.weakUnderstandingMarkers.join(' · ')}`)
-  }
-  if (concept.capabilityOutcomes.length) {
-    lines.push(`After this lands, you should be able to: ${concept.capabilityOutcomes.join(' · ')}`)
-  }
+  lines.push('Follow citations for the full lesson thread—this panel stays snippet-only.')
   lines.push(
-    'If this does not match your situation, say what task you are doing—Jifunze help routes using indexed curriculum atoms, not open-ended guessing.',
+    'If this does not match your situation, say what task you are doing—help routes from indexed atoms, not open-ended guessing.',
   )
   return lines
 }
@@ -192,6 +202,16 @@ function hintTier(query: string): 'gentle' | 'strong' | 'explain' {
 
 function contextPreamble(params: LearnerHelpQueryParams): string[] {
   const lines: string[] = []
+  if (params.currentCourseSlug && params.currentSessionId) {
+    const place = kbPlacementSentenceForFlagshipSession(params.currentCourseSlug, params.currentSessionId)
+    if (place) {
+      lines.push(`Placement: ${place}.`)
+      lines.push('Full chapter bodies stay in the course player—answers here are short placement + indexed snippets only.')
+    }
+    if (params.flagshipCourseAccess === 'locked') {
+      lines.push('This course is not in your current access scope—open Pricing or your purchase email to upgrade; links below stay honest about that gate.')
+    }
+  }
   if (params.currentLessonSlug) {
     const place = kbPlacementSentenceForLessonSlug(params.currentLessonSlug)
     if (place) lines.push(`Lesson placement in Jifunze catalogs: ${place}.`)
@@ -261,7 +281,7 @@ function labHintAnswer(params: LearnerHelpQueryParams, labIdFromQuery: string | 
     title: `Lab help · ${lab.title}`,
     body,
     citations: [
-      { label: 'Open teaching labs workspace', href: '/learning/labs' },
+      { label: 'Browse courses (labs live inside modules)', href: '/learn' },
       ...(lab.labAccess === 'public' ? [{ label: 'Public AI labs listing', href: PUBLIC_AI_LABS_BASE_PATH }] : []),
       ...lab.lessonSlugs
         .map((s) => {
@@ -289,10 +309,21 @@ export function answerLearnerHelpQuestion(params: LearnerHelpQueryParams): Learn
       query,
       currentLessonSlug: params.currentLessonSlug ?? '',
       labId: params.labId ?? '',
+      currentCourseSlug: params.currentCourseSlug ?? '',
+      currentSessionId: params.currentSessionId ?? '',
     },
   })
 
   if (!query) {
+    const here =
+      params.currentCourseSlug && params.currentSessionId
+        ? [
+            {
+              label: 'Continue this chapter in the course player',
+              href: `/learn/courses/${params.currentCourseSlug}/session/${params.currentSessionId}`,
+            },
+          ]
+        : []
     return {
       title: 'Ask a learning question',
       body: [
@@ -301,12 +332,45 @@ export function answerLearnerHelpQuestion(params: LearnerHelpQueryParams): Learn
         'Jifunze answers from indexed KB atoms + curriculum links—not generic web guessing.',
       ],
       citations: [
+        ...(params.flagshipCourseAccess === 'locked' ? [{ label: 'Plans & pricing', href: LEGAL_ROUTES.pricing }] : []),
+        ...here,
         { label: 'AI library', href: PUBLIC_AI_FOUNDATIONS_BASE_PATH },
         { label: 'ML library', href: PUBLIC_ML_LIBRARY_BASE_PATH },
-        { label: 'Teaching labs', href: '/learning/labs' },
+        { label: 'Course catalog', href: '/learn' },
         { label: 'Public AI labs', href: PUBLIC_AI_LABS_BASE_PATH },
       ],
       confidence: 'high',
+    }
+  }
+
+  const flagshipHit = resolveTopicToCourses(query)
+  if (flagshipHit && flagshipHit.confidence >= 0.72) {
+    const snippet = getFlagshipCurriculum(flagshipHit.courseSlug)
+      ? curriculumOutlineSnippet(flagshipHit.courseSlug, 280)
+      : `Catalog: ${flagshipHit.courseTitle}. Open the linked reader for full modules, checkpoints, and practice.`
+    const altCitations =
+      flagshipHit.alternateSlugs?.map((a) => ({
+        label: `Also matches: ${a.title}`,
+        href: `/learn/courses/${a.slug}`,
+      })) ?? []
+    return {
+      title: `Course match · ${flagshipHit.courseTitle}`,
+      body: [
+        `Mapped your question to the flagship course “${flagshipHit.courseTitle}” (${flagshipHit.kind} route · ~${Math.round(flagshipHit.confidence * 100)}% confidence).`,
+        ...(snippet
+          ? [
+              `Snippet from the syllabus (not a substitute for lessons): ${snippet}`,
+              'Open the course player for full lessons, embedded labs, checkpoints, and resources—those stay inside the canonical path.',
+            ]
+          : ['Use the course link below to enter the structured module order.']),
+        'If a destination is outside your subscription or assignment, the player will route you through checkout or upgrade—not unrestricted lesson bodies here.',
+      ],
+      citations: [
+        { label: `Open ${flagshipHit.courseTitle}`, href: flagshipHit.primaryHref },
+        ...(params.flagshipCourseAccess === 'locked' ? [{ label: 'Plans & pricing', href: LEGAL_ROUTES.pricing }] : []),
+        ...altCitations,
+      ],
+      confidence: flagshipHit.confidence >= 0.85 ? 'high' : 'medium',
     }
   }
 
@@ -321,10 +385,10 @@ export function answerLearnerHelpQuestion(params: LearnerHelpQueryParams): Learn
       title: 'Lab hints',
       body: [
         ...contextPreamble(params),
-        'Paste a lab id from Teaching labs (example: lab-ai-f3-spot-factual-weakness).',
+        'Paste a lab id from your course materials (example: lab-ai-f3-spot-factual-weakness).',
         'Hints escalate from gentle → strong → explanation-style guidance—without dumping perfect final artifacts.',
       ],
-      citations: [{ label: 'Teaching labs', href: '/learning/labs' }],
+      citations: [{ label: 'Course catalog', href: '/learn' }],
       confidence: 'medium',
     }
   }
@@ -343,12 +407,12 @@ export function answerLearnerHelpQuestion(params: LearnerHelpQueryParams): Learn
             ]
           : [
               'Tell me which lesson you are on (paste title or slug), or browse the library index for your category/module.',
-              weakEcho ?? recentQueriesEcho() ?? 'Teaching labs often beat passive “next lesson” if your goal is applied judgment.',
+              weakEcho ?? 'When you know the module, open the course path and continue from your last session.',
             ]),
       ].filter(Boolean) as string[],
       citations: [
         ...(next ? [next] : []),
-        { label: 'Teaching labs', href: '/learning/labs' },
+        { label: 'Course catalog', href: '/learn' },
         { label: 'Library overview', href: '/library' },
       ],
       confidence: next ? 'medium' : 'low',
@@ -365,7 +429,7 @@ export function answerLearnerHelpQuestion(params: LearnerHelpQueryParams): Learn
         title: `Revision · ${top.title}`,
         body: [
           ...contextPreamble(params),
-          top.explanation,
+          clipSnippet(top.explanation, 360),
           `Revision drill (avoid passive rereading): ${top.revisionAnchor}`,
           top.misconceptions[0] ? `Trap to check: ${top.misconceptions[0]}` : '',
           top.goodUnderstandingMarkers?.length
@@ -388,7 +452,7 @@ export function answerLearnerHelpQuestion(params: LearnerHelpQueryParams): Learn
         'Paste a lesson slug, concept phrase, or lab id—revision answers here come from indexed KB atoms and anchors, not generic coaching scripts.',
       ],
       citations: [
-        { label: 'Teaching labs', href: '/learning/labs' },
+        { label: 'Course catalog', href: '/learn' },
         { label: 'Library overview', href: '/library' },
       ],
       confidence: 'low',
@@ -405,8 +469,8 @@ export function answerLearnerHelpQuestion(params: LearnerHelpQueryParams): Learn
         title: `Compare: ${a.title} vs ${b.title}`,
         body: [
           ...contextPreamble(params),
-          `${a.title}: ${a.explanation}`,
-          `${b.title}: ${b.explanation}`,
+          `${a.title}: ${clipSnippet(a.explanation, 280)}`,
+          `${b.title}: ${clipSnippet(b.explanation, 280)}`,
           `Common mix-up: ${a.misconceptions[0] ?? 'See misconception lists in linked lessons.'}`,
         ],
         citations: [...citationsFromConcept(a).slice(0, 2), ...citationsFromConcept(b).slice(0, 2)],
@@ -486,7 +550,7 @@ export function answerLearnerHelpQuestion(params: LearnerHelpQueryParams): Learn
       { label: 'AI library', href: PUBLIC_AI_FOUNDATIONS_BASE_PATH },
       { label: 'ML library', href: PUBLIC_ML_LIBRARY_BASE_PATH },
       { label: 'Chatbots library', href: PUBLIC_CHATBOT_LIBRARY_BASE_PATH },
-      { label: 'Teaching labs', href: '/learning/labs' },
+      { label: 'Course catalog', href: '/learn' },
       { label: 'Public AI labs', href: PUBLIC_AI_LABS_BASE_PATH },
     ],
     confidence: 'low',

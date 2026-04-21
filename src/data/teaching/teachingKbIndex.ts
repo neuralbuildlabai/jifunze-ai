@@ -13,6 +13,9 @@ import {
 import { TEACHING_CONCEPTS } from './teachingKnowledgeBase'
 import type { TeachingConcept } from './teachingTypes'
 import { teachingLabById } from './teachingLabsCatalog'
+import { getFlagshipCourseBySlug } from '../learning/flagshipCoursesCatalog'
+import { flagshipStageLabel, getFlagshipCurriculum } from '../learning/flagshipCourseCurricula'
+import { buildSessionsForCurriculum, chapterOrdinalInModule, getSessionById } from '../learning/flagshipCourseSessions'
 
 export function conceptsForLessonSlug(slug: string): TeachingConcept[] {
   return TEACHING_CONCEPTS.filter((c) => c.lessonSlugs.includes(slug))
@@ -51,4 +54,18 @@ export function kbPlacementSentenceForLessonSlug(slug: string): string | null {
   }
 
   return null
+}
+
+/** Exact flagship player placement for help routing (course → module → chapter ordinal). */
+export function kbPlacementSentenceForFlagshipSession(courseSlug: string, sessionId: string): string | null {
+  const course = getFlagshipCourseBySlug(courseSlug)
+  const curriculum = getFlagshipCurriculum(courseSlug)
+  if (!course || !curriculum) return null
+  const sessions = buildSessionsForCurriculum(curriculum)
+  const sess = getSessionById(sessions, sessionId)
+  if (!sess) return null
+  const mod = curriculum.modules.find((m) => m.id === sess.moduleId)
+  const ch = chapterOrdinalInModule(sess, sessions)
+  const stage = mod?.stage ? flagshipStageLabel(mod.stage) : 'Module'
+  return `${course.title} · ${mod?.title ?? sess.moduleId} · chapter ${ch} · ${sess.title} (${sess.type}; ${stage})`
 }

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { isBillingCheckoutEnabled } from '../../lib/billingEnv'
 import {
@@ -8,7 +7,7 @@ import {
   annualEffectiveMonthlyUsd,
   formatUsdWhole,
 } from '../../data/learning/publicPricingStory'
-import { LEGAL_ROUTES, SUPPORT_CONTACT_EMAIL } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../training/trustCopy'
 
 function billingHref(billingEnabled: boolean): string {
   return billingEnabled ? LEGAL_ROUTES.workspaceSubscription : '/?auth=signup#auth'
@@ -48,57 +47,16 @@ const PLAN_BULLETS = {
 } as const
 
 /**
- * Public pricing: individuals (monthly · annual · single) + optional teams path.
+ * Public pricing — three individual offers only ($29 / $199 / $59).
  */
 export function PublicPricingPlansSimplified() {
   const billingEnabled = isBillingCheckoutEnabled()
   const checkoutHref = billingHref(billingEnabled)
   const effectiveMo = annualEffectiveMonthlyUsd(PUBLIC_ANNUAL_USD)
-  const [audience, setAudience] = useState<'individual' | 'team'>('individual')
 
   return (
     <section className="space-y-8" data-testid="public-pricing-plans-grid">
-      {/* Individual vs team — commercial clarity without clutter */}
-      <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">How are you buying?</p>
-        <div
-          className="inline-flex rounded-full border border-white/[0.12] bg-[color:var(--jf-surface)] p-1 ring-1 ring-white/[0.04]"
-          role="tablist"
-          aria-label="Buyer type"
-        >
-          <button
-            type="button"
-            role="tab"
-            aria-selected={audience === 'individual'}
-            className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
-              audience === 'individual'
-                ? 'bg-white/[0.12] text-[color:var(--jf-text)] shadow-sm'
-                : 'text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]'
-            }`}
-            onClick={() => setAudience('individual')}
-          >
-            Individual
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={audience === 'team'}
-            data-testid="pricing-audience-team"
-            className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
-              audience === 'team'
-                ? 'bg-white/[0.12] text-[color:var(--jf-text)] shadow-sm'
-                : 'text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]'
-            }`}
-            onClick={() => setAudience('team')}
-          >
-            Team
-          </button>
-        </div>
-      </div>
-
-      {audience === 'individual' ? (
-        <>
-          <div className="grid gap-6 lg:grid-cols-3 lg:items-stretch">
+      <div className="grid gap-6 lg:grid-cols-3 lg:items-stretch">
             {/* Monthly */}
             <section className={CARD_SHELL} data-testid="pricing-plan-monthly">
               <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[color:var(--jf-muted)]">Monthly access</p>
@@ -210,33 +168,6 @@ export function PublicPricingPlansSimplified() {
             </Link>
             .
           </p>
-        </>
-      ) : (
-        <section
-          className="rounded-3xl border border-white/[0.12] bg-gradient-to-br from-[color:var(--jf-surface-elevated)] to-[color:var(--jf-surface)] px-8 py-10 shadow-[0_24px_56px_-22px_rgba(12,14,18,0.55)] ring-1 ring-white/[0.08] sm:px-12 sm:py-12"
-          data-testid="pricing-team-path"
-        >
-          <div className="mx-auto max-w-2xl text-center">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[color:var(--jf-muted)]">Team access</p>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-[1.65rem]">
-              Shared learning across your organization
-            </h2>
-            <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--jf-muted)]">
-              Team pricing and access are set up with you—we’ll align seats, billing, and rollout to how you work. No self-serve team checkout yet; we’ll respond
-              quickly by email.
-            </p>
-            <a
-              className="mt-8 inline-flex w-full max-w-sm items-center justify-center rounded-xl bg-[var(--jf-brand)] px-6 py-3.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)] sm:w-auto"
-              href={`mailto:${SUPPORT_CONTACT_EMAIL}?subject=Team%20access%20inquiry`}
-            >
-              Contact sales
-            </a>
-            <p className="mt-4 text-[12px] text-[color:var(--jf-subtle)]">
-              Include team size and what you&apos;re trying to accomplish—we&apos;ll follow up with next steps.
-            </p>
-          </div>
-        </section>
-      )}
     </section>
   )
 }

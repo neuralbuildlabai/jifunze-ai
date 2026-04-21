@@ -29,6 +29,22 @@
   Public landing — deep warm slate (layered graphite). Page is visibly lighter than pure black;
   surfaces step up for hierarchy without harsh slabs or void-like contrast.
 */
+/* Long-form flagship lesson reading — calm measure & rhythm */
+.jf-reading-surface {
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+
+.jf-reading-surface .prose-p,
+.jf-reading-surface p {
+  line-height: 1.72;
+}
+
+@media (max-width: 640px) {
+  .jf-reading-surface {
+    font-size: 15px;
+  }
+}
+
 .jf-public-surface {
   color-scheme: dark;
   --jf-bg-page: #252830;

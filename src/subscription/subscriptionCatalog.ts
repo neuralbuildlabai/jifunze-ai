@@ -1,11 +1,10 @@
 /**
- * Compatibility layer for workspace / pricing surfaces — composes legacy “plan cards” from the SKU registry.
- * New work should prefer `pricingSkuRegistry.ts` directly.
+ * High-level plan labels for dashboards — aligns with `pricingSkuRegistry.ts` (three SKUs).
  */
 
-import { type PricingSkuKey, skuByKey } from './pricingSkuRegistry'
+import { skuByKey } from './pricingSkuRegistry'
 
-export type PaidPlanKey = Extract<PricingSkuKey, 'creator' | 'team'>
+export type PaidPlanKey = 'jifunze_monthly' | 'jifunze_annual' | 'jifunze_single_course'
 
 export type SubscriptionPlanId = 'free' | PaidPlanKey
 
@@ -16,7 +15,6 @@ export type SubscriptionPlan = {
   summary: string
   tagline?: string
   bullets: readonly string[]
-  stripePriceEnvKey?: string
   checkoutPlanKey?: PaidPlanKey
   accessTierHint: 'member' | 'pro' | 'workspace_admin'
 }
@@ -25,46 +23,48 @@ const freePlan: SubscriptionPlan = {
   id: 'free',
   name: 'Free',
   monthlyUsd: null,
-  summary: 'Try generation, workspace basics, and core training flows where enabled.',
-  tagline: 'Try generation, workspace basics, and core training flows.',
+  summary: 'Explore the catalog and workspace basics.',
+  tagline: 'Get started with core learning flows.',
   bullets: [
-    'Public trial generation and workspace exploration where enabled',
-    'Training plans and checkpoints where available for your tenant',
-    'Assistive outputs—still require your review before publication or reliance',
+    'Browse courses and preview learning paths',
+    'Workspace features available for your account',
+    'Upgrade when you want full access or a single deep dive',
   ],
   accessTierHint: 'member',
 }
 
-function legacyPlan(id: PaidPlanKey): SubscriptionPlan {
-  const sku = skuByKey(id)
+function skuPlan(key: PaidPlanKey): SubscriptionPlan {
+  const sku = skuByKey(key)
   if (!sku) {
     return {
-      id,
-      name: id === 'team' ? 'Team' : 'Creator',
+      id: key,
+      name: 'Paid plan',
       monthlyUsd: null,
-      summary: 'Legacy billing SKU.',
-      bullets: ['See pricing catalog for replacement SKUs.'],
-      accessTierHint: id === 'team' ? 'workspace_admin' : 'pro',
-      checkoutPlanKey: id,
+      summary: 'See Plans & billing for current options.',
+      bullets: [],
+      checkoutPlanKey: key,
+      accessTierHint: 'pro',
     }
   }
+  const monthlyUsd =
+    sku.billingInterval === 'month' ? sku.displayAmountUsd : sku.billingInterval === 'year' ? Math.round(sku.displayAmountUsd / 12) : null
   return {
-    id,
+    id: key,
     name: sku.name,
-    monthlyUsd: sku.displayAmountUsd,
+    monthlyUsd,
     summary: sku.summary,
     tagline: sku.summary,
     bullets: sku.bullets,
-    stripePriceEnvKey: sku.stripePriceEnvKey,
-    checkoutPlanKey: id,
-    accessTierHint: id === 'team' ? 'workspace_admin' : 'pro',
+    checkoutPlanKey: key,
+    accessTierHint: 'pro',
   }
 }
 
 export const SUBSCRIPTION_PLANS: readonly SubscriptionPlan[] = [
   freePlan,
-  legacyPlan('creator'),
-  legacyPlan('team'),
+  skuPlan('jifunze_monthly'),
+  skuPlan('jifunze_annual'),
+  skuPlan('jifunze_single_course'),
 ] as const
 
 export function paidPlans(): readonly SubscriptionPlan[] {

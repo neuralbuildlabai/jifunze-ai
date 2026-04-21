@@ -9,6 +9,11 @@ import {
   canSeeWorkspaceAdminSettings,
   resolveAccessTier,
 } from './appAccess'
+import {
+  canManageInstitutionTrainingPlans,
+  canViewOperatorInsightsNav,
+  workspaceNavVariant,
+} from './navRole'
 
 export function useAppAccess() {
   const { user } = useAuth()
@@ -31,5 +36,8 @@ export function useAppAccess() {
     showPlatformNav: canAccessPlatformSurface(tier),
     showTenantMetadata: canSeeTenantMetadata(tier),
     showWorkspaceAdminSettings: canSeeWorkspaceAdminSettings(tier),
+    navVariant: workspaceNavVariant(tier),
+    canManageInstitutionTrainingPlans: canManageInstitutionTrainingPlans(tier),
+    canViewOperatorInsights: canViewOperatorInsightsNav(tier),
   }
 }

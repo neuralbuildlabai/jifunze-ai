@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom'
-import { LEGAL_ROUTES, TRUST_COPY } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { SUBSCRIPTION_PLANS } from '../../subscription/subscriptionCatalog'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
-import { TrustBoundaryStrip } from '../TrustBoundaryStrip'
 import { isBillingCheckoutEnabled } from '../../lib/billingEnv'
 import { PricingSkuCards } from '../pricing/PricingSkuCards'
 
@@ -25,20 +24,8 @@ export function PricingPage() {
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-500">Plans</p>
           <h1 className="mt-2 text-2xl font-semibold text-white">Choose learning access</h1>
           <p className="mt-2 max-w-3xl text-sm text-zinc-400">
-            One-time modules, monthly module plans, bundles, full access, and team/student discounts (where enabled). Paid access
-            is software and materials—not a credential. See the{' '}
-            <Link className="text-violet-300/90 hover:text-violet-200" to={LEGAL_ROUTES.disclaimer}>
-              disclaimer
-            </Link>{' '}
-            for boundaries.
+            Browse the catalog for free. Choose monthly all-access, annual savings, or a single-course purchase. Legal notices are linked at the bottom of this page.
           </p>
-        </div>
-
-        <TrustBoundaryStrip variant="panel" dataTestId="pricing-trust-strip" />
-
-        <div className="rounded-xl border border-amber-500/20 bg-amber-950/15 p-4 text-[11px] leading-relaxed text-amber-100/95 ring-1 ring-amber-500/10">
-          <p className="font-semibold uppercase tracking-[0.12em] text-amber-200/95">Paid access &amp; outcomes</p>
-          <p className="mt-2 text-zinc-300/95">{TRUST_COPY.subscriptionPaidAccessBoundary}</p>
         </div>
 
         {freePlan ? (
@@ -66,17 +53,20 @@ export function PricingPage() {
 
         <PricingSkuCards mode="public" billingEnabled={billingEnabled} workspaceCheckoutHref="/settings/subscription" />
 
-        <p className="text-center text-[11px] text-zinc-600">
-          See also{' '}
-          <Link className="text-violet-300/90 hover:text-violet-200" to={LEGAL_ROUTES.refunds}>
-            Refunds &amp; billing
-          </Link>{' '}
-          and the{' '}
+        <nav className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-center text-[11px] text-zinc-600">
           <Link className="text-violet-300/90 hover:text-violet-200" to={LEGAL_ROUTES.disclaimer}>
-            product disclaimer
+            Disclaimer
           </Link>
-          .
-        </p>
+          <Link className="text-violet-300/90 hover:text-violet-200" to={LEGAL_ROUTES.privacy}>
+            Privacy
+          </Link>
+          <Link className="text-violet-300/90 hover:text-violet-200" to={LEGAL_ROUTES.refunds}>
+            Refunds
+          </Link>
+          <Link className="text-violet-300/90 hover:text-violet-200" to={LEGAL_ROUTES.terms}>
+            Terms
+          </Link>
+        </nav>
       </div>
     </div>
   )

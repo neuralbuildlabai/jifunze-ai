@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useAppAccess } from '../access/useAppAccess'
+import { LEGAL_ROUTES } from '../training/trustCopy'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { PUBLIC_PLATFORM_OPTIONS, PUBLIC_TONE_OPTIONS } from '../constants/publicGenerateUi'
 import { jifunzeCriticalLog } from '../lib/jifunzeTelemetry'
@@ -33,6 +35,7 @@ export function SignedInQuickCreatePanel({
   promptInjection,
 }: Props) {
   const navigate = useNavigate()
+  const { navVariant, canViewOperatorInsights } = useAppAccess()
   const [topic, setTopic] = useState('')
   const [platform, setPlatform] = useState<PublicPlatform>('instagram')
   const [tone, setTone] = useState<PublicTone>('professional')
@@ -393,24 +396,45 @@ export function SignedInQuickCreatePanel({
                   </button>
                 </div>
                 <div className="mt-3 flex flex-col gap-2 border-t border-white/[0.06] pt-3 sm:flex-row sm:flex-wrap sm:items-center">
-                  <Link
-                    to="/ideas"
-                    className="inline-flex items-center justify-center rounded-lg border border-white/[0.1] bg-white/[0.03] px-3 py-2 text-xs font-semibold text-zinc-200 transition-colors hover:border-violet-400/35 hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/45"
-                  >
-                    Browse ideas
-                  </Link>
-                  <Link
-                    to="/studio"
-                    className="inline-flex items-center justify-center rounded-lg border border-white/[0.1] bg-white/[0.03] px-3 py-2 text-xs font-semibold text-zinc-200 transition-colors hover:border-violet-400/35 hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/45"
-                  >
-                    Open Studio
-                  </Link>
-                  <Link
-                    to="/insights"
-                    className="inline-flex items-center justify-center rounded-lg border border-white/[0.1] bg-white/[0.03] px-3 py-2 text-xs font-semibold text-zinc-200 transition-colors hover:border-violet-400/35 hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/45"
-                  >
-                    View learning insights
-                  </Link>
+                  {navVariant === 'learner' ? (
+                    <>
+                      <Link
+                        to="/my-learning"
+                        className="inline-flex items-center justify-center rounded-lg border border-white/[0.1] bg-white/[0.03] px-3 py-2 text-xs font-semibold text-zinc-200 transition-colors hover:border-violet-400/35 hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/45"
+                      >
+                        My Learning
+                      </Link>
+                      <Link
+                        to={LEGAL_ROUTES.learn}
+                        className="inline-flex items-center justify-center rounded-lg border border-white/[0.1] bg-white/[0.03] px-3 py-2 text-xs font-semibold text-zinc-200 transition-colors hover:border-violet-400/35 hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/45"
+                      >
+                        Discover courses
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        to="/ideas"
+                        className="inline-flex items-center justify-center rounded-lg border border-white/[0.1] bg-white/[0.03] px-3 py-2 text-xs font-semibold text-zinc-200 transition-colors hover:border-violet-400/35 hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/45"
+                      >
+                        Browse ideas
+                      </Link>
+                      <Link
+                        to="/studio"
+                        className="inline-flex items-center justify-center rounded-lg border border-white/[0.1] bg-white/[0.03] px-3 py-2 text-xs font-semibold text-zinc-200 transition-colors hover:border-violet-400/35 hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/45"
+                      >
+                        Open Studio
+                      </Link>
+                      {canViewOperatorInsights ? (
+                        <Link
+                          to="/insights"
+                          className="inline-flex items-center justify-center rounded-lg border border-white/[0.1] bg-white/[0.03] px-3 py-2 text-xs font-semibold text-zinc-200 transition-colors hover:border-violet-400/35 hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/45"
+                        >
+                          Learning insights
+                        </Link>
+                      ) : null}
+                    </>
+                  )}
                 </div>
                 <p className="mt-3 text-[11px] leading-relaxed text-zinc-500/90">
                   Save to workspace copies your text and opens Studio so you can keep building. Copy

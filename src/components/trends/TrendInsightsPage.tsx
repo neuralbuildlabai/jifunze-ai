@@ -72,7 +72,7 @@ export function TrendInsightsPage() {
   return (
     <div className="mx-auto w-full max-w-5xl space-y-8 px-4 py-10 text-zinc-100">
       <header className="border-b border-white/[0.06] pb-6">
-        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">Insights</p>
+        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">Workspace intelligence</p>
         <h1 className="mt-1 text-xl font-semibold text-white">Trend insights</h1>
         <p className="mt-2 max-w-2xl text-sm text-zinc-400">
           Monitor topics, capture signals (manual or simulated), generate summaries, and turn insights into

@@ -11,7 +11,7 @@ import { useAuth } from '../auth/AuthContext'
 import { isSupabaseConfigured } from '../config/supabaseEnv'
 import { isWorkspaceTenantId } from '../persistence/tenantPersistenceMode'
 import type { AccessTier } from './appAccess'
-import { resolveAccessTier } from './appAccess'
+import { effectiveAccessTierAfterRpc, resolveAccessTier } from './appAccess'
 import type { AccessTierContextValue } from './accessTierContext'
 import { AccessTierContext } from './accessTierContext'
 import { fetchMyEffectiveAccessTier } from './fetchMyEffectiveAccessTier'
@@ -43,11 +43,12 @@ export function AccessTierProvider({ children }: { children: ReactNode }) {
   }, [tenantId, usesWorkspacePersistence])
 
   const applyFallbackTier = useCallback(() => {
-    if (!envEmailFallbackEnabled()) {
+    const fromEmail = resolveAccessTier(email)
+    if (!envEmailFallbackEnabled() && fromEmail === 'member') {
       setTier('member')
       return
     }
-    setTier(resolveAccessTier(email))
+    setTier(fromEmail)
   }, [email])
 
   const refreshAccessTier = useCallback(async () => {
@@ -74,7 +75,7 @@ export function AccessTierProvider({ children }: { children: ReactNode }) {
     if (error || !next) {
       applyFallbackTier()
     } else {
-      setTier(next)
+      setTier(effectiveAccessTierAfterRpc(email, next))
     }
     setTierLoading(false)
   }, [user, supabase, emailVerified, workspaceShellReady, rpcTenantId, applyFallbackTier])

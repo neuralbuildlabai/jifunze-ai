@@ -14,7 +14,7 @@ export function WorkspaceShell() {
                 Jifunze.AI workspace
               </p>
               <p className="mt-1 text-sm text-zinc-400">
-                Discover courses in public, then continue learning and lightweight creation here.
+                Continue courses, manage your workspace, and open account tools from here.
               </p>
             </div>
             <WorkspaceNav className="justify-end" />

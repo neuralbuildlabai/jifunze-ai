@@ -8,7 +8,7 @@ import { LearningOptimizationPanel } from './LearningOptimizationPanel'
 import { TRUST_COPY } from '../training/trustCopy'
 
 /**
- * Dedicated full readout for performance memory and “what Jifunze learned” (tenant-scoped).
+ * Dedicated full readout for performance memory and “what Jifunze learned” (workspace-scoped).
  */
 export function LearningInsightsPage() {
   const {
@@ -110,8 +110,7 @@ export function LearningInsightsPage() {
         </header>
 
         <p className="text-sm leading-relaxed text-zinc-400">
-          Full performance memory, patterns, recommendations, and teaching signals for this workspace
-          (tenant <span className="font-mono text-zinc-500">{tenantId.slice(0, 8)}…</span>).
+          Full performance memory, patterns, recommendations, and teaching signals scoped to this workspace.
         </p>
         <p className="text-[11px] leading-relaxed text-zinc-600" data-testid="learning-insights-trust">
           {TRUST_COPY.learningInsightsHeuristicBoundary}

@@ -4,7 +4,7 @@ import { authFailureMessage } from '../../auth/authErrorMessage'
 import { useAuth } from '../../auth/AuthContext'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
-import { TrustBoundaryStrip } from '../TrustBoundaryStrip'
+import { passwordPolicyErrorMessage, passwordPolicyHint } from '../../auth/passwordPolicy'
 import { TrustLegalFooterLinks } from '../TrustLegalFooterLinks'
 
 export function ResetPasswordPage() {
@@ -18,7 +18,7 @@ export function ResetPasswordPage() {
   if (!isSupabaseConfigured() || !supabase) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4 text-sm text-zinc-500">
-        Supabase is not configured.
+        Password reset isn&apos;t available in this environment.
       </div>
     )
   }
@@ -29,8 +29,9 @@ export function ResetPasswordPage() {
     e.preventDefault()
     setLocalError(null)
     clearAuthMessages()
-    if (password.length < 8) {
-      setLocalError('Password must be at least 8 characters.')
+    const pwErr = passwordPolicyErrorMessage(password)
+    if (pwErr) {
+      setLocalError(pwErr)
       return
     }
     if (password !== password2) {
@@ -76,14 +77,14 @@ export function ResetPasswordPage() {
           >
             <h1 className="text-lg font-semibold text-white">Choose a new password</h1>
             <p className="text-xs leading-relaxed text-zinc-400">
-              Use the link from your email to open this page, then set a new password below.
+              Use the link from your email to open this page, then set a new password below. {passwordPolicyHint()}
             </p>
             <label className="block space-y-1">
               <span className="text-xs text-zinc-500">New password</span>
               <input
                 type="password"
                 required
-                minLength={8}
+                minLength={12}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-violet-500/50"
@@ -95,7 +96,7 @@ export function ResetPasswordPage() {
               <input
                 type="password"
                 required
-                minLength={8}
+                minLength={12}
                 value={password2}
                 onChange={(e) => setPassword2(e.target.value)}
                 className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-violet-500/50"
@@ -116,8 +117,7 @@ export function ResetPasswordPage() {
             </button>
           </form>
         )}
-        <div className="mt-6 space-y-4">
-          <TrustBoundaryStrip compact dataTestId="reset-password-trust-boundary" />
+        <div className="mt-6">
           <TrustLegalFooterLinks variant="compact" className="justify-center" />
         </div>
         <p className="mt-6 text-center text-xs text-zinc-500">

@@ -5,7 +5,7 @@ test.describe('Public surfaces', () => {
     page,
   }) => {
     await page.goto('/')
-    await expect(page.getByRole('heading', { name: /learn practical ai skills/i })).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: /deep learning paths for real growth/i })).toBeVisible({ timeout: 15_000 })
     await expect(page.getByTestId('landing-hero-primary-cta')).toBeVisible()
     await expect(page.getByTestId('landing-cta-trust-line')).toBeVisible()
     await expect(page.getByTestId('landing-cta-trust-line')).toContainText('Read disclaimer')

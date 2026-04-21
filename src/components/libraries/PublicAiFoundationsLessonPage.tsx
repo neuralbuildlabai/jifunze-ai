@@ -213,11 +213,7 @@ export function PublicAiFoundationsLessonPage() {
         </div>
       </div>
 
-      {canRead && !accessPending ? (
-        <div className="mt-12 scroll-mt-28">
-          <LearnerHelpAssistant key={lesson.slug} variant="embedded" currentLessonSlug={lesson.slug} />
-        </div>
-      ) : null}
+      {canRead && !accessPending ? <LearnerHelpAssistant key={lesson.slug} currentLessonSlug={lesson.slug} /> : null}
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {prev ? (

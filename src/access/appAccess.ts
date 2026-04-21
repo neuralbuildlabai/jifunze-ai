@@ -12,6 +12,12 @@ export type AccessTier =
   | 'platform_admin'
   | 'super_admin'
 
+/** Production bootstrap: only this account has super-admin UI / operator surfaces. */
+export const CANONICAL_SUPER_ADMIN_EMAIL = 'neuralbuildlab.ai@gmail.com'
+
+/** Platform operator account — admin workflows, not super-user controls. */
+export const CANONICAL_PLATFORM_ADMIN_EMAIL = 'neuralbuild.ai@gmail.com'
+
 function parseEmailList(raw: string | undefined): Set<string> {
   if (!raw?.trim()) return new Set()
   return new Set(
@@ -43,6 +49,9 @@ export function resolveAccessTier(userEmail: string | null | undefined): AccessT
   const email = userEmail?.trim().toLowerCase() ?? ''
   if (!email) return 'member'
 
+  if (email === CANONICAL_SUPER_ADMIN_EMAIL.trim().toLowerCase()) return 'super_admin'
+  if (email === CANONICAL_PLATFORM_ADMIN_EMAIL.trim().toLowerCase()) return 'platform_admin'
+
   const superAdmins = parseEmailList(import.meta.env.VITE_SUPER_ADMIN_EMAILS as string | undefined)
   const platformAdmins = parseEmailList(
     import.meta.env.VITE_PLATFORM_ADMIN_EMAILS as string | undefined,
@@ -57,6 +66,17 @@ export function resolveAccessTier(userEmail: string | null | undefined): AccessT
   if (workspaceAdmins.has(email)) return 'workspace_admin'
   if (proUsers.has(email)) return 'pro'
   return 'member'
+}
+
+/**
+ * After `my_effective_access_tier` (or RPC failure), enforce canonical operator accounts so
+ * in-app tier always matches product policy for the known super-admin and platform-admin emails.
+ */
+export function effectiveAccessTierAfterRpc(userEmail: string | null | undefined, rpcTier: AccessTier | null): AccessTier {
+  const email = userEmail?.trim().toLowerCase() ?? ''
+  if (email === CANONICAL_SUPER_ADMIN_EMAIL.toLowerCase()) return 'super_admin'
+  if (email === CANONICAL_PLATFORM_ADMIN_EMAIL.toLowerCase()) return 'platform_admin'
+  return rpcTier ?? resolveAccessTier(userEmail)
 }
 
 export function isAtLeastTier(user: AccessTier, min: AccessTier): boolean {
@@ -77,9 +97,9 @@ export function canAccessPlatformSurface(tier: AccessTier): boolean {
   return isAtLeastTier(tier, 'platform_admin')
 }
 
-/** Tenant ids, migration hints, RPC names — workspace or platform operators. */
-export function canSeeTenantMetadata(tier: AccessTier): boolean {
-  return isAtLeastTier(tier, 'workspace_admin')
+/** Tenant identifiers are never shown in standard product UI — reserved for internal tools only. */
+export function canSeeTenantMetadata(_tier: AccessTier): boolean {
+  return false
 }
 
 /** Workspace settings beyond brand basics (e.g. tenant ids). */
@@ -91,7 +111,7 @@ export function canSeeWorkspaceAdminSettings(tier: AccessTier): boolean {
 export function humanAccessTierLabel(tier: AccessTier): string {
   switch (tier) {
     case 'member':
-      return 'Member'
+      return 'Learner'
     case 'pro':
       return 'Pro'
     case 'workspace_admin':

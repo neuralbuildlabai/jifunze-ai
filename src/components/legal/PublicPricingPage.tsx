@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import { LEGAL_ROUTES, SUPPORT_CONTACT_EMAIL } from '../../training/trustCopy'
-import { TrustBoundaryStrip } from '../TrustBoundaryStrip'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { PublicPricingPlansSimplified } from '../pricing/PublicPricingPlansSimplified'
 
@@ -31,17 +30,9 @@ export function PublicPricingPage() {
             Choose your plan
           </h1>
           <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--jf-muted)]">
-            Simple pricing for individuals—and a dedicated path for teams.
+            Three straightforward options — monthly, annual, or a one-time single course.
           </p>
         </div>
-
-        <TrustBoundaryStrip
-          density="legalLink"
-          variant="inline"
-          compact
-          className="mx-auto max-w-xl justify-center text-center text-[12px] text-[color:var(--jf-subtle)]"
-          dataTestId="public-pricing-trust-boundary"
-        />
 
         <PublicPricingPlansSimplified />
 

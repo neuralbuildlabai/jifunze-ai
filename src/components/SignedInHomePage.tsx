@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useLearnerCommerceOptional } from '../learner/LearnerCommerceContext'
+import { getFlagshipCourseBySlug } from '../data/learning/flagshipCoursesCatalog'
 import { useAuth } from '../auth/AuthContext'
 import { useDisclaimerAcknowledgment } from '../auth/useDisclaimerAcknowledgment'
 import { isSupabaseConfigured } from '../config/supabaseEnv'
@@ -8,6 +10,7 @@ import { WorkspaceNav } from './workspace/WorkspaceNav'
 import { EmptyWorkspaceCreateBrand } from './EmptyWorkspaceCreateBrand'
 import { JifunzeBrandLogo } from './brand/JifunzeBrandLogo'
 import { SignedInEngagementStrip } from './SignedInEngagementStrip'
+import { SignedInContinueLearning } from './SignedInContinueLearning'
 import { SignedInWelcomeBlock } from './SignedInWelcomeBlock'
 import { SignedInQuickCreatePanel } from './SignedInQuickCreatePanel'
 import { WorkspaceIdentityStrip } from './WorkspaceIdentityStrip'
@@ -15,6 +18,8 @@ import { useWorkspaceIdentity } from '../workspace/useWorkspaceIdentity'
 import { DisclaimerAcknowledgmentModal } from './auth/DisclaimerAcknowledgmentModal'
 import { EmailVerificationGate } from './auth/EmailVerificationGate'
 import { recordTeachingSignal } from '../data/teaching/teachingSignals'
+import { useAppAccess } from '../access/useAppAccess'
+import { LEGAL_ROUTES } from '../training/trustCopy'
 
 const WORKSPACE_ENTRY_ONCE_KEY = 'jifunze.signal.workspaceEntryOnce.v1'
 
@@ -57,6 +62,10 @@ export function SignedInHomePage() {
   const applyEngagementPrompt = useCallback((text: string) => {
     setPromptInjection({ token: Date.now(), text })
   }, [])
+
+  const learnerCommerce = useLearnerCommerceOptional()
+  const { navVariant, canViewOperatorInsights } = useAppAccess()
+  const isLearnerNav = navVariant === 'learner'
 
   if (isSupabaseConfigured() && user && !emailVerified) {
     return <EmailVerificationGate />
@@ -147,7 +156,7 @@ export function SignedInHomePage() {
         <header className="flex flex-col gap-4 border-b border-white/[0.06] pb-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex min-w-0 flex-1 flex-wrap items-start gap-3 sm:gap-4">
-              <JifunzeBrandLogo to="/" size="xl" />
+              <JifunzeBrandLogo to="/dashboard" size="xl" />
               <div className="h-8 w-px shrink-0 bg-gradient-to-b from-transparent via-white/[0.14] to-transparent" aria-hidden />
               <WorkspaceIdentityStrip brandName={brand.name} identity={workspaceIdentity} />
             </div>
@@ -167,6 +176,32 @@ export function SignedInHomePage() {
 
         <SignedInWelcomeBlock user={user!} brand={brand} identity={workspaceIdentity} />
 
+        <SignedInContinueLearning supabase={supabase} userId={user!.id} />
+
+        {learnerCommerce?.purchaseGateEnabled ? (
+          <section className="mt-8 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 text-[13px] leading-relaxed text-zinc-400/95 sm:p-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-500">Flagship access (this browser)</p>
+            <p className="mt-3 text-[13px] text-zinc-400/95">
+              {learnerCommerce.entitlement.mode === 'all_access'
+                ? 'All-access is active — open any flagship course; each path still progresses session by session.'
+                : learnerCommerce.entitlement.mode === 'single'
+                  ? `Single-course access: ${getFlagshipCourseBySlug(learnerCommerce.entitlement.courseSlug)?.title ?? learnerCommerce.entitlement.courseSlug}`
+                  : 'Browse the catalog — purchase one course or subscribe for all-access when you’re ready.'}
+              {learnerCommerce.discount.eligible && !learnerCommerce.discount.consumed ? (
+                <span className="mt-2 block text-emerald-400/85"> Readiness Challenge discount pending on your next eligible checkout.</span>
+              ) : null}
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Link className="rounded-full border border-white/[0.1] px-4 py-2 text-xs font-semibold text-zinc-100 hover:bg-white/[0.05]" to="/learn">
+                Learning catalog
+              </Link>
+              <Link className="rounded-full border border-white/[0.1] px-4 py-2 text-xs font-semibold text-zinc-100 hover:bg-white/[0.05]" to="/learn/checkout?plan=all">
+                All-access checkout
+              </Link>
+            </div>
+          </section>
+        ) : null}
+
         <SignedInEngagementStrip brand={brand} onApplyPrompt={applyEngagementPrompt} />
 
         <div className="mt-8">
@@ -177,69 +212,88 @@ export function SignedInHomePage() {
           />
         </div>
 
-        <section className="mt-10 rounded-2xl border border-white/[0.07] bg-white/[0.03] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.12)] ring-1 ring-white/[0.03] sm:p-6">
-          <h2 className="text-sm font-semibold text-white">What you can do next</h2>
-          <p className="mt-1 max-w-2xl text-[12px] leading-relaxed text-zinc-500/90">
-            A few simple moves when you are ready — stay at your own pace.
-          </p>
-          <ul className="mt-4 grid gap-3 sm:grid-cols-3">
-            <li className="rounded-xl border border-white/[0.06] bg-zinc-950/25 px-3 py-3">
-              <p className="text-[13px] font-medium text-zinc-100">Ship what you made</p>
-              <p className="mt-1 text-[12px] leading-relaxed text-zinc-500/90">
-                Copy your caption and hashtags and post where you planned — Instagram, X, or
-                anywhere you chose above.
+        {isLearnerNav ? (
+          <section className="mt-10 rounded-2xl border border-white/[0.07] bg-white/[0.03] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.12)] ring-1 ring-white/[0.03] sm:p-6">
+            <h2 className="text-sm font-semibold text-white">Keep learning</h2>
+            <p className="mt-1 max-w-2xl text-[12px] leading-relaxed text-zinc-500/90">
+              Pick up structured courses, save progress, and return anytime.
+            </p>
+            <ul className="mt-4 grid gap-3 sm:grid-cols-3">
+              <li className="rounded-xl border border-white/[0.06] bg-zinc-950/25 px-3 py-3">
+                <p className="text-[13px] font-medium text-zinc-100">My Learning</p>
+                <p className="mt-1 text-[12px] leading-relaxed text-zinc-500/90">
+                  <Link to="/my-learning" className="text-violet-300/90 hover:text-violet-200">
+                    Continue where you left off
+                  </Link>
+                  .
+                </p>
+              </li>
+              <li className="rounded-xl border border-white/[0.06] bg-zinc-950/25 px-3 py-3">
+                <p className="text-[13px] font-medium text-zinc-100">Discover courses</p>
+                <p className="mt-1 text-[12px] leading-relaxed text-zinc-500/90">
+                  <Link to={LEGAL_ROUTES.learn} className="text-violet-300/90 hover:text-violet-200">
+                    Browse the catalog
+                  </Link>{' '}
+                  for flagship paths and libraries.
+                </p>
+              </li>
+              <li className="rounded-xl border border-white/[0.06] bg-zinc-950/25 px-3 py-3">
+                <p className="text-[13px] font-medium text-zinc-100">Plan &amp; pricing</p>
+                <p className="mt-1 text-[12px] leading-relaxed text-zinc-500/90">
+                  <Link to="/pricing" className="text-violet-300/90 hover:text-violet-200">
+                    View plans
+                  </Link>{' '}
+                  when you are ready for full access.
+                </p>
+              </li>
+            </ul>
+          </section>
+        ) : (
+          <>
+            <section className="mt-10 rounded-2xl border border-white/[0.07] bg-white/[0.03] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.12)] ring-1 ring-white/[0.03] sm:p-6">
+              <h2 className="text-sm font-semibold text-white">What you can do next</h2>
+              <p className="mt-1 max-w-2xl text-[12px] leading-relaxed text-zinc-500/90">
+                Operator tools — use when your role needs them.
               </p>
-            </li>
-            <li className="rounded-xl border border-white/[0.06] bg-zinc-950/25 px-3 py-3">
-              <p className="text-[13px] font-medium text-zinc-100">Refine and regenerate</p>
-              <p className="mt-1 text-[12px] leading-relaxed text-zinc-500/90">
-                Tweak the topic or tone and generate again until the voice feels unmistakably yours.
-              </p>
-            </li>
-            <li className="rounded-xl border border-white/[0.06] bg-zinc-950/25 px-3 py-3">
-              <p className="text-[13px] font-medium text-zinc-100">Explore ideas &amp; studio</p>
-              <p className="mt-1 text-[12px] leading-relaxed text-zinc-500/90">
-                Browse ranked recommendations on{' '}
-                <Link to="/ideas" className="text-violet-300/90 hover:text-violet-200">
-                  Ideas
-                </Link>
-                , then generate on{' '}
-                <Link to="/studio" className="text-violet-300/90 hover:text-violet-200">
-                  Studio
-                </Link>
-                .
-              </p>
-            </li>
-          </ul>
-        </section>
-
-        <section className="mt-8 rounded-2xl border border-violet-500/35 bg-violet-950/25 p-5 ring-1 ring-violet-400/15 sm:p-6">
-          <h2 className="text-sm font-semibold text-white">Ready for more?</h2>
-          <p className="mt-1 max-w-2xl text-[12px] leading-relaxed text-zinc-400/95">
-            Move through focused pages — Ideas for discovery, Studio to generate, Lab for experiments,
-            and Insights for what Jifunze learned.
-          </p>
-          <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
-            <Link
-              to="/ideas"
-              className="inline-flex items-center justify-center rounded-xl bg-violet-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-950/25 transition-colors hover:bg-violet-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/60"
-            >
-              Browse ideas
-            </Link>
-            <Link
-              to="/studio"
-              className="inline-flex items-center justify-center rounded-xl border border-white/[0.12] bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-zinc-100 transition-colors hover:border-violet-400/35 hover:bg-white/[0.07] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/50"
-            >
-              Open Studio
-            </Link>
-            <Link
-              to="/insights"
-              className="inline-flex items-center justify-center rounded-xl border border-white/[0.12] bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-zinc-100 transition-colors hover:border-violet-400/35 hover:bg-white/[0.07] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/50"
-            >
-              View learning insights
-            </Link>
-          </div>
-        </section>
+              <ul className="mt-4 grid gap-3 sm:grid-cols-3">
+                <li className="rounded-xl border border-white/[0.06] bg-zinc-950/25 px-3 py-3">
+                  <p className="text-[13px] font-medium text-zinc-100">Ideas &amp; Studio</p>
+                  <p className="mt-1 text-[12px] leading-relaxed text-zinc-500/90">
+                    <Link to="/ideas" className="text-violet-300/90 hover:text-violet-200">
+                      Ideas
+                    </Link>{' '}
+                    and{' '}
+                    <Link to="/studio" className="text-violet-300/90 hover:text-violet-200">
+                      Studio
+                    </Link>{' '}
+                    for packaging and generation workflows.
+                  </p>
+                </li>
+                <li className="rounded-xl border border-white/[0.06] bg-zinc-950/25 px-3 py-3">
+                  <p className="text-[13px] font-medium text-zinc-100">Trend insights</p>
+                  <p className="mt-1 text-[12px] leading-relaxed text-zinc-500/90">
+                    <Link to="/trends" className="text-violet-300/90 hover:text-violet-200">
+                      Open signals
+                    </Link>{' '}
+                    for workspace topics you manage.
+                  </p>
+                </li>
+                <li className="rounded-xl border border-white/[0.06] bg-zinc-950/25 px-3 py-3">
+                  <p className="text-[13px] font-medium text-zinc-100">Learning analytics</p>
+                  <p className="mt-1 text-[12px] leading-relaxed text-zinc-500/90">
+                    {canViewOperatorInsights ? (
+                      <Link to="/insights" className="text-violet-300/90 hover:text-violet-200">
+                        Open platform learning insights
+                      </Link>
+                    ) : (
+                      <span className="text-zinc-500">Reserved for platform operators.</span>
+                    )}
+                  </p>
+                </li>
+              </ul>
+            </section>
+          </>
+        )}
       </div>
     </div>
   )

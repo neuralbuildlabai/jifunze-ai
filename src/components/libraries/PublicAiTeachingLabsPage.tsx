@@ -47,7 +47,7 @@ export function PublicAiTeachingLabsPage() {
           teaching labs route when you are ready for continuity—not a mastery guarantee.
         </p>
         <div className="mt-8">
-          <LearnerHelpAssistant key="public-ai-labs-help" variant="embedded" />
+          <LearnerHelpAssistant key="public-ai-labs-help" />
         </div>
 
         <div className="mt-5 flex flex-wrap gap-3 text-[12px] text-zinc-500">

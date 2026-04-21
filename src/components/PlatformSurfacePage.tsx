@@ -49,9 +49,7 @@ export function PlatformSurfacePage() {
         <InternalUatDiagnostics />
 
         <p className="text-center text-[11px] text-zinc-600">
-          Member-facing pages intentionally omit this strip. Grant access via{' '}
-          <span className="font-mono text-zinc-500">VITE_PLATFORM_ADMIN_EMAILS</span> (and related
-          tier envs in <span className="font-mono">.env.example</span>).
+          For access questions, contact your platform owner. This surface is not shown to learners.
         </p>
       </div>
     </div>

@@ -39,6 +39,35 @@ export function PublicStandaloneCourseLandingPage({ config }: { config: Extended
     >
       <TrustBoundaryStrip density="legalLink" variant="inline" compact />
 
+      <section
+        aria-labelledby="standalone-depth-heading"
+        className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 sm:p-6"
+        data-testid="standalone-course-depth-structure"
+      >
+        <h2 id="standalone-depth-heading" className="text-[10px] font-semibold uppercase tracking-[0.22em] text-zinc-500">
+          Depth structure
+        </h2>
+        <p className="mt-2 text-[13px] leading-relaxed text-zinc-400">
+          This specialist course follows the same Jifunze depth model: foundations, applied practice, professional execution, and outputs you can reuse—layered
+          modules with practice and review, not a thin overview.
+        </p>
+        <ol className="mt-5 grid gap-3 sm:grid-cols-2">
+          {[
+            { t: 'Foundations', d: 'Clear teaching, mental models, and common failure modes.' },
+            { t: 'Applied practice', d: 'Scenarios, drills, and verification habits for real work.' },
+            { t: 'Professional execution', d: 'Workflow fit, handoffs, and disciplined review.' },
+            { t: 'Mastery and outputs', d: 'Templates, packs, and capstone artifacts you revise over time.' },
+          ].map((stage, idx) => (
+            <li key={stage.t} className="rounded-xl border border-white/[0.06] bg-black/15 px-4 py-3">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-500">
+                Stage {idx + 1} · {stage.t}
+              </p>
+              <p className="mt-2 text-[12px] leading-relaxed text-zinc-400">{stage.d}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
       {meta ? (
         <section className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 sm:p-6" data-testid="standalone-course-product-snapshot">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">

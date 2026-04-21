@@ -10,7 +10,7 @@ export const PUBLIC_MONTHLY_DISPLAY_USD = PUBLIC_LAUNCH_MONTHLY_USD
 /** Launch promotion applies only to the first two paid monthly invoice periods (product framing). */
 export const PUBLIC_LAUNCH_MONTH_COUNT = 2
 /** Single standalone course — public anchor price (USD one-time). */
-export const PUBLIC_SINGLE_COURSE_USD = 49
+export const PUBLIC_SINGLE_COURSE_USD = 59
 /**
  * Current public annual anchor (reset for buyer clarity). Compare against 12× standard monthly list for context.
  * $49 × 12 = $588 list-stake reference; $199/yr is the current annual offer.

@@ -21,57 +21,35 @@ export type PricingSkuCardsProps = {
   showStripeEnvHints?: boolean
 }
 
-function skuDisabled(args: {
-  billingEnabled: boolean
-  checkoutBusy: boolean
-  eligibility: BillingEligibilityTags | undefined
-  discountKind: 'none' | 'student' | 'team_org'
-}) {
-  const { billingEnabled, checkoutBusy, eligibility, discountKind } = args
-  if (!billingEnabled || checkoutBusy) return true
-  if (discountKind === 'none') return false
-  if (!eligibility) return true
-  if (discountKind === 'student' && !eligibility.studentDomainEligible) return true
-  if (discountKind === 'team_org' && !eligibility.teamOrgDomainEligible) return true
-  return false
+function skuDisabled(args: { billingEnabled: boolean; checkoutBusy: boolean }) {
+  const { billingEnabled, checkoutBusy } = args
+  return !billingEnabled || checkoutBusy
 }
 
 function skuCtaLabel(args: {
   mode: PricingSkuCardsMode
   billingEnabled: boolean
   checkoutBusy: boolean
-  eligibility: BillingEligibilityTags | undefined
-  discountKind: 'none' | 'student' | 'team_org'
   productKind: string
   name: string
 }) {
-  const { mode, billingEnabled, checkoutBusy, eligibility, discountKind, productKind, name } = args
+  const { mode, billingEnabled, checkoutBusy, productKind, name } = args
   if (mode === 'public') {
     return billingEnabled ? 'Continue in workspace billing' : 'Sign in to subscribe'
   }
   if (!billingEnabled) return 'Checkout unavailable'
   if (checkoutBusy) return 'Starting checkout…'
-  if (discountKind === 'student' && eligibility && !eligibility.studentDomainEligible) {
-    return 'Student discount · domain not eligible'
-  }
-  if (discountKind === 'team_org' && eligibility && !eligibility.teamOrgDomainEligible) {
-    return 'Team discount · domain not eligible'
-  }
-  return productKind === 'one_time_module' ? `Purchase · ${name}` : `Subscribe · ${name}`
+  return productKind === 'single_course_once' ? `Purchase · ${name}` : `Subscribe · ${name}`
 }
 
 export function PricingSkuCards(props: PricingSkuCardsProps) {
   const {
     mode,
     billingEnabled,
-    eligibility,
     workspaceCheckoutHref = LEGAL_ROUTES.workspaceSubscription,
     onCheckoutSku,
     checkoutBusySku,
-    showStripeEnvHints,
   } = props
-
-  const showHints = mode === 'workspace' ? showStripeEnvHints !== false : Boolean(showStripeEnvHints)
 
   return (
     <div className="space-y-10">
@@ -90,21 +68,12 @@ export function PricingSkuCards(props: PricingSkuCardsProps) {
               const disabled = skuDisabled({
                 billingEnabled,
                 checkoutBusy: checkoutBusySku != null,
-                eligibility,
-                discountKind: item.discountKind,
               })
-
-              const legacyPlanTestId =
-                item.skuKey === 'creator'
-                  ? 'pricing-plan-creator'
-                  : item.skuKey === 'team'
-                    ? 'pricing-plan-team'
-                    : undefined
 
               return (
                 <div
                   key={skuKey}
-                  data-testid={legacyPlanTestId ?? `pricing-sku-${skuKey}`}
+                  data-testid={`pricing-sku-${skuKey}`}
                   className="flex flex-col rounded-xl border border-white/[0.08] bg-zinc-950/40 p-4 ring-1 ring-white/[0.04]"
                 >
                   <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-violet-300/90">{item.name}</p>
@@ -127,8 +96,6 @@ export function PricingSkuCards(props: PricingSkuCardsProps) {
                           mode,
                           billingEnabled,
                           checkoutBusy: false,
-                          eligibility,
-                          discountKind: item.discountKind,
                           productKind: item.productKind,
                           name: item.name,
                         })}
@@ -145,24 +112,11 @@ export function PricingSkuCards(props: PricingSkuCardsProps) {
                           mode,
                           billingEnabled,
                           checkoutBusy: busy,
-                          eligibility,
-                          discountKind: item.discountKind,
                           productKind: item.productKind,
                           name: item.name,
                         })}
                       </button>
                     )}
-                    {mode === 'public' && (item.discountKind === 'student' || item.discountKind === 'team_org') ? (
-                      <p className="mt-2 text-[10px] text-zinc-600">
-                        Discount pricing may require an eligible school or work email—details are confirmed at checkout.
-                      </p>
-                    ) : null}
-                    {showHints && item.stripePriceEnvKey ? (
-                      <p className="mt-2 text-[10px] text-zinc-600">
-                        Stripe Price env: {item.stripePriceEnvKey.replace(/^VITE_/, '')} (server secret without{' '}
-                        <span className="font-mono">VITE_</span>)
-                      </p>
-                    ) : null}
                   </div>
                 </div>
               )
