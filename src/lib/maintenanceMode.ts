@@ -2,15 +2,33 @@
  * Public maintenance / coming-soon mode (Vite build-time flag).
  * When enabled, anonymous visitors are steered away from marketing and course surfaces;
  * auth, legal, and (optionally) a secret bypass remain available.
+ *
+ * Why `VITE_*` alone can look "broken" on Vercel:
+ * - Vite replaces `import.meta.env.VITE_*` at **build** time. Changing env in the dashboard does not
+ *   change already-built static assets until a **new** production deploy runs `vite build`.
+ * - The value must be exactly the string `true` (not `1`, not `True`).
+ * - Confirm the variable is enabled for the **Production** environment and that branch deploys use it.
  */
 
 const SESSION_BYPASS_KEY = 'jf_maintenance_preview_v1'
 /** Query param name for optional internal preview bypass (must match `VITE_MAINTENANCE_BYPASS_TOKEN`). */
 export const MAINTENANCE_BYPASS_QUERY = 'jf_maintenance_bypass'
 
-/** Strict: only the string "true" enables maintenance (avoids accidental truthy env). */
-export function isMaintenanceModeEnabled(): boolean {
+/**
+ * TODO: Restore env-controlled maintenance after rebuild by using VITE_MAINTENANCE_MODE only.
+ * Set to `false` after the learning experience ships and you want toggling via hosting env only
+ * (remember: still requires a fresh build for Vite to pick up changes).
+ */
+const FORCE_PUBLIC_MAINTENANCE_UI = true
+
+/** Strict: only the string "true" enables maintenance via env (avoids accidental truthy env). */
+function isMaintenanceEnvVarEnabled(): boolean {
   return import.meta.env.VITE_MAINTENANCE_MODE === 'true'
+}
+
+/** True when the public anonymous experience should use the maintenance shell (code force OR env). */
+export function isMaintenanceModeEnabled(): boolean {
+  return FORCE_PUBLIC_MAINTENANCE_UI || isMaintenanceEnvVarEnabled()
 }
 
 function normalizePathname(pathname: string): string {
