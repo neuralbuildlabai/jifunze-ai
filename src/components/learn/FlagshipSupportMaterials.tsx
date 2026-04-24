@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { FlagshipCourseCurriculum } from '@/data/learning/flagshipCourseCurricula'
 import type { FlagshipSession } from '@/data/learning/flagshipCourseSessions'
 import {
@@ -72,28 +73,47 @@ export function FlagshipSupportMaterials(props: {
   curriculum: FlagshipCourseCurriculum
   sessions: FlagshipSession[]
   progress: FlagshipCourseProgressApi
+  /** When true, list stays closed until the learner expands it (Course 1 overview). */
+  collapsedByDefault?: boolean
 }) {
-  const { courseSlug, curriculum, sessions, progress } = props
+  const { courseSlug, curriculum, sessions, progress, collapsedByDefault } = props
   const mats = supportMaterialsForCourse(courseSlug, curriculum)
+  const [open, setOpen] = useState(!collapsedByDefault)
 
   return (
     <section className="mt-14" aria-labelledby="support-materials-heading">
-      <h2 id="support-materials-heading" className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
-        Support materials
-      </h2>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 id="support-materials-heading" className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
+          Support materials
+        </h2>
+        {collapsedByDefault ? (
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            className="inline-flex min-h-[2.5rem] items-center rounded-full border border-[color:var(--jf-border)] px-4 text-[12px] font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.04]"
+            aria-expanded={open}
+          >
+            {open ? 'Hide list' : 'Show list'}
+          </button>
+        ) : null}
+      </div>
       <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-        Printable summaries for revision—not a substitute for guided work on the platform. Sheets unlock as you earn progress.
+        {collapsedByDefault
+          ? 'Support materials unlock as you progress. Printable sheets are for your notes—not a substitute for doing the work on the platform.'
+          : 'Printable summaries for revision—not a substitute for guided work on the platform. Sheets unlock as you earn progress.'}
       </p>
-      <ul className="mt-6 space-y-3">
-        {mats.map((m) => (
-          <MaterialRow
-            key={m.id}
-            material={m}
-            unlocked={isSupportMaterialUnlocked(m, progress, sessions)}
-            courseSlug={courseSlug}
-          />
-        ))}
-      </ul>
+      {open ? (
+        <ul className="mt-6 space-y-3">
+          {mats.map((m) => (
+            <MaterialRow
+              key={m.id}
+              material={m}
+              unlocked={isSupportMaterialUnlocked(m, progress, sessions)}
+              courseSlug={courseSlug}
+            />
+          ))}
+        </ul>
+      ) : null}
     </section>
   )
 }

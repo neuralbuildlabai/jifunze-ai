@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react'
-import { Link, Navigate, Outlet, Route, Routes, useLocation, useParams } from 'react-router-dom'
+import { Link, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom'
 import { AuthSignInPage } from './components/auth/AuthSignInPage'
 import { AuthSignUpPage } from './components/auth/AuthSignUpPage'
 import { MyLearningPage } from './components/learning/MyLearningPage'
@@ -90,6 +90,7 @@ import { logEnvValidationFailure, validateStartupEnv } from './lib/envCheck'
 import type { EnvCheckResult } from './lib/envCheck'
 import { PUBLIC_AI_FOUNDATIONS_BASE_PATH } from './data/publicStarterLibraries/aiFoundations'
 import { LEGAL_ROUTES } from './training/trustCopy'
+import { MaintenancePublicGate } from './components/maintenance/MaintenancePublicGate'
 
 function RedirectLegacyLibrariesAiFoundationsToCanonical() {
   return <Navigate to={PUBLIC_AI_FOUNDATIONS_BASE_PATH} replace />
@@ -278,27 +279,27 @@ export default function App() {
     <LearnerCommerceProvider>
       <LearnerDeviceLimitModal />
       <Routes>
-      <Route path="/generate" element={<PublicGeneratePage />} />
-      <Route path="/disclaimer" element={<FullDisclaimerPage />} />
-      <Route path="/terms" element={<TermsOfServicePage />} />
-      <Route path="/privacy" element={<PrivacyPolicyPage />} />
-      <Route path="/refunds" element={<RefundPolicyPage />} />
-      <Route path="/pricing" element={<PublicPricingPage />} />
-      <Route path="/learn" element={<LearningDiscoveryHubPage />} />
-      <Route path="/learn/school/:schoolId" element={<LearningSchoolCatalogPage />} />
-      <Route path="/learn/category/:slug" element={<LearningCategoryPage />} />
       <Route
         element={
           <AuthProvider>
             <LearningAccessProvider>
               <AccessTierProvider>
                 <AppChrome env={env} />
-                <Outlet />
+                <MaintenancePublicGate />
               </AccessTierProvider>
             </LearningAccessProvider>
           </AuthProvider>
         }
       >
+        <Route path="/generate" element={<PublicGeneratePage />} />
+        <Route path="/disclaimer" element={<FullDisclaimerPage />} />
+        <Route path="/terms" element={<TermsOfServicePage />} />
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
+        <Route path="/refunds" element={<RefundPolicyPage />} />
+        <Route path="/pricing" element={<PublicPricingPage />} />
+        <Route path="/learn" element={<LearningDiscoveryHubPage />} />
+        <Route path="/learn/school/:schoolId" element={<LearningSchoolCatalogPage />} />
+        <Route path="/learn/category/:slug" element={<LearningCategoryPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/auth/sign-in" element={<AuthSignInPage />} />

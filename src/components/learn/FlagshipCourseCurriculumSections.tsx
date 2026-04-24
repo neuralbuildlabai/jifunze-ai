@@ -61,9 +61,26 @@ export function FlagshipCourseCurriculumSections(props: {
         <p className="text-[12px] leading-snug text-[color:var(--jf-subtle)] sm:max-w-md sm:text-right">{curriculum.depthLabel}</p>
       </div>
       <p className="mt-3 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{curriculum.estimatedDurationLabel}</p>
-      <p className="mt-2 max-w-xl text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">
+        <p className="mt-2 max-w-xl text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">
         Self-paced — session effort is qualitative until timing models are anchored to block-level work. Prefer depth over clock-chasing.
       </p>
+
+      {progress.certificateReady ? (
+        <div
+          className="mt-6 rounded-2xl border border-emerald-500/25 bg-emerald-500/[0.06] px-5 py-4 text-[13px] leading-relaxed text-[color:var(--jf-text)]"
+          role="status"
+        >
+          <p className="font-semibold text-emerald-950/85">Certificate-ready</p>
+          <p className="mt-1 text-[color:var(--jf-muted)]">
+            You have completed all modules (including quizzes and mastery checkpoints) and capstone preparation. Jifunze does not issue PDF certificates from the product yet — this status means you have met the completion bar for future credentialing.
+          </p>
+        </div>
+      ) : courseSlug === 'ai-essentials' ? (
+        <p className="mt-6 max-w-2xl rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/80 px-5 py-4 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
+          <span className="font-semibold text-[color:var(--jf-text)]">Certificate readiness: </span>
+          Complete every module session, pass each module checkpoint quiz (6 of 8 correct), finish all mastery evidence checkpoints, complete capstone prep, and assemble the Responsible AI fluency portfolio described in the capstone brief.
+        </p>
+      ) : null}
 
       {/* Structure overview — stages tied to real module counts */}
       <section className="mt-14" aria-labelledby="structure-overview-heading" data-testid="flagship-curriculum-structure">

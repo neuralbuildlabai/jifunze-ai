@@ -3,6 +3,7 @@
  * Authoritative structure for course detail UX; scalable to remaining flagships via the same shapes.
  */
 
+import { AI_ESSENTIALS_FLAGSHIP_MODULES } from './aiEssentialsCourse1Modules'
 import { FLAGSHIP_CURRICULA_EXTENDED } from './flagshipCourseCurriculaExtended'
 import { FLAGSHIP_CURRICULA_EXTENDED_2 } from './flagshipCourseCurriculaExtended2'
 import type { FlagshipCourseCurriculum, FlagshipDepthStage } from './flagshipCurriculumTypes'
@@ -86,240 +87,32 @@ export type FlagshipCurriculumSlug = (typeof FLAGSHIP_CURRICULUM_SLUGS)[number]
 export const FLAGSHIP_CURRICULA_BASE = {
   'ai-essentials': {
     slug: 'ai-essentials',
-    estimatedDurationLabel: 'Roughly 45–65 hours of study and practice',
+    estimatedDurationLabel: 'Roughly 55–85 hours of study, practice, and portfolio work (16 modules + capstone prep)',
     depthLabel:
-      'Judgment-first AI literacy with explicit prompt engineering: what prompts are, why instructions shape outputs, how ambiguity and thin context cause failure, safe revision habits—and assessable drills (critique sheets, rewrites, comparison)—not cargo-cult guessing.',
+      'Flagship AI Essentials (Course 1): sixteen-module judgment-first fluency—mental models, prompting, verification, communication, research, workflows, teams, reusable systems, safety, and a Responsible AI fluency portfolio—with module quizzes, mastery checkpoints, and capstone prep aligned to reviewer-ready evidence.',
     reinforcementSignals: [
-      'Foundational prompt engineering appears in foundations modules (mistakes, ambiguity, responsible habits) before applied specs',
-      'Practice blocks produce reviewer-visible prompt artifacts—critiques, improved rewrites, comparison notes',
-      'Failure-mode drills on real outputs—not abstract “best practices” lists',
-      'Stake-weighted verification habits embedded before stakes rise',
-      'Responsible-use boundaries tied to data, IP, people you serve',
-      'Capstone playbook includes reusable prompt packs and escalation cues tied to workflows',
+      'Sixteen modules from foundations through portfolio—one coherent path (no duplicate AI Essentials track in the catalog)',
+      'Module quizzes use the Course 1 bank first, with varied retakes so practice stays honest',
+      'Practice sessions ask for concrete outputs; examples note how students, professionals, creators, leads, and educators apply the same ideas differently',
+      'Verification and responsible-use habits before high-stakes synthesis and portfolio assembly',
+      'Capstone prep aligns the Responsible AI fluency portfolio to a clear rubric; certificate-ready when every gate in the product is satisfied',
     ],
     capstone: {
-      title: 'Responsible AI operating playbook (review-ready)',
+      title: 'Responsible AI fluency portfolio (capstone prep)',
       description:
-        'Ship one integrated pack you could hand to a manager or mentor: accountable use stance for your context(s), stakes-classified verification doctrine, minimalist workflow architectures with triggers/humans/fallbacks, escalation rules for uncertain outputs, an explicit refusal map (what you will not outsource to models), and reusable prompt/spec templates grounded in how you actually work—including where prompt packs attach to workflows. Quarterly refresh notes included.',
+        'Finalize a reviewer-ready portfolio you could hand to a mentor or manager. Include: (1) prompt improvement artifact with before/after prompts and rationale, (2) verification / evidence artifact showing provenance discipline, (3) responsible-use checklist tailored to your contexts, (4) one AI-assisted writing or research sample with marginal review notes, (5) workflow or productivity artifact with triggers and human gates, (6) decision-support memo with assumptions and falsifiers, (7) personal AI operating system plan (tools, data tiers, refusal map), (8) short final reflection on human judgment and accountable use. Rubric (self- and peer-review): AI judgment; prompt quality; evidence discipline; responsible-use awareness; workflow usefulness; communication clarity; human review and accountability; practical transfer to real work. Jifunze does not issue PDF certificates from the app yet—completion here means certificate-ready against this bar.',
       deliverables: [
-        'Responsible-use stance (roles, stakes, refusal boundaries, escalation)',
-        'Verification checklist matrix by stake level with concrete review moves',
-        'Prompt engineering pack for 2–3 recurring task categories: starter prompts, critique checklist, versioning notes—aligned to your workflows',
-        'Workflow diagrams for 2–3 task families: trigger → tool/human → fallback → archive',
-        'Incident response sketch: suspected bad output / leak / misrepresentation',
+        'Prompt improvement pack (versions + critique notes)',
+        'Verification / evidence artifact with sources or search strategy documented',
+        'Responsible-use and escalation checklist for your roles',
+        'AI-assisted writing or research sample with human review visible',
+        'Workflow or productivity artifact (diagram, SOP slice, or runbook)',
+        'Decision-support memo with tradeoffs and next information buys',
+        'Personal AI operating system plan (data tiers, tools, boundaries)',
+        'Final reflection: human judgment and responsible use',
       ],
     },
-    modules: [
-      {
-        id: 'ae-m01',
-        order: 1,
-        title: 'How modern AI behaves—and how prompt engineering connects to outputs',
-        stage: 'foundations',
-        summary:
-          'Connect stochastic behavior to something you control: prompts are instructions to a system—quality and completeness of prompts strongly shape usefulness, hallucination pressure, and tone. Build intuition for fluent-but-wrong outputs AND for how thin or ambiguous prompts make failure more likely.',
-        learningGoals: [
-          'Define what a prompt is (instructions + context + constraints) and why prompt quality is inseparable from output quality.',
-          'Explain memorization mimicry vs. reasoning metaphors—and where metaphors fail.',
-          'Identify how ambiguous or under-specified prompts produce confident garbage; name what minimum context belongs in a starter prompt.',
-          'Sort tasks into verification-mandatory vs. lightweight review buckets—and note how prompting cannot replace verification on high stakes.',
-          'Describe model limits to stakeholders without buzzwords.',
-        ],
-        practiceActivities: [
-          'Cold-read three model outputs labeling fabrication, omission, overconfident tone, or missing caveats—and note which missing prompt constraints might have contributed.',
-          'Rewrite one vague prompt twice: diagnose ambiguity and missing constraints; compare outputs in a short prompt comparison table (weak vs improved).',
-          'Translate “Is this safe?” from a stakeholder into operational sub-questions.',
-          'Draft five “safe prompting habits” you will keep (privacy, citations, refusal to invent sources).',
-        ],
-        revisionCheckpoint: true,
-        expectedOutputs: [
-          'Failure-mode note sheet (half page)',
-          'Prompt comparison table + improved rewrite (one task)',
-          'Starter list of responsible prompting habits',
-        ],
-      },
-      {
-        id: 'ae-m02',
-        order: 2,
-        title: 'What AI is not: myths, shortcuts, harmful expectations—and prompt myths',
-        stage: 'foundations',
-        summary:
-          'Demystify hype so effort goes to judgment, procedures, and evidence—not prompt superstition. Explicitly debunk common prompt myths (length equals quality, magic phrases, “just ask nicer,” model knows what you meant).',
-        learningGoals: [
-          'Replace “magic assistant” fantasies with inspectable step lists—and replace prompt myths with testable prompt habits.',
-          'List five frequent prompt failure modes: ambiguity, missing audience, missing evidence rules, missing output shape, missing refusal behavior.',
-          'Stress-test vendor or media claims against known tool behavior.',
-          'State where human accountability stays non-negotiable.',
-        ],
-        practiceActivities: [
-          'Fact-check one viral AI claim using primary documentation or reproducible tests.',
-          'Prompt myth busting: take three “tips” from social media; evaluate each with a before/after prompt pair and note whether output quality actually changed.',
-          'Draft a “never outsource” list with ethical and quality rationale per line.',
-        ],
-        recap: true,
-        expectedOutputs: ['Expectation reset memo', 'Prompt myth critique sheet (3 myths + evidence)'],
-      },
-      {
-        id: 'ae-m03',
-        order: 3,
-        title: 'Tool landscape: assistants, retrieval, models, agents—and prompts as the control surface',
-        stage: 'foundations',
-        summary:
-          'Choose tool classes for tasks—integrations, permissions, eval harnesses—not model bragging rights. Treat prompts as the primary control surface for assistants: same intent with different constraints should produce auditable differences in outputs.',
-        learningGoals: [
-          'Map recurring work to assistants, retrieval, copilots, agents, or local tooling—and state what each interface implies for prompt structure.',
-          'Explain why “which model?” is incomplete without “what prompt spec, what evidence policy, what format?”',
-          'Articulate why data boundaries and SSO matter as much as benchmarks.',
-          'Draft evaluation criteria before pilots spend calendar time—including prompt+criteria pairs for acceptance tests.',
-        ],
-        practiceActivities: [
-          'Score five workflows against tool categories + integration requirements; for two, sketch the minimum viable prompt contract (inputs, forbidden moves, output shape).',
-          'Document red/yellow/green data handling rules for one workflow—and how prompts must change when data tier changes.',
-          'Write one small “acceptance test prompt” that checks whether a tool response meets explicit constraints.',
-        ],
-        revisionCheckpoint: true,
-        expectedOutputs: ['Tool-fit matrix', 'Mini prompt contract + acceptance test prompt for one workflow'],
-      },
-      {
-        id: 'ae-m04',
-        order: 4,
-        title: 'Prompt engineering I: structured prompts as specs—not spellcasting',
-        stage: 'applied_practice',
-        summary:
-          'Foundational prompt engineering you can defend in review: author prompts like specs—intent, audience, constraints, evidence policy, output format, refusal behavior—then iterate with version notes and side-by-side comparisons like code review.',
-        learningGoals: [
-          'Build prompts where role, goal, constraints, and output shape are explicit—so ambiguity surfaces early.',
-          'Embed cite vs. infer vs. refuse policies for contested facts.',
-          'Explain how and why prompts fail (under-spec, wrong audience, missing negatives, missing format).',
-          'Iterate with documented diffs; compare outputs against a simple quality rubric—not vibes.',
-        ],
-        practiceActivities: [
-          'Produce a prompt critique sheet: diagnose a weak prompt (ambiguity, missing context, weak constraints) and rewrite it with labeled sections.',
-          'Run draft → critique → revise on one gnarly task with saved versions v0 → v2 and a short changelog.',
-          'Apply a rubric to two outputs: clarity, evidence rules, failure handling, escalation.',
-        ],
-        expectedOutputs: [
-          'Prompt critique sheet + improved rewrite',
-          'Versioned prompt spec template for a recurring task (v0.2 with changelog)',
-        ],
-      },
-      {
-        id: 'ae-m05',
-        order: 5,
-        title: 'Learning with AI without outsourcing cognition',
-        stage: 'applied_practice',
-        summary:
-          'Deploy AI as deliberate practice partner—without letting it sit exams for you. Prompt engineering here means tutoring-style prompts that force you to retrieve, explain, and check—not prompts that generate finished submissions.',
-        learningGoals: [
-          'Design study loops where AI supports retrieval, not substitution—and specify prompt patterns for each loop step.',
-          'Spot when explanatory chat undermines durable understanding.',
-          'Codify integrity boundaries for coursework and certifications—including forbidden prompt patterns.',
-        ],
-        practiceActivities: [
-          'Author five-step study protocol listing AI-allowed vs. forbidden moves—and include example prompts for allowed steps only.',
-          'Generate quiz items then independently verify keys and rationales.',
-          'Prompt comparison: “do my homework” style vs. Socratic tutoring prompts; note failure modes of each.',
-        ],
-        revisionCheckpoint: true,
-        expectedOutputs: ['Integrity-forward study protocol + example prompt patterns'],
-      },
-      {
-        id: 'ae-m06',
-        order: 6,
-        title: 'Drafting, summarizing, and transforming text—prompt + review discipline',
-        stage: 'applied_practice',
-        summary:
-          'Produce knowledge work with tone control, factual traceability, and ruthless diff review. Prompt engineering means explicit extraction/summary prompts with evidence rules—then editing against those rules.',
-        learningGoals: [
-          'Write summarize/extract prompts that forbid invention and require paragraph-tied claims.',
-          'Summarize long sources without smuggling new claims.',
-          'Maintain citation pathways for contested facts.',
-          'Edit AI prose with inline questions, not cosmetic fixes only.',
-        ],
-        practiceActivities: [
-          'Summarize a dense article tagging each claim to a paragraph or “uncited.”',
-          'Red-team an AI summary for omission, hedging, and persuasive spin.',
-          'Author two prompt variants for the same document (extract facts vs. executive brief) and compare failure modes.',
-        ],
-        expectedOutputs: ['Edited draft with marginal verification notes', 'Prompt pair comparison notes for summarization'],
-      },
-      {
-        id: 'ae-m07',
-        order: 7,
-        title: 'AI at work: handoffs, approvals, stakeholders, norms—and shared prompt defaults',
-        stage: 'professional_execution',
-        summary:
-          'Make hybrid human+AI collaboration legible—ownership, disclosure, review gates, escalation paths. Include lightweight standards for reusable team prompts (what must be in a handoff prompt, how to label AI-generated sections, where prompt templates live).',
-        learningGoals: [
-          'Draft lightweight team norms for disclosure, labeling, review—including shared prompt prefixes and forbidden prompt patterns.',
-          'Communicate AI assistance without undermining trust.',
-          'Plug into ticket/PR/review workflows you already run.',
-        ],
-        practiceActivities: [
-          'RACI map for AI-supported deliverables with explicit review owners.',
-          'Write email templates declaring assistance, uncertainty, and verification status.',
-          'Produce one “team starter prompt template” with slots for stakeholder, stakes, constraints, and review owner.',
-        ],
-        expectedOutputs: ['Team AI workflow norms draft', 'Starter prompt template for team use'],
-      },
-      {
-        id: 'ae-m08',
-        order: 8,
-        title: 'Risk, privacy, confidentiality, intellectual honesty—and safe prompting',
-        stage: 'professional_execution',
-        summary:
-          'Protect people and IP with pragmatic classification—know what never leaves trusted environments. Tie safe prompting habits to data tiers (what you must never paste; what belongs in prompts vs. retrieval systems).',
-        learningGoals: [
-          'Label sensitive data tiers tied to realistic tooling constraints—and rewrite one risky prompt into a safe variant.',
-          'Define escalation paths for suspected leaks or unsafe outputs.',
-          'Attribute ideas and AI contributions honestly.',
-        ],
-        practiceActivities: [
-          'Classify three real document types with paste/stay-local rules—and write “always/never include in prompts” bullets per tier.',
-          'Draft incident outline for suspected data exfiltration or harmful advice.',
-        ],
-        revisionCheckpoint: true,
-        expectedOutputs: ['Sensitivity + escalation sheet', 'Safe prompting rules by data tier'],
-      },
-      {
-        id: 'ae-m09',
-        order: 9,
-        title: 'Personal workflow architecture: triggers, stacks, fallbacks, prompt hooks',
-        stage: 'mastery_outputs',
-        summary:
-          'Compose resilient workflows—when to automate, throttle, escalate, or refuse based on stakes and fatigue. Attach prompt specs to workflow steps (“when this trigger fires, use this prompt pack; when stakes rise, escalate to human review prompts”).',
-        learningGoals: [
-          'Encode triggers using stakes × reversibility × blast radius—and map prompt variants to triggers.',
-          'Plan API/model outage fallbacks humans can execute—including offline prompt patterns.',
-          'Stress-test workflows under low-sleep / high-interruption realities.',
-        ],
-        practiceActivities: [
-          'Diagram three task families with decision diamonds and owners.',
-          'Friday-afternoon tabletop: what breaks first? patch the workflow—and update prompt packs accordingly.',
-        ],
-        expectedOutputs: ['Workflow diagram + fallback table', 'Mini prompt pack indexed by trigger'],
-      },
-      {
-        id: 'ae-m10',
-        order: 10,
-        title: 'Synthesis and operating playbook assembly',
-        stage: 'mastery_outputs',
-        summary:
-          'Integrate stance, verification, workflows, incidents, and reusable prompt/spec templates into one lean, revisable playbook—prompt engineering included as operational assets, not an appendix.',
-        learningGoals: [
-          'Decide what belongs in a pocket playbook vs. long training decks—including which prompt templates are canonical.',
-          'Author for future-you: triggers, checklists, escalation cues, and prompt pack ownership.',
-          'Schedule quarterly refresh triggers.',
-        ],
-        practiceActivities: [
-          'Cut 40% of a bloated draft while keeping safeguards explicit.',
-          'Peer dry-run capstone review with rubric + capture gaps.',
-          'Assemble a “prompt pack appendix”: 3–5 reusable prompts with owners, version, and when-not-to-use notes.',
-        ],
-        recap: true,
-        revisionCheckpoint: true,
-        expectedOutputs: ['Draft capstone playbook v1', 'Prompt pack appendix (reusable, versioned)'],
-      },
-    ],
+    modules: AI_ESSENTIALS_FLAGSHIP_MODULES,
   },
 
   'smart-workflows-with-ai': {

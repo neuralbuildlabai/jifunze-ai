@@ -245,6 +245,25 @@ export function isCapstonePrepComplete(sessions: FlagshipSession[], completed: S
   return completed.has(prep.id)
 }
 
+/**
+ * Honest completion bar for future certificate issuance: every module session done, module quiz passed,
+ * mastery checkpoint trio complete, and capstone prep marked done. Does not mint or imply a PDF credential.
+ */
+export function isFlagshipCertificateReady(
+  curriculum: FlagshipCourseCurriculum,
+  sessions: FlagshipSession[],
+  completed: Set<string>,
+  checkpointDone: Set<string>,
+  progress: FlagshipCourseProgressState,
+): boolean {
+  if (!isCapstonePrepComplete(sessions, completed)) return false
+  for (const m of curriculum.modules) {
+    if (!moduleFullyComplete(m.id, sessions, completed, progress)) return false
+    if (!moduleAssessmentComplete(m.id, checkpointDone)) return false
+  }
+  return true
+}
+
 const REVIEW_TYPES: FlagshipSessionType[] = ['practice', 'revision', 'recap']
 
 /** Sessions worth surfacing when conceptually “done enough” to revisit — practice/revision/recap left open */

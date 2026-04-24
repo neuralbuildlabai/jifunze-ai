@@ -5,6 +5,7 @@ import {
   FLAGSHIP_CAPSTONE_MODULE_ID,
   FLAGSHIP_SESSION_TYPE_LABEL,
   flagshipSessionEffortDisplay,
+  firstSessionInCourseOrder,
   type FlagshipSession,
 } from '../../data/learning/flagshipCourseSessions'
 import {
@@ -13,6 +14,7 @@ import {
   sessionOpenForLearner,
   sessionPrerequisitesMet,
 } from '../../learner/flagshipSessionPrereq'
+import { useCallback, useState } from 'react'
 import { useLearnerCommerceOptional } from '../../learner/LearnerCommerceContext'
 import type { FlagshipCourseProgressApi } from '../../hooks/useFlagshipCourseProgress'
 import type { FlagshipCourseProgressState } from '../../lib/flagshipCourseProgressDerived'
@@ -47,6 +49,8 @@ function SessionRow(props: {
   curriculum: FlagshipCourseCurriculum
   progressState: FlagshipCourseProgressState | undefined
   chapterOrdinal: number
+  /** Calmer overview: shorter lock copy, less metadata in each row */
+  compact?: boolean
 }) {
   const {
     session,
@@ -59,6 +63,7 @@ function SessionRow(props: {
     curriculum,
     progressState,
     chapterOrdinal,
+    compact,
   } = props
   const done = completed.has(session.id)
   const prereqOk = sessionPrerequisitesMet(completed, session)
@@ -98,11 +103,11 @@ function SessionRow(props: {
           <SessionStatusDot done={done} active={false} />
           <div className="min-w-0 flex-1">
             <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">
-              Chapter {chapterOrdinal}
+              {compact ? `Session ${chapterOrdinal}` : `Chapter ${chapterOrdinal}`}
             </p>
             <p className="text-[13px] font-medium leading-snug text-[color:var(--jf-text)]">{session.title}</p>
             <p className="mt-0.5 text-[11px] text-[color:var(--jf-muted)]">
-              Purchase this course or choose all-access to open structured sessions—not an instant bulk unlock.
+              Purchase or subscribe to unlock sessions.
             </p>
           </div>
           <span className="rounded-full border border-[color:var(--jf-border)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[color:var(--jf-subtle)]">
@@ -124,11 +129,13 @@ function SessionRow(props: {
           <SessionStatusDot done={done} active={false} />
           <div className="min-w-0 flex-1">
             <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">
-              Chapter {chapterOrdinal}
+              {compact ? `Session ${chapterOrdinal}` : `Chapter ${chapterOrdinal}`}
             </p>
             <p className="text-[13px] font-medium leading-snug text-[color:var(--jf-text)]">{session.title}</p>
             <p className="mt-1 text-[11px] leading-relaxed text-[color:var(--jf-muted)]">{lockExplain}</p>
-            <p className="mt-0.5 line-clamp-2 text-[11px] text-[color:var(--jf-subtle)]">{session.summary}</p>
+            {!compact ? (
+              <p className="mt-0.5 line-clamp-2 text-[11px] text-[color:var(--jf-subtle)]">{session.summary}</p>
+            ) : null}
           </div>
           <span className="rounded-full border border-[color:var(--jf-border)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[color:var(--jf-subtle)]">
             Locked
@@ -148,32 +155,44 @@ function SessionRow(props: {
         <SessionStatusDot done={done} active={isNext && !done} />
         <div className="min-w-0 flex-1">
           <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">
-            Chapter {chapterOrdinal}
+            {compact ? `Session ${chapterOrdinal}` : `Chapter ${chapterOrdinal}`}
           </p>
           <p className="text-[13px] font-medium leading-snug text-[color:var(--jf-text)]">{session.title}</p>
-          <p className="mt-0.5 line-clamp-2 text-[11px] text-[color:var(--jf-muted)]">{session.summary}</p>
+          {!compact ? <p className="mt-0.5 line-clamp-2 text-[11px] text-[color:var(--jf-muted)]">{session.summary}</p> : null}
         </div>
-        <div className="flex w-full shrink-0 flex-wrap items-center justify-end gap-2 sm:w-auto sm:justify-start">
-          <span className="rounded-full border border-[color:var(--jf-border)] px-2 py-0.5 text-[10px] font-medium text-[color:var(--jf-subtle)]">
-            {FLAGSHIP_SESSION_TYPE_LABEL[session.type]}
-          </span>
-          <span className="text-[11px] leading-snug text-[color:var(--jf-muted)]">{flagshipSessionEffortDisplay(session)}</span>
-        </div>
+        {!compact ? (
+          <div className="flex w-full shrink-0 flex-wrap items-center justify-end gap-2 sm:w-auto sm:justify-start">
+            <span className="rounded-full border border-[color:var(--jf-border)] px-2 py-0.5 text-[10px] font-medium text-[color:var(--jf-subtle)]">
+              {FLAGSHIP_SESSION_TYPE_LABEL[session.type]}
+            </span>
+            <span className="text-[11px] leading-snug text-[color:var(--jf-muted)]">{flagshipSessionEffortDisplay(session)}</span>
+          </div>
+        ) : null}
       </Link>
     </li>
   )
 }
+
+export type FlagshipLearningPathLayout = 'default' | 'accordion'
 
 export function FlagshipCourseLearningPath(props: {
   courseSlug: string
   curriculum: FlagshipCourseCurriculum
   sessions: FlagshipSession[]
   progress: FlagshipCourseProgressApi
+  /** Accordion: one module expanded at a time; calmer session rows (Course 1 overview). */
+  layout?: FlagshipLearningPathLayout
 }) {
-  const { courseSlug, curriculum, sessions, progress } = props
+  const { courseSlug, curriculum, sessions, progress, layout: layoutProp } = props
+  const layout = layoutProp ?? 'default'
+  const compactRows = layout === 'accordion'
   const commerce = useLearnerCommerceOptional()
   const purchaseGateEnabled = commerce?.purchaseGateEnabled ?? false
   const hasCourseAccess = commerce?.hasCourseAccess(courseSlug) ?? true
+  const [expandedModuleId, setExpandedModuleId] = useState<string | null>(null)
+  const toggleModule = useCallback((id: string) => {
+    setExpandedModuleId((cur) => (cur === id ? null : id))
+  }, [])
 
   const {
     completed,
@@ -214,6 +233,14 @@ export function FlagshipCourseLearningPath(props: {
       curriculum,
       progressState: state,
     })
+  const firstSession = firstSessionInCourseOrder(sessions)
+  const startReachable =
+    !!firstSession &&
+    sessionOpenForLearner(completed, firstSession, {
+      capstonePrepAccessible,
+      curriculum,
+      progressState: state,
+    })
 
   function moduleById(id: string): FlagshipCurriculumModule | undefined {
     return curriculum.modules.find((m) => m.id === id)
@@ -222,10 +249,12 @@ export function FlagshipCourseLearningPath(props: {
   return (
     <section className="mt-14" aria-labelledby="learning-path-heading" data-testid="flagship-learning-path">
       <h2 id="learning-path-heading" className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
-        Your learning path
+        {layout === 'accordion' ? 'Curriculum' : 'Your learning path'}
       </h2>
       <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-        Each module is a sequence of chapters—complete them in order, then pass the module understanding check to unlock the next module. Progress saves on this device.
+        {layout === 'accordion'
+          ? 'Expand a module to see its sessions. Complete them in order, then take the short module quiz to unlock the next module. Progress saves on this device.'
+          : 'Each module is a sequence of sessions—complete them in order, then pass the module quiz to unlock the next module. Progress saves on this device.'}
       </p>
 
       {/* Progress summary */}
@@ -308,42 +337,61 @@ export function FlagshipCourseLearningPath(props: {
                 className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)]"
                 data-testid="flagship-resume-primary"
               >
-                {resumeCtaLabel}
+                {completed.size === 0 ? 'Start course' : resumeCtaLabel}
+              </Link>
+            ) : firstSession && startReachable && completed.size === 0 ? (
+              <Link
+                to={sessionHref(firstSession.id)}
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)]"
+                data-testid="flagship-resume-primary"
+              >
+                Start course
               </Link>
             ) : nextSession ? (
               <span className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-6 py-2.5 text-sm font-medium text-[color:var(--jf-muted)]">
-                Continue along visible sessions below
+                Open an unlocked session below to continue
               </span>
             ) : (
               <span className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-6 py-2.5 text-sm font-medium text-[color:var(--jf-muted)]">
                 Path complete
               </span>
             )}
-            <Link
-              to={`/learn/courses/${courseSlug}`}
-              className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-white/[0.12] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-white/[0.05]"
-            >
-              Course overview
-            </Link>
+            {layout === 'accordion' ? (
+              <a
+                href="#ai-essentials-hero"
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-white/[0.12] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-white/[0.05]"
+              >
+                Back to top
+              </a>
+            ) : (
+              <Link
+                to={`/learn/courses/${courseSlug}`}
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-white/[0.12] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-white/[0.05]"
+              >
+                Course overview
+              </Link>
+            )}
           </div>
         </div>
 
         {/* Stage breakdown — compact */}
-        <div className="mt-8 grid gap-3 border-t border-[color:var(--jf-border)] pt-6 sm:grid-cols-2 lg:grid-cols-4">
-          {STAGE_FLOW.map((st) => {
-            const s = stageSummary[st]
-            const pct =
-              s.sessionsTotal === 0 ? 0 : Math.round((s.sessionsDone / s.sessionsTotal) * 100)
-            return (
-              <div key={st} className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-3 py-3">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">{flagshipStageLabel(st)}</p>
-                <p className="mt-2 font-mono text-[13px] tabular-nums text-[color:var(--jf-text)]">
-                  {s.sessionsDone}/{s.sessionsTotal} sessions · {pct}%
-                </p>
-              </div>
-            )
-          })}
-        </div>
+        {layout !== 'accordion' ? (
+          <div className="mt-8 grid gap-3 border-t border-[color:var(--jf-border)] pt-6 sm:grid-cols-2 lg:grid-cols-4">
+            {STAGE_FLOW.map((st) => {
+              const s = stageSummary[st]
+              const pct =
+                s.sessionsTotal === 0 ? 0 : Math.round((s.sessionsDone / s.sessionsTotal) * 100)
+              return (
+                <div key={st} className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-3 py-3">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">{flagshipStageLabel(st)}</p>
+                  <p className="mt-2 font-mono text-[13px] tabular-nums text-[color:var(--jf-text)]">
+                    {s.sessionsDone}/{s.sessionsTotal} sessions · {pct}%
+                  </p>
+                </div>
+              )
+            })}
+          </div>
+        ) : null}
 
         {pendingMasteryModuleTitles.length > 0 ? (
           <div className="mt-6 rounded-xl border border-violet-900/25 bg-violet-950/[0.12] px-4 py-3" data-testid="flagship-mastery-pending">
@@ -379,61 +427,91 @@ export function FlagshipCourseLearningPath(props: {
             <div className="border-b border-[color:var(--jf-border)] pb-3">
               <h3 className="text-[13px] font-semibold uppercase tracking-[0.16em] text-[color:var(--jf-muted)]">{flagshipStageLabel(stage)}</h3>
             </div>
-            <div className="mt-6 space-y-8">
+            <div className={layout === 'accordion' ? 'mt-6 space-y-3' : 'mt-6 space-y-8'}>
               {modules.map((mod) => {
                 const modSessions = sessions.filter((s) => s.moduleId === mod.id).sort((a, b) => a.orderInModule - b.orderInModule)
                 const stats = moduleSessionStats(mod.id, sessions, completed)
                 const fullyComplete = moduleFullyComplete(mod.id, sessions, completed, state)
                 const sessionsOnlyDone = moduleSessionsAllDone(mod.id, sessions, completed)
+                const moduleExpanded = layout !== 'accordion' || expandedModuleId === mod.id
+                const header = (
+                  <div className="flex min-w-0 flex-1 flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-mono text-[11px] font-semibold text-[color:var(--jf-muted)]">{String(mod.order).padStart(2, '0')}</span>
+                        {fullyComplete ? (
+                          <span className="rounded-full border border-emerald-900/35 bg-emerald-950/[0.2] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-100/85">
+                            Module complete
+                          </span>
+                        ) : sessionsOnlyDone ? (
+                          <span className="rounded-full border border-amber-900/35 bg-amber-950/[0.15] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-100/90">
+                            Quiz pending
+                          </span>
+                        ) : (
+                          <span className="rounded-full border border-[color:var(--jf-border)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[color:var(--jf-muted)]">
+                            {stats.done}/{stats.total} sessions
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-2 text-[16px] font-semibold text-[color:var(--jf-text)]">{mod.title}</p>
+                      {!compactRows ? (
+                        <p className="mt-1 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{mod.summary}</p>
+                      ) : moduleExpanded ? (
+                        <p className="mt-1 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{mod.summary}</p>
+                      ) : null}
+                    </div>
+                    {layout === 'accordion' ? (
+                      <span className="shrink-0 pt-1 text-[11px] text-[color:var(--jf-subtle)]" aria-hidden>
+                        {moduleExpanded ? '▼' : '▶'}
+                      </span>
+                    ) : null}
+                  </div>
+                )
                 return (
                   <div key={mod.id} className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-4 sm:p-5">
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="font-mono text-[11px] font-semibold text-[color:var(--jf-muted)]">{String(mod.order).padStart(2, '0')}</span>
-                          {fullyComplete ? (
-                            <span className="rounded-full border border-emerald-900/35 bg-emerald-950/[0.2] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-100/85">
-                              Module complete
-                            </span>
-                          ) : sessionsOnlyDone ? (
-                            <span className="rounded-full border border-amber-900/35 bg-amber-950/[0.15] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-100/90">
-                              Understanding check pending
-                            </span>
-                          ) : (
-                            <span className="rounded-full border border-[color:var(--jf-border)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[color:var(--jf-muted)]">
-                              {stats.done}/{stats.total} sessions
-                            </span>
-                          )}
-                        </div>
-                        <p className="mt-2 text-[16px] font-semibold text-[color:var(--jf-text)]">{mod.title}</p>
-                        <p className="mt-1 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{mod.summary}</p>
-                      </div>
-                    </div>
-                    <ul className="mt-5 space-y-2">
-                      {modSessions.map((sess, chapterIdx) => (
-                        <SessionRow
-                          key={sess.id}
-                          courseSlug={courseSlug}
-                          session={sess}
-                          completed={completed}
-                          isNext={sess.id === nextId}
-                          capstonePrepAccessible={capstonePrepAccessible}
-                          purchaseGateEnabled={purchaseGateEnabled}
-                          hasCourseAccess={hasCourseAccess}
-                          curriculum={curriculum}
-                          progressState={state}
-                          chapterOrdinal={chapterIdx + 1}
-                        />
-                      ))}
-                    </ul>
-                    {sessionsOnlyDone ? (
-                      <FlagshipModuleQuizPanel
-                        module={mod}
-                        sessions={sessions}
-                        courseSlug={courseSlug}
-                        quizState={state.moduleQuiz?.[mod.id]}
-                        onUpdateQuiz={(partial) => updateModuleQuizRecord(mod.id, partial)}
-                      />
+                    {layout === 'accordion' ? (
+                      <button
+                        type="button"
+                        className="flex w-full cursor-pointer text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+                        onClick={() => toggleModule(mod.id)}
+                        aria-expanded={moduleExpanded}
+                        aria-controls={`module-sessions-${mod.id}`}
+                      >
+                        {header}
+                      </button>
+                    ) : (
+                      header
+                    )}
+                    {moduleExpanded ? (
+                      <>
+                        <ul id={`module-sessions-${mod.id}`} className="mt-5 space-y-2">
+                          {modSessions.map((sess, chapterIdx) => (
+                            <SessionRow
+                              key={sess.id}
+                              courseSlug={courseSlug}
+                              session={sess}
+                              completed={completed}
+                              isNext={sess.id === nextId}
+                              capstonePrepAccessible={capstonePrepAccessible}
+                              purchaseGateEnabled={purchaseGateEnabled}
+                              hasCourseAccess={hasCourseAccess}
+                              curriculum={curriculum}
+                              progressState={state}
+                              chapterOrdinal={chapterIdx + 1}
+                              compact={compactRows}
+                            />
+                          ))}
+                        </ul>
+                        {sessionsOnlyDone ? (
+                          <FlagshipModuleQuizPanel
+                            module={mod}
+                            sessions={sessions}
+                            courseSlug={courseSlug}
+                            quizState={state.moduleQuiz?.[mod.id]}
+                            onUpdateQuiz={(partial) => updateModuleQuizRecord(mod.id, partial)}
+                          />
+                        ) : null}
+                      </>
                     ) : null}
                   </div>
                 )
@@ -451,13 +529,21 @@ export function FlagshipCourseLearningPath(props: {
             {!capstoneUnlocked ? 'Still preparing' : capstonePrepAccessible ? 'Ready when you are' : 'Checkpoints before prep'}
           </p>
           <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-            {!capstoneUnlocked
-              ? `Complete the remaining ${remainingBeforeCapstone} sessions across modules to reach capstone preparation.`
-              : !capstonePrepAccessible
-                ? 'All sessions are marked complete—finish mastery checkpoints on each module’s practice session so capstone prep reflects defensible readiness.'
-                : capstonePrepComplete
-                  ? 'You marked capstone preparation complete—keep iterating on deliverables until they meet your own bar.'
-                  : 'Walk through the prep session to align deliverables with the brief before you call the capstone finished.'}
+            {layout === 'accordion'
+              ? !capstoneUnlocked
+                ? `${remainingBeforeCapstone} sessions left before capstone prep opens.`
+                : !capstonePrepAccessible
+                  ? 'Finish mastery checkpoints on practice sessions, then capstone prep unlocks.'
+                  : capstonePrepComplete
+                    ? 'Capstone prep is complete—you can still refine deliverables.'
+                    : 'Open the prep session when you are ready to align deliverables with the brief.'
+              : !capstoneUnlocked
+                ? `Complete the remaining ${remainingBeforeCapstone} sessions across modules to reach capstone preparation.`
+                : !capstonePrepAccessible
+                  ? 'All sessions are marked complete—finish mastery checkpoints on each module’s practice session so capstone prep reflects defensible readiness.'
+                  : capstonePrepComplete
+                    ? 'You marked capstone preparation complete—keep iterating on deliverables until they meet your own bar.'
+                    : 'Walk through the prep session to align deliverables with the brief before you call the capstone finished.'}
           </p>
           {capstonePrepAccessible ? (
             <div className="mt-5 flex flex-wrap gap-3">

@@ -1,7 +1,9 @@
 /**
- * Module-bound quiz pools — questions are generated from the module’s own session metadata only.
+ * Module-bound quiz pools — mostly from session metadata; AI Essentials merges the Course 1 bank
+ * (training-imports) so checkpoints stay tied to module teaching, not title-guess trivia alone.
  */
 
+import { course1AiEssentialsQuizQuestionsForModule } from '../data/learning/course1AiEssentialsQuizBank'
 import type { FlagshipCurriculumModule } from '../data/learning/flagshipCourseCurricula'
 import type { FlagshipSession } from '../data/learning/flagshipCourseSessions'
 
@@ -37,7 +39,11 @@ function clip(s: string, max: number): string {
 /**
  * Build a sufficiently large pool so retakes can vary (minimum 14 questions when enough sessions exist).
  */
-export function buildModuleQuizPool(module: FlagshipCurriculumModule, sessions: FlagshipSession[]): ModuleQuizQuestion[] {
+export function buildModuleQuizPool(
+  module: FlagshipCurriculumModule,
+  sessions: FlagshipSession[],
+  courseSlug?: string,
+): ModuleQuizQuestion[] {
   const modSessions = sessions
     .filter((s) => s.moduleId === module.id && s.type === 'lesson')
     .sort((a, b) => a.orderInModule - b.orderInModule)
@@ -113,7 +119,28 @@ export function buildModuleQuizPool(module: FlagshipCurriculumModule, sessions: 
     pad++
   }
 
-  return pool.filter((p) => p.correctIndex >= 0 && p.choices.length >= 4)
+  const filtered = pool.filter((p) => p.correctIndex >= 0 && p.choices.length >= 4)
+
+  if (courseSlug === 'ai-essentials') {
+    const bank = course1AiEssentialsQuizQuestionsForModule(module.id)
+    if (bank.length > 0) {
+      const seen = new Set<string>()
+      const merged: ModuleQuizQuestion[] = []
+      for (const q of bank) {
+        if (seen.has(q.id)) continue
+        seen.add(q.id)
+        merged.push(q)
+      }
+      for (const q of filtered) {
+        if (seen.has(q.id)) continue
+        seen.add(q.id)
+        merged.push(q)
+      }
+      return merged
+    }
+  }
+
+  return filtered
 }
 
 export function drawQuizQuestions(pool: ModuleQuizQuestion[], seed: string): ModuleQuizQuestion[] {

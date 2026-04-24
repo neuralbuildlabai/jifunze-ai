@@ -112,6 +112,10 @@ function applyPremiumLift(
   session: FlagshipSession,
   curriculum: FlagshipCourseCurriculum | undefined,
 ): FlagshipSessionContentBlock[] {
+  /** Course 1 ships authored overrides + generator merge; skip auto-appended orientation blocks to avoid stacked repetition. */
+  if (session.courseSlug === 'ai-essentials') {
+    return blocks
+  }
   if (!curriculum || instructionalBodyCharTotal(blocks) >= PREMIUM_DEPTH_TARGET_CHARS) {
     return blocks
   }

@@ -25,7 +25,7 @@ export function FlagshipModuleQuizPanel(props: {
 }) {
   const { module, sessions, courseSlug, quizState, onUpdateQuiz } = props
 
-  const pool = useMemo(() => buildModuleQuizPool(module, sessions), [module, sessions])
+  const pool = useMemo(() => buildModuleQuizPool(module, sessions, courseSlug), [module, sessions, courseSlug])
   const [attemptNonce, setAttemptNonce] = useState(0)
   const seed = `${courseSlug}:${module.id}:${attemptNonce}`
   const questions = useMemo(() => drawQuizQuestions(pool, seed), [pool, seed])

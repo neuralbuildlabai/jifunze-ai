@@ -36,6 +36,16 @@ interface ImportMetaEnv {
    * Must remain `false`/unset in production builds.
    */
   readonly VITE_E2E_BILLING_INVOKE_MOCK?: string
+  /**
+   * When `true`, anonymous visitors see the public maintenance / coming-soon surface instead of
+   * marketing and course pages. Auth, legal, and signed-in app routes remain available.
+   */
+  readonly VITE_MAINTENANCE_MODE?: string
+  /**
+   * Optional secret for internal preview: append `?jf_maintenance_bypass=<token>` once per tab.
+   * Leave unset in production public builds so the bypass cannot be activated.
+   */
+  readonly VITE_MAINTENANCE_BYPASS_TOKEN?: string
 }
 
 interface ImportMeta {

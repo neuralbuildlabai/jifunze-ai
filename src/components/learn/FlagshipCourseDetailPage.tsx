@@ -4,12 +4,13 @@ import { useAuth } from '../../auth/AuthContext'
 import { useLearnerCommerceOptional } from '../../learner/LearnerCommerceContext'
 import { FLAGSHIP_SCHOOLS, getFlagshipCourseBySlug } from '../../data/learning/flagshipCoursesCatalog'
 import { getFlagshipCurriculum } from '../../data/learning/flagshipCourseCurricula'
-import { buildSessionsForCurriculum } from '../../data/learning/flagshipCourseSessions'
 import { useFlagshipCourseProgress } from '../../hooks/useFlagshipCourseProgress'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { LearnerHelpAssistant } from '../teaching/LearnerHelpAssistant'
 import { TrustBoundaryStrip } from '../TrustBoundaryStrip'
+import { buildSessionsForCurriculum, firstSessionInCourseOrder } from '../../data/learning/flagshipCourseSessions'
+import { AiEssentialsCourseOverview } from './AiEssentialsCourseOverview'
 import { FlagshipCourseCurriculumSections } from './FlagshipCourseCurriculumSections'
 
 const DEPTH_LABELS = [
@@ -40,6 +41,7 @@ export function FlagshipCourseDetailPage() {
   }
 
   const school = FLAGSHIP_SCHOOLS[course.schoolId]
+  const firstLaunchSession = firstSessionInCourseOrder(sessions)
 
   return (
     <div className="jf-public-surface min-h-screen w-full bg-[var(--jf-bg-page)] text-[color:var(--jf-text)]">
@@ -85,6 +87,19 @@ export function FlagshipCourseDetailPage() {
       </header>
 
       <main className="mx-auto max-w-4xl px-5 pb-24 pt-10 sm:px-8 sm:pt-14 lg:px-10">
+        {slug === 'ai-essentials' && curriculum ? (
+          <AiEssentialsCourseOverview
+            slug={slug}
+            course={course}
+            school={school}
+            curriculum={curriculum}
+            sessions={sessions}
+            progress={progress}
+            purchaseGateEnabled={purchaseGateEnabled}
+            hasCourseAccess={hasCourseAccess}
+          />
+        ) : (
+          <>
         <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:var(--jf-muted)]">
           Flagship learning path · {school.label}
         </p>
@@ -276,18 +291,22 @@ export function FlagshipCourseDetailPage() {
           </div>
           <div className="flex flex-wrap gap-3">
             <Link
-              to={LEGAL_ROUTES.pricing}
+              to={
+                firstLaunchSession && slug
+                  ? `/learn/courses/${slug}/session/${firstLaunchSession.id}`
+                  : LEGAL_ROUTES.pricing
+              }
               className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
               data-testid="flagship-cta-start"
             >
               Start course
             </Link>
             <Link
-              to={LEGAL_ROUTES.pricing}
+              to="/learn/checkout?plan=all"
               className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-white/[0.12] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
               data-testid="flagship-cta-plan"
             >
-              Build your plan
+              All-access checkout
             </Link>
             <Link
               to={LEGAL_ROUTES.learn}
@@ -297,6 +316,8 @@ export function FlagshipCourseDetailPage() {
             </Link>
           </div>
         </section>
+          </>
+        )}
       </main>
       <LearnerHelpAssistant />
     </div>

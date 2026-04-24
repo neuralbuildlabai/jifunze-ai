@@ -79,9 +79,9 @@ export const FLAGSHIP_COURSES: FlagshipCourse[] = [
     exampleOutputs: ['Stakeholder-safe use stance', 'Stake-weighted verification matrix', 'Workflow + incident sketch pack'],
     featured: true,
     intro:
-      'Build a grounded mental model of what modern AI can and cannot do—and learn prompt engineering as an explicit skill: how instructions shape outputs, why prompts fail, and how to improve them responsibly.',
+      'Course 1 (AI Essentials): sixteen modules on judgment-first AI fluency—how models behave, how to prompt and iterate with evidence, how to verify outputs, how to use AI responsibly in real workflows, and how to assemble a Responsible AI fluency portfolio.',
     promise:
-      'Foundational prompt engineering plus defensible judgment: failure-mode literacy, stake-weighted review, responsible-use guardrails, assessable prompt practice, and a revision-friendly operating playbook.',
+      'Practical fluency you can show: clear prompting, disciplined verification, responsible boundaries, reusable workflows, and a portfolio-ready capstone—without a second “legacy” AI Essentials track in the catalog.',
     depthStages: {
       foundations:
         'Language, limits, failure modes, and prompt engineering basics—what prompts are, how quality drives output quality, and safe iteration habits.',
@@ -91,22 +91,25 @@ export const FLAGSHIP_COURSES: FlagshipCourse[] = [
       masteryOutputs: 'A personal playbook with templates, escalation cues, and reusable prompt packs.',
     },
     learningOutcomes: [
-      'Explain AI capabilities and limits—and how prompt design and iteration shape output quality—in plain language stakeholders understand.',
-      'Draft, critique, and revise prompts using explicit constraints; spot ambiguity, missing context, and unsafe prompting habits.',
-      'Review AI-assisted work with verification habits tied to stakes—not vibes or length-as-quality.',
+      'Explain how modern AI behaves, where it fails, and where human judgment must stay in charge.',
+      'Prompt with intent, constraints, and evaluation criteria—and iterate with evidence.',
+      'Verify outputs, handle sensitive data responsibly, and design light review loops for real work.',
+      'Use AI for writing, study, research, planning, and decisions without outsourcing accountability.',
+      'Package prompts and habits into a personal operating approach and a portfolio you can defend.',
     ],
     whatYouCreate: [
-      'Role-specific AI use policy (lightweight)',
-      'Verification checklist for high-stakes outputs',
-      'Annotated workflow diagram for your team or studies',
+      'Prompt improvement pack with versions and rationale',
+      'Verification / evidence checklist tied to your contexts',
+      'AI-assisted writing or research sample with your review visible',
+      'Workflow or SOP slice with clear human gates',
+      'Decision-support memo with tradeoffs and next information buys',
+      'Personal AI operating system plan (tools, data tiers, boundaries)',
+      'Responsible AI fluency portfolio plus a concise final reflection',
     ],
     modulePathway: [
-      'Mental models and prompt literacy',
-      'Prompt engineering foundations (specs, iteration, critique)',
-      'Learning and drafting with disciplined prompts',
-      'Stakeholders, norms, safety',
-      'Risk, workflows, playbook assembly',
-      'Capstone: responsible AI operating playbook',
+      'Foundations through mastery: sixteen ordered modules (ae-m01–ae-m16) with one catalog entry',
+      'Module quizzes: eight questions drawn, six correct to pass—aligned to each module’s focus',
+      'Mastery checkpoints on practice sessions plus capstone prep before portfolio sign-off',
     ],
   },
   {

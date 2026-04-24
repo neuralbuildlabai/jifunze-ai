@@ -22,6 +22,7 @@ import {
   type FlagshipCourseProgressState,
   isCapstonePrepComplete,
   isCapstoneUnlocked,
+  isFlagshipCertificateReady,
   isSessionCompleted,
   masteryCheckpointCompletionSet,
   modulesCompletedCount,
@@ -76,6 +77,8 @@ export type FlagshipCourseProgressApi = {
   toggleMasteryCheckpoint: (checkpointId: string, done: boolean) => void
   resetProgress: () => void
   updateModuleQuizRecord: (moduleId: string, partial: Partial<FlagshipModuleQuizRecord>) => void
+  /** All modules + quizzes + mastery checkpoints + capstone prep — UI only until issuance exists. */
+  certificateReady: boolean
 }
 
 const REMOTE_DEBOUNCE_MS = 700
@@ -365,6 +368,7 @@ export function useFlagshipCourseProgress(
         toggleMasteryCheckpoint,
         resetProgress,
         updateModuleQuizRecord,
+        certificateReady: false,
       }
     }
 
@@ -377,14 +381,13 @@ export function useFlagshipCourseProgress(
 
     let learningGuidanceLine: string | null = null
     if (pendingMastery.length > 0) {
-      learningGuidanceLine = `Suggested follow-up: finish mastery checkpoints on the practice session for “${pendingMastery[0].title}”.`
+      learningGuidanceLine = `Next: finish the two checkpoints on the practice session for “${pendingMastery[0].title}”.`
     } else if (needsAttentionSessions(sessions, completed).length > 0) {
-      learningGuidanceLine = 'Suggested follow-up: revisit recap or revision sessions still open from earlier modules.'
+      learningGuidanceLine = 'Optional: revisit an open recap or review session from an earlier module.'
     } else if (capUnlocked && !prepAccessible) {
-      learningGuidanceLine =
-        'Sessions are complete—finish remaining mastery checkpoints across modules before capstone prep reflects full readiness.'
+      learningGuidanceLine = 'Sessions are done—finish the remaining practice checkpoints so capstone prep can open.'
     } else if (prepAccessible && !prepDone) {
-      learningGuidanceLine = 'Nearly ready for capstone — complete preparation when deliverables meet the brief and your own evidence bar.'
+      learningGuidanceLine = 'Capstone prep is open—align deliverables to the brief, then mark prep complete when ready.'
     }
 
     const needsAtt = needsAttentionSessions(sessions, completed)
@@ -406,6 +409,7 @@ export function useFlagshipCourseProgress(
     const currentStageLabel = nextModule ? flagshipStageLabel(nextModule.stage) : 'Mastery complete'
     const nonCap = sessions.filter((s) => s.type !== 'capstone_prep')
     const remainingBeforeCapstone = nonCap.filter((s) => !completed.has(s.id)).length
+    const certificateReady = isFlagshipCertificateReady(curriculum, sessions, completed, ckDone, state)
 
     return {
       state,
@@ -435,6 +439,7 @@ export function useFlagshipCourseProgress(
       toggleMasteryCheckpoint,
       resetProgress,
       updateModuleQuizRecord,
+      certificateReady,
     }
   }, [
     curriculum,

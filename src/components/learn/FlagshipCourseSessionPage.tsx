@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { useAuth } from '../../auth/AuthContext'
 import { useLearnerCommerceOptional } from '../../learner/LearnerCommerceContext'
@@ -19,11 +19,17 @@ import {
   capstonePrepAccessible,
   forwardProgressionAllowsNewCompletion,
   masteryCheckpointCompletionSet,
+  moduleFullyComplete,
 } from '../../lib/flagshipCourseProgressDerived'
+import { blockAllowsLearnerResponse } from '../../lib/flagshipSessionResponseBlocks'
+import { archiveLocalDraftsForModule } from '../../lib/learnerCourseArtifactsLocal'
+import { isWorkspaceTenantId } from '../../persistence/tenantPersistenceMode'
+import { archiveNonAcceptedArtifactsForModule } from '../../services/learning/learnerCourseArtifactsRemote'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { LearnerHelpAssistant } from '../teaching/LearnerHelpAssistant'
 import { FlagshipSessionAssessment } from './flagshipSession/FlagshipSessionAssessment'
+import type { FlagshipSessionResponseContext } from './flagshipSession/flagshipSessionResponseTypes'
 import { FlagshipSessionBlocks } from './flagshipSession/FlagshipSessionBlocks'
 
 function neighborSessions(sessions: FlagshipSession[], current: FlagshipSession): {
@@ -40,11 +46,11 @@ function neighborSessions(sessions: FlagshipSession[], current: FlagshipSession)
 
 export function FlagshipCourseSessionPage() {
   const { slug, sessionId } = useParams<{ slug: string; sessionId: string }>()
-  const { user, supabase, signOut, signOutPending } = useAuth()
+  const { user, supabase, signOut, signOutPending, usesWorkspacePersistence, tenantId } = useAuth()
   const commerce = useLearnerCommerceOptional()
   const course = slug ? getFlagshipCourseBySlug(slug) : undefined
   const curriculum = slug ? getFlagshipCurriculum(slug) : undefined
-  const sessions = curriculum ? buildSessionsForCurriculum(curriculum) : []
+  const sessions = useMemo(() => (curriculum ? buildSessionsForCurriculum(curriculum) : []), [curriculum])
   const flagshipSync = useMemo(
     () => (user && supabase ? { supabase, userId: user.id } : null),
     [user, supabase],
@@ -71,6 +77,64 @@ export function FlagshipCourseSessionPage() {
     if (!sessionId || !slug || !session || !learnerReachable) return
     touchActiveSession(sessionId)
   }, [sessionId, slug, session, learnerReachable, touchActiveSession])
+
+  const canMarkThisChapterComplete = useMemo(() => {
+    if (!session || !curriculum) return false
+    if (progress.completed.has(session.id)) return true
+    const ck = masteryCheckpointCompletionSet(progress.state)
+    const prepOk = capstonePrepAccessible(curriculum, sessions, progress.completed, ck)
+    return forwardProgressionAllowsNewCompletion(
+      progress.completed,
+      session,
+      curriculum,
+      progress.state,
+      prepOk,
+    )
+  }, [session, curriculum, sessions, progress.completed, progress.state])
+
+  const moduleDoneForResponses = useMemo(() => {
+    if (!session || !curriculum) return false
+    return moduleFullyComplete(session.moduleId, sessions, progress.completed, progress.state)
+  }, [session, curriculum, sessions, progress.completed, progress.state])
+
+  const responseContext = useMemo((): FlagshipSessionResponseContext | null => {
+    if (!session || !slug || !curriculum) return null
+    return {
+      courseSlug: slug,
+      moduleId: session.moduleId,
+      sessionId: session.id,
+      userId: user?.id ?? null,
+      supabase,
+      usesWorkspacePersistence,
+      tenantId: tenantId && isWorkspaceTenantId(tenantId) ? tenantId : null,
+      canEdit: Boolean(learnerReachable),
+      moduleFullyComplete: moduleDoneForResponses,
+    }
+  }, [
+    session,
+    slug,
+    curriculum,
+    user?.id,
+    supabase,
+    usesWorkspacePersistence,
+    tenantId,
+    learnerReachable,
+    moduleDoneForResponses,
+  ])
+
+  const archivedModuleRef = useRef<string | null>(null)
+  useEffect(() => {
+    if (!user?.id || !slug || !session || !curriculum || !supabase || !usesWorkspacePersistence) return
+    if (!moduleFullyComplete(session.moduleId, sessions, progress.completed, progress.state)) return
+    const key = `${slug}:${session.moduleId}:archived`
+    if (archivedModuleRef.current === key) return
+    archivedModuleRef.current = key
+    void archiveNonAcceptedArtifactsForModule(supabase, user.id, slug, session.moduleId)
+    const keys = getFlagshipSessionContentBlocks(session, curriculum)
+      .filter(blockAllowsLearnerResponse)
+      .map((b) => b.id)
+    archiveLocalDraftsForModule(user.id, slug, session.id, keys)
+  }, [user?.id, slug, session, curriculum, sessions, supabase, usesWorkspacePersistence, progress.completed, progress.state])
 
   if (!slug || !course || !curriculum || !sessionId) {
     return <Navigate to={LEGAL_ROUTES.learn} replace />
@@ -150,19 +214,6 @@ export function FlagshipCourseSessionPage() {
   const moduleMeta = curriculum.modules.find((m: FlagshipCurriculumModule) => m.id === session.moduleId)
   const showPracticeAssessment = session.type === 'practice' && Boolean(moduleMeta)
   const chapterN = chapterOrdinalInModule(session, sessions)
-
-  const canMarkThisChapterComplete = useMemo(() => {
-    if (done) return true
-    const ck = masteryCheckpointCompletionSet(progress.state)
-    const prepOk = capstonePrepAccessible(curriculum, sessions, progress.completed, ck)
-    return forwardProgressionAllowsNewCompletion(
-      progress.completed,
-      session,
-      curriculum,
-      progress.state,
-      prepOk,
-    )
-  }, [done, session, curriculum, sessions, progress.completed, progress.state])
 
   return (
     <div className="jf-public-surface min-h-screen w-full bg-[var(--jf-bg-page)] text-[color:var(--jf-text)]">
@@ -252,7 +303,11 @@ export function FlagshipCourseSessionPage() {
           </section>
         ) : null}
 
-        <FlagshipSessionBlocks blocks={contentBlocks} />
+        {/*
+          TODO(stricter-gating): optionally require accepted learner artifacts before marking some practice sessions complete.
+          Not enabled here to preserve existing flagship progress + certificate rules.
+        */}
+        <FlagshipSessionBlocks blocks={contentBlocks} responseContext={responseContext} />
 
         {showPracticeAssessment && moduleMeta ? (
           <FlagshipSessionAssessment
@@ -276,7 +331,7 @@ export function FlagshipCourseSessionPage() {
               data-testid="flagship-session-complete-toggle"
               title={
                 !canMarkThisChapterComplete
-                  ? 'Complete earlier chapters in order, or pass the previous module quiz, before marking this chapter complete.'
+                  ? 'Complete earlier sessions in order, or pass the previous module quiz, before marking this chapter complete.'
                   : undefined
               }
             >

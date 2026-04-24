@@ -28,7 +28,7 @@ function lessonBlocks(
     '',
     `Stage lens (${stage}): ${module.summary.trim()}`,
     '',
-    'Instructional standard: prefer claims you can defend with evidence, scenarios, or artifacts—not vibes. When stakes rise, slow down and name your verification standard.',
+    'Instructional standard: prefer claims you can defend with evidence, scenarios, or artifacts. When stakes rise, slow down and name your verification standard.',
   ].join('\n')
 
   const workedNarrative = [
@@ -272,7 +272,7 @@ function capstonePrepBlocks(session: FlagshipSession, curriculum: FlagshipCourse
       body: [
         capstone.description,
         '',
-        'Readiness definition: capstone prep is available after session completion and checkpoint evidence across modules—this session turns artifacts into something reviewable.',
+        'Use this session once your module work and checkpoints are done: align drafts and evidence with the brief below.',
       ].join('\n'),
     },
     {

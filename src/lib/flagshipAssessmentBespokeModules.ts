@@ -90,11 +90,11 @@ const FLAGSHIP_ASSESSMENT_BESPOKE_TRIPLES: Partial<Record<string, Trio>> = {
       'I iterated at least one prompt with saved versions and noted what behavioral change each revision sought.',
     ),
   ],
-  'ae-m09': [
+  'ae-m14': [
     mcq(
-      'What belongs in a serious personal AI playbook?',
-      'Triggers by stakes × reversibility, owners, human gates, fallbacks when tools fail.',
-      'A collection of favorite prompts without consequence mapping.',
+      'What belongs in a serious reusable prompt / operating system pack?',
+      'Triggers by stakes × reversibility, owners, human gates, fallbacks when tools fail—plus version notes and when-not-to-use boundaries.',
+      'A collection of favorite prompts without consequence mapping or ownership.',
     ),
     scen(
       'Judgment call.',
@@ -103,8 +103,8 @@ const FLAGSHIP_ASSESSMENT_BESPOKE_TRIPLES: Partial<Record<string, Trio>> = {
       'Allow it once—exceptions become policy.',
     ),
     refl(
-      'Applied evidence · playbook',
-      'I sketched at least one workflow with trigger → tool/human → fallback and named where accountability stays human.',
+      'Applied evidence · reusable systems',
+      'I catalogued at least three prompt or workflow assets with owners, dependencies, and one explicit when-not-to-use note.',
     ),
   ],
 
@@ -888,19 +888,19 @@ const FLAGSHIP_ASSESSMENT_BESPOKE_MID_TRIPLES: Partial<Record<string, Trio>> = {
   ],
   "ae-m05": [
     mcq(
-      "When is AI-supported practice still authentic learning?",
-      "When outputs are labeled drafts you verify against sources—and forbidden moves stay forbidden.",
-      "When the model writes the submitted exam answer you paste in verbatim.",
+      'What makes prompt iteration defensible to a reviewer?',
+      'Hypothesis per change, saved prompt/output pairs, rubric checks, and rollback when a “better” variant regresses format, safety, or evidence rules.',
+      'Retrying with random wording until the answer feels confident enough.',
     ),
     scen(
-      "Integrity under grading pressure.",
-      "You used AI to draft quiz explanations you truly understand—but a peer argues any AI touch is cheating.",
-      "Show your verification steps and learning artifacts; invite instructor policy clarity.",
-      "Hide AI use entirely—tone matters more than disclosure.",
+      'Regression under deadline.',
+      'Stakeholders prefer v3 tone, but v3 silently drops the citations table the client requires. Ship is tonight.',
+      'Rollback to last known-good prompt spec, isolate which edit caused the regression, fix the contract, re-run checks before ship.',
+      'Ship v3—tone approval means citations are probably fine.',
     ),
     refl(
-      "Applied evidence · cognition",
-      "I separated practice scaffolding from substituted cognition and stated my verification lane.",
+      'Applied evidence · iteration',
+      'I logged at least two prompt versions with what each change targeted, and one rubric row that forced a real rewrite—not cosmetic edits.',
     ),
   ],
   "sw-m02": [
@@ -939,19 +939,172 @@ const FLAGSHIP_ASSESSMENT_BESPOKE_MID_TRIPLES: Partial<Record<string, Trio>> = {
   ],
   "ae-m08": [
     mcq(
-      "Customer PII landed in an unapproved assistant. What is the most defensible first response?",
-      "Stop further submissions; escalate per incident policy; preserve logs; scope exposure.",
-      "Ask the chatbot to delete the conversation and proceed as if risk is gone.",
+      'When is AI-supported study still authentic learning?',
+      'When AI scaffolds retrieval and checks you perform—and forbidden moves (e.g., model-authored submissions) stay forbidden.',
+      'When the model writes the submitted answer you paste verbatim.',
     ),
     scen(
-      "Leak triage.",
-      "Support pastes patient IDs into a public tool; screenshots circulate internally “for speed.”",
-      "Contain spread; notify security lead; classify data; start controlled comms—not casual DMs.",
-      "Delete the chat locally—problem solved if nobody screenshots.",
+      'Integrity under grading pressure.',
+      'You used AI to draft practice explanations you truly understand—but a peer argues any AI touch is cheating.',
+      'Show verification steps and learning artifacts; invite policy clarity; separate tutoring from substitution.',
+      'Hide AI use entirely—tone matters more than disclosure.',
     ),
     refl(
-      "Applied evidence · sensitive data",
-      "I documented one paste/stay-local rule I will enforce under fatigue.",
+      'Applied evidence · learning integrity',
+      'I separated scaffolding from substituted cognition and stated the verification lane I will use before any graded artifact ships.',
+    ),
+  ],
+  "ae-m06": [
+    mcq(
+      'Which habit best protects truth when models sound fluent?',
+      'Claims stay tied to sources; conflicts stay visible; unknowns are labeled—especially under executive pressure for certainty.',
+      'Confidence in tone substitutes for confidence in evidence.',
+    ),
+    scen(
+      'Thin evidence, loud narrative.',
+      'Marketing wants a confident headline; your notes show mixed evidence and missing data.',
+      'Publish limits, conflicts, and the smallest next experiment—avoid false precision.',
+      'Smooth contradictions into a single upbeat takeaway.',
+    ),
+    refl(
+      'Applied evidence · verification',
+      'I preserved provenance on at least one non-obvious claim and logged what would change my mind.',
+    ),
+  ],
+  "ae-m07": [
+    mcq(
+      'Which editorial move is most professional for AI-assisted writing?',
+      'Separate structure, factual review, and tone; keep contested facts tied to citations or explicit gaps.',
+      'Polish wording until it reads well while skipping factual traceability.',
+    ),
+    scen(
+      'Stakeholder loves the draft.',
+      'The brief cites no sources; release is tomorrow.',
+      'Escalate thin evidence—qualify claims, refuse invented citations, propose review gates.',
+      'Ship fast—tone matters more than traceability.',
+    ),
+    refl(
+      'Applied evidence · writing lane',
+      'I edited one AI draft with inline verification questions—not cosmetic fixes only.',
+    ),
+  ],
+  "ae-m09": [
+    mcq(
+      'Which stance best matches responsible operational AI use?',
+      'Disclosure, proportionate review, refusal boundaries, and named human owners for escalation—not “move fast and assume the model checked.”',
+      'If the tool has an enterprise badge, accountability transfers to the vendor.',
+    ),
+    scen(
+      'Shadow tool adoption.',
+      'A team ships customer summaries from an unapproved assistant to meet SLAs.',
+      'Stop the flow; restore approved paths; document incident; reinstate review owners.',
+      'Allow it until someone complains—velocity proves value.',
+    ),
+    refl(
+      'Applied evidence · responsibility',
+      'I wrote one responsible-use rule I will enforce when tired—and the escalation path if I cannot.',
+    ),
+  ],
+  "ae-m10": [
+    mcq(
+      'What makes research synthesis executive-ready?',
+      'Claims trace to sources; conflicts stay visible; recommendations match evidence strength.',
+      'Confidence in tone substitutes for confidence in data.',
+    ),
+    scen(
+      'Evidence conflict.',
+      'Two studies disagree on uplift; exec wants a single recommendation today.',
+      'Summarize disagreement, stakes of wrong choice, cheapest next experiment—avoid false precision.',
+      'Average the percentages and pick the midpoint.',
+    ),
+    refl(
+      'Applied evidence · synthesis',
+      'My evidence table distinguishes claim strength and notes at least one unresolved conflict explicitly.',
+    ),
+  ],
+  "ae-m11": [
+    mcq(
+      'What belongs in a workflow diagram before you attach AI?',
+      'Triggers, owners, human gates, fallbacks, and where prompts attach—not only happy-path steps.',
+      'A linear list of tasks that assumes tools never fail.',
+    ),
+    scen(
+      'Ops overload.',
+      'Tickets back up; someone proposes skipping the human checkpoint “just this week.”',
+      'Restore the gate; measure misroutes; treat bypass as a defect with an owner.',
+      'Allow bypass until CSAT recovers.',
+    ),
+    refl(
+      'Applied evidence · workflows',
+      'I drew one workflow with a named human gate and one fallback a tired teammate could still execute.',
+    ),
+  ],
+  "ae-m12": [
+    mcq(
+      'Which decision memo habit is most mature?',
+      'Explicit assumptions, tradeoffs, falsifiers, and next information buys—authorship stays with the human decision owner.',
+      'Let the model pick the recommendation; you polish the wording.',
+    ),
+    scen(
+      'Executive wants a call today.',
+      'Your memo shows conflicting scenarios; leadership wants one clear answer.',
+      'Name what you know vs infer; propose decisions under uncertainty with logged risks.',
+      'Pick the most optimistic scenario so the meeting ends quickly.',
+    ),
+    refl(
+      'Applied evidence · decisions',
+      'I stated one assumption that would flip my recommendation if proven false.',
+    ),
+  ],
+  "ae-m13": [
+    mcq(
+      'What fixes silent drift in team AI use?',
+      'Shared review standards, labeled outputs, catalog owners, and explicit escalation—not informal chats as the system of record.',
+      'More model access so people stop using shadow tools.',
+    ),
+    scen(
+      'Two teams, two prompt packs.',
+      'Customer-facing answers diverge; nobody knows which template is canonical.',
+      'Freeze changes; assign owner; unify template; document migration and test notes.',
+      'Let teams choose—diversity of prompts is healthy.',
+    ),
+    refl(
+      'Applied evidence · team norms',
+      'I proposed one review ritual or RACI line that makes AI assistance legible to the next shift.',
+    ),
+  ],
+  "ae-m15": [
+    mcq(
+      'Customer PII landed in an unapproved assistant. What is the most defensible first response?',
+      'Stop further submissions; escalate per incident policy; preserve logs; scope exposure.',
+      'Ask the chatbot to delete the conversation and proceed as if risk is gone.',
+    ),
+    scen(
+      'Leak triage.',
+      'Support pastes patient IDs into a public tool; screenshots circulate internally “for speed.”',
+      'Contain spread; notify security lead; classify data; start controlled comms—not casual DMs.',
+      'Delete the chat locally—problem solved if nobody screenshots.',
+    ),
+    refl(
+      'Applied evidence · sensitive data',
+      'I documented one paste/stay-local rule I will enforce under fatigue.',
+    ),
+  ],
+  "ae-m16": [
+    mcq(
+      'Which portfolio stance matches certificate-ready work?',
+      'Artifacts show process, verification, and accountability—not polished outputs with hidden AI dependence.',
+      'If it looks finished, reviewers should not ask how it was made.',
+    ),
+    scen(
+      'Final review pressure.',
+      'A mentor finds a thin evidence section hours before submission.',
+      'Flag the gap honestly; tighten or scope the claim; document what you would verify next.',
+      'Ask AI to invent supporting citations so the section looks complete.',
+    ),
+    refl(
+      'Applied evidence · portfolio',
+      'I mapped each capstone deliverable to evidence I can show and named the weakest section I still need to strengthen.',
     ),
   ],
   "sw-m05": [

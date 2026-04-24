@@ -1,5 +1,8 @@
 import type { FlagshipSessionContentBlock } from '../../../data/learning/flagshipSessionContentTypes'
+import { blockAllowsLearnerResponse, learnerFriendlyBlockEyebrow } from '../../../lib/flagshipSessionResponseBlocks'
 import { flagshipBlockAccentClass, flagshipBlockEyebrowLabel } from './flagshipSessionBlockUi'
+import { FlagshipLearnerResponsePanel } from './FlagshipLearnerResponsePanel'
+import type { FlagshipSessionResponseContext } from './flagshipSessionResponseTypes'
 
 function ProseParagraphs({ text }: { text: string }) {
   const parts = text.split(/\n\n+/).filter(Boolean)
@@ -14,11 +17,15 @@ function ProseParagraphs({ text }: { text: string }) {
   )
 }
 
-export function FlagshipSessionBlock(props: { block: FlagshipSessionContentBlock }) {
-  const { block } = props
+export function FlagshipSessionBlock(props: {
+  block: FlagshipSessionContentBlock
+  responseContext?: FlagshipSessionResponseContext | null
+}) {
+  const { block, responseContext } = props
   const accent = flagshipBlockAccentClass(block.type)
   const typeLabel = flagshipBlockEyebrowLabel(block.type)
-  const eyebrow = block.eyebrow ?? typeLabel
+  const friendlyEyebrow = learnerFriendlyBlockEyebrow(block)
+  const eyebrow = friendlyEyebrow ?? block.eyebrow ?? typeLabel
 
   return (
     <article
@@ -49,7 +56,9 @@ export function FlagshipSessionBlock(props: { block: FlagshipSessionContentBlock
 
         {block.prompt ? (
           <div className="rounded-xl border border-white/[0.06] bg-[color:var(--jf-bg-page)]/90 px-4 py-4">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-subtle)]">Prompt</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-subtle)]">
+              {block.type === 'output_prompt' ? 'Your prompt' : 'Prompt'}
+            </p>
             <pre className="mt-3 whitespace-pre-wrap font-sans text-[14px] leading-relaxed text-[color:var(--jf-text)]">{block.prompt}</pre>
           </div>
         ) : null}
@@ -66,6 +75,10 @@ export function FlagshipSessionBlock(props: { block: FlagshipSessionContentBlock
             <span className="font-medium text-[color:var(--jf-muted)]">Done means: </span>
             {block.outputExpectation}
           </p>
+        ) : null}
+
+        {blockAllowsLearnerResponse(block) && responseContext ? (
+          <FlagshipLearnerResponsePanel block={block} ctx={responseContext} />
         ) : null}
       </div>
     </article>

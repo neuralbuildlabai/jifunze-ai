@@ -83,7 +83,7 @@ function sessionEffortLabel(type: FlagshipSessionType, stage: FlagshipDepthStage
     case 'practice':
       return `Self-paced · ${tier} · practice block`
     case 'revision':
-      return `Self-paced · ${tier} · revision gate`
+      return `Self-paced · ${tier} · review step`
     case 'recap':
       return `Self-paced · ${tier} · consolidation`
     case 'reflection':
@@ -302,6 +302,12 @@ export function chapterOrdinalInModule(session: FlagshipSession, sessions: Flags
 
 export function getSessionById(sessions: FlagshipSession[], id: string): FlagshipSession | undefined {
   return sessions.find((s) => s.id === id)
+}
+
+/** First session in course order — stable “Start course” target when the path is empty or not started. */
+export function firstSessionInCourseOrder(sessions: FlagshipSession[]): FlagshipSession | undefined {
+  if (sessions.length === 0) return undefined
+  return [...sessions].sort((a, b) => a.orderInCourse - b.orderInCourse)[0]
 }
 
 /** Non-capstone sessions that must be complete before capstone prep is “unlocked” */
