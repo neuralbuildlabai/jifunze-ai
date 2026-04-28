@@ -106,6 +106,28 @@ export async function upsertFlagshipProgress(
 }
 
 /** Recent rows for workspace “continue learning” — caller filters to curricula with sessions. */
+/** One round-trip for pathway / dashboard surfaces that need specific course slugs only. */
+export async function fetchFlagshipProgressRowsForSlugs(
+  supabase: SupabaseClient,
+  userId: string,
+  courseSlugs: string[],
+): Promise<FlagshipCourseProgressRow[]> {
+  const unique = [...new Set(courseSlugs.filter(Boolean))]
+  if (!unique.length) return []
+
+  const { data, error } = await supabase
+    .from('flagship_course_progress')
+    .select('*')
+    .eq('user_id', userId)
+    .in('course_slug', unique)
+
+  if (error) {
+    console.error('[flagship sync] list by slugs failed', error.message)
+    throw error
+  }
+  return (data ?? []) as FlagshipCourseProgressRow[]
+}
+
 export async function fetchFlagshipProgressRowsForUser(
   supabase: SupabaseClient,
   userId: string,

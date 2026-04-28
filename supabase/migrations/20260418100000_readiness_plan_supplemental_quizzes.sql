@@ -1,6 +1,9 @@
 -- Part 14: plan-level recap / mixed-review / exam-practice quizzes + broader quiz_kind vocabulary.
 
 alter table public.training_quizzes
+  add column if not exists quiz_kind text not null default 'module_checkpoint';
+
+alter table public.training_quizzes
   drop constraint if exists training_quizzes_quiz_kind_check;
 
 alter table public.training_quizzes

@@ -26,17 +26,19 @@ export function TeamAssignmentsPage() {
         <p className="mt-3 max-w-xl text-[11px] leading-relaxed text-zinc-600" data-testid="team-assignments-trust">
           {TRUST_COPY.teamAssignmentsBoundary}
         </p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          <Link
-            to="/team/members"
-            className="rounded-lg border border-zinc-600 bg-zinc-800/80 px-3 py-1.5 text-xs text-zinc-200 hover:bg-zinc-800"
-          >
-            Members
-          </Link>
-          <Link to="/training" className="rounded-lg border border-zinc-600 bg-zinc-800/80 px-3 py-1.5 text-xs text-zinc-200 hover:bg-zinc-800">
-            Training
-          </Link>
-        </div>
+        {isManager ? (
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Link
+              to="/team/members"
+              className="rounded-lg border border-zinc-600 bg-zinc-800/80 px-3 py-1.5 text-xs text-zinc-200 hover:bg-zinc-800"
+            >
+              Members
+            </Link>
+            <Link to="/training" className="rounded-lg border border-zinc-600 bg-zinc-800/80 px-3 py-1.5 text-xs text-zinc-200 hover:bg-zinc-800">
+              Training
+            </Link>
+          </div>
+        ) : null}
       </header>
 
       {isSupabaseConfigured() && !workspaceShellReady ? (

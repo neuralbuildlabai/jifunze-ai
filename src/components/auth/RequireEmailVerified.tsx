@@ -1,6 +1,7 @@
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../../auth/AuthContext'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
+import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { EmailVerificationGate } from './EmailVerificationGate'
 
 /**
@@ -10,6 +11,7 @@ import { EmailVerificationGate } from './EmailVerificationGate'
  */
 export function RequireEmailVerified() {
   const { user, emailVerified, loading } = useAuth()
+  const location = useLocation()
 
   if (!isSupabaseConfigured()) {
     return <Outlet />
@@ -24,7 +26,8 @@ export function RequireEmailVerified() {
   }
 
   if (!user) {
-    return <Navigate to="/?auth=signin#auth" replace />
+    const returnUrl = encodeURIComponent(`${location.pathname}${location.search}`)
+    return <Navigate to={`${LEGAL_ROUTES.authSignIn}?returnUrl=${returnUrl}`} replace />
   }
 
   if (!emailVerified) {

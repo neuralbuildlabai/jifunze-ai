@@ -4,6 +4,7 @@
  */
 
 import type { FlagshipSessionContentBlock } from './flagshipSessionContentTypes'
+import { FLAGSHIP_SESSION_CONTENT_OVERRIDES_AI_ESSENTIALS_LESSONS } from './flagshipSessionContentOverridesAiEssentialsLessons'
 import { FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION } from './flagshipSessionContentOverridesCompletion'
 import { FLAGSHIP_SESSION_CONTENT_OVERRIDES_MIDCOURSE } from './flagshipSessionContentOverridesMidCourse'
 import { FLAGSHIP_SESSION_CONTENT_OVERRIDES_SCHOOLS134 } from './flagshipSessionContentOverridesSchools134'
@@ -818,6 +819,9 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES: Partial<Record<string, Flagship
       body: 'Practice: map three audiences for a live initiative and adjust one outline section per audience tier.',
     },
   ],
+
+  // AI Essentials (Course 1) — deep lesson teaching blocks; wins over Schools134, MidCourse, and completion for these keys.
+  ...FLAGSHIP_SESSION_CONTENT_OVERRIDES_AI_ESSENTIALS_LESSONS,
 }
 
 export function flagshipSessionContentOverrideKey(courseSlug: string, sessionId: string): string {

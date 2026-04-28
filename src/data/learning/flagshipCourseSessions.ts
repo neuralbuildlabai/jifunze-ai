@@ -132,7 +132,7 @@ function practiceSummary(module: FlagshipCurriculumModule): string {
 }
 
 function revisionTitle(module: FlagshipCurriculumModule): string {
-  return `Revision gate · ${module.title}`
+  return `Revision checkpoint: ${module.title}`
 }
 
 function revisionSummary(module: FlagshipCurriculumModule): string {

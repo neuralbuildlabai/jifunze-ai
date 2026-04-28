@@ -1,10 +1,11 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { TrustLegalFooterLinks } from './TrustLegalFooterLinks'
 import { authFailureMessage } from '../auth/authErrorMessage'
 import { useAuth } from '../auth/AuthContext'
 import { isSupabaseConfigured } from '../config/supabaseEnv'
 import { passwordPolicyErrorMessage, passwordPolicyHint } from '../auth/passwordPolicy'
+import { safeReturnUrl } from '../lib/safeReturnUrl'
 import { LEGAL_ROUTES, TRUST_COPY } from '../training/trustCopy'
 
 type AuthFormProps = {
@@ -16,6 +17,7 @@ type AuthFormProps = {
 export function AuthForm({ initialMode = 'signin', appearance = 'default' }: AuthFormProps) {
   const { signIn, signUp, error, authInfo, clearAuthMessages, supabase } = useAuth()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [mode, setMode] = useState<'signin' | 'signup'>(initialMode)
@@ -53,15 +55,16 @@ export function AuthForm({ initialMode = 'signin', appearance = 'default' }: Aut
     }
     setBusy(true)
     try {
+      const postAuth = safeReturnUrl(searchParams.get('returnUrl')) ?? '/dashboard'
       if (mode === 'signin') {
         await signIn(email, password)
-        navigate('/dashboard', { replace: true })
+        navigate(postAuth, { replace: true })
       } else {
         await signUp(email, password)
         if (supabase) {
           const { data } = await supabase.auth.getSession()
           if (data.session?.user) {
-            navigate('/dashboard', { replace: true })
+            navigate(postAuth, { replace: true })
           }
         }
       }

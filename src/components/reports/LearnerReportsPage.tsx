@@ -7,6 +7,10 @@ import {
   FLAGSHIP_SCHOOLS,
   getFlagshipCourseBySlug,
 } from '../../data/learning/flagshipCoursesCatalog'
+import {
+  canLearnerSelectPathwayAsPrimary,
+  getPathwayBySlug,
+} from '../../data/learning/employablePathwaysCatalog'
 import { getFlagshipCurriculum } from '../../data/learning/flagshipCourseCurricula'
 import { buildSessionsForCurriculum } from '../../data/learning/flagshipCourseSessions'
 import {
@@ -16,15 +20,17 @@ import {
   masteryCheckpointCompletionSet,
   modulesCompletedCount,
   moduleQuizPassed,
-  reconcileFlagshipProgressState,
   type FlagshipCourseProgressState,
 } from '../../lib/flagshipCourseProgressDerived'
-import { mergeFlagshipProgressStates } from '../../lib/flagshipCourseProgressMerge'
-import { listLocalFlagshipCourseSlugs, loadFlagshipCourseProgress } from '../../lib/flagshipCourseLocalProgress'
+import { getPathwayNextAction, getPathwayProgressSummary } from '../../lib/pathwayNextAction'
+import { isFlagshipCoursePublished } from '../../lib/pathwayProgressDerived'
+import { mergeLocalRemoteReconciledForSlug } from '../../lib/flagshipCourseProgressLocalRemoteMerge'
+import { listLocalFlagshipCourseSlugs } from '../../lib/flagshipCourseLocalProgress'
 import {
   fetchFlagshipProgressRowsForUser,
   flagshipProgressRowToState,
 } from '../../services/learning/flagshipCourseProgressRemote'
+import { useSelectedPathway } from '../../hooks/useSelectedPathway'
 import { WorkspaceNav } from '../workspace/WorkspaceNav'
 import { WorkspaceRouteReady, WorkspaceRouteShell } from '../workspace/WorkspaceRouteReady'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
@@ -44,22 +50,20 @@ type CourseReportRow = {
   nextHref: string | null
 }
 
-function mergeProgressForSlug(
-  slug: string,
-  remoteState: FlagshipCourseProgressState | null,
-): FlagshipCourseProgressState {
-  const local = loadFlagshipCourseProgress(slug)
-  const mergedRaw = mergeFlagshipProgressStates(local, remoteState)
-  const curriculum = getFlagshipCurriculum(slug)
-  const sessions = curriculum ? buildSessionsForCurriculum(curriculum) : []
-  if (!curriculum || sessions.length === 0) return mergedRaw
-  return reconcileFlagshipProgressState(mergedRaw, curriculum, sessions)
+type SelectedPathwayReportHint = {
+  slug: string
+  title: string
+  progressPct: number
+  nextSummary: string
+  nextHref: string | null
 }
 
 export function LearnerReportsPage() {
   const { user, supabase } = useAuth()
+  const { selectedPathwaySlug } = useSelectedPathway()
   const [rows, setRows] = useState<CourseReportRow[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedPathwayHint, setSelectedPathwayHint] = useState<SelectedPathwayReportHint | null>(null)
 
   const slugsToConsider = useMemo(() => {
     const fromCatalog = new Set(FLAGSHIP_COURSES.map((c) => c.slug))
@@ -86,13 +90,16 @@ export function LearnerReportsPage() {
       }
       if (cancelled) return
 
+      /** Same “hydrated” rule as pathways: only merge server rows when signed in with Supabase. */
+      const applyRemote = Boolean(user && supabase && isSupabaseConfigured())
+
       const out: CourseReportRow[] = []
       for (const slug of slugsToConsider) {
         const course = getFlagshipCourseBySlug(slug)
         const curriculum = getFlagshipCurriculum(slug)
         if (!course || !curriculum) continue
 
-        const state = mergeProgressForSlug(slug, remoteBySlug.get(slug) ?? null)
+        const state = mergeLocalRemoteReconciledForSlug(slug, remoteBySlug.get(slug) ?? null, applyRemote)
         const sessions = buildSessionsForCurriculum(curriculum)
         const completed = completionSet(state)
         const ck = masteryCheckpointCompletionSet(state)
@@ -131,21 +138,69 @@ export function LearnerReportsPage() {
         return a.title.localeCompare(b.title)
       })
 
+      let pathwayHint: SelectedPathwayReportHint | null = null
+      if (selectedPathwaySlug && user && supabase && isSupabaseConfigured()) {
+        const pathway = getPathwayBySlug(selectedPathwaySlug)
+        if (pathway && canLearnerSelectPathwayAsPrimary(pathway)) {
+          const progressMap: Record<string, FlagshipCourseProgressState> = {}
+          for (const slug of pathway.includedCourseSlugs) {
+            if (!isFlagshipCoursePublished(slug)) continue
+            progressMap[slug] = mergeLocalRemoteReconciledForSlug(slug, remoteBySlug.get(slug) ?? null, applyRemote)
+          }
+          const summary = getPathwayProgressSummary(pathway, progressMap)
+          const na = getPathwayNextAction(pathway, progressMap)
+          const nextHref =
+            na.kind === 'planned_only' ? na.hrefExplore : 'href' in na && typeof na.href === 'string' ? na.href : null
+          pathwayHint = {
+            slug: pathway.slug,
+            title: pathway.shortTitle,
+            progressPct: summary.pathwaySessionProgressPercent,
+            nextSummary: summary.recommendedNextActionLabel,
+            nextHref,
+          }
+        }
+      }
+
       setRows(out)
+      setSelectedPathwayHint(pathwayHint)
       setLoading(false)
     })()
     return () => {
       cancelled = true
     }
-  }, [user, supabase, slugsToConsider])
+  }, [user, supabase, slugsToConsider, selectedPathwaySlug])
 
   return (
     <WorkspaceRouteReady>
       <WorkspaceRouteShell
         title="Reports"
-        subtitle="Your flagship progress: chapters completed, module quizzes, and where to resume."
+        subtitle="Flagship progress aligned with pathways: chapters, module quizzes, and resume—merged the same way as pathway views when you are signed in."
       >
         <WorkspaceNav className="mb-8 w-full justify-start" />
+
+        {!loading && selectedPathwayHint ? (
+          <div
+            className="mb-6 rounded-xl border border-violet-500/20 bg-violet-950/15 px-4 py-3 text-[13px] text-zinc-300"
+            data-testid="reports-selected-pathway-summary"
+          >
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-violet-300/90">Your pathway</p>
+            <p className="mt-1 font-medium text-zinc-100">{selectedPathwayHint.title}</p>
+            <p className="mt-1 text-[12px] text-zinc-400">
+              Session progress (included courses):{' '}
+              <span className="tabular-nums text-zinc-200">{selectedPathwayHint.progressPct}%</span>
+              <span className="mx-1.5 text-zinc-600">·</span>
+              Next: {selectedPathwayHint.nextSummary}
+            </p>
+            <Link className="mt-2 inline-block text-[12px] font-semibold text-violet-200 hover:underline" to={`/paths/${selectedPathwayHint.slug}`}>
+              Open pathway overview →
+            </Link>
+            {selectedPathwayHint.nextHref ? (
+              <Link className="ml-3 inline-block text-[12px] font-medium text-zinc-500 hover:text-zinc-300 hover:underline" to={selectedPathwayHint.nextHref}>
+                Go to next step →
+              </Link>
+            ) : null}
+          </div>
+        ) : null}
 
         {loading ? (
           <p className="text-sm text-zinc-400">Loading your progress…</p>
@@ -207,7 +262,8 @@ export function LearnerReportsPage() {
         )}
 
         <p className="mt-8 text-[11px] leading-relaxed text-zinc-600">
-          Workspace training assignments from your admin appear under My Learning when your organization assigns plans.
+          Percentages and resume links use the same local + account merge as employable pathways—use them to spot revision gaps, not as a job promise. Workspace
+          training assignments from your admin appear under My Learning when your organization assigns plans.
         </p>
       </WorkspaceRouteShell>
     </WorkspaceRouteReady>

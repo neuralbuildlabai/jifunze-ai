@@ -53,6 +53,12 @@ export function LearningDiscoveryHubPage() {
           <div className="flex flex-wrap items-center gap-3">
             <Link
               className="text-xs font-medium text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)]"
+              to={LEGAL_ROUTES.paths}
+            >
+              Pathways
+            </Link>
+            <Link
+              className="text-xs font-medium text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)]"
               to="/generate"
             >
               Try generation

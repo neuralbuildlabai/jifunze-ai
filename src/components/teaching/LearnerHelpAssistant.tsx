@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { answerLearnerHelpQuestion } from '../../lib/learnerHelpEngine'
 import { useLearnerCommerceOptional } from '../../learner/LearnerCommerceContext'
@@ -47,14 +47,6 @@ export function LearnerHelpAssistant({ currentLessonSlug, labId, className }: Le
     )
   }
 
-  useEffect(() => {
-    if (!query.trim()) {
-      setActiveAnswer(
-        answerLearnerHelpQuestion({ query: '', currentLessonSlug, labId, ...flagshipCtx, flagshipCourseAccess }),
-      )
-    }
-  }, [location.pathname, currentLessonSlug, labId, flagshipCtx, flagshipCourseAccess, query])
-
   const panel = (
     <div
       className={
@@ -85,7 +77,21 @@ export function LearnerHelpAssistant({ currentLessonSlug, labId, className }: Le
         <textarea
           id="learner-help-input"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            const v = e.target.value
+            setQuery(v)
+            if (!v.trim()) {
+              setActiveAnswer(
+                answerLearnerHelpQuestion({
+                  query: '',
+                  currentLessonSlug,
+                  labId,
+                  ...flagshipCtx,
+                  flagshipCourseAccess,
+                }),
+              )
+            }
+          }}
           rows={3}
           className="w-full resize-none rounded-xl border border-white/[0.08] bg-black/25 px-3 py-2 text-[13px] leading-relaxed text-zinc-100 placeholder:text-zinc-600 focus:border-violet-400/35 focus:outline-none focus:ring-2 focus:ring-violet-400/25"
           placeholder="e.g. Where is this concept explained? What should I review next?"

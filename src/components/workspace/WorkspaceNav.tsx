@@ -19,6 +19,9 @@ function OperationalAdminNav() {
       <NavLink to={LEGAL_ROUTES.learn} className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
         Courses
       </NavLink>
+      <NavLink to={LEGAL_ROUTES.paths} className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
+        Pathways
+      </NavLink>
       <NavLink to="/team/assignments" className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
         Assignments
       </NavLink>
@@ -57,6 +60,9 @@ function SuperAdminNav() {
       </NavLink>
       <NavLink to={LEGAL_ROUTES.learn} className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
         Catalog
+      </NavLink>
+      <NavLink to={LEGAL_ROUTES.paths} className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
+        Pathways
       </NavLink>
       <NavLink
         to={LEGAL_ROUTES.workspaceSubscription}
@@ -99,6 +105,9 @@ export function WorkspaceNav({ className = '' }: { className?: string }) {
           </NavLink>
           <NavLink to={LEGAL_ROUTES.learn} className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
             Discover
+          </NavLink>
+          <NavLink to={LEGAL_ROUTES.paths} className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
+            Pathways
           </NavLink>
           <NavLink to="/my-learning" className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
             My Learning

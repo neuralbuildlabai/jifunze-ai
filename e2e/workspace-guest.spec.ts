@@ -33,7 +33,7 @@ test.describe('Workspace routes (demo / no Supabase env)', () => {
 
   test('training route loads (demo guest)', async ({ page }) => {
     await page.goto('/training')
-    await expect(page.getByRole('heading', { name: /my training plans/i })).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: /plans.*cohort/i })).toBeVisible({ timeout: 15_000 })
   })
 
   test('team members route loads (demo guest)', async ({ page }) => {

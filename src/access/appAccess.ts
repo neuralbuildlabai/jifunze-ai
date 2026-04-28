@@ -98,7 +98,8 @@ export function canAccessPlatformSurface(tier: AccessTier): boolean {
 }
 
 /** Tenant identifiers are never shown in standard product UI — reserved for internal tools only. */
-export function canSeeTenantMetadata(_tier: AccessTier): boolean {
+export function canSeeTenantMetadata(tier: AccessTier): boolean {
+  void tier
   return false
 }
 

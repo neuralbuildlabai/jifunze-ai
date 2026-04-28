@@ -78,7 +78,7 @@ export function AccessTierProvider({ children }: { children: ReactNode }) {
       setTier(effectiveAccessTierAfterRpc(email, next))
     }
     setTierLoading(false)
-  }, [user, supabase, emailVerified, workspaceShellReady, rpcTenantId, applyFallbackTier])
+  }, [user, supabase, email, emailVerified, workspaceShellReady, rpcTenantId, applyFallbackTier])
 
   useEffect(() => {
     startTransition(() => {

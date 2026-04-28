@@ -13,6 +13,9 @@ export function PublicPricingPage() {
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
           <JifunzeBrandLogo to="/" size="sm" variant="compact" surface="dark" />
           <div className="flex flex-wrap items-center gap-4 text-[13px] font-medium">
+            <Link className="text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)]" to={LEGAL_ROUTES.paths}>
+              Pathways
+            </Link>
             <Link className="text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)]" to="/generate">
               Try preview
             </Link>
@@ -30,7 +33,8 @@ export function PublicPricingPage() {
             Choose your plan
           </h1>
           <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--jf-muted)]">
-            Three straightforward options — monthly, annual, or a one-time single course.
+            Three straightforward options—monthly, annual, or a one-time single course. All-access unlocks the flagship library behind employable pathways;
+            certificate readiness still follows each course&apos;s in-app rules (no external accreditation claim here).
           </p>
         </div>
 

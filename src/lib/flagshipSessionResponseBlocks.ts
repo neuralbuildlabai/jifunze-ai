@@ -1,5 +1,4 @@
-import type { FlagshipSessionBlockType } from '../data/learning/flagshipSessionContentTypes'
-import type { FlagshipSessionContentBlock } from '../data/learning/flagshipSessionContentTypes'
+import type { FlagshipSessionBlockType, FlagshipSessionContentBlock } from '../data/learning/flagshipSessionContentTypes'
 
 const RESPONSE_BLOCK_TYPES: ReadonlySet<FlagshipSessionBlockType> = new Set([
   'practice_task',
@@ -29,6 +28,19 @@ export function blockSuggestsPortfolioEvidence(block: FlagshipSessionContentBloc
   return PORTFOLIO_KEYWORD_RE.test(hay)
 }
 
+const LEARNER_FACING_TYPE_EYEBROW: Record<FlagshipSessionBlockType, string> = {
+  intro: 'Lesson',
+  concept_explanation: 'Key idea',
+  key_points: 'Key concepts',
+  worked_example: 'Worked example',
+  practice_task: 'Practice',
+  reflection_prompt: 'Reflection',
+  output_prompt: 'Practice',
+  recap: 'Review checkpoint',
+  takeaway: 'What sticks',
+  next_step: 'Next step',
+}
+
 /**
  * Friendlier on-card label than raw eyebrow strings like “Structured gate”.
  */
@@ -36,11 +48,21 @@ export function learnerFriendlyBlockEyebrow(block: FlagshipSessionContentBlock):
   const e = block.eyebrow ?? ''
   const t = block.title ?? ''
   const hay = `${e} ${t}`
-  if (/structured\s*gate/i.test(hay)) return 'Practice response'
-  if (/structured\s*check/i.test(hay)) return 'Practice check'
-  if (/quality\s*gate/i.test(hay)) return 'Readiness check'
+  if (/structured\s*gate/i.test(hay)) return 'Practice'
+  if (/structured\s*check/i.test(hay)) return 'Evidence check'
+  if (/revision\s*gate/i.test(hay)) return 'Review checkpoint'
+  if (/quality\s*gate/i.test(hay)) return 'Review checkpoint'
   if (/evidence/i.test(hay) && /check|table|draft/i.test(hay)) return 'Evidence check'
   return undefined
+}
+
+/** Learner-facing eyebrow: keyword overrides, authored eyebrow when set, else block type defaults. */
+export function getLearnerFacingEyebrow(block: FlagshipSessionContentBlock): string {
+  const fromKeywords = learnerFriendlyBlockEyebrow(block)
+  if (fromKeywords) return fromKeywords
+  const authored = block.eyebrow?.trim()
+  if (authored) return authored
+  return LEARNER_FACING_TYPE_EYEBROW[block.type] ?? 'Lesson'
 }
 
 export function inferArtifactType(block: FlagshipSessionContentBlock): string {

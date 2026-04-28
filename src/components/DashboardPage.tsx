@@ -6,6 +6,7 @@ import { useAuth } from '../auth/AuthContext'
 import { isSupabaseConfigured } from '../config/supabaseEnv'
 import { DashboardTeamAssignmentsWidget } from './team/DashboardTeamAssignmentsWidget'
 import { DashboardTrainingWidget } from './training/DashboardTrainingWidget'
+import { DashboardPathwaysPanel } from './DashboardPathwaysPanel'
 const cardClass =
   'rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 shadow-[0_12px_40px_rgba(0,0,0,0.2)] ring-1 ring-white/[0.04]'
 
@@ -91,6 +92,7 @@ export function DashboardPage() {
         <div className="sm:col-span-2">
           <DashboardTeamAssignmentsWidget />
         </div>
+        {navVariant === 'learner' ? <DashboardPathwaysPanel /> : null}
         <section className={navVariant === 'learner' ? `${cardClass} sm:col-span-2` : cardClass}>
           <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Account</h2>
           <p className="mt-2 text-sm text-zinc-200">{email}</p>
@@ -125,6 +127,10 @@ export function DashboardPage() {
               <Link to="/reports" className={linkTileClass}>
                 <span className="text-sm font-medium text-zinc-100">Reports</span>
                 <span className="text-[11px] text-zinc-500">Progress and chapter status</span>
+              </Link>
+              <Link to={LEGAL_ROUTES.paths} className={linkTileClass}>
+                <span className="text-sm font-medium text-zinc-100">Pathways</span>
+                <span className="text-[11px] text-zinc-500">Employability tracks</span>
               </Link>
               <Link to={LEGAL_ROUTES.learn} className={linkTileClass}>
                 <span className="text-sm font-medium text-zinc-100">Discover</span>

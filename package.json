@@ -18,6 +18,7 @@
     "uat:live": "npm run uat:provision && npm run test:e2e:live-uat",
     "verify:training-schema": "node scripts/print-training-schema.mjs",
     "verify:flagship-merge": "tsx scripts/verify-flagship-merge.ts",
+    "verify:pathway-remote-merge": "tsx scripts/verify-pathway-remote-merge.ts",
     "verify:readiness-adaptive": "tsx scripts/verify-readiness-adaptive.ts",
     "validate:training": "tsx scripts/validate-training-artifacts.ts",
     "audit:flagship-depth": "tsx scripts/audit-flagship-override-depth.ts",

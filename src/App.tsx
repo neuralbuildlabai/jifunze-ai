@@ -91,6 +91,10 @@ import type { EnvCheckResult } from './lib/envCheck'
 import { PUBLIC_AI_FOUNDATIONS_BASE_PATH } from './data/publicStarterLibraries/aiFoundations'
 import { LEGAL_ROUTES } from './training/trustCopy'
 import { MaintenancePublicGate } from './components/maintenance/MaintenancePublicGate'
+import { EmployablePathwaysPage } from './components/pathways/EmployablePathwaysPage'
+import { PathwayDetailPage } from './components/pathways/PathwayDetailPage'
+import { EmployablePathwaysHomeSection } from './components/pathways/EmployablePathwaysHomeSection'
+import { NotFoundPage } from './components/NotFoundPage'
 
 function RedirectLegacyLibrariesAiFoundationsToCanonical() {
   return <Navigate to={PUBLIC_AI_FOUNDATIONS_BASE_PATH} replace />
@@ -139,6 +143,13 @@ function HomeEntryPage() {
           </div>
           <nav className="flex flex-wrap items-center justify-end gap-1 sm:gap-2">
             <Link
+              to={LEGAL_ROUTES.paths}
+              className="rounded-full px-3 py-2 text-xs font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:bg-white/[0.06] hover:text-[color:var(--jf-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+              data-testid="home-nav-pathways"
+            >
+              Pathways
+            </Link>
+            <Link
               to={LEGAL_ROUTES.learn}
               className="rounded-full px-3 py-2 text-xs font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:bg-white/[0.06] hover:text-[color:var(--jf-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
               data-testid="home-nav-courses"
@@ -180,29 +191,42 @@ function HomeEntryPage() {
           <div className="relative z-10 mx-auto max-w-4xl pt-2 text-center lg:max-w-5xl lg:text-left">
             <div className="mx-auto max-w-3xl space-y-5 lg:mx-0 sm:space-y-6">
               <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-[color:var(--jf-muted)] sm:text-[14px]">
-                Jifunze · premium learning paths
+                Jifunze · employability pathways
               </p>
               <h1 className="text-[1.9rem] font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-[2.25rem] sm:leading-[1.15] lg:text-[2.5rem] lg:leading-[1.1]">
-                Deep learning paths for real growth
+                Learn skills. Build proof. Become employable.
               </h1>
               <p className="text-[15px] leading-[1.65] text-[color:var(--jf-muted)] sm:text-[17px] sm:leading-relaxed">
-                Explore Jifunze&apos;s flagship learning paths across AI, business, digital skills, career growth, communication, leadership, and more. Each course is
-                designed as a deep track with guided learning, practice, real-world application, and useful outputs you can carry into work, study, and life.
+                Jifunze is built around <strong className="font-semibold text-[color:var(--jf-text)]">employable pathways</strong>: flagship courses, practical
+                projects, and portfolio-ready outputs—clearly separated from roadmap work. Proof you can show, not job or income guarantees.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-3 pt-1 lg:justify-start">
                 <Link
-                  to={LEGAL_ROUTES.learn}
+                  to={LEGAL_ROUTES.paths}
                   data-testid="landing-hero-primary-cta"
                   className="inline-flex min-h-[3rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-8 py-3 text-[15px] font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition-colors duration-200 hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
                 >
+                  Browse pathways
+                </Link>
+                <Link
+                  to={LEGAL_ROUTES.learn}
+                  data-testid="landing-hero-secondary-courses"
+                  className="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-white/[0.1] px-7 py-3 text-[15px] font-semibold text-[color:var(--jf-text)] transition-colors duration-200 hover:border-white/[0.14] hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+                >
                   Explore courses
+                </Link>
+                <Link
+                  to={LEGAL_ROUTES.pricing}
+                  className="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-white/[0.08] px-6 py-3 text-[14px] font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:border-white/[0.12] hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+                >
+                  View plans
                 </Link>
                 <a
                   href="#try-jifunze"
                   data-testid="landing-hero-explore"
-                  className="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-white/[0.1] px-7 py-3 text-[15px] font-semibold text-[color:var(--jf-text)] transition-colors duration-200 hover:border-white/[0.14] hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+                  className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full px-4 py-2.5 text-[13px] font-medium text-[color:var(--jf-subtle)] underline-offset-4 hover:text-[color:var(--jf-muted)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
                 >
-                  Try a quick preview
+                  Optional: try a quick draft preview ↓
                 </a>
               </div>
               <TrustBoundaryStrip
@@ -218,18 +242,20 @@ function HomeEntryPage() {
           </div>
         </div>
 
+        <EmployablePathwaysHomeSection />
+
         {/* Supporting: optional draft preview — narrowed so it does not compete with the learning story */}
         <section
           aria-labelledby="landing-preview-heading"
-          className="relative z-10 mx-auto mt-16 max-w-6xl border-t border-[color:var(--jf-border)] pt-14 sm:mt-[4.5rem] sm:pt-16"
+          className="relative z-10 mx-auto mt-12 max-w-6xl border-t border-[color:var(--jf-border)] pt-10 sm:mt-14 sm:pt-12"
         >
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">Also included for visitors</p>
-            <h2 id="landing-preview-heading" className="mt-2 text-lg font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-xl">
-              Quick preview: draft from a topic
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">Optional visitor tool</p>
+            <h2 id="landing-preview-heading" className="mt-2 text-base font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-lg">
+              Quick draft preview (not the core product)
             </h2>
-            <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-              A small helper for social drafts—not a substitute for the courses above. Edit, verify, then post on your terms.
+            <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
+              A lightweight topic-to-caption helper for social drafts. Learning, pathways, and proof stay above this fold.
             </p>
           </div>
           <div className="mx-auto mt-8 max-w-xl">
@@ -297,6 +323,8 @@ export default function App() {
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
         <Route path="/refunds" element={<RefundPolicyPage />} />
         <Route path="/pricing" element={<PublicPricingPage />} />
+        <Route path="/paths" element={<EmployablePathwaysPage />} />
+        <Route path="/paths/:pathwaySlug" element={<PathwayDetailPage />} />
         <Route path="/learn" element={<LearningDiscoveryHubPage />} />
         <Route path="/learn/school/:schoolId" element={<LearningSchoolCatalogPage />} />
         <Route path="/learn/category/:slug" element={<LearningCategoryPage />} />
@@ -562,7 +590,7 @@ export default function App() {
           </Route>
         </Route>
       </Route>
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </LearnerCommerceProvider>
   )

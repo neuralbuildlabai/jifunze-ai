@@ -11,6 +11,7 @@ import { EmptyWorkspaceCreateBrand } from './EmptyWorkspaceCreateBrand'
 import { JifunzeBrandLogo } from './brand/JifunzeBrandLogo'
 import { SignedInEngagementStrip } from './SignedInEngagementStrip'
 import { SignedInContinueLearning } from './SignedInContinueLearning'
+import { LearnerPathwayOverview } from './pathways/LearnerPathwayOverview'
 import { SignedInWelcomeBlock } from './SignedInWelcomeBlock'
 import { SignedInQuickCreatePanel } from './SignedInQuickCreatePanel'
 import { WorkspaceIdentityStrip } from './WorkspaceIdentityStrip'
@@ -178,6 +179,8 @@ export function SignedInHomePage() {
 
         <SignedInContinueLearning supabase={supabase} userId={user!.id} />
 
+        {isLearnerNav ? <LearnerPathwayOverview /> : null}
+
         {learnerCommerce?.purchaseGateEnabled ? (
           <section className="mt-8 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 text-[13px] leading-relaxed text-zinc-400/95 sm:p-6">
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-500">Flagship access (this browser)</p>
@@ -226,6 +229,15 @@ export function SignedInHomePage() {
                     Continue where you left off
                   </Link>
                   .
+                </p>
+              </li>
+              <li className="rounded-xl border border-white/[0.06] bg-zinc-950/25 px-3 py-3">
+                <p className="text-[13px] font-medium text-zinc-100">Employable pathways</p>
+                <p className="mt-1 text-[12px] leading-relaxed text-zinc-500/90">
+                  <Link to={LEGAL_ROUTES.paths} className="text-violet-300/90 hover:text-violet-200">
+                    Browse pathways
+                  </Link>{' '}
+                  for skills, proof, and role direction.
                 </p>
               </li>
               <li className="rounded-xl border border-white/[0.06] bg-zinc-950/25 px-3 py-3">

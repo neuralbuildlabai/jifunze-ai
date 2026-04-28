@@ -1,10 +1,13 @@
 import { useMemo } from 'react'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { getFlagshipCourseBySlug } from '@/data/learning/flagshipCoursesCatalog'
+import { PUBLIC_ANNUAL_USD, PUBLIC_MONTHLY_DISPLAY_USD, PUBLIC_SINGLE_COURSE_USD, formatUsdWhole } from '@/data/learning/publicPricingStory'
 import { LEGAL_ROUTES } from '@/training/trustCopy'
 import { useLearnerCommerce } from '@/learner/LearnerCommerceContext'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
+import { isBillingLiveConfigured } from '@/lib/billingEnv'
 
+/** Dev-only simulated prices; production copy references public pricing anchors when simulation is off. */
 const MOCK_SINGLE_PRICE_USD = 149
 const MOCK_ALL_ACCESS_PRICE_USD = 39
 
@@ -32,6 +35,9 @@ export function LearnerCheckoutPage() {
     return eligibleDiscount ? Math.round(base * 0.95 * 100) / 100 : base
   }, [eligibleDiscount])
 
+  const showSimulatedCheckout = !import.meta.env.PROD
+  const liveBilling = isBillingLiveConfigured()
+
   if (!mode) {
     return <Navigate to={LEGAL_ROUTES.learn} replace />
   }
@@ -49,6 +55,7 @@ export function LearnerCheckoutPage() {
   const alreadyOwnedAllAccess = mode === 'all_access' && entitlement.mode === 'all_access'
 
   function completePurchase() {
+    if (!showSimulatedCheckout) return
     if (mode === 'single' && courseSlug) {
       if (eligibleDiscount) consumeFirstCourseDiscount()
       grantSingleCourse(courseSlug)
@@ -74,78 +81,112 @@ export function LearnerCheckoutPage() {
 
       <main className="mx-auto max-w-lg px-5 pb-24 pt-10 sm:px-8">
         <h1 className="text-xl font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-2xl">Checkout</h1>
-        <p className="mt-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-          Complete access is simulated on this build—your selection is saved to this browser. Production would complete payment with Stripe.
-        </p>
 
-        {mode === 'single' && course ? (
-          <section className="mt-10 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 shadow-[var(--jf-shadow-soft)]">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[color:var(--jf-muted)]">Single course</p>
-            <p className="mt-2 text-lg font-semibold text-[color:var(--jf-text)]">{course.title}</p>
-            <p className="mt-4 font-mono text-2xl tabular-nums text-[color:var(--jf-text)]">
-              ${singleTotal.toFixed(2)}{' '}
-              <span className="text-[13px] font-sans font-normal text-[color:var(--jf-muted)]">USD</span>
+        {!showSimulatedCheckout ? (
+          <div className="mt-6 space-y-4 rounded-2xl border border-amber-400/25 bg-amber-500/[0.07] p-5 text-[14px] leading-relaxed text-amber-50/95">
+            <p>
+              Simulated flagship checkout is <strong className="font-semibold">disabled in production</strong>. Paid access is handled through{' '}
+              <strong className="font-semibold">Plans & billing</strong> in your account when Stripe checkout is enabled for your deployment.
             </p>
-            {eligibleDiscount ? (
-              <p className="mt-2 text-[13px] text-emerald-200/85">Readiness Challenge discount applied (5% on this course).</p>
+            <p className="text-[13px] text-amber-100/85">
+              Public reference prices: single course from {formatUsdWhole(PUBLIC_SINGLE_COURSE_USD)}, monthly from {formatUsdWhole(PUBLIC_MONTHLY_DISPLAY_USD)}/mo,
+              annual from {formatUsdWhole(PUBLIC_ANNUAL_USD)}/yr — see{' '}
+              <Link className="font-semibold underline-offset-2 hover:underline" to={LEGAL_ROUTES.pricing}>
+                pricing
+              </Link>
+              .
+            </p>
+            <div className="flex flex-wrap gap-2 pt-2">
+              <Link
+                className="inline-flex rounded-full border border-white/[0.12] px-4 py-2 text-xs font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.06]"
+                to={LEGAL_ROUTES.pricing}
+              >
+                View pricing
+              </Link>
+              <Link
+                className="inline-flex rounded-full bg-[var(--jf-brand)] px-4 py-2 text-xs font-semibold text-zinc-950 hover:bg-[var(--jf-brand-hover)]"
+                to={LEGAL_ROUTES.workspaceSubscription}
+              >
+                Plans & billing
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <>
+            <p className="mt-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+              {liveBilling
+                ? 'Live Stripe billing is configured for subscriptions, but this page still uses a local demo for flagship cart simulation—use Plans & billing for real checkout.'
+                : 'Development mode: access below is simulated and saved to this browser only.'}
+            </p>
+
+            {mode === 'single' && course ? (
+              <section className="mt-10 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 shadow-[var(--jf-shadow-soft)]">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[color:var(--jf-muted)]">Single course</p>
+                <p className="mt-2 text-lg font-semibold text-[color:var(--jf-text)]">{course.title}</p>
+                <p className="mt-4 font-mono text-2xl tabular-nums text-[color:var(--jf-text)]">
+                  ${singleTotal.toFixed(2)}{' '}
+                  <span className="text-[13px] font-sans font-normal text-[color:var(--jf-muted)]">USD (dev simulation)</span>
+                </p>
+                {eligibleDiscount ? (
+                  <p className="mt-2 text-[13px] text-emerald-200/85">Readiness Challenge discount applied (5% on this course).</p>
+                ) : null}
+                <ul className="mt-6 space-y-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
+                  <li>· Opens this flagship course for structured learning on this device.</li>
+                  <li>· Modules still unlock progressively inside the course.</li>
+                  <li>· PDF support materials unlock as you progress.</li>
+                </ul>
+                <button
+                  type="button"
+                  disabled={alreadyOwnedSingle}
+                  className="mt-8 inline-flex min-h-[2.75rem] w-full items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-3 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)] enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto"
+                  onClick={completePurchase}
+                  data-testid="checkout-complete-single"
+                >
+                  Confirm access — ${singleTotal.toFixed(2)}
+                </button>
+                <p className="mt-4 text-center text-[12px] text-[color:var(--jf-subtle)]">After confirming, you&apos;ll go straight into the course.</p>
+              </section>
             ) : null}
-            <ul className="mt-6 space-y-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-              <li>· Opens this flagship course for structured learning on this device.</li>
-              <li>· Modules still unlock progressively inside the course.</li>
-              <li>· PDF support materials unlock as you progress.</li>
-            </ul>
-            <button
-              type="button"
-              disabled={alreadyOwnedSingle}
-              className="mt-8 inline-flex min-h-[2.75rem] w-full items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-3 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)] enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto"
-              onClick={completePurchase}
-              data-testid="checkout-complete-single"
-            >
-              Confirm access — ${singleTotal.toFixed(2)}
-            </button>
-            <p className="mt-4 text-center text-[12px] text-[color:var(--jf-subtle)]">
-              After confirming, you&apos;ll go straight into the course.
-            </p>
-          </section>
-        ) : null}
 
-        {mode === 'all_access' ? (
-          <section className="mt-10 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 shadow-[var(--jf-shadow-soft)]">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[color:var(--jf-muted)]">All-access subscription</p>
-            <p className="mt-2 text-lg font-semibold text-[color:var(--jf-text)]">All flagship courses</p>
-            <p className="mt-4 font-mono text-2xl tabular-nums text-[color:var(--jf-text)]">
-              ${MOCK_ALL_ACCESS_PRICE_USD}{' '}
-              <span className="text-[13px] font-sans font-normal text-[color:var(--jf-muted)]">/ month</span>
-            </p>
-            <ul className="mt-6 space-y-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-              <li>· Enroll and enter every flagship course.</li>
-              <li>· Each course still progresses session by session — not an instant unlock of every module.</li>
-              <li>· Challenge discount applies to first single-course purchase only, not this tier.</li>
-            </ul>
-            <button
-              type="button"
-              disabled={alreadyOwnedAllAccess}
-              className="mt-8 inline-flex min-h-[2.75rem] w-full items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-3 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)] enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto"
-              onClick={completePurchase}
-              data-testid="checkout-complete-all-access"
-            >
-              Confirm subscription — ${MOCK_ALL_ACCESS_PRICE_USD}/mo
-            </button>
-            <p className="mt-4 text-center text-[12px] text-[color:var(--jf-subtle)]">
-              After confirming, you&apos;ll return to the catalog with every course available to open.
-            </p>
-          </section>
-        ) : null}
+            {mode === 'all_access' ? (
+              <section className="mt-10 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 shadow-[var(--jf-shadow-soft)]">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[color:var(--jf-muted)]">All-access subscription</p>
+                <p className="mt-2 text-lg font-semibold text-[color:var(--jf-text)]">All flagship courses</p>
+                <p className="mt-4 font-mono text-2xl tabular-nums text-[color:var(--jf-text)]">
+                  ${MOCK_ALL_ACCESS_PRICE_USD}{' '}
+                  <span className="text-[13px] font-sans font-normal text-[color:var(--jf-muted)]">/ month (dev simulation)</span>
+                </p>
+                <ul className="mt-6 space-y-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
+                  <li>· Enroll and enter every flagship course.</li>
+                  <li>· Each course still progresses session by session — not an instant unlock of every module.</li>
+                  <li>· Challenge discount applies to first single-course purchase only, not this tier.</li>
+                </ul>
+                <button
+                  type="button"
+                  disabled={alreadyOwnedAllAccess}
+                  className="mt-8 inline-flex min-h-[2.75rem] w-full items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-3 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)] enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto"
+                  onClick={completePurchase}
+                  data-testid="checkout-complete-all-access"
+                >
+                  Confirm subscription — ${MOCK_ALL_ACCESS_PRICE_USD}/mo
+                </button>
+                <p className="mt-4 text-center text-[12px] text-[color:var(--jf-subtle)]">
+                  After confirming, you&apos;ll return to the catalog with every course available to open.
+                </p>
+              </section>
+            ) : null}
 
-        {alreadyOwnedSingle || alreadyOwnedAllAccess ? (
-          <p className="mt-6 text-[13px] text-amber-200/90">
-            You already have this access —{' '}
-            <Link className="font-medium underline-offset-2 hover:underline" to="/learn">
-              open the catalog
-            </Link>
-            .
-          </p>
-        ) : null}
+            {alreadyOwnedSingle || alreadyOwnedAllAccess ? (
+              <p className="mt-6 text-[13px] text-amber-200/90">
+                You already have this access —{' '}
+                <Link className="font-medium underline-offset-2 hover:underline" to="/learn">
+                  open the catalog
+                </Link>
+                .
+              </p>
+            ) : null}
+          </>
+        )}
 
         <p className="mt-10 text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">
           Account security: learners may use up to two active browsers/devices at once; you&apos;ll see a calm prompt if that limit is reached.

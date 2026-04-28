@@ -7,6 +7,8 @@ export type FlagshipValidationResult = {
   summary: string
   strengths: string[]
   improvements: string[]
+  /** One short learner-facing action line (shown separately from improvement bullets). */
+  nextStep: string | null
   acceptedAsModuleEvidence: boolean
   capstoneCandidate: boolean
   /** 0–1 heuristic score for future AI replacement */
@@ -73,9 +75,10 @@ export function validateFlagshipLearnerResponse(
   if (!text) {
     return {
       status: 'needs_more_work',
-      summary: 'Add a response before running a check.',
+      summary: 'Write something here first, then use Save & Check.',
       strengths,
       improvements: ['Write at least a short paragraph that answers the prompt in your own words.'],
+      nextStep: 'Draft a few sentences in your own words, then tap Save & Check.',
       acceptedAsModuleEvidence: false,
       capstoneCandidate: false,
       score: 0,
@@ -85,12 +88,13 @@ export function validateFlagshipLearnerResponse(
   if (looksLikeNonsense(text)) {
     return {
       status: 'needs_more_work',
-      summary: 'This does not look like a serious attempt yet.',
+      summary: 'This does not look like a real attempt yet—take another pass when you are ready.',
       strengths: [],
       improvements: [
         'Use real sentences about your situation, constraints, or next actions.',
         'Avoid placeholders, keyboard mash, or empty filler.',
       ],
+      nextStep: 'Rewrite with two sincere sentences about your real context or next move.',
       acceptedAsModuleEvidence: false,
       capstoneCandidate: false,
       score: 0.05,
@@ -101,12 +105,13 @@ export function validateFlagshipLearnerResponse(
   if (overlap > 0.55 && text.length < 220) {
     return {
       status: 'needs_more_work',
-      summary: 'Too close to the prompt text — add your own analysis and specifics.',
+      summary: 'This mirrors the prompt a bit closely—add your own angle and concrete specifics.',
       strengths: [],
       improvements: [
         'Paraphrase the task in one sentence, then answer with your context (role, stakes, unknowns).',
         'Add one concrete example or observation that is not already in the prompt.',
       ],
+      nextStep: 'Open with your own framing in one sentence, then add one detail only you would know.',
       acceptedAsModuleEvidence: false,
       capstoneCandidate: false,
       score: 0.15,
@@ -116,12 +121,13 @@ export function validateFlagshipLearnerResponse(
   if (text.length < 48) {
     return {
       status: 'needs_more_work',
-      summary: 'Good start — go deeper so a reviewer can see your judgment.',
+      summary: 'Good start—add enough detail that your judgment comes through clearly.',
       strengths: ['You engaged with the prompt.'],
       improvements: [
         'Add specifics: who, what decision, what evidence you have, what you still do not know.',
         'Aim for at least 4–6 sentences unless the prompt explicitly asks for less.',
       ],
+      nextStep: 'Add who is involved, what decision you face, and what you still need to figure out.',
       acceptedAsModuleEvidence: false,
       capstoneCandidate: false,
       score: 0.25,
@@ -135,12 +141,13 @@ export function validateFlagshipLearnerResponse(
     if (!hasSignal) {
       return {
         status: 'almost_ready',
-        summary: 'Solid writing — tie claims more clearly to evidence or examples.',
+        summary: 'Solid writing—tie your claims to a clear example or piece of evidence.',
         strengths: ['Clear enough to follow.'],
         improvements: [
           'Name one piece of evidence, observation, or source that supports your main claim.',
           'If you have no evidence yet, say what you would collect next and why.',
         ],
+        nextStep: 'Add one named example, observation, or source that backs your main point.',
         acceptedAsModuleEvidence: false,
         capstoneCandidate: blockSuggestsPortfolioEvidence(block),
         score: 0.55,
@@ -153,11 +160,12 @@ export function validateFlagshipLearnerResponse(
     if (!hasLimit) {
       return {
         status: 'almost_ready',
-        summary: 'Add a line about uncertainty, limits, or what could prove you wrong.',
+        summary: 'Add a sentence about what you are unsure of, or what could prove you wrong.',
         strengths: ['You addressed the reflection direction.'],
         improvements: [
           'Name one risk, unknown, or limitation you are carrying into the next step.',
         ],
+        nextStep: 'Before you move on, name one unknown or limitation you will stay honest about.',
         acceptedAsModuleEvidence: false,
         capstoneCandidate: blockSuggestsPortfolioEvidence(block),
         score: 0.58,
@@ -168,9 +176,10 @@ export function validateFlagshipLearnerResponse(
   if (text.length < 120 && overlap > 0.35) {
     return {
       status: 'almost_ready',
-      summary: 'Almost there — stretch with one more concrete detail.',
+      summary: 'Almost there—one more concrete detail will strengthen this.',
       strengths: ['On-topic and readable.'],
       improvements: ['Add a named stakeholder, metric, deadline, or artifact you will produce next.'],
+      nextStep: 'Add one concrete name: a person, metric, date, or deliverable you will act on next.',
       acceptedAsModuleEvidence: false,
       capstoneCandidate: blockSuggestsPortfolioEvidence(block),
       score: 0.62,
@@ -180,11 +189,12 @@ export function validateFlagshipLearnerResponse(
   if (text.length < 96) {
     return {
       status: 'almost_ready',
-      summary: 'Close — add a bit more so your judgment is visible to a reviewer.',
+      summary: 'Close—add a little more so your thinking is easy for a reviewer to see.',
       strengths: ['You are on the right track.'],
       improvements: [
         'Expand with one more sentence on impact, tradeoffs, or what you will do next.',
       ],
+      nextStep: 'Add one sentence on impact, a trade-off, or the very next action you will take.',
       acceptedAsModuleEvidence: false,
       capstoneCandidate: blockSuggestsPortfolioEvidence(block),
       score: 0.65,
@@ -192,7 +202,7 @@ export function validateFlagshipLearnerResponse(
   }
 
   strengths.push('Answers the prompt in your own words.')
-  if (text.length >= 160) strengths.push('Enough depth for a reviewer skim.')
+  if (text.length >= 160) strengths.push('Enough depth for a reviewer to understand your judgment.')
   if (/because|therefore|so that|next step|i will|we will/i.test(text)) strengths.push('Shows reasoning or forward motion.')
 
   const portfolio = blockSuggestsPortfolioEvidence(block)
@@ -201,9 +211,10 @@ export function validateFlagshipLearnerResponse(
   if (strong) {
     return {
       status: 'strong_portfolio_evidence',
-      summary: 'Strong enough to reuse in your portfolio or capstone evidence pack.',
+      summary: 'Portfolio-ready — strong enough to reuse in your capstone evidence pack.',
       strengths,
       improvements: [],
+      nextStep: null,
       acceptedAsModuleEvidence: true,
       capstoneCandidate: true,
       score: 0.92,
@@ -212,11 +223,12 @@ export function validateFlagshipLearnerResponse(
 
   return {
     status: 'accepted',
-    summary: 'Accepted as module evidence — clear enough to stand in your learning record.',
+    summary: 'Accepted as module evidence — clear enough to keep in your learning record.',
     strengths,
     improvements: portfolio
       ? ['Optional: add a sentence on how you would reuse this in your capstone or work context.']
       : [],
+    nextStep: null,
     acceptedAsModuleEvidence: true,
     capstoneCandidate: portfolio,
     score: 0.78,

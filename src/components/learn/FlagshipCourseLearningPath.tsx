@@ -468,7 +468,7 @@ export function FlagshipCourseLearningPath(props: {
                   </div>
                 )
                 return (
-                  <div key={mod.id} className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-4 sm:p-5">
+                  <div id={`flagship-module-${mod.id}`} key={mod.id} className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-4 sm:p-5">
                     {layout === 'accordion' ? (
                       <button
                         type="button"

@@ -5,7 +5,7 @@
 
 export const FLAGSHIP_OPENING_LESSON_SUPPLEMENT: Record<string, string> = {
   'ai-essentials':
-    'You will explicitly learn prompt engineering—not as gimmicks but as disciplined communication that controls quality: what prompts are, why they steer outputs, how ambiguity and thin context cause failure, how to revise safely, and hands-on drills you can defend in review.',
+    'Welcome. This module starts with how AI behaves today—often fluent, sometimes wrong—and why human judgment stays non‑negotiable. You will read outputs as hypotheses you can test, not as facts. You will name common failure modes (fabrication, omission, overconfidence, missing caveats), see why thin prompts invite thin reasoning, and practice sorting work by risk so you know when verification is mandatory. The written responses you save here become evidence you can carry into later modules and your portfolio.',
 
   'smart-workflows-with-ai':
     'You will practice professional prompt engineering inside real workflows—anatomy (role, context, constraints, format), multi-step prompting, critique and versioning, reusable templates and prompt libraries tied to QA lanes—so AI work is repeatable, comparable, and owned like other engineering assets.',

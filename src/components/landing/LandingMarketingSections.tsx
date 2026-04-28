@@ -39,6 +39,13 @@ export function LandingMarketingSections() {
               Eight curated mastery paths across AI fluency, growth, business judgment, data literacy, career craft, communication, and leadership—each built as
               layered progression with practice and outputs.
             </p>
+            <p className="mx-auto mt-4 max-w-2xl text-[13px] leading-relaxed text-[color:var(--jf-subtle)]">
+              Prefer a guided employability map?{' '}
+              <Link className="font-medium text-[color:var(--jf-text)] underline-offset-2 hover:underline" to={LEGAL_ROUTES.paths}>
+                Browse employable pathways
+              </Link>{' '}
+              first—then open individual tracks here.
+            </p>
           </header>
 
           <div className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">

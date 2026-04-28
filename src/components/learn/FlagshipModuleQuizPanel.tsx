@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { FlagshipCurriculumModule } from '../../data/learning/flagshipCourseCurricula'
 import type { FlagshipSession } from '../../data/learning/flagshipCourseSessions'
 import {
@@ -34,13 +34,23 @@ export function FlagshipModuleQuizPanel(props: {
   const [submitted, setSubmitted] = useState(false)
   const [cheatSignals, setCheatSignals] = useState(0)
   const [reviewAcknowledged, setReviewAcknowledged] = useState(Boolean(quizState?.reviewAcknowledgedAt))
-  const attemptStartedAt = useRef<number>(Date.now())
+  const attemptStartedAt = useRef<number | null>(null)
 
   const lockUntil = quizState?.lockUntil ? Date.parse(quizState.lockUntil) : 0
-  const locked = Date.now() < lockUntil
+  const [nowMs, setNowMs] = useState(() => (typeof window === 'undefined' ? 0 : Date.now()))
+  useEffect(() => {
+    if (!(lockUntil > 0)) return
+    const tick = () => startTransition(() => setNowMs(Date.now()))
+    tick()
+    const id = window.setInterval(tick, 500)
+    return () => clearInterval(id)
+  }, [lockUntil])
+  const locked = nowMs > 0 && lockUntil > 0 && nowMs < lockUntil
 
   useEffect(() => {
-    setReviewAcknowledged(Boolean(quizState?.reviewAcknowledgedAt))
+    startTransition(() => {
+      setReviewAcknowledged(Boolean(quizState?.reviewAcknowledgedAt))
+    })
   }, [quizState?.reviewAcknowledgedAt])
 
   useEffect(() => {
@@ -80,7 +90,8 @@ export function FlagshipModuleQuizPanel(props: {
       if (answers[q.id] === q.correctIndex) n++
     }
     const ts = nowIso()
-    const elapsed = Date.now() - attemptStartedAt.current
+    const startedAt = attemptStartedAt.current ?? Date.now()
+    const elapsed = Date.now() - startedAt
     recordTeachingSignal({
       kind: 'quiz_module_submit',
       payload: {

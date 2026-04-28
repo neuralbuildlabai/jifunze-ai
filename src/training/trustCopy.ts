@@ -10,6 +10,7 @@ export const LEGAL_ROUTES = {
   privacy: '/privacy',
   refunds: '/refunds',
   pricing: '/pricing',
+  paths: '/paths',
   learn: '/learn',
   workspaceSubscription: '/settings/subscription',
   authSignIn: '/auth/sign-in',

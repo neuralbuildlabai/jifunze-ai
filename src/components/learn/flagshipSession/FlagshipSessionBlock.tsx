@@ -1,6 +1,6 @@
 import type { FlagshipSessionContentBlock } from '../../../data/learning/flagshipSessionContentTypes'
-import { blockAllowsLearnerResponse, learnerFriendlyBlockEyebrow } from '../../../lib/flagshipSessionResponseBlocks'
-import { flagshipBlockAccentClass, flagshipBlockEyebrowLabel } from './flagshipSessionBlockUi'
+import { blockAllowsLearnerResponse, getLearnerFacingEyebrow } from '../../../lib/flagshipSessionResponseBlocks'
+import { flagshipBlockAccentClass } from './flagshipSessionBlockUi'
 import { FlagshipLearnerResponsePanel } from './FlagshipLearnerResponsePanel'
 import type { FlagshipSessionResponseContext } from './flagshipSessionResponseTypes'
 
@@ -20,18 +20,18 @@ function ProseParagraphs({ text }: { text: string }) {
 export function FlagshipSessionBlock(props: {
   block: FlagshipSessionContentBlock
   responseContext?: FlagshipSessionResponseContext | null
+  /** First learner-response block in the session shows the short portfolio helper; others omit it. */
+  isFirstLearnerResponseBlock?: boolean
 }) {
-  const { block, responseContext } = props
+  const { block, responseContext, isFirstLearnerResponseBlock } = props
   const accent = flagshipBlockAccentClass(block.type)
-  const typeLabel = flagshipBlockEyebrowLabel(block.type)
-  const friendlyEyebrow = learnerFriendlyBlockEyebrow(block)
-  const eyebrow = friendlyEyebrow ?? block.eyebrow ?? typeLabel
+  const eyebrow = getLearnerFacingEyebrow(block)
 
   return (
     <article
       data-testid={`flagship-session-block-${block.id}`}
       data-block-type={block.type}
-      className={`rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/85 pl-4 pr-5 py-6 shadow-[var(--jf-shadow-soft)] ring-1 ring-black/[0.02] sm:pl-5 ${accent} border-l-[3px]`}
+      className={`rounded-xl border border-white/[0.06] bg-[color:var(--jf-surface)]/40 pl-4 pr-5 py-5 sm:pl-5 ${accent} border-l-[3px]`}
     >
       <header className="space-y-1">
         <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[color:var(--jf-subtle)]">{eyebrow}</p>
@@ -57,7 +57,7 @@ export function FlagshipSessionBlock(props: {
         {block.prompt ? (
           <div className="rounded-xl border border-white/[0.06] bg-[color:var(--jf-bg-page)]/90 px-4 py-4">
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-subtle)]">
-              {block.type === 'output_prompt' ? 'Your prompt' : 'Prompt'}
+              {block.type === 'output_prompt' ? 'Your prompt' : 'Task'}
             </p>
             <pre className="mt-3 whitespace-pre-wrap font-sans text-[14px] leading-relaxed text-[color:var(--jf-text)]">{block.prompt}</pre>
           </div>
@@ -65,7 +65,9 @@ export function FlagshipSessionBlock(props: {
 
         {block.example ? (
           <div className="rounded-xl border border-emerald-900/25 bg-emerald-950/[0.08] px-4 py-4">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-200/70">Illustration</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-200/70">
+              {block.type === 'worked_example' ? 'Worked example' : 'Example'}
+            </p>
             <p className="mt-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">{block.example}</p>
           </div>
         ) : null}
@@ -78,7 +80,11 @@ export function FlagshipSessionBlock(props: {
         ) : null}
 
         {blockAllowsLearnerResponse(block) && responseContext ? (
-          <FlagshipLearnerResponsePanel block={block} ctx={responseContext} />
+          <FlagshipLearnerResponsePanel
+            block={block}
+            ctx={responseContext}
+            isFirstLearnerResponseBlock={isFirstLearnerResponseBlock}
+          />
         ) : null}
       </div>
     </article>

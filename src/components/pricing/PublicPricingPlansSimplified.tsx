@@ -30,14 +30,14 @@ const CARD_SHELL =
 
 const PLAN_BULLETS = {
   monthly: [
-    'Full library access for flexible ongoing learning',
+    'Full flagship library for pathways and deep courses',
     'Billed monthly—manage or cancel from your account',
     'Best when you want maximum flexibility',
   ],
   annual: [
     'Same full library as monthly at the best yearly value',
     'Single annual payment',
-    'Ideal when you plan to learn over the year',
+    'Ideal when you plan steady progress on pathways over the year',
   ],
   single: [
     'One-time purchase for one standalone course',

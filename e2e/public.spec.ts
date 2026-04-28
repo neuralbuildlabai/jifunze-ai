@@ -1,12 +1,23 @@
 import { test, expect } from '@playwright/test'
+import { applyPublicE2eMaintenanceBypass } from './helpers/publicE2eMaintenanceBypass'
+import { gotoPublicHomeAnonymous } from './helpers/publicHomeAnonymous'
 
 test.describe('Public surfaces', () => {
+  test.beforeEach(async ({ page }) => {
+    await applyPublicE2eMaintenanceBypass(page)
+  })
   test('homepage loads and exposes primary CTAs (demo E2E runs without Supabase env)', async ({
     page,
   }) => {
-    await page.goto('/')
-    await expect(page.getByRole('heading', { name: /deep learning paths for real growth/i })).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByTestId('landing-hero-primary-cta')).toBeVisible()
+    await gotoPublicHomeAnonymous(page)
+    await expect(
+      page.getByRole('heading', { level: 1, name: /learn skills.*build proof.*become employable/i }),
+    ).toBeVisible({ timeout: 15_000 })
+    const heroPrimary = page.getByTestId('landing-hero-primary-cta')
+    await expect(heroPrimary).toBeVisible()
+    await expect(heroPrimary).toHaveAttribute('href', /\/paths$/)
+    await expect(page.getByTestId('home-nav-pathways')).toBeVisible()
+    await expect(page.locator('header').getByRole('link', { name: /^training$/i })).toHaveCount(0)
     await expect(page.getByTestId('landing-cta-trust-line')).toBeVisible()
     await expect(page.getByTestId('landing-cta-trust-line')).toContainText('Read disclaimer')
     await expect(page.getByTestId('home-generate-trust-boundary')).toBeVisible()
@@ -58,7 +69,7 @@ test.describe('Public surfaces', () => {
   })
 
   test('full disclaimer link from landing navigates to /disclaimer', async ({ page }) => {
-    await page.goto('/')
+    await gotoPublicHomeAnonymous(page)
     await page.getByTestId('landing-cta-trust-line').getByRole('link', { name: /read disclaimer/i }).click()
     await expect(page).toHaveURL(/\/disclaimer$/)
     await expect(page.getByRole('heading', { name: /product disclaimer/i })).toBeVisible()
@@ -67,7 +78,7 @@ test.describe('Public surfaces', () => {
   test('public pricing page loads without auth', async ({ page }) => {
     await page.goto('/pricing')
     await expect(page.getByRole('heading', { name: /choose your plan/i })).toBeVisible()
-    await expect(page.getByTestId('public-pricing-trust-boundary')).toBeVisible()
+    await expect(page.getByTestId('public-pricing-plans-grid')).toBeVisible()
   })
 
   test('public AI foundations library index loads without auth', async ({ page }) => {

@@ -36,6 +36,7 @@ export function SignedInQuickCreatePanel({
 }: Props) {
   const navigate = useNavigate()
   const { navVariant, canViewOperatorInsights } = useAppAccess()
+  const isLearnerNav = navVariant === 'learner'
   const [topic, setTopic] = useState('')
   const [platform, setPlatform] = useState<PublicPlatform>('instagram')
   const [tone, setTone] = useState<PublicTone>('professional')
@@ -188,11 +189,12 @@ export function SignedInQuickCreatePanel({
         <div className="mb-4 flex flex-col gap-1.5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 id="signed-in-create-heading" className="text-base font-semibold text-white">
-              Create your first post
+              {isLearnerNav ? 'Draft a post from your learning context' : 'Create your first post'}
             </h2>
             <p className="text-sm text-zinc-400/85">
-              Add a short idea, choose platform and tone, then generate. You can edit the result before
-              you post.
+              {isLearnerNav
+                ? 'Optional: turn a lesson insight or milestone into a short social draft—edit and verify before you post. This supports visibility for your proof, not random content spam.'
+                : 'Add a short idea, choose platform and tone, then generate. You can edit the result before you post.'}
             </p>
           </div>
         </div>
