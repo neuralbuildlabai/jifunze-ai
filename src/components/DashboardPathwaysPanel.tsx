@@ -76,18 +76,21 @@ function PathwayCard({
 
 /**
  * Read-only pathway progress: local + Supabase flagship_course_progress when available.
+ * `browse` layout: featured grid only (no “your pathway” reordering) for embedding under pathway-first hub.
  */
-export function DashboardPathwaysPanel() {
+export function DashboardPathwaysPanel({ layoutMode = 'default' }: { layoutMode?: 'default' | 'browse' }) {
+  const browseMode = layoutMode === 'browse'
   const { user, supabase } = useAuth()
   const { selectedPathwaySlug } = useSelectedPathway()
   const baseFeatured = featuredEmployablePathways().slice(0, 4)
-  const selected = selectedPathwaySlug ? getPathwayBySlug(selectedPathwaySlug) : null
-  const selectedOk = Boolean(selected && canLearnerSelectPathwayAsPrimary(selected))
+  const selected = browseMode ? null : selectedPathwaySlug ? getPathwayBySlug(selectedPathwaySlug) : null
+  const selectedOk = !browseMode && Boolean(selected && canLearnerSelectPathwayAsPrimary(selected))
   const featured = useMemo(() => {
+    if (browseMode) return baseFeatured
     if (!selectedOk || !selected) return baseFeatured
     const rest = baseFeatured.filter((p) => p.slug !== selected.slug)
     return [selected, ...rest].slice(0, 4)
-  }, [baseFeatured, selected, selectedOk])
+  }, [baseFeatured, browseMode, selected, selectedOk])
 
   const pathwaySync: PathwayProgressSyncContext = useMemo(() => {
     if (!user || !supabase || !isSupabaseConfigured()) return null
@@ -135,19 +138,23 @@ export function DashboardPathwaysPanel() {
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Employable pathways</h2>
+          <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">
+            {browseMode ? 'Explore pathways' : 'Employable pathways'}
+          </h2>
           <p className="mt-2 max-w-xl text-sm text-zinc-400">
-            Pathways sequence flagship courses and portfolio-ready outputs to support certificate readiness—without claiming job placement.
+            {browseMode
+              ? 'Compare featured tracks and open details when you want deeper context on practical skills and portfolio-ready proof.'
+              : 'Pathways sequence flagship courses and portfolio-ready outputs to support certificate readiness—without claiming job placement.'}
           </p>
           {pathwaySync && !hydrated ? (
             <p className="mt-2 text-[10px] text-zinc-500">Loading account progress…</p>
           ) : null}
-          {selectedOk && selected ? (
+          {!browseMode && selectedOk && selected ? (
             <p className="mt-2 text-[11px] text-zinc-500">
               <span className="font-semibold text-violet-200">Your pathway: </span>
               {selected.shortTitle} — open details to continue or change your primary pathway from the pathways hub.
             </p>
-          ) : top ? (
+          ) : !browseMode && top ? (
             <p className="mt-2 text-[11px] text-zinc-500">
               <span className="font-semibold text-zinc-300">Top match: </span>
               {top.pathway.shortTitle} (~{top.summary.pathwaySessionProgressPercent}% across included courses)
@@ -167,7 +174,7 @@ export function DashboardPathwaysPanel() {
             key={pathway.slug}
             pathway={pathway}
             progressBySlug={progressBySlug}
-            variant={selectedOk && selected?.slug === pathway.slug ? 'your_pathway' : 'default'}
+            variant={!browseMode && selectedOk && selected?.slug === pathway.slug ? 'your_pathway' : 'default'}
           />
         ))}
       </ul>

@@ -5,10 +5,10 @@ import { getFlagshipCourseBySlug } from '../data/learning/flagshipCoursesCatalog
 import { getFlagshipCurriculum } from '../data/learning/flagshipCourseCurricula'
 import { buildSessionsForCurriculum } from '../data/learning/flagshipCourseSessions'
 import { FLAGSHIP_PROGRESS_EVENT } from '../lib/flagshipCourseLocalProgress'
+import { getFlagshipCourseDisplayProgressPercent } from '../lib/aiEssentialsProgressMilestones'
 import {
   capstonePrepAccessible,
   completionSet,
-  courseProgressFraction,
   findNextFlagshipResumeSession,
   isCapstonePrepComplete,
   isCapstoneUnlocked,
@@ -90,7 +90,7 @@ export function SignedInContinueLearning(props: {
           masteryTotal: mcProg.total,
         })
         const next = findNextFlagshipResumeSession(curriculum, sessions, completed, ck, state)
-        const pct = Math.round(courseProgressFraction(sessions, completed) * 100)
+        const pct = getFlagshipCourseDisplayProgressPercent(slug, curriculum, sessions, state)
         const resumeHref = next ? `/learn/courses/${slug}/session/${next.id}` : `/learn/courses/${slug}`
         const resumeCta = next ? 'Resume learning' : 'Explore course'
         const guidanceHint = readiness.detailHint ?? readiness.compactLabel ?? undefined

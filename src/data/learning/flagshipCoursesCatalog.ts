@@ -79,9 +79,9 @@ export const FLAGSHIP_COURSES: FlagshipCourse[] = [
     exampleOutputs: ['Stakeholder-safe use stance', 'Stake-weighted verification matrix', 'Workflow + incident sketch pack'],
     featured: true,
     intro:
-      'Course 1 (AI Essentials): sixteen modules on judgment-first AI fluency—how models behave, how to prompt and iterate with evidence, how to verify outputs, how to use AI responsibly in real workflows, and how to assemble a Responsible AI fluency portfolio.',
+      'Course 1 (AI Essentials): sixteen modules on judgment-first AI fluency—how models behave, how to prompt and iterate with evidence, how to verify outputs, how to use AI responsibly (including privacy before synthesis), and how to complete an end-to-end capstone bundle you can show.',
     promise:
-      'Practical fluency you can show: clear prompting, disciplined verification, responsible boundaries, reusable workflows, and a portfolio-ready capstone—without a second “legacy” AI Essentials track in the catalog.',
+      'Practical fluency you can show: clear prompting, disciplined verification, responsible boundaries, reusable workflows, and a portfolio-ready capstone—paced at roughly 32–45 hours for many learners (often 3–5 weeks)—without a second “legacy” AI Essentials track in the catalog.',
     depthStages: {
       foundations:
         'Language, limits, failure modes, and prompt engineering basics—what prompts are, how quality drives output quality, and safe iteration habits.',

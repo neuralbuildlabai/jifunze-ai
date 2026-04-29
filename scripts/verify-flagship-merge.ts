@@ -179,8 +179,8 @@ verifyBespokeAssessmentAnchors()
 function verifyMidCourseBespokeAssessments() {
   assert.equal(
     FLAGSHIP_MID_BESPOKE_ASSESSMENT_MODULE_IDS.length,
-    34,
-    'expected baseline mid bespoke coverage + extra PE-focused mids on AI Essentials & Smart Workflows with AI',
+    43,
+    'expected baseline mid bespoke coverage + extra mids on AI Essentials (ae-m02…ae-m16 minus anchors) & Smart Workflows with AI',
   )
   const found = new Set<string>()
   for (const slug of FLAGSHIP_CURRICULUM_SLUGS) {

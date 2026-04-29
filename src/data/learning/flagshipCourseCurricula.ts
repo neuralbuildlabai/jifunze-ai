@@ -87,29 +87,29 @@ export type FlagshipCurriculumSlug = (typeof FLAGSHIP_CURRICULUM_SLUGS)[number]
 export const FLAGSHIP_CURRICULA_BASE = {
   'ai-essentials': {
     slug: 'ai-essentials',
-    estimatedDurationLabel: 'Roughly 55–85 hours of study, practice, and portfolio work (16 modules + capstone prep)',
+    estimatedDurationLabel:
+      'Roughly 32–45 hours of focused study and portfolio work (16 modules + capstone prep); many learners spread this across 3–5 weeks',
     depthLabel:
-      'Flagship AI Essentials (Course 1): sixteen-module judgment-first fluency—mental models, prompting, verification, communication, research, workflows, teams, reusable systems, safety, and a Responsible AI fluency portfolio—with module quizzes, mastery checkpoints, and capstone prep aligned to reviewer-ready evidence.',
+      'Flagship AI Essentials (Course 1): sixteen-module judgment-first fluency—what AI is (and is not), responsible judgment, prompts as control, structured iteration, verification, communication and learning uses, guardrails and privacy before synthesis, research, workflows, decisions, team standards, reusable prompt packs, and an end-to-end capstone—with module quizzes, mastery checkpoints, and capstone prep aligned to reviewer-ready evidence.',
     reinforcementSignals: [
-      'Sixteen modules from foundations through portfolio—one coherent path (no duplicate AI Essentials track in the catalog)',
+      'Sixteen modules from foundations through capstone—one coherent path (no duplicate AI Essentials track in the catalog)',
       'Module quizzes use the Course 1 bank first, with varied retakes so practice stays honest',
       'Practice sessions ask for concrete outputs; examples note how students, professionals, creators, leads, and educators apply the same ideas differently',
-      'Verification and responsible-use habits before high-stakes synthesis and portfolio assembly',
-      'Capstone prep aligns the Responsible AI fluency portfolio to a clear rubric; certificate-ready when every gate in the product is satisfied',
+      'Privacy and operational safety before high-stakes research, workflow, and team modules; portfolio artifacts carry forward to Modules 15 and 16',
+      'Capstone prep aligns Module 16 bundle, disclosure, self-critique, and rubric to certificate-ready gates in the product—without claiming accreditation',
     ],
     capstone: {
-      title: 'Responsible AI fluency portfolio (capstone prep)',
+      title: 'Capstone prep — end-to-end AI-supported workflow (Module 16 bundle)',
       description:
-        'Finalize a reviewer-ready portfolio you could hand to a mentor or manager. Include: (1) prompt improvement artifact with before/after prompts and rationale, (2) verification / evidence artifact showing provenance discipline, (3) responsible-use checklist tailored to your contexts, (4) one AI-assisted writing or research sample with marginal review notes, (5) workflow or productivity artifact with triggers and human gates, (6) decision-support memo with assumptions and falsifiers, (7) personal AI operating system plan (tools, data tiers, refusal map), (8) short final reflection on human judgment and accountable use. Rubric (self- and peer-review): AI judgment; prompt quality; evidence discipline; responsible-use awareness; workflow usefulness; communication clarity; human review and accountability; practical transfer to real work. Jifunze does not issue PDF certificates from the app yet—completion here means certificate-ready against this bar.',
+        'Module 16 is the integration capstone: one bounded real task run end-to-end with plan, prompt set, verification, revision, privacy boundaries, reviewer-visible packaging, self-critique, disclosure, and a one-page reflection. Before marking capstone prep complete, align your bundle to the seven-criterion rubric (problem framing; prompt and workflow design; verification and review; safety and privacy; reusability; reflection; presentation quality)—each self-scored at Ready or Strong where the manuscript requires. Capstone prep in the app is where you map prior module artifacts to gaps, finalize filenames (e.g. Module16_AI_Workflow_Capstone_[YourName].pdf), and confirm certificate-readiness criteria. Jifunze does not issue PDF certificates from the app—completion means meeting the in-product readiness bar only.',
       deliverables: [
-        'Prompt improvement pack (versions + critique notes)',
-        'Verification / evidence artifact with sources or search strategy documented',
-        'Responsible-use and escalation checklist for your roles',
-        'AI-assisted writing or research sample with human review visible',
-        'Workflow or productivity artifact (diagram, SOP slice, or runbook)',
-        'Decision-support memo with tradeoffs and next information buys',
-        'Personal AI operating system plan (data tiers, tools, boundaries)',
-        'Final reflection: human judgment and responsible use',
+        'Workflow map and execution log (prompts, outputs, human decisions)',
+        'Extended prompt pack and playbook from Module 15 (reused, not rebuilt)',
+        'Verification and review notes tied to claims in the final output',
+        'Safety and privacy boundaries applied inside the workflow',
+        'Revised final output plus revision log',
+        'Self-critique notes (fallback steps) and disclosure statement',
+        'One-page reflection and organized capstone bundle with context note',
       ],
     },
     modules: AI_ESSENTIALS_FLAGSHIP_MODULES,

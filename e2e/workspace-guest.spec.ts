@@ -1,10 +1,14 @@
 import { test, expect } from '@playwright/test'
+import { applyPublicE2eMaintenanceBypass } from './helpers/publicE2eMaintenanceBypass'
 
 /**
  * Supabase env cleared for E2E: app runs in **demo persistence** (local tenant + demo brands).
  * Workspace surfaces load without a Supabase session — distinct from production “sign in” gating.
  */
 test.describe('Workspace routes (demo / no Supabase env)', () => {
+  test.beforeEach(async ({ page }) => {
+    await applyPublicE2eMaintenanceBypass(page)
+  })
   test('ideas page loads', async ({ page }) => {
     await page.goto('/ideas')
     await expect(page.getByRole('heading', { name: /^ideas$/i }).first()).toBeVisible({ timeout: 15_000 })
@@ -29,6 +33,8 @@ test.describe('Workspace routes (demo / no Supabase env)', () => {
   test('dashboard route loads (demo guest)', async ({ page }) => {
     await page.goto('/dashboard')
     await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByText(/continue your pathway, build portfolio-ready proof/i)).toBeVisible()
+    await expect(page.getByTestId('dashboard-your-pathway')).toBeVisible()
   })
 
   test('training route loads (demo guest)', async ({ page }) => {
@@ -76,6 +82,10 @@ test.describe('Workspace routes (demo / no Supabase env)', () => {
 })
 
 test.describe('Navigation smoke (guest)', () => {
+  test.beforeEach(async ({ page }) => {
+    await applyPublicE2eMaintenanceBypass(page)
+  })
+
   test('insights route loads (demo brands when Supabase env is cleared)', async ({ page }) => {
     await page.goto('/insights')
     await expect(page.getByRole('heading', { name: /what jifunze learned/i })).toBeVisible({

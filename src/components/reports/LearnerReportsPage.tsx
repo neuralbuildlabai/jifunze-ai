@@ -13,9 +13,9 @@ import {
 } from '../../data/learning/employablePathwaysCatalog'
 import { getFlagshipCurriculum } from '../../data/learning/flagshipCourseCurricula'
 import { buildSessionsForCurriculum } from '../../data/learning/flagshipCourseSessions'
+import { getFlagshipCourseDisplayProgressPercent } from '../../lib/aiEssentialsProgressMilestones'
 import {
   completionSet,
-  courseProgressFraction,
   findNextFlagshipResumeSession,
   masteryCheckpointCompletionSet,
   modulesCompletedCount,
@@ -103,7 +103,7 @@ export function LearnerReportsPage() {
         const sessions = buildSessionsForCurriculum(curriculum)
         const completed = completionSet(state)
         const ck = masteryCheckpointCompletionSet(state)
-        const frac = courseProgressFraction(sessions, completed)
+        const displayPct = getFlagshipCourseDisplayProgressPercent(slug, curriculum, sessions, state)
         const mod = modulesCompletedCount(curriculum, sessions, completed, state)
         const next = findNextFlagshipResumeSession(curriculum, sessions, completed, ck, state)
 
@@ -121,7 +121,7 @@ export function LearnerReportsPage() {
           schoolLabel: school?.shortLabel ?? school?.label ?? 'Course',
           sessionDone: completed.size,
           sessionTotal: sessions.length,
-          progressPct: Math.round(frac * 100),
+          progressPct: displayPct,
           modulesDone: mod.completed,
           modulesTotal: mod.total,
           quizModulesPassed,

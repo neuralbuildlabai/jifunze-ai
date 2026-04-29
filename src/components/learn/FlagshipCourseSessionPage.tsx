@@ -32,6 +32,7 @@ import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { LearnerHelpAssistant } from '../teaching/LearnerHelpAssistant'
 import { FlagshipSessionAssessment } from './flagshipSession/FlagshipSessionAssessment'
 import type { FlagshipSessionResponseContext } from './flagshipSession/flagshipSessionResponseTypes'
+import { AeCapstoneRubricSelfGradePanel } from './AeCapstoneRubricSelfGradePanel'
 import { FlagshipSessionBlocks } from './flagshipSession/FlagshipSessionBlocks'
 import {
   FlagshipSessionModuleStepper,
@@ -419,6 +420,13 @@ export function FlagshipCourseSessionPage() {
             module={moduleMeta}
             completedIds={checkpointDone}
             onToggleCheckpoint={(id, done) => progress.toggleMasteryCheckpoint(id, done)}
+          />
+        ) : null}
+
+        {slug === 'ai-essentials' && (session.type === 'capstone_prep' || session.moduleId === 'ae-m16') ? (
+          <AeCapstoneRubricSelfGradePanel
+            grade={progress.state.aeCapstoneRubricSelfGrade}
+            onChange={(id, level) => progress.setAeCapstoneRubricCriterion(id, level)}
           />
         ) : null}
 

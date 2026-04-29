@@ -4,6 +4,7 @@
  */
 
 import type { FlagshipSessionContentBlock } from './flagshipSessionContentTypes'
+import { flagshipDepthPaddingBlock } from './flagshipSessionDepthPadding'
 
 export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_SCHOOLS134: Partial<
   Record<string, FlagshipSessionContentBlock[]>
@@ -107,6 +108,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_SCHOOLS134: Partial<
       type: 'next_step',
       body: 'Proceed to prompting specs once your evidence and refusal boundaries feel lived-in, not aspirational.',
     },
+    flagshipDepthPaddingBlock('ae-m03-revision'),
   ],
 
   'ai-essentials::ai-essentials-capstone-prep': [

@@ -12,10 +12,12 @@ import {
 import { mergeFlagshipProgressStates, flagshipProgressStatesEqual } from '../lib/flagshipCourseProgressMerge'
 import { masteryEvidenceProgress } from '../lib/flagshipAssessmentCatalog'
 import { flagshipReadinessCompact } from '../lib/flagshipReadinessSignals'
+import { getFlagshipCourseDisplayProgressPercent } from '../lib/aiEssentialsProgressMilestones'
 import {
+  type AeCapstoneRubricId,
+  type AeCapstoneRubricLevel,
   capstonePrepAccessible,
   completionSet,
-  courseProgressFraction,
   emptyStageSummary,
   findNextFlagshipResumeSession,
   forwardProgressionAllowsNewCompletion,
@@ -77,6 +79,8 @@ export type FlagshipCourseProgressApi = {
   toggleMasteryCheckpoint: (checkpointId: string, done: boolean) => void
   resetProgress: () => void
   updateModuleQuizRecord: (moduleId: string, partial: Partial<FlagshipModuleQuizRecord>) => void
+  /** AI Essentials capstone rubric self-grade (local-first; not synced to Supabase row yet). */
+  setAeCapstoneRubricCriterion: (criterionId: AeCapstoneRubricId, level: AeCapstoneRubricLevel | null) => void
   /** All modules + quizzes + mastery checkpoints + capstone prep — UI only until issuance exists. */
   certificateReady: boolean
 }
@@ -321,6 +325,19 @@ export function useFlagshipCourseProgress(
     [courseSlug, persist],
   )
 
+  const setAeCapstoneRubricCriterion = useCallback(
+    (criterionId: AeCapstoneRubricId, level: AeCapstoneRubricLevel | null) => {
+      if (courseSlug !== 'ai-essentials') return
+      const cur = loadFlagshipCourseProgress(courseSlug)
+      const prev = { ...(cur.aeCapstoneRubricSelfGrade ?? {}) }
+      if (level == null) delete prev[criterionId]
+      else prev[criterionId] = level
+      const aeCapstoneRubricSelfGrade = Object.keys(prev).length ? prev : undefined
+      persist({ ...cur, aeCapstoneRubricSelfGrade }, true)
+    },
+    [courseSlug, persist],
+  )
+
   const toggleMasteryCheckpoint = useCallback(
     (checkpointId: string, done: boolean) => {
       const cur = loadFlagshipCourseProgress(courseSlug)
@@ -368,6 +385,7 @@ export function useFlagshipCourseProgress(
         toggleMasteryCheckpoint,
         resetProgress,
         updateModuleQuizRecord,
+        setAeCapstoneRubricCriterion: () => {},
         certificateReady: false,
       }
     }
@@ -401,7 +419,7 @@ export function useFlagshipCourseProgress(
       masteryTotal: mcProg.total,
     })
 
-    const fraction = courseProgressFraction(sessions, completed)
+    const displayPct = getFlagshipCourseDisplayProgressPercent(courseSlug, curriculum, sessions, state)
     const modCount = modulesCompletedCount(curriculum, sessions, completed, state)
     const next = findNextFlagshipResumeSession(curriculum, sessions, completed, ckDone, state)
     const stageSummary = stageProgressSummary(curriculum, sessions, completed, state)
@@ -414,7 +432,7 @@ export function useFlagshipCourseProgress(
     return {
       state,
       completed,
-      progressPercent: Math.round(fraction * 100),
+      progressPercent: displayPct,
       modulesCompleted: modCount.completed,
       modulesTotal: modCount.total,
       stageSummary,
@@ -439,9 +457,11 @@ export function useFlagshipCourseProgress(
       toggleMasteryCheckpoint,
       resetProgress,
       updateModuleQuizRecord,
+      setAeCapstoneRubricCriterion,
       certificateReady,
     }
   }, [
+    courseSlug,
     curriculum,
     sessions,
     completed,
@@ -453,6 +473,7 @@ export function useFlagshipCourseProgress(
     toggleMasteryCheckpoint,
     resetProgress,
     updateModuleQuizRecord,
+    setAeCapstoneRubricCriterion,
   ])
 
   return api

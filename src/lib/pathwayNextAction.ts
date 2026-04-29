@@ -10,12 +10,12 @@ import { buildSessionsForCurriculum, type FlagshipSession } from '../data/learni
 import { portfolioOutputsForPathway } from '../data/learning/portfolioOutputsCatalog'
 import {
   completionSet,
-  courseProgressFraction,
   findNextFlagshipResumeSession,
   isFlagshipCertificateReady,
   masteryCheckpointCompletionSet,
   type FlagshipCourseProgressState,
 } from './flagshipCourseProgressDerived'
+import { getFlagshipCourseDisplayProgressPercent } from './aiEssentialsProgressMilestones'
 import { defaultFlagshipProgress, loadFlagshipCourseProgress } from './flagshipCourseLocalProgress'
 import { isFlagshipCoursePublished } from './pathwayProgressDerived'
 
@@ -131,7 +131,7 @@ export function getPathwayProgressSummary(
     const sessions = curriculum ? buildSessionsForCurriculum(curriculum) : []
     const state = courseState(progressBySlug, slug)
     const done = completionSet(state)
-    const frac = sessions.length ? courseProgressFraction(sessions, done) : 0
+    const frac = sessions.length ? getFlagshipCourseDisplayProgressPercent(slug, curriculum, sessions, state) / 100 : 0
     sumFrac += frac
     if (done.size > 0 || Boolean(state.startedAt)) started += 1
     if (curriculum && sessions.length) {

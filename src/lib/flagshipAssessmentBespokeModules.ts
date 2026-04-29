@@ -92,19 +92,19 @@ const FLAGSHIP_ASSESSMENT_BESPOKE_TRIPLES: Partial<Record<string, Trio>> = {
   ],
   'ae-m14': [
     mcq(
-      'What belongs in a serious reusable prompt / operating system pack?',
-      'Triggers by stakes × reversibility, owners, human gates, fallbacks when tools fail—plus version notes and when-not-to-use boundaries.',
-      'A collection of favorite prompts without consequence mapping or ownership.',
+      'What is the most important outcome of a team AI use agreement?',
+      'Shared disclosure, review ownership, data boundaries, and escalation paths so AI-assisted work is auditable—not “everyone uses their favorite tool.”',
+      'A longer policy document that nobody reads after week one.',
     ),
     scen(
       'Judgment call.',
-      'Friday outage; teams paste customer data into an unapproved assistant to “save time.”',
-      'Pause traffic—restore approved paths, document incident, reinstate least-privilege tooling.',
-      'Allow it once—exceptions become policy.',
+      'A client deliverable was AI-assisted but reviewers never agreed who checked facts; the team learns Friday night.',
+      'Pause send; assign a named reviewer; rebuild provenance; disclose assistance per the team template; log the gap for norm updates.',
+      'Ship quietly—disclosure might worry the client.',
     ),
     refl(
-      'Applied evidence · reusable systems',
-      'I catalogued at least three prompt or workflow assets with owners, dependencies, and one explicit when-not-to-use note.',
+      'Applied evidence · team AI coordination',
+      'I drafted a one-page team AI use agreement (or solo equivalent) with disclosure, review ownership, data boundaries, and escalation—and mapped responsibilities for at least three AI-assisted steps.',
     ),
   ],
 
@@ -1007,6 +1007,23 @@ const FLAGSHIP_ASSESSMENT_BESPOKE_MID_TRIPLES: Partial<Record<string, Trio>> = {
   ],
   "ae-m10": [
     mcq(
+      'Customer PII landed in an unapproved assistant. What is the most defensible first response?',
+      'Stop further submissions; escalate per incident policy; preserve logs; scope exposure.',
+      'Ask the chatbot to delete the conversation and proceed as if risk is gone.',
+    ),
+    scen(
+      'Leak triage.',
+      'Support pastes patient IDs into a public tool; screenshots circulate internally “for speed.”',
+      'Contain spread; notify security lead; classify data; start controlled comms—not casual DMs.',
+      'Delete the chat locally—problem solved if nobody screenshots.',
+    ),
+    refl(
+      'Applied evidence · privacy and safety',
+      'I documented one paste/stay-local rule I will enforce under fatigue.',
+    ),
+  ],
+  "ae-m11": [
+    mcq(
       'What makes research synthesis executive-ready?',
       'Claims trace to sources; conflicts stay visible; recommendations match evidence strength.',
       'Confidence in tone substitutes for confidence in data.',
@@ -1022,7 +1039,7 @@ const FLAGSHIP_ASSESSMENT_BESPOKE_MID_TRIPLES: Partial<Record<string, Trio>> = {
       'My evidence table distinguishes claim strength and notes at least one unresolved conflict explicitly.',
     ),
   ],
-  "ae-m11": [
+  "ae-m12": [
     mcq(
       'What belongs in a workflow diagram before you attach AI?',
       'Triggers, owners, human gates, fallbacks, and where prompts attach—not only happy-path steps.',
@@ -1039,7 +1056,7 @@ const FLAGSHIP_ASSESSMENT_BESPOKE_MID_TRIPLES: Partial<Record<string, Trio>> = {
       'I drew one workflow with a named human gate and one fallback a tired teammate could still execute.',
     ),
   ],
-  "ae-m12": [
+  "ae-m13": [
     mcq(
       'Which decision memo habit is most mature?',
       'Explicit assumptions, tradeoffs, falsifiers, and next information buys—authorship stays with the human decision owner.',
@@ -1056,38 +1073,21 @@ const FLAGSHIP_ASSESSMENT_BESPOKE_MID_TRIPLES: Partial<Record<string, Trio>> = {
       'I stated one assumption that would flip my recommendation if proven false.',
     ),
   ],
-  "ae-m13": [
-    mcq(
-      'What fixes silent drift in team AI use?',
-      'Shared review standards, labeled outputs, catalog owners, and explicit escalation—not informal chats as the system of record.',
-      'More model access so people stop using shadow tools.',
-    ),
-    scen(
-      'Two teams, two prompt packs.',
-      'Customer-facing answers diverge; nobody knows which template is canonical.',
-      'Freeze changes; assign owner; unify template; document migration and test notes.',
-      'Let teams choose—diversity of prompts is healthy.',
-    ),
-    refl(
-      'Applied evidence · team norms',
-      'I proposed one review ritual or RACI line that makes AI assistance legible to the next shift.',
-    ),
-  ],
   "ae-m15": [
     mcq(
-      'Customer PII landed in an unapproved assistant. What is the most defensible first response?',
-      'Stop further submissions; escalate per incident policy; preserve logs; scope exposure.',
-      'Ask the chatbot to delete the conversation and proceed as if risk is gone.',
+      'What makes a prompt pack maintainable across teammates?',
+      'Named owners, version notes, test prompts, refusal boundaries, and a changelog—not a folder of “final v7 really final” screenshots.',
+      'Longer prompts always beat shorter ones—detail equals quality.',
     ),
     scen(
-      'Leak triage.',
-      'Support pastes patient IDs into a public tool; screenshots circulate internally “for speed.”',
-      'Contain spread; notify security lead; classify data; start controlled comms—not casual DMs.',
-      'Delete the chat locally—problem solved if nobody screenshots.',
+      'Model update week.',
+      'A shared playbook drifts: half the team uses an old refusal rule and customer tone shifts.',
+      'Freeze changes; diff versions; assign owner; re-run acceptance prompts before reopening edits.',
+      'Let everyone patch quietly—speed matters more than traceability.',
     ),
     refl(
-      'Applied evidence · sensitive data',
-      'I documented one paste/stay-local rule I will enforce under fatigue.',
+      'Applied evidence · prompt packs',
+      'I versioned one prompt pack slice and noted what behavior each version targeted.',
     ),
   ],
   "ae-m16": [

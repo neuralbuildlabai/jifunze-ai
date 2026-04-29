@@ -1,0 +1,97 @@
+module,module_title,block_number,block_type,block_title,learner_action,platform_signal
+1,"What AI Is, How It Works, and Why It Matters",1,Orient,Why AI mental models and grounded expectations matters,Read a short framing note and identify personal relevance,entry_engagement
+1,"What AI Is, How It Works, and Why It Matters",2,Teach,Core concepts for AI mental models and grounded expectations,Study the explanation and examples,concept_exposure
+1,"What AI Is, How It Works, and Why It Matters",3,Demonstrate,Weak vs stronger example,Compare examples and identify the improvement,comparison_accuracy
+1,"What AI Is, How It Works, and Why It Matters",4,Guided practice,Try with support,Complete a small practice task with hints,practice_attempt
+1,"What AI Is, How It Works, and Why It Matters",5,Independent lab,Produce the module artifact,Create a reviewable artifact tied to real context,artifact_submitted
+1,"What AI Is, How It Works, and Why It Matters",6,Check,Quiz and self-review,Pass checkpoint and complete reflection,module_mastery
+2,"AI Myths, Reality, and Responsible Judgment",1,Orient,"Why myth correction, risk sense, and responsible use matters",Read a short framing note and identify personal relevance,entry_engagement
+2,"AI Myths, Reality, and Responsible Judgment",2,Teach,"Core concepts for myth correction, risk sense, and responsible use",Study the explanation and examples,concept_exposure
+2,"AI Myths, Reality, and Responsible Judgment",3,Demonstrate,Weak vs stronger example,Compare examples and identify the improvement,comparison_accuracy
+2,"AI Myths, Reality, and Responsible Judgment",4,Guided practice,Try with support,Complete a small practice task with hints,practice_attempt
+2,"AI Myths, Reality, and Responsible Judgment",5,Independent lab,Produce the module artifact,Create a reviewable artifact tied to real context,artifact_submitted
+2,"AI Myths, Reality, and Responsible Judgment",6,Check,Quiz and self-review,Pass checkpoint and complete reflection,module_mastery
+3,Prompts as Control - How Better Instructions Shape Better AI Results,1,Orient,"Why prompt intent, constraints, and output control matters",Read a short framing note and identify personal relevance,entry_engagement
+3,Prompts as Control - How Better Instructions Shape Better AI Results,2,Teach,"Core concepts for prompt intent, constraints, and output control",Study the explanation and examples,concept_exposure
+3,Prompts as Control - How Better Instructions Shape Better AI Results,3,Demonstrate,Weak vs stronger example,Compare examples and identify the improvement,comparison_accuracy
+3,Prompts as Control - How Better Instructions Shape Better AI Results,4,Guided practice,Try with support,Complete a small practice task with hints,practice_attempt
+3,Prompts as Control - How Better Instructions Shape Better AI Results,5,Independent lab,Produce the module artifact,Create a reviewable artifact tied to real context,artifact_submitted
+3,Prompts as Control - How Better Instructions Shape Better AI Results,6,Check,Quiz and self-review,Pass checkpoint and complete reflection,module_mastery
+4,"Prompt Engineering I - Structure, Constraints, and Clear Output Design",1,Orient,Why structured prompting and acceptance criteria matters,Read a short framing note and identify personal relevance,entry_engagement
+4,"Prompt Engineering I - Structure, Constraints, and Clear Output Design",2,Teach,Core concepts for structured prompting and acceptance criteria,Study the explanation and examples,concept_exposure
+4,"Prompt Engineering I - Structure, Constraints, and Clear Output Design",3,Demonstrate,Weak vs stronger example,Compare examples and identify the improvement,comparison_accuracy
+4,"Prompt Engineering I - Structure, Constraints, and Clear Output Design",4,Guided practice,Try with support,Complete a small practice task with hints,practice_attempt
+4,"Prompt Engineering I - Structure, Constraints, and Clear Output Design",5,Independent lab,Produce the module artifact,Create a reviewable artifact tied to real context,artifact_submitted
+4,"Prompt Engineering I - Structure, Constraints, and Clear Output Design",6,Check,Quiz and self-review,Pass checkpoint and complete reflection,module_mastery
+5,"Prompt Engineering II - Iteration, Comparison, and Reviewable Prompt Workflows",1,Orient,"Why iteration, critique, prompt testing, and versioning matters",Read a short framing note and identify personal relevance,entry_engagement
+5,"Prompt Engineering II - Iteration, Comparison, and Reviewable Prompt Workflows",2,Teach,"Core concepts for iteration, critique, prompt testing, and versioning",Study the explanation and examples,concept_exposure
+5,"Prompt Engineering II - Iteration, Comparison, and Reviewable Prompt Workflows",3,Demonstrate,Weak vs stronger example,Compare examples and identify the improvement,comparison_accuracy
+5,"Prompt Engineering II - Iteration, Comparison, and Reviewable Prompt Workflows",4,Guided practice,Try with support,Complete a small practice task with hints,practice_attempt
+5,"Prompt Engineering II - Iteration, Comparison, and Reviewable Prompt Workflows",5,Independent lab,Produce the module artifact,Create a reviewable artifact tied to real context,artifact_submitted
+5,"Prompt Engineering II - Iteration, Comparison, and Reviewable Prompt Workflows",6,Check,Quiz and self-review,Pass checkpoint and complete reflection,module_mastery
+6,"Evidence, Verification, and Source-Aware AI Use",1,Orient,"Why source awareness, verification, and hallucination control matters",Read a short framing note and identify personal relevance,entry_engagement
+6,"Evidence, Verification, and Source-Aware AI Use",2,Teach,"Core concepts for source awareness, verification, and hallucination control",Study the explanation and examples,concept_exposure
+6,"Evidence, Verification, and Source-Aware AI Use",3,Demonstrate,Weak vs stronger example,Compare examples and identify the improvement,comparison_accuracy
+6,"Evidence, Verification, and Source-Aware AI Use",4,Guided practice,Try with support,Complete a small practice task with hints,practice_attempt
+6,"Evidence, Verification, and Source-Aware AI Use",5,Independent lab,Produce the module artifact,Create a reviewable artifact tied to real context,artifact_submitted
+6,"Evidence, Verification, and Source-Aware AI Use",6,Check,Quiz and self-review,Pass checkpoint and complete reflection,module_mastery
+7,"AI for Writing, Communication, and Audience Fit",1,Orient,"Why writing quality, tone, audience, and revision matters",Read a short framing note and identify personal relevance,entry_engagement
+7,"AI for Writing, Communication, and Audience Fit",2,Teach,"Core concepts for writing quality, tone, audience, and revision",Study the explanation and examples,concept_exposure
+7,"AI for Writing, Communication, and Audience Fit",3,Demonstrate,Weak vs stronger example,Compare examples and identify the improvement,comparison_accuracy
+7,"AI for Writing, Communication, and Audience Fit",4,Guided practice,Try with support,Complete a small practice task with hints,practice_attempt
+7,"AI for Writing, Communication, and Audience Fit",5,Independent lab,Produce the module artifact,Create a reviewable artifact tied to real context,artifact_submitted
+7,"AI for Writing, Communication, and Audience Fit",6,Check,Quiz and self-review,Pass checkpoint and complete reflection,module_mastery
+8,"AI for Learning, Study, and Understanding",1,Orient,"Why learning support, remediation, and retrieval practice matters",Read a short framing note and identify personal relevance,entry_engagement
+8,"AI for Learning, Study, and Understanding",2,Teach,"Core concepts for learning support, remediation, and retrieval practice",Study the explanation and examples,concept_exposure
+8,"AI for Learning, Study, and Understanding",3,Demonstrate,Weak vs stronger example,Compare examples and identify the improvement,comparison_accuracy
+8,"AI for Learning, Study, and Understanding",4,Guided practice,Try with support,Complete a small practice task with hints,practice_attempt
+8,"AI for Learning, Study, and Understanding",5,Independent lab,Produce the module artifact,Create a reviewable artifact tied to real context,artifact_submitted
+8,"AI for Learning, Study, and Understanding",6,Check,Quiz and self-review,Pass checkpoint and complete reflection,module_mastery
+9,"Responsible AI Use, Human Accountability, and Practical Guardrails",1,Orient,"Why accountability, boundaries, and risk review matters",Read a short framing note and identify personal relevance,entry_engagement
+9,"Responsible AI Use, Human Accountability, and Practical Guardrails",2,Teach,"Core concepts for accountability, boundaries, and risk review",Study the explanation and examples,concept_exposure
+9,"Responsible AI Use, Human Accountability, and Practical Guardrails",3,Demonstrate,Weak vs stronger example,Compare examples and identify the improvement,comparison_accuracy
+9,"Responsible AI Use, Human Accountability, and Practical Guardrails",4,Guided practice,Try with support,Complete a small practice task with hints,practice_attempt
+9,"Responsible AI Use, Human Accountability, and Practical Guardrails",5,Independent lab,Produce the module artifact,Create a reviewable artifact tied to real context,artifact_submitted
+9,"Responsible AI Use, Human Accountability, and Practical Guardrails",6,Check,Quiz and self-review,Pass checkpoint and complete reflection,module_mastery
+10,"AI for Research, Analysis, and Synthesis",1,Orient,"Why research workflows, synthesis, and evidence mapping matters",Read a short framing note and identify personal relevance,entry_engagement
+10,"AI for Research, Analysis, and Synthesis",2,Teach,"Core concepts for research workflows, synthesis, and evidence mapping",Study the explanation and examples,concept_exposure
+10,"AI for Research, Analysis, and Synthesis",3,Demonstrate,Weak vs stronger example,Compare examples and identify the improvement,comparison_accuracy
+10,"AI for Research, Analysis, and Synthesis",4,Guided practice,Try with support,Complete a small practice task with hints,practice_attempt
+10,"AI for Research, Analysis, and Synthesis",5,Independent lab,Produce the module artifact,Create a reviewable artifact tied to real context,artifact_submitted
+10,"AI for Research, Analysis, and Synthesis",6,Check,Quiz and self-review,Pass checkpoint and complete reflection,module_mastery
+11,"AI for Workflows, Planning, and Task Design",1,Orient,"Why workflow redesign, SOPs, and task delegation matters",Read a short framing note and identify personal relevance,entry_engagement
+11,"AI for Workflows, Planning, and Task Design",2,Teach,"Core concepts for workflow redesign, SOPs, and task delegation",Study the explanation and examples,concept_exposure
+11,"AI for Workflows, Planning, and Task Design",3,Demonstrate,Weak vs stronger example,Compare examples and identify the improvement,comparison_accuracy
+11,"AI for Workflows, Planning, and Task Design",4,Guided practice,Try with support,Complete a small practice task with hints,practice_attempt
+11,"AI for Workflows, Planning, and Task Design",5,Independent lab,Produce the module artifact,Create a reviewable artifact tied to real context,artifact_submitted
+11,"AI for Workflows, Planning, and Task Design",6,Check,Quiz and self-review,Pass checkpoint and complete reflection,module_mastery
+12,AI for Decision Support and Critical Thinking,1,Orient,"Why decision memos, assumptions, and tradeoff analysis matters",Read a short framing note and identify personal relevance,entry_engagement
+12,AI for Decision Support and Critical Thinking,2,Teach,"Core concepts for decision memos, assumptions, and tradeoff analysis",Study the explanation and examples,concept_exposure
+12,AI for Decision Support and Critical Thinking,3,Demonstrate,Weak vs stronger example,Compare examples and identify the improvement,comparison_accuracy
+12,AI for Decision Support and Critical Thinking,4,Guided practice,Try with support,Complete a small practice task with hints,practice_attempt
+12,AI for Decision Support and Critical Thinking,5,Independent lab,Produce the module artifact,Create a reviewable artifact tied to real context,artifact_submitted
+12,AI for Decision Support and Critical Thinking,6,Check,Quiz and self-review,Pass checkpoint and complete reflection,module_mastery
+13,AI Collaboration in Teams and Organizations,1,Orient,"Why team norms, review loops, and shared standards matters",Read a short framing note and identify personal relevance,entry_engagement
+13,AI Collaboration in Teams and Organizations,2,Teach,"Core concepts for team norms, review loops, and shared standards",Study the explanation and examples,concept_exposure
+13,AI Collaboration in Teams and Organizations,3,Demonstrate,Weak vs stronger example,Compare examples and identify the improvement,comparison_accuracy
+13,AI Collaboration in Teams and Organizations,4,Guided practice,Try with support,Complete a small practice task with hints,practice_attempt
+13,AI Collaboration in Teams and Organizations,5,Independent lab,Produce the module artifact,Create a reviewable artifact tied to real context,artifact_submitted
+13,AI Collaboration in Teams and Organizations,6,Check,Quiz and self-review,Pass checkpoint and complete reflection,module_mastery
+14,"Building Reusable AI Systems, Prompt Packs, and Playbooks",1,Orient,"Why reusable systems, prompt packs, and operating playbooks matters",Read a short framing note and identify personal relevance,entry_engagement
+14,"Building Reusable AI Systems, Prompt Packs, and Playbooks",2,Teach,"Core concepts for reusable systems, prompt packs, and operating playbooks",Study the explanation and examples,concept_exposure
+14,"Building Reusable AI Systems, Prompt Packs, and Playbooks",3,Demonstrate,Weak vs stronger example,Compare examples and identify the improvement,comparison_accuracy
+14,"Building Reusable AI Systems, Prompt Packs, and Playbooks",4,Guided practice,Try with support,Complete a small practice task with hints,practice_attempt
+14,"Building Reusable AI Systems, Prompt Packs, and Playbooks",5,Independent lab,Produce the module artifact,Create a reviewable artifact tied to real context,artifact_submitted
+14,"Building Reusable AI Systems, Prompt Packs, and Playbooks",6,Check,Quiz and self-review,Pass checkpoint and complete reflection,module_mastery
+15,"Privacy, Risk, Boundaries, and Safe Operational Use",1,Orient,"Why privacy, sensitive data, and operational safety matters",Read a short framing note and identify personal relevance,entry_engagement
+15,"Privacy, Risk, Boundaries, and Safe Operational Use",2,Teach,"Core concepts for privacy, sensitive data, and operational safety",Study the explanation and examples,concept_exposure
+15,"Privacy, Risk, Boundaries, and Safe Operational Use",3,Demonstrate,Weak vs stronger example,Compare examples and identify the improvement,comparison_accuracy
+15,"Privacy, Risk, Boundaries, and Safe Operational Use",4,Guided practice,Try with support,Complete a small practice task with hints,practice_attempt
+15,"Privacy, Risk, Boundaries, and Safe Operational Use",5,Independent lab,Produce the module artifact,Create a reviewable artifact tied to real context,artifact_submitted
+15,"Privacy, Risk, Boundaries, and Safe Operational Use",6,Check,Quiz and self-review,Pass checkpoint and complete reflection,module_mastery
+16,Capstone - Designing an AI-Supported Workflow from End to End,1,Orient,Why portfolio capstone and end-to-end workflow design matters,Read a short framing note and identify personal relevance,entry_engagement
+16,Capstone - Designing an AI-Supported Workflow from End to End,2,Teach,Core concepts for portfolio capstone and end-to-end workflow design,Study the explanation and examples,concept_exposure
+16,Capstone - Designing an AI-Supported Workflow from End to End,3,Demonstrate,Weak vs stronger example,Compare examples and identify the improvement,comparison_accuracy
+16,Capstone - Designing an AI-Supported Workflow from End to End,4,Guided practice,Try with support,Complete a small practice task with hints,practice_attempt
+16,Capstone - Designing an AI-Supported Workflow from End to End,5,Independent lab,Produce the module artifact,Create a reviewable artifact tied to real context,artifact_submitted
+16,Capstone - Designing an AI-Supported Workflow from End to End,6,Check,Quiz and self-review,Pass checkpoint and complete reflection,module_mastery

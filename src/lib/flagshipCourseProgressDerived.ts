@@ -23,6 +23,63 @@ export type FlagshipModuleQuizRecord = {
   reviewAcknowledgedAt?: string
 }
 
+/** Module 16 capstone rubric self-grade (AI Essentials only; local-first; omitted from Supabase upsert until a column exists). */
+export type AeCapstoneRubricId =
+  | 'problemFraming'
+  | 'promptWorkflow'
+  | 'verificationReview'
+  | 'safetyPrivacy'
+  | 'reusability'
+  | 'reflection'
+  | 'presentation'
+
+export type AeCapstoneRubricLevel = 'not_ready' | 'developing' | 'ready' | 'strong'
+
+export type AeCapstoneRubricSelfGrade = Partial<Record<AeCapstoneRubricId, AeCapstoneRubricLevel>>
+
+export const AI_ESSENTIALS_CAPSTONE_RUBRIC_IDS: readonly AeCapstoneRubricId[] = [
+  'problemFraming',
+  'promptWorkflow',
+  'verificationReview',
+  'safetyPrivacy',
+  'reusability',
+  'reflection',
+  'presentation',
+]
+
+function rubricLevelRank(v: AeCapstoneRubricLevel | undefined): number {
+  if (!v) return -1
+  const o: Record<AeCapstoneRubricLevel, number> = {
+    not_ready: 0,
+    developing: 1,
+    ready: 2,
+    strong: 3,
+  }
+  return o[v] ?? -1
+}
+
+/** True when every capstone rubric row is self-scored Ready or Strong (all seven required). */
+export function aeCapstoneRubricAllCriteriaReadyPlus(state: FlagshipCourseProgressState): boolean {
+  const g = state.aeCapstoneRubricSelfGrade
+  if (!g) return false
+  return AI_ESSENTIALS_CAPSTONE_RUBRIC_IDS.every((id) => g[id] === 'ready' || g[id] === 'strong')
+}
+
+export function mergeAeCapstoneRubricSelfGrade(
+  a: AeCapstoneRubricSelfGrade | undefined,
+  b: AeCapstoneRubricSelfGrade | undefined,
+): AeCapstoneRubricSelfGrade | undefined {
+  if (!a && !b) return undefined
+  const out: AeCapstoneRubricSelfGrade = { ...(a ?? {}), ...(b ?? {}) }
+  for (const id of AI_ESSENTIALS_CAPSTONE_RUBRIC_IDS) {
+    const va = a?.[id]
+    const vb = b?.[id]
+    if (va && vb) out[id] = rubricLevelRank(va) >= rubricLevelRank(vb) ? va : vb
+    else out[id] = va ?? vb ?? out[id]
+  }
+  return Object.keys(out).length ? out : undefined
+}
+
 export type FlagshipCourseProgressState = {
   version: 1
   completedSessionIds: string[]
@@ -34,6 +91,8 @@ export type FlagshipCourseProgressState = {
   completedMasteryCheckpointIds?: string[]
   /** Module id → quiz completion / lock state (local-first; server row may omit). */
   moduleQuiz?: Record<string, FlagshipModuleQuizRecord>
+  /** AI Essentials Module 16 — rubric self-grade for milestone 10 / certificate (local-first). */
+  aeCapstoneRubricSelfGrade?: AeCapstoneRubricSelfGrade
   lastActiveSessionId?: string
   lastActiveAt?: string
   startedAt?: string
@@ -261,6 +320,7 @@ export function isFlagshipCertificateReady(
     if (!moduleFullyComplete(m.id, sessions, completed, progress)) return false
     if (!moduleAssessmentComplete(m.id, checkpointDone)) return false
   }
+  if (curriculum.slug === 'ai-essentials' && !aeCapstoneRubricAllCriteriaReadyPlus(progress)) return false
   return true
 }
 

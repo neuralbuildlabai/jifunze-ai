@@ -2,11 +2,8 @@ import type { EmployablePathway } from '../data/learning/employablePathwaysCatal
 import { FLAGSHIP_COURSES } from '../data/learning/flagshipCoursesCatalog'
 import { getFlagshipCurriculum } from '../data/learning/flagshipCourseCurricula'
 import { buildSessionsForCurriculum } from '../data/learning/flagshipCourseSessions'
-import {
-  completionSet,
-  courseProgressFraction,
-  type FlagshipCourseProgressState,
-} from './flagshipCourseProgressDerived'
+import { completionSet, type FlagshipCourseProgressState } from './flagshipCourseProgressDerived'
+import { getFlagshipCourseDisplayProgressPercent } from './aiEssentialsProgressMilestones'
 import { loadFlagshipCourseProgress } from './flagshipCourseLocalProgress'
 
 export type PathwayCourseProgressRow = {
@@ -48,7 +45,9 @@ export function derivePathwayCourseProgress(
     const sessions = curriculum ? buildSessionsForCurriculum(curriculum) : []
     const state = progressBySlug?.[slug] ?? loadFlagshipCourseProgress(slug)
     const completed = completionSet(state)
-    const sessionFraction = sessions.length ? courseProgressFraction(sessions, completed) : 0
+    const sessionFraction = sessions.length
+      ? getFlagshipCourseDisplayProgressPercent(slug, curriculum, sessions, state) / 100
+      : 0
     const started = completed.size > 0 || Boolean(state.startedAt)
     if (started) startedCount += 1
     sum += sessionFraction

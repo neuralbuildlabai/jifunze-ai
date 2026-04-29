@@ -2,7 +2,11 @@
  * Conservative merge of local + remote flagship progress — union completions, newest activity wins.
  */
 
-import type { FlagshipModuleQuizRecord, FlagshipCourseProgressState } from './flagshipCourseProgressDerived'
+import {
+  mergeAeCapstoneRubricSelfGrade,
+  type FlagshipModuleQuizRecord,
+  type FlagshipCourseProgressState,
+} from './flagshipCourseProgressDerived'
 
 function parseIso(iso?: string): number {
   return iso ? Date.parse(iso) : 0
@@ -46,6 +50,10 @@ export function mergeFlagshipProgressStates(
   ])
 
   const moduleQuiz = mergeModuleQuiz(local.moduleQuiz, remote.moduleQuiz)
+  const aeCapstoneRubricSelfGrade = mergeAeCapstoneRubricSelfGrade(
+    local.aeCapstoneRubricSelfGrade,
+    remote.aeCapstoneRubricSelfGrade,
+  )
 
   const localT = parseIso(local.lastActiveAt)
   const remoteT = parseIso(remote.lastActiveAt)
@@ -71,6 +79,7 @@ export function mergeFlagshipProgressStates(
     flaggedForReviewSessionIds: [...flagged],
     completedMasteryCheckpointIds: [...mastery],
     ...(moduleQuiz ? { moduleQuiz } : {}),
+    ...(aeCapstoneRubricSelfGrade ? { aeCapstoneRubricSelfGrade } : {}),
     lastActiveSessionId,
     lastActiveAt,
     startedAt,
@@ -102,11 +111,14 @@ export function flagshipProgressStatesEqual(a: FlagshipCourseProgressState, b: F
   const sort = (xs: string[]) => [...xs].sort()
   const ma = sort(a.completedMasteryCheckpointIds ?? []).join('\0')
   const mb = sort(b.completedMasteryCheckpointIds ?? []).join('\0')
+  const rubA = JSON.stringify(a.aeCapstoneRubricSelfGrade ?? {})
+  const rubB = JSON.stringify(b.aeCapstoneRubricSelfGrade ?? {})
   return (
     sort(a.completedSessionIds).join('\0') === sort(b.completedSessionIds).join('\0') &&
     sort(a.flaggedForReviewSessionIds).join('\0') === sort(b.flaggedForReviewSessionIds).join('\0') &&
     ma === mb &&
     moduleQuizEqual(a.moduleQuiz, b.moduleQuiz) &&
+    rubA === rubB &&
     a.lastActiveSessionId === b.lastActiveSessionId &&
     a.lastActiveAt === b.lastActiveAt &&
     a.startedAt === b.startedAt

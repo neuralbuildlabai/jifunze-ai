@@ -3,7 +3,11 @@
  * Structured for future sync to authenticated persistence without changing session ids.
  */
 
-import type { FlagshipCourseProgressState } from './flagshipCourseProgressDerived'
+import {
+  AI_ESSENTIALS_CAPSTONE_RUBRIC_IDS,
+  type AeCapstoneRubricSelfGrade,
+  type FlagshipCourseProgressState,
+} from './flagshipCourseProgressDerived'
 
 export const FLAGSHIP_COURSE_PROGRESS_PREFIX = 'jifunze.flagshipCourseProgress.v1:'
 
@@ -42,12 +46,27 @@ function safeParse(raw: string | null): FlagshipCourseProgressState | null {
       }
       moduleQuiz = Object.keys(o).length ? o : undefined
     }
+    let aeCapstoneRubricSelfGrade: AeCapstoneRubricSelfGrade | undefined
+    if (
+      data.aeCapstoneRubricSelfGrade &&
+      typeof data.aeCapstoneRubricSelfGrade === 'object' &&
+      !Array.isArray(data.aeCapstoneRubricSelfGrade)
+    ) {
+      const raw = data.aeCapstoneRubricSelfGrade as Record<string, unknown>
+      const o: AeCapstoneRubricSelfGrade = {}
+      for (const id of AI_ESSENTIALS_CAPSTONE_RUBRIC_IDS) {
+        const v = raw[id]
+        if (v === 'not_ready' || v === 'developing' || v === 'ready' || v === 'strong') o[id] = v
+      }
+      aeCapstoneRubricSelfGrade = Object.keys(o).length ? o : undefined
+    }
     return {
       version: 1,
       completedSessionIds,
       flaggedForReviewSessionIds,
       ...(completedMasteryCheckpointIds?.length ? { completedMasteryCheckpointIds } : {}),
       ...(moduleQuiz ? { moduleQuiz } : {}),
+      ...(aeCapstoneRubricSelfGrade ? { aeCapstoneRubricSelfGrade } : {}),
       lastActiveSessionId: typeof data.lastActiveSessionId === 'string' ? data.lastActiveSessionId : undefined,
       lastActiveAt: typeof data.lastActiveAt === 'string' ? data.lastActiveAt : undefined,
       startedAt: typeof data.startedAt === 'string' ? data.startedAt : undefined,

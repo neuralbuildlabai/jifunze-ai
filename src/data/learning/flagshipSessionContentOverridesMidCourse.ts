@@ -6,6 +6,7 @@
  */
 
 import type { FlagshipSessionContentBlock } from './flagshipSessionContentTypes'
+import { flagshipDepthPaddingBlock } from './flagshipSessionDepthPadding'
 
 export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_MIDCOURSE: Partial<
   Record<string, FlagshipSessionContentBlock[]>
@@ -76,7 +77,8 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_MIDCOURSE: Partial<
       id: "ae-m06-practice-ov-next",
       type: "next_step",
       body: "If you cannot point to the paragraph each claim came from, stop and fix before continuing.",
-    }
+    },
+    flagshipDepthPaddingBlock('ae-m06-practice'),
   ],
 
   "ai-essentials::ae-m07-lesson": [

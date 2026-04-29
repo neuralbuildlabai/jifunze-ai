@@ -9,6 +9,7 @@
  */
 
 import type { FlagshipSessionContentBlock } from './flagshipSessionContentTypes'
+import { flagshipDepthPaddingBlock } from './flagshipSessionDepthPadding'
 
 export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
   Record<string, FlagshipSessionContentBlock[]>
@@ -73,7 +74,8 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
       id: "ae-m01-revision-lt-next",
       type: "next_step",
       body: "Proceed only if you would defend these claims aloud to a skeptical peer.",
-    }
+    },
+    flagshipDepthPaddingBlock('ae-m01-revision'),
   ],
 
   "ai-essentials::ae-m02-lesson": [
@@ -172,7 +174,8 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
       id: "ae-m02-recap-lt-next",
       type: "next_step",
       body: "Archive the recap where your future self will actually find it.",
-    }
+    },
+    flagshipDepthPaddingBlock('ae-m02-recap'),
   ],
 
   "ai-essentials::ae-m03-lesson": [
@@ -241,6 +244,72 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
       type: "next_step",
       body: "Take your matrix to ae-m04. Each tool in the matrix needs at least one prompt constraint you haven’t written yet.",
     }
+  ],
+
+  "ai-essentials::ae-m05-practice": [
+    {
+      id: "ae-m05-practice-lt-intro",
+      type: "intro",
+      eyebrow: "Practice lab",
+      title: "Iteration with receipts — not vibes",
+      body: "You compare prompt variants under fixed evaluation criteria, log what each version changed, and watch for regressions (format drift, missing refusals, weaker evidence behavior). A reviewer should see why v2 exists, not just that it exists.",
+    },
+    {
+      id: "ae-m05-practice-lt-task",
+      type: "practice_task",
+      title: "Practice · Pairwise prompt tests and version notes",
+      bullets: [
+        "1. Run three variants on one real task; keep intent and constraints identical except one controlled variable per pair.",
+        "2. Score outputs against a short rubric (accuracy, format, safety, usefulness) — note one regression if a “better” variant fails a row.",
+      ],
+      prompt: "Stop when you could hand your log to a teammate and they could reproduce your conclusion.",
+    },
+    {
+      id: "ae-m05-practice-lt-output",
+      type: "output_prompt",
+      title: "Artifact to produce",
+      prompt: "Draft your Module05 prompt version log: dated rows, what changed, why, and the rubric row that decided keep vs rollback.",
+      outputExpectation: "Prompt version log + QA checklist draft",
+    },
+    {
+      id: "ae-m05-practice-lt-next",
+      type: "next_step",
+      body: "Next: ae-m06 — verification lanes so fluent outputs cannot masquerade as verified facts.",
+    },
+    flagshipDepthPaddingBlock('ae-m05-practice'),
+  ],
+
+  "ai-essentials::ae-m05-revision": [
+    {
+      id: "ae-m05-revision-lt-intro",
+      type: "intro",
+      eyebrow: "Revision gate",
+      title: "Tighten · Iteration, comparison, and rollback discipline",
+      body: "Compress what you will actually do when a prompt “improvement” silently breaks format, citations, or refusal behavior. Revision is where vague iteration habits die.",
+    },
+    {
+      id: "ae-m05-revision-lt-recap",
+      type: "recap",
+      title: "Compress to checks",
+      bullets: [
+        "One pairwise test you ran and the rubric row that decided the winner.",
+        "One regression you caught (or should have caught) and how you rolled back.",
+        "Three lines your prompt QA checklist will contain before the next deadline.",
+      ],
+    },
+    {
+      id: "ae-m05-revision-lt-task",
+      type: "practice_task",
+      title: "Structured gate",
+      prompt:
+        "In 6–10 sentences: (1) your default iteration mistake under pressure, (2) the signal that should trigger rollback, (3) what in your version log proves you practiced this module.",
+    },
+    {
+      id: "ae-m05-revision-lt-next",
+      type: "next_step",
+      body: "Proceed only if a tired teammate could follow your version notes without asking you to narrate.",
+    },
+    flagshipDepthPaddingBlock('ae-m05-revision'),
   ],
 
   "ai-essentials::ae-m04-lesson": [

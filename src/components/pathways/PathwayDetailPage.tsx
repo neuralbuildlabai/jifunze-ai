@@ -252,7 +252,10 @@ export function PathwayDetailPage() {
           </section>
         ) : null}
 
-        <section className="rounded-2xl border border-dashed border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/60 p-5 sm:p-6">
+        <section
+          id="pathway-portfolio-guidance"
+          className="rounded-2xl border border-dashed border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/60 p-5 sm:p-6"
+        >
           <h2 className={sectionTitle}>Portfolio-ready outputs (guidance only)</h2>
           <p className={`mt-2 ${prose}`}>
             A practical checklist tied to this pathway—not a completed evidence vault. Uploads and formal review are not wired yet; use the rows below to plan

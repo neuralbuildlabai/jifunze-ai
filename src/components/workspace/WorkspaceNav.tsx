@@ -32,7 +32,7 @@ function OperationalAdminNav() {
         Learning reports
       </NavLink>
       <NavLink to="/trends" className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
-        Trend Insights
+        Growth Intelligence
       </NavLink>
       <NavLink
         to={LEGAL_ROUTES.workspaceSubscription}
@@ -71,11 +71,11 @@ function SuperAdminNav() {
         Billing / Plan
       </NavLink>
       <NavLink to="/trends" className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
-        Trend Insights
+        Growth Intelligence
       </NavLink>
       {canViewOperatorInsights ? (
         <NavLink to="/insights" className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
-          Insights
+          Learner Insights
         </NavLink>
       ) : null}
       <NavLink end to="/settings" className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>

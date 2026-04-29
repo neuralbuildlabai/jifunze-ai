@@ -5,8 +5,9 @@ import { LEGAL_ROUTES } from '../training/trustCopy'
 import { useAuth } from '../auth/AuthContext'
 import { isSupabaseConfigured } from '../config/supabaseEnv'
 import { DashboardTeamAssignmentsWidget } from './team/DashboardTeamAssignmentsWidget'
-import { DashboardTrainingWidget } from './training/DashboardTrainingWidget'
-import { DashboardPathwaysPanel } from './DashboardPathwaysPanel'
+import { DashboardLearnerHub } from './DashboardLearnerHub'
+import { DashboardAdminToolsSection } from './DashboardAdminToolsSection'
+
 const cardClass =
   'rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 shadow-[0_12px_40px_rgba(0,0,0,0.2)] ring-1 ring-white/[0.04]'
 
@@ -14,7 +15,7 @@ const linkTileClass =
   'flex flex-col gap-1 rounded-lg border border-white/[0.06] bg-zinc-950/40 px-3 py-2.5 text-left transition hover:border-violet-400/25 hover:bg-white/[0.04]'
 
 /**
- * Post-login hub: session, effective access tier, and role-filtered shortcuts (UI only — enforce on server).
+ * Post-login hub: pathway-first learner surfaces, then account; admin tools stay compact below for operators.
  */
 export function DashboardPage() {
   const {
@@ -28,13 +29,10 @@ export function DashboardPage() {
     retryWorkspaceBootstrap,
   } = useAuth()
 
-  const { tier, tierLoading, navVariant, canViewOperatorInsights } = useAppAccess()
+  const { tier, tierLoading, navVariant, canViewOperatorInsights, canManageInstitutionTrainingPlans } = useAppAccess()
 
   const workspaceBootstrapNeedsRecovery =
-    isSupabaseConfigured() &&
-    Boolean(user) &&
-    !workspaceTenantResolved &&
-    authError != null
+    isSupabaseConfigured() && Boolean(user) && !workspaceTenantResolved && authError != null
 
   if (workspaceBootstrapNeedsRecovery) {
     return (
@@ -76,38 +74,34 @@ export function DashboardPage() {
   const tierLabel = humanAccessTierLabel(tier)
 
   return (
-    <div className="mx-auto w-full max-w-3xl space-y-8 px-4 py-10 text-zinc-100">
+    <div className="mx-auto w-full max-w-4xl space-y-8 px-4 py-10 text-zinc-100">
       <header className="border-b border-white/[0.06] pb-6">
         <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">Dashboard</p>
         <h1 className="mt-1 text-xl font-semibold text-white">Welcome back</h1>
-        <p className="mt-2 max-w-xl text-sm text-zinc-400">
-          Pick up learning, manage your plan, or open tools that match your role.
+        <p className="mt-2 max-w-2xl text-sm text-zinc-400">
+          Continue your pathway, build portfolio-ready proof, and manage your learning workspace.
         </p>
       </header>
 
+      <DashboardLearnerHub />
+
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="sm:col-span-2">
-          <DashboardTrainingWidget />
-        </div>
         <div className="sm:col-span-2">
           <DashboardTeamAssignmentsWidget />
         </div>
-        {navVariant === 'learner' ? <DashboardPathwaysPanel /> : null}
         <section className={navVariant === 'learner' ? `${cardClass} sm:col-span-2` : cardClass}>
           <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Account</h2>
           <p className="mt-2 text-sm text-zinc-200">{email}</p>
           {navVariant === 'learner' ? (
             <p className="mt-3 text-[13px] leading-relaxed text-zinc-400">
-              Continue courses and open Account when you need billing links or password help.
+              Open Account when you need billing links, password help, or plan details—your pathway progress stays in Reports and Pathways.
             </p>
           ) : null}
         </section>
         {navVariant === 'learner' ? null : (
           <section className={cardClass}>
             <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Role</h2>
-            <p className="mt-2 text-sm font-medium text-zinc-100">
-              {tierLoading ? 'Loading…' : tierLabel}
-            </p>
+            <p className="mt-2 text-sm font-medium text-zinc-100">{tierLoading ? 'Loading…' : tierLabel}</p>
             <p className="mt-1 text-[11px] leading-relaxed text-zinc-500">
               Course access follows your subscription or purchases. Administrative actions are enforced on the server too.
             </p>
@@ -115,118 +109,50 @@ export function DashboardPage() {
         )}
       </div>
 
-      <section className="space-y-3">
-        <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Go to</h2>
-        <div className="grid gap-2 sm:grid-cols-2">
-          {navVariant === 'learner' ? (
-            <>
-              <Link to="/my-learning" className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">My Learning</span>
-                <span className="text-[11px] text-zinc-500">Continue courses and assignments</span>
-              </Link>
-              <Link to="/reports" className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Reports</span>
-                <span className="text-[11px] text-zinc-500">Progress and chapter status</span>
-              </Link>
-              <Link to={LEGAL_ROUTES.paths} className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Pathways</span>
-                <span className="text-[11px] text-zinc-500">Employability tracks</span>
-              </Link>
-              <Link to={LEGAL_ROUTES.learn} className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Discover</span>
-                <span className="text-[11px] text-zinc-500">Browse the catalog</span>
-              </Link>
-              <Link to="/library" className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Library</span>
-                <span className="text-[11px] text-zinc-500">Extended readers</span>
-              </Link>
-              <Link to={LEGAL_ROUTES.workspaceSubscription} className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Billing / Plan</span>
-                <span className="text-[11px] text-zinc-500">Pricing and subscription</span>
-              </Link>
-              <Link to="/account" className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Account</span>
-                <span className="text-[11px] text-zinc-500">Plan links &amp; sign-in</span>
-              </Link>
-            </>
-          ) : null}
-          {navVariant === 'institution_admin' || navVariant === 'platform_admin' ? (
-            <>
-              <Link to="/training" className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Training plans</span>
-                <span className="text-[11px] text-zinc-500">Assign catalog-backed paths</span>
-              </Link>
-              <Link to="/team/members" className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Members</span>
-                <span className="text-[11px] text-zinc-500">Workspace roster</span>
-              </Link>
-              <Link to="/team/learning-reports" className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Learning reports</span>
-                <span className="text-[11px] text-zinc-500">Assignment progress</span>
-              </Link>
-              <Link to="/team/assignments" className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Assignments</span>
-                <span className="text-[11px] text-zinc-500">Deployment board</span>
-              </Link>
-              <Link to={LEGAL_ROUTES.learn} className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Courses</span>
-                <span className="text-[11px] text-zinc-500">Catalog</span>
-              </Link>
-              <Link to="/trends" className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Trend Insights</span>
-                <span className="text-[11px] text-zinc-500">Signals and recommendations</span>
-              </Link>
-              <Link to="/ideas" className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Ideas</span>
-                <span className="text-[11px] text-zinc-500">Operator workspace</span>
-              </Link>
-              <Link to="/studio" className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Studio</span>
-                <span className="text-[11px] text-zinc-500">Packages &amp; adaptation</span>
-              </Link>
-              <Link to={LEGAL_ROUTES.workspaceSubscription} className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Billing / Plan</span>
-                <span className="text-[11px] text-zinc-500">Subscription</span>
-              </Link>
-              <Link to="/settings" className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Settings</span>
-                <span className="text-[11px] text-zinc-500">Workspace preferences</span>
-              </Link>
-            </>
-          ) : null}
-          {navVariant === 'super_admin' ? (
-            <>
-              <Link to="/platform" className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Platform ops</span>
-                <span className="text-[11px] text-zinc-500">Runtime &amp; diagnostics</span>
-              </Link>
-              <Link to={LEGAL_ROUTES.learn} className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Catalog</span>
-                <span className="text-[11px] text-zinc-500">All courses</span>
-              </Link>
-              <Link to={LEGAL_ROUTES.workspaceSubscription} className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Billing / Plan</span>
-                <span className="text-[11px] text-zinc-500">Plans</span>
-              </Link>
-              {canViewOperatorInsights ? (
-                <Link to="/insights" className={linkTileClass}>
-                  <span className="text-sm font-medium text-zinc-100">Insights</span>
-                  <span className="text-[11px] text-zinc-500">Learning analytics</span>
-                </Link>
-              ) : null}
-              <Link to="/settings" className={linkTileClass}>
-                <span className="text-sm font-medium text-zinc-100">Settings</span>
-                <span className="text-[11px] text-zinc-500">Account</span>
-              </Link>
-            </>
-          ) : null}
-        </div>
-      </section>
+      {navVariant === 'learner' ? (
+        <section className="space-y-3">
+          <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Shortcuts</h2>
+          <div className="grid gap-2 sm:grid-cols-2">
+            <Link to="/my-learning" className={linkTileClass}>
+              <span className="text-sm font-medium text-zinc-100">My Learning</span>
+              <span className="text-[11px] text-zinc-500">Assignments and enrolled paths</span>
+            </Link>
+            <Link to="/reports" className={linkTileClass}>
+              <span className="text-sm font-medium text-zinc-100">Reports</span>
+              <span className="text-[11px] text-zinc-500">Session and module progress</span>
+            </Link>
+            <Link to={LEGAL_ROUTES.paths} className={linkTileClass}>
+              <span className="text-sm font-medium text-zinc-100">Pathways</span>
+              <span className="text-[11px] text-zinc-500">Employability tracks</span>
+            </Link>
+            <Link to={LEGAL_ROUTES.learn} className={linkTileClass}>
+              <span className="text-sm font-medium text-zinc-100">Discover</span>
+              <span className="text-[11px] text-zinc-500">Browse the catalog</span>
+            </Link>
+            <Link to="/library" className={linkTileClass}>
+              <span className="text-sm font-medium text-zinc-100">Library</span>
+              <span className="text-[11px] text-zinc-500">Extended readers</span>
+            </Link>
+            <Link to={LEGAL_ROUTES.workspaceSubscription} className={linkTileClass}>
+              <span className="text-sm font-medium text-zinc-100">Billing / Plan</span>
+              <span className="text-[11px] text-zinc-500">Pricing and subscription</span>
+            </Link>
+            <Link to="/account" className={linkTileClass}>
+              <span className="text-sm font-medium text-zinc-100">Account</span>
+              <span className="text-[11px] text-zinc-500">Plan links and sign-in</span>
+            </Link>
+          </div>
+        </section>
+      ) : null}
+
+      <DashboardAdminToolsSection
+        navVariant={navVariant}
+        canManageInstitutionTrainingPlans={canManageInstitutionTrainingPlans}
+        canViewOperatorInsights={canViewOperatorInsights}
+      />
 
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06] pt-6">
-        <p className="text-[11px] text-zinc-600">
-          Need help? Open Account or sign out and back in after confirming email.
-        </p>
+        <p className="text-[11px] text-zinc-600">Need help? Open Account or sign out and back in after confirming email.</p>
         <button
           type="button"
           disabled={signOutPending}

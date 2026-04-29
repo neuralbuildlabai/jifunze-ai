@@ -4,6 +4,7 @@
  */
 
 import type { FlagshipSessionContentBlock } from './flagshipSessionContentTypes'
+import { FLAGSHIP_SESSION_CONTENT_OVERRIDES_AI_ESSENTIALS_GAPS } from './flagshipSessionContentOverridesAiEssentialsGaps'
 import { FLAGSHIP_SESSION_CONTENT_OVERRIDES_AI_ESSENTIALS_LESSONS } from './flagshipSessionContentOverridesAiEssentialsLessons'
 import { FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION } from './flagshipSessionContentOverridesCompletion'
 import { FLAGSHIP_SESSION_CONTENT_OVERRIDES_MIDCOURSE } from './flagshipSessionContentOverridesMidCourse'
@@ -822,6 +823,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES: Partial<Record<string, Flagship
 
   // AI Essentials (Course 1) — deep lesson teaching blocks; wins over Schools134, MidCourse, and completion for these keys.
   ...FLAGSHIP_SESSION_CONTENT_OVERRIDES_AI_ESSENTIALS_LESSONS,
+  ...FLAGSHIP_SESSION_CONTENT_OVERRIDES_AI_ESSENTIALS_GAPS,
 }
 
 export function flagshipSessionContentOverrideKey(courseSlug: string, sessionId: string): string {
