@@ -113,7 +113,7 @@ Bridges 6→7, 7→8, 8→9, 10→11, 11→12, 12→13, 13→14, 14→15, 15→1
 
 ## 5. Assessment consistency check
 
-**Passed modules (eight-question checkpoints, mixed formats, answer keys with strong-answer criteria, 80% threshold all visible):** M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12, M13, M14, M15. Spot checks confirm each has at least 2 multiple-choice, 2 scenario, 2 short-answer, and at least 1 application item per the Assessment Standards. Answer keys explain why the correct answer is correct and what strong/partial/unacceptable looks like for the open items. No "answers will vary" without rubric.
+**Passed modules (eight-question checkpoints, mixed formats, answer keys with strong-answer criteria, 6-of-8 pass rule all visible):** M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12, M13, M14, M15. Spot checks confirm each has at least 2 multiple-choice, 2 scenario, 2 short-answer, and at least 1 application item per the Assessment Standards. Answer keys explain why the correct answer is correct and what strong/partial/unacceptable looks like for the open items. No "answers will vary" without rubric.
 
 **M16 — capstone uses the rubric model rather than an eight-question quiz, which matches the Assessment Standards spec for the capstone block.** Rubric covers seven criteria (problem framing, prompt and workflow design, verification and review, safety and privacy, usefulness of final output, reusability and transfer, reflection and improvement) at four evidence levels (Not ready, Developing, Ready, Strong). Pass threshold: every criterion at Ready or higher, at least four at Strong. This matches the Assessment Standards section on capstone.
 

@@ -360,7 +360,7 @@ A self-check before submitting: pick any sentence in the synthesis brief at rand
 
 ## Checkpoint quiz
 
-Eight questions. Pass threshold: 80% (seven correct or, for short-answer and application items, demonstrating the strong-answer criteria below).
+Eight questions. Pass threshold: at least 6 of 8 questions correct (or, for short-answer and application items, meeting the strong-answer criteria below).
 
 **1. (Multiple choice — research-assist workflow.)** In the research-assist workflow taught in this module, which step comes immediately *before* "compare and cluster themes"?
 a) Define the question
@@ -450,7 +450,7 @@ You have completed Module 11 meaningfully when:
 - You have produced the three-part portfolio artifact and saved it under the required filename.
 - Every claim in your synthesis brief traces to a row in your source comparison grid, and every row traces to a real source.
 - Your synthesis brief uses uncertainty language inside the brief, not only in a closing limitations note, and includes at least one explicitly named open question.
-- You scored at least 80% on the checkpoint quiz, and your scenario and application answers meet the strong-answer criteria above.
+- You scored at least 6 of 8 on the checkpoint quiz, and your scenario and application answers meet the strong-answer criteria above.
 - The disclosure note describes any AI assistance you used, and the human review notes describe what you accepted, changed, and flagged as still uncertain.
 - No source containing Tier 3 or Tier 4 content (Module 10) was pasted into an AI tool in raw form.
 
@@ -493,7 +493,7 @@ Module 12 takes the next step. Once you have done the same kind of research-and-
 
 **Likely content block types.** Text/markdown for the concept, examples, and reflection blocks. Card-style components for worked examples and practice activities, with embedded source excerpts as quoted-text components. Tabular component for the Source Comparison Grid template (offered to the learner in the artifact upload block as an optional starting structure). Interactive labelling component for Practice Activity 4 and Checkpoint Question 3, if available; otherwise free-text input with a rubric-checked answer.
 
-**Quiz mapping notes.** Questions 1, 2, and 5 are multiple-choice with a single correct answer (auto-checkable). Questions 3 and 7 are scenario short-answer items; render as free-text with the strong-answer criteria from the answer key as the rubric. Question 4 is an applied prompt-construction item; render as free-text with a three-part rubric (source-type identification, output specification, anti-fabrication constraint). Question 6 is a short-answer definitional item; render as free-text with rubric. Question 8 is the application item that produces a 200-word synthesis; render as free-text with the six-criterion rubric. Pass threshold: 80%, with auto-graded items contributing to the score and rubric-graded items either self-assessed against the answer key or facilitator-assessed depending on the deployment mode.
+**Quiz mapping notes.** Questions 1, 2, and 5 are multiple-choice with a single correct answer (auto-checkable). Questions 3 and 7 are scenario short-answer items; render as free-text with the strong-answer criteria from the answer key as the rubric. Question 4 is an applied prompt-construction item; render as free-text with a three-part rubric (source-type identification, output specification, anti-fabrication constraint). Question 6 is a short-answer definitional item; render as free-text with rubric. Question 8 is the application item that produces a 200-word synthesis; render as free-text with the six-criterion rubric. Pass threshold: at least 6 of 8 correct, with auto-graded items contributing to the score and rubric-graded items either self-assessed against the answer key or facilitator-assessed depending on the deployment mode.
 
 **Portfolio artifact mapping notes.** Single combined artifact, three internal sections. Filename pattern: `Module11_Research_Synthesis_Brief_[YourName].pdf` or `.docx`. Acceptable formats: .pdf, .docx, .md. The acceptance criterion (three random sentences traceable through the grid to source) is suitable for self-check; for facilitator review, it converts directly into a three-item checklist. Connect the artifact record forward to Module 12 (workflow standardisation), Module 13 (decision memo input), Module 15 (prompt pack), and Module 16 (capstone).
 

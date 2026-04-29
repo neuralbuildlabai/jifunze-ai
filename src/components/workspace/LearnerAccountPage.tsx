@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../../auth/AuthContext'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
 import { passwordPolicyHint } from '../../auth/passwordPolicy'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { TrustLegalFooterLinks } from '../TrustLegalFooterLinks'
 import { WorkspaceNav } from './WorkspaceNav'
@@ -18,7 +19,7 @@ export function LearnerAccountPage() {
     <WorkspaceRouteReady>
       <WorkspaceRouteShell
         title="Account"
-        subtitle="Manage how you sign in, your plan, and links to policies—without workspace admin controls."
+        subtitle="Manage how you sign in and review policies—without workspace admin controls."
       >
         <WorkspaceNav className="mb-8 w-full justify-start" />
 
@@ -35,26 +36,26 @@ export function LearnerAccountPage() {
           </button>
         </section>
 
-        <section className="mt-6 rounded-2xl border border-white/[0.06] bg-zinc-950/35 p-5 space-y-3">
-          <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Plan &amp; billing</h2>
-          <p className="text-[13px] leading-relaxed text-zinc-400">
-            View plans and manage subscription readiness in one place.
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              to={LEGAL_ROUTES.pricing}
-              className="rounded-lg border border-violet-500/35 bg-violet-950/30 px-4 py-2 text-sm font-medium text-violet-100 hover:bg-violet-950/45"
-            >
-              Pricing
-            </Link>
-            <Link
-              to={LEGAL_ROUTES.workspaceSubscription}
-              className="rounded-lg border border-zinc-600 bg-zinc-900/60 px-4 py-2 text-sm font-medium text-zinc-100 hover:bg-zinc-800"
-            >
-              Billing / Plan
-            </Link>
-          </div>
-        </section>
+        {LEARNER_MONETIZATION_UI_DISABLED ? null : (
+          <section className="mt-6 rounded-2xl border border-white/[0.06] bg-zinc-950/35 p-5 space-y-3">
+            <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Plan &amp; billing</h2>
+            <p className="text-[13px] leading-relaxed text-zinc-400">View plans and manage subscription readiness in one place.</p>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                to={LEGAL_ROUTES.pricing}
+                className="rounded-lg border border-violet-500/35 bg-violet-950/30 px-4 py-2 text-sm font-medium text-violet-100 hover:bg-violet-950/45"
+              >
+                Pricing
+              </Link>
+              <Link
+                to={LEGAL_ROUTES.workspaceSubscription}
+                className="rounded-lg border border-zinc-600 bg-zinc-900/60 px-4 py-2 text-sm font-medium text-zinc-100 hover:bg-zinc-800"
+              >
+                Billing / Plan
+              </Link>
+            </div>
+          </section>
+        )}
 
         {isSupabaseConfigured() ? (
           <section className="mt-6 rounded-2xl border border-white/[0.06] bg-zinc-950/35 p-5 space-y-3">

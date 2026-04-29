@@ -79,7 +79,7 @@ export type FlagshipCourseProgressApi = {
   toggleMasteryCheckpoint: (checkpointId: string, done: boolean) => void
   resetProgress: () => void
   updateModuleQuizRecord: (moduleId: string, partial: Partial<FlagshipModuleQuizRecord>) => void
-  /** AI Essentials capstone rubric self-grade (local-first; not synced to Supabase row yet). */
+  /** AI Essentials capstone rubric self-grade (local-first; debounced upsert to Supabase when signed in). */
   setAeCapstoneRubricCriterion: (criterionId: AeCapstoneRubricId, level: AeCapstoneRubricLevel | null) => void
   /** All modules + quizzes + mastery checkpoints + capstone prep — UI only until issuance exists. */
   certificateReady: boolean
@@ -333,7 +333,15 @@ export function useFlagshipCourseProgress(
       if (level == null) delete prev[criterionId]
       else prev[criterionId] = level
       const aeCapstoneRubricSelfGrade = Object.keys(prev).length ? prev : undefined
-      persist({ ...cur, aeCapstoneRubricSelfGrade }, true)
+      const rubricTouchIso = new Date().toISOString()
+      persist(
+        {
+          ...cur,
+          aeCapstoneRubricSelfGrade,
+          aeCapstoneRubricSelfGradeUpdatedAt: aeCapstoneRubricSelfGrade ? rubricTouchIso : undefined,
+        },
+        true,
+      )
     },
     [courseSlug, persist],
   )

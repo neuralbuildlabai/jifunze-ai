@@ -136,6 +136,23 @@ mergeEarlierStartedAt()
 mergeUnionMasteryCheckpoints()
 equalityStable()
 
+function mergeCapstoneRubricPreferStrongerCriterion() {
+  const local: FlagshipCourseProgressState = {
+    ...empty(),
+    aeCapstoneRubricSelfGrade: { problemFraming: 'ready' },
+    aeCapstoneRubricSelfGradeUpdatedAt: '2026-01-15T00:00:00.000Z',
+  }
+  const remote: FlagshipCourseProgressState = {
+    ...empty(),
+    aeCapstoneRubricSelfGrade: { problemFraming: 'developing' },
+    aeCapstoneRubricSelfGradeUpdatedAt: '2026-06-01T00:00:00.000Z',
+  }
+  const merged = mergeFlagshipProgressStates(local, remote)
+  assert.equal(merged.aeCapstoneRubricSelfGrade?.problemFraming, 'ready')
+}
+
+mergeCapstoneRubricPreferStrongerCriterion()
+
 function verifyAllFlagshipBlueprints() {
   assert.equal(FLAGSHIP_CURRICULUM_SLUGS.length, 15)
   for (const slug of FLAGSHIP_CURRICULUM_SLUGS) {

@@ -17,13 +17,18 @@ export function FlagshipCourseCard({
   course,
   testId,
   ctaLabel = 'Explore course',
+  maxOutputs,
 }: {
   course: FlagshipCourse
   testId?: string
   ctaLabel?: string
+  /** When set, only the first N example outputs are listed (e.g. featured grid). */
+  maxOutputs?: number
 }) {
   const school = schoolForCourse(course)
   const leftAccent = SCHOOL_ACCENT[school.accent]
+  const outputs =
+    typeof maxOutputs === 'number' ? course.exampleOutputs.slice(0, Math.max(0, maxOutputs)) : course.exampleOutputs
 
   return (
     <article
@@ -40,7 +45,7 @@ export function FlagshipCourseCard({
         </p>
 
         <ul className="mt-3 space-y-1.5 border-t border-[color:var(--jf-border)] pt-4">
-          {course.exampleOutputs.map((line) => (
+          {outputs.map((line) => (
             <li key={line} className="flex gap-2 text-[12px] leading-snug text-[color:var(--jf-muted)]">
               <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[color:var(--jf-muted)]/80" aria-hidden />
               <span>{line}</span>

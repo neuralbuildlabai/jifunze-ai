@@ -241,21 +241,12 @@ export function SignedInHomePage() {
                 </p>
               </li>
               <li className="rounded-xl border border-white/[0.06] bg-zinc-950/25 px-3 py-3">
-                <p className="text-[13px] font-medium text-zinc-100">Discover courses</p>
+                <p className="text-[13px] font-medium text-zinc-100">Catalog</p>
                 <p className="mt-1 text-[12px] leading-relaxed text-zinc-500/90">
                   <Link to={LEGAL_ROUTES.learn} className="text-violet-300/90 hover:text-violet-200">
                     Browse the catalog
                   </Link>{' '}
                   for flagship paths and libraries.
-                </p>
-              </li>
-              <li className="rounded-xl border border-white/[0.06] bg-zinc-950/25 px-3 py-3">
-                <p className="text-[13px] font-medium text-zinc-100">Plan &amp; pricing</p>
-                <p className="mt-1 text-[12px] leading-relaxed text-zinc-500/90">
-                  <Link to="/pricing" className="text-violet-300/90 hover:text-violet-200">
-                    View plans
-                  </Link>{' '}
-                  when you are ready for full access.
                 </p>
               </li>
             </ul>

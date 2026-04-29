@@ -6,6 +6,7 @@ import {
   resolveMlStarterLinkHref,
 } from '../../data/learning/mlLibraryCatalog'
 import { ML_LIBRARY_FAMILY, mlCurriculumStats } from '../../data/learning/machineLearningCurriculum'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { CurriculumDepthSection } from '../libraries/CurriculumDepthSection'
 
@@ -33,18 +34,26 @@ export function WorkspaceMlLibraryPage() {
           >
             Open free ML starter
           </Link>
-          <Link
-            to="/pricing"
-            className="inline-flex items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] px-5 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-emerald-400/25 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/55"
-          >
-            Unlock the full ML path
-          </Link>
-          <Link
-            to="/settings/subscription"
-            className="inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-medium text-zinc-500 transition hover:text-zinc-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/55"
-          >
-            Manage subscription or billing
-          </Link>
+          {LEARNER_MONETIZATION_UI_DISABLED ? (
+            <p className="max-w-xl text-[12px] leading-relaxed text-zinc-500">
+              Paid checkout is not active in this release—use the public ML starter link above.
+            </p>
+          ) : (
+            <>
+              <Link
+                to="/pricing"
+                className="inline-flex items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] px-5 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-emerald-400/25 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/55"
+              >
+                Unlock the full ML path
+              </Link>
+              <Link
+                to="/settings/subscription"
+                className="inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-medium text-zinc-500 transition hover:text-zinc-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/55"
+              >
+                Manage subscription or billing
+              </Link>
+            </>
+          )}
         </div>
       </header>
 
@@ -137,12 +146,16 @@ export function WorkspaceMlLibraryPage() {
                   ))}
                 </ul>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <Link
-                    to="/pricing"
-                    className="inline-flex items-center justify-center rounded-lg bg-white/[0.06] px-3 py-1.5 text-[11px] font-semibold text-zinc-100 ring-1 ring-white/[0.08] transition hover:bg-white/[0.09] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/55"
-                  >
-                    Unlock deeper ML learning
-                  </Link>
+                  {LEARNER_MONETIZATION_UI_DISABLED ? (
+                    <span className="text-[11px] text-zinc-600">Deeper tiers are not listed in this release.</span>
+                  ) : (
+                    <Link
+                      to="/pricing"
+                      className="inline-flex items-center justify-center rounded-lg bg-white/[0.06] px-3 py-1.5 text-[11px] font-semibold text-zinc-100 ring-1 ring-white/[0.08] transition hover:bg-white/[0.09] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/55"
+                    >
+                      Unlock deeper ML learning
+                    </Link>
+                  )}
                 </div>
               </div>
             </article>
@@ -160,12 +173,16 @@ export function WorkspaceMlLibraryPage() {
               licensing prep guarantees, or hiring outcomes.
             </p>
           </div>
-          <Link
-            to="/pricing"
-            className="text-sm font-semibold text-emerald-300/95 hover:text-emerald-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/55"
-          >
-            Check pricing →
-          </Link>
+          {LEARNER_MONETIZATION_UI_DISABLED ? (
+            <span className="text-sm text-zinc-600">Pricing paused.</span>
+          ) : (
+            <Link
+              to="/pricing"
+              className="text-sm font-semibold text-emerald-300/95 hover:text-emerald-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/55"
+            >
+              Check pricing →
+            </Link>
+          )}
         </div>
 
         <div className="mt-8 grid gap-4 lg:grid-cols-2">
@@ -181,12 +198,16 @@ export function WorkspaceMlLibraryPage() {
                 </span>
               </div>
               <p className="mt-2 text-[13px] leading-relaxed text-zinc-400">{track.summary}</p>
-              <Link
-                to="/pricing"
-                className="mt-4 inline-flex text-[12px] font-semibold text-emerald-200/95 hover:text-emerald-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/55"
-              >
-                Check availability on pricing →
-              </Link>
+              {LEARNER_MONETIZATION_UI_DISABLED ? (
+                <p className="mt-4 text-[12px] text-zinc-600">Availability on pricing — not listed in this release.</p>
+              ) : (
+                <Link
+                  to="/pricing"
+                  className="mt-4 inline-flex text-[12px] font-semibold text-emerald-200/95 hover:text-emerald-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/55"
+                >
+                  Check availability on pricing →
+                </Link>
+              )}
             </article>
           ))}
         </div>

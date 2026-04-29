@@ -6,6 +6,7 @@ import {
 } from '../../data/learning/aiLibraryCatalog'
 import { CHATBOT_FAMILY_STARTER_PUBLIC_PATH } from '../../data/learning/chatbotLibraryCatalog'
 import { ML_FAMILY_STARTER_PUBLIC_PATH } from '../../data/learning/mlLibraryCatalog'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { EXTENDED_PUBLIC_LIBRARY_CONFIGS } from '../../data/learning/extendedPublicLibraryConfigs'
 import { flattenLessonsForCurriculum } from '../../data/learning/extendedLibrariesCurricula'
@@ -223,18 +224,24 @@ export function WorkspaceLibraryPage() {
               Subscriptions or one-time bundles can unlock richer tracks—access varies; outcomes do not.
             </p>
             <div className="mt-4 flex flex-wrap gap-3">
-              <Link
-                to="/pricing"
-                className="inline-flex text-[12px] font-semibold text-violet-300/95 hover:text-violet-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/55"
-              >
-                View pricing →
-              </Link>
-              <Link
-                to="/settings/subscription"
-                className="inline-flex text-[12px] font-medium text-zinc-500 hover:text-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/55"
-              >
-                Manage subscription →
-              </Link>
+              {LEARNER_MONETIZATION_UI_DISABLED ? (
+                <p className="text-[12px] text-zinc-500">Public checkout is not active in this release.</p>
+              ) : (
+                <>
+                  <Link
+                    to="/pricing"
+                    className="inline-flex text-[12px] font-semibold text-violet-300/95 hover:text-violet-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/55"
+                  >
+                    View pricing →
+                  </Link>
+                  <Link
+                    to="/settings/subscription"
+                    className="inline-flex text-[12px] font-medium text-zinc-500 hover:text-zinc-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/55"
+                  >
+                    Manage subscription →
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

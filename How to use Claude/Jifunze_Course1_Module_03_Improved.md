@@ -313,7 +313,7 @@ Produce a *Before/After Prompt Rewrite* document covering one task you actually 
 
 ## Checkpoint quiz
 
-Eight questions. Pass threshold: 80% (six out of eight). Use a paper notebook or a separate file. Do not look back at Part A while answering. After you finish, mark yourself against the answer key in the next section.
+Eight questions. Pass threshold: at least 6 of 8 questions correct. Use a paper notebook or a separate file. Do not look back at Part A while answering. After you finish, mark yourself against the answer key in the next section.
 
 1. *(Multiple choice)* Which of the following best describes the *Task* element of a T-C-C-F-A prompt?
    a. The background information the AI needs about your situation.
@@ -370,7 +370,7 @@ Eight questions. Pass threshold: 80% (six out of eight). Use a paper notebook or
    a. Strong answers point to two distinct sources of clutter, such as: (i) the tone constraints contradict each other (*professional, friendly, casual but not too casual, formal-yet-warm* — these cancel out and the AI cannot satisfy all of them at once); (ii) the format is double-specified and contradictory (*"use bullet points but also write it in paragraphs"*); (iii) the content list is too long for the stated 80-word limit, which forces the AI to either skip items or shrink each one to a single phrase. Any two of these earn full marks.
    b. Strong answers propose targeted edits — for example: *"Pick one tone direction (warm and professional) and delete the other tone words. Pick one format (a short paragraph followed by three bullets) and delete the contradictory instruction."* Or: *"Cut the content list to the three items the team actually needs to act on (time, venue, RSVP) and move the rest to a follow-up message."* The marker should look for whether the learner is removing real noise rather than just shortening the prompt at random.
 
-A learner who scores six or more out of eight has met the 80% threshold. A learner who scores four or five should review specific Part A sub-sections — the Revision guidance section below names which one matches each weakness.
+A learner who scores six or more out of eight has met the pass bar (at least 6 of 8). A learner who scores four or five should review specific Part A sub-sections — the Revision guidance section below names which one matches each weakness.
 
 ## Portfolio artifact
 
@@ -414,7 +414,7 @@ If you skip the artifact or save a thin version of it, four later modules become
 
 The following outputs together prove that you have completed Module 3 meaningfully. Keep them in your portfolio folder.
 
-- The 8-question checkpoint quiz, completed at 80% or higher (six or more correct).
+- The 8-question checkpoint quiz, completed with at least 6 of 8 correct.
 - Practice activity 1 submitted as a table — four weak prompts, three labelled improvements per prompt, and the predicted output change for each. Twelve labelled improvements in total.
 - Practice activity 2 submitted as two short paragraphs — one per prompt-output pair — naming the T-C-C-F-A element that changed and how it changed the output. Plus the one-sentence answer to the Pair B reflection question.
 - Practice activity 3 submitted as two AI outputs (no-context and full-context) plus a one-paragraph analysis of which version you would actually send and why.
@@ -426,7 +426,7 @@ A learner with all of the above has finished Module 3 at the expected depth. A l
 
 ## Revision guidance
 
-If you scored under 80% on the checkpoint, or if any of the situations below describe you, return to the named section before moving on.
+If you scored below 6 of 8 on the checkpoint, or if any of the situations below describe you, return to the named section before moving on.
 
 **Your prompt is still vague after rewriting.** Re-read the *Task* sub-section of the core lesson in Part A. The most common cause of a still-vague prompt is a missing or hidden verb. Apply the test from that sub-section: *"If I read my prompt and ask 'did the AI do that, yes or no?', is the answer clear?"* If the answer is *kind of* or *I'm not sure*, the verb is too broad. Rewrite the Task line first; the rest of the prompt usually tightens once the verb is specific.
 
@@ -465,7 +465,7 @@ This section is for the platform team mapping Module 3 into Cursor. It is not pa
 - *Artifact upload* — the portfolio artifact, with the filename pattern enforced by the upload widget.
 - *Remediation* — the Revision guidance section, mapped to deep-link buttons that jump back to the named Part A sub-sections.
 
-**Quiz mapping notes.** Eight questions, four formats, two of each. Two are machine-checkable multiple choice (Q1, Q2) and can be scored automatically. The remaining six (Q3 through Q8) are rubric-checkable: each has a model answer plus criteria in the answer key. The platform should render Q5, Q6, Q7, and Q8 as text-area inputs with a learner-side self-assessment rubric (collapsible) below each. The pass threshold of 80% means the learner must mark themselves as correct on at least six of eight using the supplied criteria. Q7 (the customer-delay rewrite) is the most rubric-heavy and benefits from a side-by-side display of the learner's rewrite and the five element-checks from the answer key.
+**Quiz mapping notes.** Eight questions, four formats, two of each. Two are machine-checkable multiple choice (Q1, Q2) and can be scored automatically. The remaining six (Q3 through Q8) are rubric-checkable: each has a model answer plus criteria in the answer key. The platform should render Q5, Q6, Q7, and Q8 as text-area inputs with a learner-side self-assessment rubric (collapsible) below each. The pass rule means the learner must mark themselves as correct on at least six of eight using the supplied criteria. Q7 (the customer-delay rewrite) is the most rubric-heavy and benefits from a side-by-side display of the learner's rewrite and the five element-checks from the answer key.
 
 **Portfolio artifact mapping notes.** Upload widget should accept `.pdf` and `.docx` only. Filename must match the pattern `Module03_Prompt_Rewrite_*.{pdf,docx}` — enforce on upload. The widget should expose all seven required parts as a checklist the learner ticks before submission, so partial uploads are caught at the point of submission rather than at the start of Module 4. Tag the artifact in storage as `feeds:m04, feeds:m05, feeds:m15, feeds:m16` so later modules can surface it automatically when needed.
 

@@ -16,11 +16,19 @@ The audience is internal: curriculum authors, reviewers, platform engineers, and
 
 ---
 
+## Jifunze AI Essentials app rule (current shipped product)
+
+The live **module quiz** gate in Jifunze draws **8 questions** and passes only when the learner answers **at least 6 correctly** (count-based; do not label this as **"80%"** in learner-facing UI—six of eight is **75%** as a percentage and confuses the bar).
+
+Manuscript checkpoints in this document may still describe mixed item formats and **0.5 credit** rubric scoring toward an **8.0** total. That model is for authoring fidelity; engineers should mirror whatever scorer ships. Until partial credit ships in the quiz UI, treat the **product** rule as **6 of 8** whole correct.
+
+---
+
 ## Checkpoint structure
 
 Every Course 1 module ends with a checkpoint quiz. The quiz is the same shape in every module so learners build a stable expectation and platform engineers build a single component.
 
-**Eight questions per module.** Not six, not ten. Eight is the count that lets us cover four formats meaningfully without becoming a long-form test. It also produces a clean 80% threshold (six correct out of eight) without fractional grading.
+**Eight questions per module.** Not six, not ten. Eight is the count that lets us cover four formats meaningfully without becoming a long-form test. The **pass bar aligns with the Jifunze app:** at least **six of eight** scored items treated as correct (see *Pass threshold* below for manuscript partial-credit rules).
 
 **Mixed formats, with required minimums.** Each eight-question checkpoint must contain at least:
 
@@ -43,11 +51,11 @@ The eighth question is author's choice in format, but should be the question tha
 
 ## Pass threshold
 
-**The pass threshold is 80% — six correct out of eight.** This is the same number across all sixteen modules and across every retake. There is no curve, no per-module variation, and no facilitator override.
+**Authoring / manuscript rule (eight-point total, may include half credit).** Multiple-choice questions are scored binary: right or wrong. Scenario, short-answer, and application questions are scored against the rubric in the answer key — each question is either *acceptable* (full credit), *partial* (half credit), or *unacceptable* (no credit). Half-credit answers count as 0.5 toward the eight-question total. A learner who scores **5.5** has not passed. A learner who scores **6.0** has.
 
-Multiple-choice questions are scored binary: right or wrong. Scenario, short-answer, and application questions are scored against the rubric in the answer key — each question is either *acceptable* (full credit), *partial* (half credit), or *unacceptable* (no credit). Half-credit answers count as 0.5 toward the eight-question total. A learner who scores 5.5 has not passed. A learner who scores 6.0 has.
+**Jifunze app rule today (module quiz gate).** Eight drawn items, each right or wrong; **pass = at least 6 correct** (say **6 of 8**, not "80%"). This is the same count expectation across all sixteen modules and retakes. There is no curve, no per-module variation, and no facilitator override in the shipped quiz UI.
 
-**What happens below threshold.** A learner who scores below 80% has not completed the module checkpoint. The platform does not mark the module as complete. The learner is shown:
+**What happens below threshold.** A learner who scores **below 6 of 8** (or below **6.0** on the eight-point rubric model where partial credit applies) has not completed the module checkpoint. The platform does not mark the module as complete. The learner is shown:
 
 - The questions they got wrong, with the answer key explanations.
 - The specific module sub-sections to review (named explicitly in the module's revision guidance — see the *Revision and remediation* section below).
@@ -57,7 +65,7 @@ We do not let learners retake the same checkpoint instantly. The cooling rule ex
 
 **Suggested retry rule.** A learner gets up to three attempts on any checkpoint. Each attempt uses the same eight questions in randomized order; the application item may be replaced by an equivalent variant if one is authored. Three attempts is a deliberate ceiling — it lets a learner who genuinely needed a second pass through the material succeed, but it stops the platform from being used as a guess-until-you-pass tool.
 
-If a learner exhausts three attempts without reaching 80%, the platform does not block them from continuing the course. It does mark the module as *not yet passed* and adds it to the learner's *return to* list, which is shown on the dashboard. The certificate-readiness rule (see *Capstone assessment relationship* below) requires every module checkpoint to eventually pass at 80% or higher; the learner can return to a not-yet-passed checkpoint at any time and try again.
+If a learner exhausts three attempts without reaching **6 of 8** correct (or **6.0** on the eight-point rubric model), the platform does not block them from continuing the course. It does mark the module as *not yet passed* and adds it to the learner's *return to* list, which is shown on the dashboard. The certificate-readiness rule (see *Capstone assessment relationship* below) requires every module checkpoint to eventually meet the pass bar; the learner can return to a not-yet-passed checkpoint at any time and try again.
 
 A learner who fails three times in a row should also be offered the option to talk to a facilitator (when one is available in the deployment) or to consult the Self-Learner Guide's *When you're stuck* section. The platform does not force this conversation.
 
@@ -85,7 +93,7 @@ A strong question is **unambiguous in what it asks**. A learner should not have 
 
 Weak questions are removed during the QA pass. The most common patterns to watch for:
 
-**Recall-only questions that test whether the learner read the module.** A question asking *"What does T-C-C-F-A stand for?"* tests vocabulary, not skill. A question asking *"In the Module 3 example of the late-assignment email, which T-C-C-F-A element was most strengthened in the revision?"* tests understanding. We allow some recall — two questions out of eight is the cap — but a checkpoint dominated by recall has not earned 80% as the bar.
+**Recall-only questions that test whether the learner read the module.** A question asking *"What does T-C-C-F-A stand for?"* tests vocabulary, not skill. A question asking *"In the Module 3 example of the late-assignment email, which T-C-C-F-A element was most strengthened in the revision?"* tests understanding. We allow some recall — two questions out of eight is the cap — but a checkpoint dominated by recall has not earned a **six-of-eight** pass bar.
 
 **Trick questions and gotchas.** Distractors that depend on the learner missing a single word, or scenarios that require an unstated assumption to answer correctly, are removed. A learner who genuinely understood the concept should be able to pass.
 
@@ -171,7 +179,7 @@ The capstone in Module 16 is the only place in Course 1 where the assessment goe
 
 **Certificate-readiness rules.** The Course 1 certificate is issued when all of the following are true:
 
-- All sixteen module checkpoints have eventually passed at 80% or higher.
+- All sixteen module checkpoints have eventually passed (**at least 6 of 8** correct on the module quiz gate, or **≥6.0 / 8.0** where partial credit is in use).
 - All sixteen module portfolio artifacts have been accepted (meet acceptance criteria).
 - The capstone has been submitted and meets the rubric's pass threshold.
 - The learner has produced a one-page reflection per the Module 16 specification.
@@ -185,9 +193,9 @@ The certificate explicitly names what the learner has demonstrated (responsible,
 
 ## Revision and remediation
 
-Every module has a *Revision guidance* section. That section is the bridge between *I scored under 80%* and *I will pass on retry*. The section is written in the module, not here — but every module's section follows the same shape, defined here.
+Every module has a *Revision guidance* section. That section is the bridge between *I scored below 6 of 8* and *I will pass on retry*. The section is written in the module, not here — but every module's section follows the same shape, defined here.
 
-**The shape.** *"If you scored under 80% on the checkpoint, return to [named sub-section A] and [named sub-section B] before retrying."* The named sub-sections are specific. Not *"the section on prompts"* — *"the section titled 'Why vague prompts fail' and the worked example titled 'Late-assignment email to students.'"* This specificity is what lets the platform turn revision guidance into automated *review section X* links rather than generic *study more* prompts.
+**The shape.** *"If you scored below 6 of 8 on the checkpoint, return to [named sub-section A] and [named sub-section B] before retrying."* The named sub-sections are specific. Not *"the section on prompts"* — *"the section titled 'Why vague prompts fail' and the worked example titled 'Late-assignment email to students.'"* This specificity is what lets the platform turn revision guidance into automated *review section X* links rather than generic *study more* prompts.
 
 **One named sub-section per likely failure mode.** A module's revision guidance maps the most common failure modes onto specific sub-sections. The Module 1 revision guidance, for example, names the misconceptions section for learners who failed the verification question and the AI task types section for learners who failed the task-classification question. This is a per-module authoring task; the module author writes the failure-to-section mapping during checkpoint writing.
 
@@ -232,11 +240,11 @@ This section translates the rules above into Jifunze UI specifications. It is th
 - *Short answer* renders as a short-answer text box (suggested 30–80 words). Self-graded.
 - *Application* renders as a longer text box, an upload field, or a structured form depending on the module's specification (a prompt rewrite is a text box; a classification table is a structured form). Self-graded.
 
-The submit button on the checkpoint block reveals the answer key. The platform records the learner's self-graded score. The learner's recorded score is what counts toward the 80% threshold.
+The submit button on the checkpoint block reveals the answer key. The platform records the learner's self-graded score. The learner's recorded score is what counts toward the **six-of-eight** pass rule (or summed credit toward **6.0 / 8.0** when partial scoring is enabled).
 
 **Pass threshold logic.** Score ≥ 6.0 out of 8.0 marks the checkpoint passed. The module is marked complete when the checkpoint is passed and the artifact is accepted. The certificate logic checks all sixteen modules' *complete* flags plus the capstone result.
 
-**Remediation block — UI behavior.** When a learner scores below 80%, the *remediation* block surfaces with the named sub-sections from the module's revision guidance, each rendered as a *go to section* link that scrolls to or opens the specific lesson sub-section. The retry button on the *checkpoint* block stays disabled until the learner has clicked at least one *go to section* link, or 24 hours have elapsed.
+**Remediation block — UI behavior.** When a learner scores **below 6 of 8** (or below the summed threshold where partial credit applies), the *remediation* block surfaces with the named sub-sections from the module's revision guidance, each rendered as a *go to section* link that scrolls to or opens the specific lesson sub-section. The retry button on the *checkpoint* block stays disabled until the learner has clicked at least one *go to section* link, or 24 hours have elapsed.
 
 **Artifact upload block — UI behavior.** The *artifact upload* block accepts the file format(s) specified in the module's *Portfolio artifact* section. The block displays the filename pattern as a hint. On upload, the platform validates the filename against the pattern and prompts the learner to rename if it does not match (this is a soft prompt, not a hard block — learners can override). The block also displays the named acceptance criteria from the module so the learner can self-check before submitting.
 

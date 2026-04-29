@@ -424,7 +424,7 @@ If you cannot answer one of these clearly, return to the core lesson section it 
 
 ## Checkpoint quiz
 
-Answer all eight questions. Mark your own answers using the answer key that follows. Pass threshold: 80% (at least 7 of 8 substantively correct, with strong-answer criteria met where named).
+Answer all eight questions. Mark your own answers using the answer key that follows. Pass threshold: at least 6 of 8 questions correct (substantively correct per strong-answer criteria where rubric-graded).
 
 **1. (Multiple choice.)** Which of the following best explains why hidden AI use creates problems even when the individual prompt was technically competent?
 
@@ -518,7 +518,7 @@ The learner has completed Module 14 meaningfully when:
 - The Shared Prompt Artifact is fit for a prompt library — usage note, boundary note, review cues, version number, date — and is specific enough that two members of the team would produce consistent work.
 - The artifact passes the new-colleague self-check across all five questions.
 - The disclosure note is present and substantively follows Course1_Disclosure_Note.md.
-- The checkpoint quiz reaches at least 80%, with the application questions meeting the strong-answer criteria.
+- The checkpoint quiz reaches at least 6 of 8, with the application questions meeting the strong-answer criteria.
 - For solo learners: the chosen hypothetical context is named and specific, and the artifact is designed against it rather than against a generic team.
 
 ## Revision guidance
@@ -570,7 +570,7 @@ Module 15 takes the next step. Until now, every prompt you have written, every w
   - Callout blocks for *what must not be in the recap*, *what this template is not for*, and the escalation triggers — these are short, must stand out, and are referenced from elsewhere.
   - A *solo-learner path* toggle or pinned callout that clarifies, at the top of every practice activity and the portfolio task, what changes for solo learners.
 
-- **Quiz mapping notes.** Questions 1, 2, 3, 4 are auto-scored multiple choice (radio button, single correct answer). Questions 5 and 6 are short answer with rubric-checked correctness against the strong-answer criteria; in the platform UI, present the question, allow free-text answer, and show the answer key only after submission. Questions 7 and 8 are application items with rubric scoring; they should accept longer free-text input and provide the strong-answer criteria as the self-check. Pass threshold is 80% (7 of 8 substantively correct). The *strong-answer criteria* in the answer key are the rubric the platform should display for self-grading on the open items.
+- **Quiz mapping notes.** Questions 1, 2, 3, 4 are auto-scored multiple choice (radio button, single correct answer). Questions 5 and 6 are short answer with rubric-checked correctness against the strong-answer criteria; in the platform UI, present the question, allow free-text answer, and show the answer key only after submission. Questions 7 and 8 are application items with rubric scoring; they should accept longer free-text input and provide the strong-answer criteria as the self-check. Pass threshold is at least 6 of 8 substantively correct. The *strong-answer criteria* in the answer key are the rubric the platform should display for self-grading on the open items.
 
 - **Portfolio artifact mapping notes.** Upload format: `.pdf` or `.docx`. Filename pattern: `Module14_Team_AI_Use_Agreement_[YourName].(pdf|docx)`. The platform's artifact-upload block should present the six required-contents items (team context, agreement, responsibility map, shared prompt, solo-learner note if applicable, disclosure note) as a checklist the learner ticks against their uploaded document. The five-part new-colleague self-check should be presented as a separate review checklist before submission, with each item ticked individually so the learner has surfaced any failing part before uploading.
 

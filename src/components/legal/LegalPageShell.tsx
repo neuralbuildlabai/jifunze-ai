@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES, SUPPORT_CONTACT_EMAIL } from '../../training/trustCopy'
 
 type Props = {
@@ -62,9 +63,11 @@ export function LegalPageShell(props: Props) {
             <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.refunds}>
               Refunds
             </Link>
-            <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.pricing}>
-              Pricing
-            </Link>
+            {LEARNER_MONETIZATION_UI_DISABLED ? null : (
+              <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.pricing}>
+                Pricing
+              </Link>
+            )}
           </nav>
           <p className="mt-4 text-[10px] text-zinc-600">
             These documents describe how Jifunze intends to operate the product today. They are not a substitute for

@@ -3,6 +3,10 @@
  */
 
 import type { SupabaseClient } from '@supabase/supabase-js'
+import {
+  serializeAeCapstoneRubricForDb,
+  parseAeCapstoneRubricSelfGradeJson,
+} from '../../lib/aeCapstoneRubricPersistence'
 import type { FlagshipCourseProgressState, FlagshipModuleQuizRecord } from '../../lib/flagshipCourseProgressDerived'
 
 function parseModuleQuizColumn(raw: unknown): FlagshipCourseProgressState['moduleQuiz'] {
@@ -31,6 +35,8 @@ export type FlagshipCourseProgressRow = {
   completed_mastery_checkpoint_ids?: string[]
   /** Serialized {@link FlagshipCourseProgressState.moduleQuiz} */
   module_quiz?: Record<string, unknown> | null
+  /** AI Essentials: `{ ratings, updatedAt }` or legacy flat criterion map */
+  ae_capstone_rubric_self_grade?: unknown | null
   last_active_session_id: string | null
   last_active_at: string | null
   started_at: string | null
@@ -40,12 +46,19 @@ export type FlagshipCourseProgressRow = {
 export function flagshipProgressRowToState(row: FlagshipCourseProgressRow): FlagshipCourseProgressState {
   const mastery = row.completed_mastery_checkpoint_ids ?? []
   const moduleQuiz = parseModuleQuizColumn(row.module_quiz)
+  const { grades: rubricGrades, updatedAt: rubricJsonAt } = parseAeCapstoneRubricSelfGradeJson(
+    row.ae_capstone_rubric_self_grade,
+  )
+  const rubricTs =
+    rubricJsonAt ?? (rubricGrades && row.updated_at ? row.updated_at : undefined)
   return {
     version: 1,
     completedSessionIds: [...(row.completed_session_ids ?? [])],
     flaggedForReviewSessionIds: [...(row.flagged_for_review_session_ids ?? [])],
     ...(mastery.length ? { completedMasteryCheckpointIds: [...mastery] } : {}),
     ...(moduleQuiz ? { moduleQuiz } : {}),
+    ...(rubricGrades ? { aeCapstoneRubricSelfGrade: rubricGrades } : {}),
+    ...(rubricGrades && rubricTs ? { aeCapstoneRubricSelfGradeUpdatedAt: rubricTs } : {}),
     lastActiveSessionId: row.last_active_session_id ?? undefined,
     lastActiveAt: row.last_active_at ?? undefined,
     startedAt: row.started_at ?? undefined,
@@ -57,6 +70,11 @@ export function flagshipProgressStateToUpsertPayload(
   courseSlug: string,
   state: FlagshipCourseProgressState,
 ): Omit<FlagshipCourseProgressRow, 'id' | 'updated_at'> {
+  const aePayload =
+    courseSlug === 'ai-essentials'
+      ? serializeAeCapstoneRubricForDb(state.aeCapstoneRubricSelfGrade, state.aeCapstoneRubricSelfGradeUpdatedAt)
+      : null
+
   return {
     user_id: userId,
     course_slug: courseSlug,
@@ -64,6 +82,7 @@ export function flagshipProgressStateToUpsertPayload(
     flagged_for_review_session_ids: state.flaggedForReviewSessionIds,
     completed_mastery_checkpoint_ids: state.completedMasteryCheckpointIds ?? [],
     module_quiz: state.moduleQuiz ?? {},
+    ...(courseSlug === 'ai-essentials' ? { ae_capstone_rubric_self_grade: aePayload } : {}),
     last_active_session_id: state.lastActiveSessionId ?? null,
     last_active_at: state.lastActiveAt ?? null,
     started_at: state.startedAt ?? null,

@@ -172,8 +172,8 @@ export function FlagshipModuleQuizPanel(props: {
       ) : null}
       <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">Module understanding check</p>
       <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-        Answer {MODULE_QUIZ_DRAW_COUNT} questions drawn from this module&apos;s sessions. You need at least {MODULE_QUIZ_MIN_CORRECT} correct to unlock the next
-        module. Questions change between attempts.
+        Answer {MODULE_QUIZ_DRAW_COUNT} questions drawn from this module&apos;s sessions. Pass requires at least {MODULE_QUIZ_MIN_CORRECT} of {MODULE_QUIZ_DRAW_COUNT}{' '}
+        correct to unlock the next module (count rule—do not round this to &quot;80%&quot;). Questions change between attempts.
       </p>
       {locked ? (
         <p className="mt-3 text-[13px] text-amber-200/90">
@@ -234,7 +234,7 @@ export function FlagshipModuleQuizPanel(props: {
               <span className="font-semibold text-[color:var(--jf-text)]">
                 {correctCount}/{questions.length}
               </span>{' '}
-              correct (need {MODULE_QUIZ_MIN_CORRECT}+).
+              correct (need at least {MODULE_QUIZ_MIN_CORRECT} of {MODULE_QUIZ_DRAW_COUNT}).
             </p>
             {correctCount >= MODULE_QUIZ_MIN_CORRECT ? null : (
               <>

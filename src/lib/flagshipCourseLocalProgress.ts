@@ -3,9 +3,11 @@
  * Structured for future sync to authenticated persistence without changing session ids.
  */
 
+import { parseAeCapstoneRubricSelfGradeJson } from './aeCapstoneRubricPersistence'
 import {
   AI_ESSENTIALS_CAPSTONE_RUBRIC_IDS,
   type AeCapstoneRubricSelfGrade,
+  type AeCapstoneRubricLevel,
   type FlagshipCourseProgressState,
 } from './flagshipCourseProgressDerived'
 
@@ -47,18 +49,28 @@ function safeParse(raw: string | null): FlagshipCourseProgressState | null {
       moduleQuiz = Object.keys(o).length ? o : undefined
     }
     let aeCapstoneRubricSelfGrade: AeCapstoneRubricSelfGrade | undefined
+    let aeCapstoneRubricSelfGradeUpdatedAt: string | undefined
     if (
       data.aeCapstoneRubricSelfGrade &&
       typeof data.aeCapstoneRubricSelfGrade === 'object' &&
       !Array.isArray(data.aeCapstoneRubricSelfGrade)
     ) {
-      const raw = data.aeCapstoneRubricSelfGrade as Record<string, unknown>
-      const o: AeCapstoneRubricSelfGrade = {}
-      for (const id of AI_ESSENTIALS_CAPSTONE_RUBRIC_IDS) {
-        const v = raw[id]
-        if (v === 'not_ready' || v === 'developing' || v === 'ready' || v === 'strong') o[id] = v
+      const parsed = parseAeCapstoneRubricSelfGradeJson(data.aeCapstoneRubricSelfGrade)
+      if (parsed.grades) {
+        aeCapstoneRubricSelfGrade = parsed.grades
+        aeCapstoneRubricSelfGradeUpdatedAt = parsed.updatedAt
+      } else {
+        const raw = data.aeCapstoneRubricSelfGrade as Record<string, unknown>
+        const o: AeCapstoneRubricSelfGrade = {}
+        for (const id of AI_ESSENTIALS_CAPSTONE_RUBRIC_IDS) {
+          const v = raw[id]
+          if (v === 'not_ready' || v === 'developing' || v === 'ready' || v === 'strong') o[id] = v as AeCapstoneRubricLevel
+        }
+        aeCapstoneRubricSelfGrade = Object.keys(o).length ? o : undefined
       }
-      aeCapstoneRubricSelfGrade = Object.keys(o).length ? o : undefined
+    }
+    if (typeof data.aeCapstoneRubricSelfGradeUpdatedAt === 'string') {
+      aeCapstoneRubricSelfGradeUpdatedAt = data.aeCapstoneRubricSelfGradeUpdatedAt
     }
     return {
       version: 1,
@@ -67,6 +79,7 @@ function safeParse(raw: string | null): FlagshipCourseProgressState | null {
       ...(completedMasteryCheckpointIds?.length ? { completedMasteryCheckpointIds } : {}),
       ...(moduleQuiz ? { moduleQuiz } : {}),
       ...(aeCapstoneRubricSelfGrade ? { aeCapstoneRubricSelfGrade } : {}),
+      ...(aeCapstoneRubricSelfGradeUpdatedAt ? { aeCapstoneRubricSelfGradeUpdatedAt } : {}),
       lastActiveSessionId: typeof data.lastActiveSessionId === 'string' ? data.lastActiveSessionId : undefined,
       lastActiveAt: typeof data.lastActiveAt === 'string' ? data.lastActiveAt : undefined,
       startedAt: typeof data.startedAt === 'string' ? data.startedAt : undefined,

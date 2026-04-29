@@ -4,9 +4,11 @@ import { humanAccessTierLabel } from '../access/appAccess'
 import { LEGAL_ROUTES } from '../training/trustCopy'
 import { useAuth } from '../auth/AuthContext'
 import { isSupabaseConfigured } from '../config/supabaseEnv'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../learner/learnerCommerceConstants'
 import { DashboardTeamAssignmentsWidget } from './team/DashboardTeamAssignmentsWidget'
 import { DashboardLearnerHub } from './DashboardLearnerHub'
 import { DashboardAdminToolsSection } from './DashboardAdminToolsSection'
+import { DashboardSuperAdminHub } from './DashboardSuperAdminHub'
 
 const cardClass =
   'rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 shadow-[0_12px_40px_rgba(0,0,0,0.2)] ring-1 ring-white/[0.04]'
@@ -15,7 +17,7 @@ const linkTileClass =
   'flex flex-col gap-1 rounded-lg border border-white/[0.06] bg-zinc-950/40 px-3 py-2.5 text-left transition hover:border-violet-400/25 hover:bg-white/[0.04]'
 
 /**
- * Post-login hub: pathway-first learner surfaces, then account; admin tools stay compact below for operators.
+ * Role-specific dashboard: super-admin operations hub, learner learning-first hub, or admin workspace view without learner pathway mixing.
  */
 export function DashboardPage() {
   const {
@@ -72,29 +74,58 @@ export function DashboardPage() {
 
   const email = user?.email ?? '—'
   const tierLabel = humanAccessTierLabel(tier)
+  const maxWidth = navVariant === 'super_admin' ? 'max-w-5xl' : 'max-w-4xl'
 
-  return (
-    <div className="mx-auto w-full max-w-4xl space-y-8 px-4 py-10 text-zinc-100">
+  const header =
+    navVariant === 'super_admin' ? (
+      <header className="border-b border-white/[0.06] pb-6">
+        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">Jifunze.ai Workspace</p>
+        <h1 className="mt-1 text-xl font-semibold text-white">Operations</h1>
+        <p className="mt-2 max-w-2xl text-sm text-zinc-400">
+          Manage platform operations, learning content, and internal review.
+        </p>
+      </header>
+    ) : navVariant === 'learner' ? (
       <header className="border-b border-white/[0.06] pb-6">
         <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">Dashboard</p>
         <h1 className="mt-1 text-xl font-semibold text-white">Welcome back</h1>
         <p className="mt-2 max-w-2xl text-sm text-zinc-400">
-          Continue your pathway, build portfolio-ready proof, and manage your learning workspace.
+          Continue your learning path and build portfolio-ready proof.
         </p>
       </header>
+    ) : (
+      <header className="border-b border-white/[0.06] pb-6">
+        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">Workspace</p>
+        <h1 className="mt-1 text-xl font-semibold text-white">Operations dashboard</h1>
+        <p className="mt-2 max-w-2xl text-sm text-zinc-400">
+          Assign training, review learner progress, and run workspace tools—learner-first views stay in Catalog and Pathways.
+        </p>
+      </header>
+    )
 
-      <DashboardLearnerHub />
+  return (
+    <div className={`mx-auto w-full ${maxWidth} space-y-8 px-4 py-10 text-zinc-100`}>
+      {header}
+
+      {navVariant === 'super_admin' ? <DashboardSuperAdminHub /> : null}
+
+      {navVariant === 'learner' ? <DashboardLearnerHub /> : null}
+
+      {navVariant !== 'super_admin' ? (
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="sm:col-span-2">
+            <DashboardTeamAssignmentsWidget />
+          </div>
+        </div>
+      ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="sm:col-span-2">
-          <DashboardTeamAssignmentsWidget />
-        </div>
         <section className={navVariant === 'learner' ? `${cardClass} sm:col-span-2` : cardClass}>
           <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Account</h2>
           <p className="mt-2 text-sm text-zinc-200">{email}</p>
           {navVariant === 'learner' ? (
             <p className="mt-3 text-[13px] leading-relaxed text-zinc-400">
-              Open Account when you need billing links, password help, or plan details—your pathway progress stays in Reports and Pathways.
+              Open Settings for workspace preferences and sign-in help. Learning evidence lives in Reports and Pathways.
             </p>
           ) : null}
         </section>
@@ -102,9 +133,15 @@ export function DashboardPage() {
           <section className={cardClass}>
             <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Role</h2>
             <p className="mt-2 text-sm font-medium text-zinc-100">{tierLoading ? 'Loading…' : tierLabel}</p>
-            <p className="mt-1 text-[11px] leading-relaxed text-zinc-500">
-              Course access follows your subscription or purchases. Administrative actions are enforced on the server too.
-            </p>
+            {LEARNER_MONETIZATION_UI_DISABLED ? (
+              <p className="mt-1 text-[11px] leading-relaxed text-zinc-500">
+                Administrative actions are enforced on the server. Learner-facing purchase flows are paused in this product phase.
+              </p>
+            ) : (
+              <p className="mt-1 text-[11px] leading-relaxed text-zinc-500">
+                Course access follows your subscription or purchases. Administrative actions are enforced on the server too.
+              </p>
+            )}
           </section>
         )}
       </div>
@@ -126,33 +163,31 @@ export function DashboardPage() {
               <span className="text-[11px] text-zinc-500">Employability tracks</span>
             </Link>
             <Link to={LEGAL_ROUTES.learn} className={linkTileClass}>
-              <span className="text-sm font-medium text-zinc-100">Discover</span>
-              <span className="text-[11px] text-zinc-500">Browse the catalog</span>
+              <span className="text-sm font-medium text-zinc-100">Catalog</span>
+              <span className="text-[11px] text-zinc-500">Browse courses</span>
             </Link>
             <Link to="/library" className={linkTileClass}>
               <span className="text-sm font-medium text-zinc-100">Library</span>
               <span className="text-[11px] text-zinc-500">Extended readers</span>
             </Link>
-            <Link to={LEGAL_ROUTES.workspaceSubscription} className={linkTileClass}>
-              <span className="text-sm font-medium text-zinc-100">Billing / Plan</span>
-              <span className="text-[11px] text-zinc-500">Pricing and subscription</span>
-            </Link>
-            <Link to="/account" className={linkTileClass}>
-              <span className="text-sm font-medium text-zinc-100">Account</span>
-              <span className="text-[11px] text-zinc-500">Plan links and sign-in</span>
+            <Link to="/settings" className={linkTileClass}>
+              <span className="text-sm font-medium text-zinc-100">Settings</span>
+              <span className="text-[11px] text-zinc-500">Preferences and account</span>
             </Link>
           </div>
         </section>
       ) : null}
 
-      <DashboardAdminToolsSection
-        navVariant={navVariant}
-        canManageInstitutionTrainingPlans={canManageInstitutionTrainingPlans}
-        canViewOperatorInsights={canViewOperatorInsights}
-      />
+      {navVariant === 'super_admin' ? null : (
+        <DashboardAdminToolsSection
+          navVariant={navVariant}
+          canManageInstitutionTrainingPlans={canManageInstitutionTrainingPlans}
+          canViewOperatorInsights={canViewOperatorInsights}
+        />
+      )}
 
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06] pt-6">
-        <p className="text-[11px] text-zinc-600">Need help? Open Account or sign out and back in after confirming email.</p>
+        <p className="text-[11px] text-zinc-600">Need help? Open Settings or sign out and back in after confirming email.</p>
         <button
           type="button"
           disabled={signOutPending}

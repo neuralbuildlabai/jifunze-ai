@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { EMPLOYABLE_PATHWAYS, featuredEmployablePathways } from '../../data/learning/employablePathwaysCatalog'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { EmployablePathwaysPublicNav } from './EmployablePathwaysPublicNav'
 import { TrustLegalFooterLinks } from '../TrustLegalFooterLinks'
@@ -45,12 +46,14 @@ export function EmployablePathwaysPage() {
             >
               Explore courses
             </Link>
-            <Link
-              to={LEGAL_ROUTES.pricing}
-              className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-transparent px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)]"
-            >
-              View plans
-            </Link>
+            {LEARNER_MONETIZATION_UI_DISABLED ? null : (
+              <Link
+                to={LEGAL_ROUTES.pricing}
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-transparent px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)]"
+              >
+                View plans
+              </Link>
+            )}
           </div>
         </section>
 

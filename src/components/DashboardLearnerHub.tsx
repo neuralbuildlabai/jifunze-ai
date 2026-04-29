@@ -15,7 +15,6 @@ import { buildMergedPathwayProgressMap } from '../lib/pathwayMergedProgressMap'
 import { getPathwayNextAction, getPathwayProgressSummary, pickTopPathway } from '../lib/pathwayNextAction'
 import { isFlagshipCoursePublished } from '../lib/pathwayProgressDerived'
 import { LEGAL_ROUTES } from '../training/trustCopy'
-import { DashboardPathwaysPanel } from './DashboardPathwaysPanel'
 
 const surface =
   'rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 shadow-[0_12px_40px_rgba(0,0,0,0.2)] ring-1 ring-white/[0.04]'
@@ -32,7 +31,7 @@ function certTeaser(pathway: EmployablePathway): string {
 }
 
 /**
- * Pathway-first dashboard body: your pathway, continue learning, build proof, progress, then browse grid.
+ * Learning-first dashboard: continue learning, pathway, progress, portfolio—no catalog grid dump.
  */
 export function DashboardLearnerHub() {
   const { user, supabase } = useAuth()
@@ -107,8 +106,33 @@ export function DashboardLearnerHub() {
 
   return (
     <div className="space-y-6">
+      <section className={surface} data-testid="dashboard-continue-learning">
+        <p className={eyebrow}>Continue learning</p>
+        {!primaryPathway ? (
+          <p className="mt-2 text-sm text-zinc-500">Pick a pathway first—then your next session will appear here.</p>
+        ) : nextAction?.kind === 'planned_only' ? (
+          <p className="mt-2 text-sm text-zinc-400">
+            This pathway is still being prepared for flagship sessions.{' '}
+            <Link className="font-medium text-violet-300 hover:underline" to={nextAction.hrefExplore}>
+              Explore available pathways
+            </Link>
+          </p>
+        ) : nextAction ? (
+          <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-zinc-400">
+              <span className="font-medium text-zinc-200">{primaryPathway.shortTitle}</span>
+              <span className="mx-1.5 text-zinc-600">·</span>
+              {nextAction.buttonLabel}
+            </p>
+            <Link className={`${btnPrimary} shrink-0`} to={nextAction.href} data-testid="dashboard-continue-primary">
+              Continue
+            </Link>
+          </div>
+        ) : null}
+      </section>
+
       <section className={surface} data-testid="dashboard-your-pathway">
-        <p className={eyebrow}>Your pathway</p>
+        <p className={eyebrow}>My pathway</p>
         {prefLoading && pathwaySync ? (
           <p className="mt-2 text-sm text-zinc-500">Loading your pathway preference…</p>
         ) : null}
@@ -126,14 +150,14 @@ export function DashboardLearnerHub() {
             <div className="mt-4 flex flex-wrap gap-2">
               {nextAction && nextAction.kind !== 'planned_only' ? (
                 <Link className={btnPrimary} to={nextAction.href} data-testid="dashboard-your-pathway-continue">
-                  {nextAction.buttonLabel}
+                  Continue
                 </Link>
               ) : null}
               <Link className={btnGhost} to={LEGAL_ROUTES.paths}>
-                Change pathway
+                Choose pathway
               </Link>
               <Link className={btnGhost} to={`/paths/${selectedPathway.slug}`}>
-                Pathway details
+                View pathway
               </Link>
             </div>
           </>
@@ -167,59 +191,6 @@ export function DashboardLearnerHub() {
         )}
       </section>
 
-      <section className={surface} data-testid="dashboard-continue-learning">
-        <p className={eyebrow}>Continue learning</p>
-        {!primaryPathway ? (
-          <p className="mt-2 text-sm text-zinc-500">Pick a pathway first—then your next session will appear here.</p>
-        ) : nextAction?.kind === 'planned_only' ? (
-          <p className="mt-2 text-sm text-zinc-400">
-            This pathway is still being prepared for flagship sessions.{' '}
-            <Link className="font-medium text-violet-300 hover:underline" to={nextAction.hrefExplore}>
-              Explore available pathways
-            </Link>
-          </p>
-        ) : nextAction ? (
-          <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm text-zinc-400">
-              <span className="font-medium text-zinc-200">{primaryPathway.shortTitle}</span>
-              <span className="mx-1.5 text-zinc-600">·</span>
-              {nextAction.buttonLabel}
-            </p>
-            <Link className={`${btnPrimary} shrink-0`} to={nextAction.href}>
-              {nextAction.buttonLabel}
-            </Link>
-          </div>
-        ) : null}
-      </section>
-
-      <section className={surface} data-testid="dashboard-build-proof">
-        <p className={eyebrow}>Build proof</p>
-        {!primaryPathway ? (
-          <p className="mt-2 text-sm text-zinc-500">Select a pathway to see portfolio-ready output examples.</p>
-        ) : (
-          <>
-            <p className="mt-2 text-sm text-zinc-400">
-              Portfolio evidence tracking is being prepared. For now, use these outputs as your checklist—guidance only, not uploads or formal review in the app yet.
-            </p>
-            <p className="mt-3 text-[13px] text-zinc-300">
-              Required outputs flagged for certificate framing:{' '}
-              <span className="font-semibold tabular-nums text-white">{requiredCount}</span>
-            </p>
-            {exampleOutputs.length ? (
-              <ul className="mt-2 list-inside list-disc text-[13px] text-zinc-500">
-                {exampleOutputs.map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
-            ) : null}
-            <p className="mt-3 text-[12px] leading-relaxed text-zinc-500">{certTeaser(primaryPathway)}</p>
-            <Link className={`${btnGhost} mt-4 inline-flex`} to={`/paths/${primaryPathway.slug}#pathway-portfolio-guidance`}>
-              View pathway outputs
-            </Link>
-          </>
-        )}
-      </section>
-
       <section className={surface} data-testid="dashboard-my-progress">
         <p className={eyebrow}>My progress</p>
         {!primaryPathway || !summary ? (
@@ -239,20 +210,70 @@ export function DashboardLearnerHub() {
             )}
             <div className="mt-4 flex flex-wrap gap-2">
               <Link className={btnPrimary} to="/reports">
-                Open reports
+                Reports
               </Link>
-              <Link className={btnGhost} to={LEGAL_ROUTES.paths}>
-                Browse pathways
+              <Link className={btnGhost} to={LEGAL_ROUTES.learn}>
+                Catalog
               </Link>
             </div>
           </>
         )}
       </section>
 
-      <div className="space-y-2">
-        <h2 className={eyebrow}>Explore more pathways</h2>
-        <DashboardPathwaysPanel layoutMode="browse" />
-      </div>
+      <section className={surface} data-testid="dashboard-build-proof">
+        <p className={eyebrow}>Portfolio outputs</p>
+        {!primaryPathway ? (
+          <p className="mt-2 text-sm text-zinc-500">Select a pathway to see portfolio-ready output examples.</p>
+        ) : (
+          <>
+            <p className="mt-2 text-sm text-zinc-400">
+              Use these outputs as your checklist—guidance in the product; formal upload review is not wired here yet.
+            </p>
+            <p className="mt-3 text-[13px] text-zinc-300">
+              Required outputs flagged for certificate framing:{' '}
+              <span className="font-semibold tabular-nums text-white">{requiredCount}</span>
+            </p>
+            {exampleOutputs.length ? (
+              <ul className="mt-2 list-inside list-disc text-[13px] text-zinc-500">
+                {exampleOutputs.map((t) => (
+                  <li key={t}>{t}</li>
+                ))}
+              </ul>
+            ) : null}
+            <p className="mt-3 text-[12px] leading-relaxed text-zinc-500">{certTeaser(primaryPathway)}</p>
+            <Link className={`${btnGhost} mt-4 inline-flex`} to={`/paths/${primaryPathway.slug}#pathway-portfolio-guidance`}>
+              View portfolio outputs
+            </Link>
+          </>
+        )}
+      </section>
+
+      <section className={`${surface} border-dashed border-white/[0.06]`} data-testid="dashboard-next-action">
+        <p className={eyebrow}>Next recommended action</p>
+        {!nextAction || nextAction.kind === 'planned_only' ? (
+          <p className="mt-2 text-sm text-zinc-500">
+            {primaryPathway ? 'When sessions are available, your best next step will surface here.' : 'Choose a pathway in Pathways to get a tailored next step.'}
+          </p>
+        ) : (
+          <p className="mt-2 text-sm text-zinc-400">
+            <span className="font-medium text-zinc-200">{nextAction.buttonLabel}</span>
+            <span className="mx-1.5 text-zinc-600">·</span>
+            <Link className="font-medium text-violet-300 hover:underline" to={nextAction.href}>
+              Go
+            </Link>
+          </p>
+        )}
+        <p className="mt-3 text-[12px] text-zinc-600">
+          More paths:{' '}
+          <Link className="text-violet-300/90 hover:text-violet-200" to={LEGAL_ROUTES.paths}>
+            Pathways
+          </Link>
+          {' · '}
+          <Link className="text-violet-300/90 hover:text-violet-200" to={LEGAL_ROUTES.learn}>
+            Catalog
+          </Link>
+        </p>
+      </section>
     </div>
   )
 }

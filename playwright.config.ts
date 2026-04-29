@@ -1,6 +1,14 @@
 import { defineConfig, devices } from '@playwright/test'
 
 /**
+ * Align the test runner with Vite: paused monetization unless this invocation explicitly sets
+ * `VITE_LEARNER_MONETIZATION_UI_DISABLED=false` (see `src/learner/learnerCommerceConstants.ts`).
+ */
+if (process.env.VITE_LEARNER_MONETIZATION_UI_DISABLED !== 'false') {
+  process.env.VITE_LEARNER_MONETIZATION_UI_DISABLED = 'true'
+}
+
+/**
  * Default E2E: deterministic UI (no Supabase in webServer env) + Vite dev server.
  * Forced-tier positive paths: see `playwright.forced.config.ts` + `npm run test:e2e:access-forced`.
  */
@@ -20,7 +28,8 @@ export default defineConfig({
   webServer: {
     command: 'npm run dev -- --host 127.0.0.1 --port 5173',
     url: 'http://127.0.0.1:5173',
-    reuseExistingServer: !process.env.CI,
+    /** Avoid attaching to a random local `npm run dev` unless `PLAYWRIGHT_REUSE_DEV_SERVER=1`. */
+    reuseExistingServer: process.env.CI ? false : process.env.PLAYWRIGHT_REUSE_DEV_SERVER === '1',
     timeout: 120_000,
     env: {
       ...process.env,
@@ -30,6 +39,8 @@ export default defineConfig({
       VITE_ACCESS_TIER_EMAIL_FALLBACK: 'false',
       // Anonymous E2E can reach marketing surfaces while `FORCE_PUBLIC_MAINTENANCE_UI` is on.
       VITE_MAINTENANCE_BYPASS_TOKEN: 'playwright-maintenance-bypass',
+      VITE_LEARNER_MONETIZATION_UI_DISABLED:
+        process.env.VITE_LEARNER_MONETIZATION_UI_DISABLED === 'false' ? 'false' : 'true',
     },
   },
 })

@@ -50,10 +50,25 @@ export function mergeFlagshipProgressStates(
   ])
 
   const moduleQuiz = mergeModuleQuiz(local.moduleQuiz, remote.moduleQuiz)
+
+  const localRubT = parseIso(local.aeCapstoneRubricSelfGradeUpdatedAt)
+  const remoteRubT = parseIso(remote.aeCapstoneRubricSelfGradeUpdatedAt)
+  const tiePreferB = remoteRubT > localRubT
+
   const aeCapstoneRubricSelfGrade = mergeAeCapstoneRubricSelfGrade(
     local.aeCapstoneRubricSelfGrade,
     remote.aeCapstoneRubricSelfGrade,
+    { tiePreferB },
   )
+
+  let aeCapstoneRubricSelfGradeUpdatedAt: string | undefined
+  if (aeCapstoneRubricSelfGrade) {
+    const mergedT = Math.max(localRubT, remoteRubT)
+    aeCapstoneRubricSelfGradeUpdatedAt =
+      mergedT > 0
+        ? new Date(mergedT).toISOString()
+        : local.aeCapstoneRubricSelfGradeUpdatedAt ?? remote.aeCapstoneRubricSelfGradeUpdatedAt
+  }
 
   const localT = parseIso(local.lastActiveAt)
   const remoteT = parseIso(remote.lastActiveAt)
@@ -80,6 +95,7 @@ export function mergeFlagshipProgressStates(
     completedMasteryCheckpointIds: [...mastery],
     ...(moduleQuiz ? { moduleQuiz } : {}),
     ...(aeCapstoneRubricSelfGrade ? { aeCapstoneRubricSelfGrade } : {}),
+    ...(aeCapstoneRubricSelfGradeUpdatedAt ? { aeCapstoneRubricSelfGradeUpdatedAt } : {}),
     lastActiveSessionId,
     lastActiveAt,
     startedAt,
@@ -119,6 +135,7 @@ export function flagshipProgressStatesEqual(a: FlagshipCourseProgressState, b: F
     ma === mb &&
     moduleQuizEqual(a.moduleQuiz, b.moduleQuiz) &&
     rubA === rubB &&
+    a.aeCapstoneRubricSelfGradeUpdatedAt === b.aeCapstoneRubricSelfGradeUpdatedAt &&
     a.lastActiveSessionId === b.lastActiveSessionId &&
     a.lastActiveAt === b.lastActiveAt &&
     a.startedAt === b.startedAt

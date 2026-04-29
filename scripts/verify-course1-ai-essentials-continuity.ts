@@ -16,15 +16,25 @@ import { buildSessionsForCurriculum } from '../src/data/learning/flagshipCourseS
 import { portfolioOutputsForPathway } from '../src/data/learning/portfolioOutputsCatalog'
 import {
   AI_ESSENTIALS_CAPSTONE_RUBRIC_IDS,
+  aeCapstoneRubricAllCriteriaReadyPlus,
   completionSet,
+  isFlagshipCertificateReady,
   moduleFullyComplete,
+  type AeCapstoneRubricSelfGrade,
   type FlagshipCourseProgressState,
 } from '../src/lib/flagshipCourseProgressDerived'
 import { bespokeAssessmentTriple } from '../src/lib/flagshipAssessmentBespokeModules'
+import { parseAeCapstoneRubricSelfGradeJson } from '../src/lib/aeCapstoneRubricPersistence'
 import {
   getFlagshipCourseDisplayProgressPercent,
   AI_ESSENTIALS_SLUG,
 } from '../src/lib/aiEssentialsProgressMilestones'
+import { mergeFlagshipProgressStates } from '../src/lib/flagshipCourseProgressMerge'
+import {
+  flagshipProgressRowToState,
+  flagshipProgressStateToUpsertPayload,
+  type FlagshipCourseProgressRow,
+} from '../src/services/learning/flagshipCourseProgressRemote'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..')
@@ -109,6 +119,128 @@ function testPortfolioRows() {
   assert.deepEqual(ids, want)
 }
 
+function allSessionsCompleteState(
+  curriculum: NonNullable<ReturnType<typeof getFlagshipCurriculum>>,
+  sessions: ReturnType<typeof buildSessionsForCurriculum>,
+  rubric: AeCapstoneRubricSelfGrade | undefined,
+): FlagshipCourseProgressState {
+  const completedSessionIds = sessions.map((s) => s.id)
+  const moduleQuiz: Record<string, { passedAt: string }> = {}
+  for (const m of curriculum.modules) {
+    moduleQuiz[m.id] = { passedAt: new Date().toISOString() }
+  }
+  const ck: string[] = []
+  for (const m of curriculum.modules) {
+    const trio = bespokeAssessmentTriple(m.id)
+    if (trio) for (const it of trio) ck.push(it.id)
+  }
+  return {
+    version: 1,
+    completedSessionIds,
+    flaggedForReviewSessionIds: [],
+    completedMasteryCheckpointIds: ck,
+    moduleQuiz,
+    ...(rubric ? { aeCapstoneRubricSelfGrade: rubric } : {}),
+  }
+}
+
+function testRubricRemoteHydrationAndMilestoneEdgeCases() {
+  const curriculum = getFlagshipCurriculum(AI_ESSENTIALS_SLUG)!
+  const sessions = buildSessionsForCurriculum(curriculum)
+
+  const row: FlagshipCourseProgressRow = {
+    id: '00000000-0000-0000-0000-000000000001',
+    user_id: '00000000-0000-0000-0000-000000000002',
+    course_slug: AI_ESSENTIALS_SLUG,
+    completed_session_ids: [],
+    flagged_for_review_session_ids: [],
+    ae_capstone_rubric_self_grade: {
+      ratings: {
+        problemFraming: 'ready',
+        promptWorkflow: 'strong',
+        verificationReview: 'ready',
+        safetyPrivacy: 'ready',
+        reusability: 'ready',
+        reflection: 'ready',
+        presentation: 'ready',
+      },
+      updatedAt: '2026-02-01T12:00:00.000Z',
+    },
+    last_active_session_id: null,
+    last_active_at: null,
+    started_at: null,
+    updated_at: '2026-02-01T12:00:00.000Z',
+  }
+  const fromRow = flagshipProgressRowToState(row)
+  assert.ok(fromRow.aeCapstoneRubricSelfGrade)
+  assert.equal(fromRow.aeCapstoneRubricSelfGrade?.problemFraming, 'ready')
+  assert.ok(aeCapstoneRubricAllCriteriaReadyPlus(fromRow))
+
+  const wrapped = parseAeCapstoneRubricSelfGradeJson({
+    ratings: { problem_framing: 'developing', prompt_workflow_design: 'ready' },
+    updatedAt: '2026-01-01T00:00:00.000Z',
+  })
+  assert.equal(wrapped.grades?.problemFraming, 'developing')
+  assert.equal(wrapped.grades?.promptWorkflow, 'ready')
+
+  const allReady: AeCapstoneRubricSelfGrade = {
+    problemFraming: 'ready',
+    promptWorkflow: 'ready',
+    verificationReview: 'ready',
+    safetyPrivacy: 'ready',
+    reusability: 'ready',
+    reflection: 'ready',
+    presentation: 'ready',
+  }
+  const fullNoRubric = allSessionsCompleteState(curriculum, sessions, undefined)
+  assert.equal(getFlagshipCourseDisplayProgressPercent(AI_ESSENTIALS_SLUG, curriculum, sessions, fullNoRubric), 90)
+
+  const fullWithRubric = allSessionsCompleteState(curriculum, sessions, allReady)
+  assert.equal(getFlagshipCourseDisplayProgressPercent(AI_ESSENTIALS_SLUG, curriculum, sessions, fullWithRubric), 100)
+
+  const completed = new Set(fullWithRubric.completedSessionIds)
+  const ck = new Set(fullWithRubric.completedMasteryCheckpointIds ?? [])
+  assert.ok(
+    isFlagshipCertificateReady(curriculum, sessions, completed, ck, fullWithRubric),
+    'certificate requires rubric + full completion',
+  )
+  assert.ok(
+    !isFlagshipCertificateReady(curriculum, sessions, completed, ck, fullNoRubric),
+    'certificate blocked without rubric',
+  )
+
+  const local: FlagshipCourseProgressState = {
+    version: 1,
+    completedSessionIds: [],
+    flaggedForReviewSessionIds: [],
+    aeCapstoneRubricSelfGrade: { problemFraming: 'ready' },
+    aeCapstoneRubricSelfGradeUpdatedAt: '2026-03-01T00:00:00.000Z',
+  }
+  const remote: FlagshipCourseProgressState = {
+    version: 1,
+    completedSessionIds: [],
+    flaggedForReviewSessionIds: [],
+    aeCapstoneRubricSelfGrade: { problemFraming: 'developing' },
+    aeCapstoneRubricSelfGradeUpdatedAt: '2026-01-01T00:00:00.000Z',
+  }
+  const merged = mergeFlagshipProgressStates(local, remote)
+  assert.equal(merged.aeCapstoneRubricSelfGrade?.problemFraming, 'ready', 'never downgrade Ready vs Developing')
+
+  const upsert = flagshipProgressStateToUpsertPayload('user-id', AI_ESSENTIALS_SLUG, {
+    version: 1,
+    completedSessionIds: [],
+    flaggedForReviewSessionIds: [],
+    aeCapstoneRubricSelfGrade: allReady,
+    aeCapstoneRubricSelfGradeUpdatedAt: '2026-04-01T00:00:00.000Z',
+  })
+  assert.ok(
+    upsert.ae_capstone_rubric_self_grade &&
+      typeof upsert.ae_capstone_rubric_self_grade === 'object' &&
+      'ratings' in upsert.ae_capstone_rubric_self_grade,
+    'upsert payload includes wrapped rubric JSON for ai-essentials',
+  )
+}
+
 function testForbiddenSubstringsInKeyLearnerFiles() {
   const paths = [
     'src/data/learning/aiEssentialsCourse1Modules.ts',
@@ -128,6 +260,7 @@ function main() {
   testSessionsQuizBespoke()
   testCapstoneRubricIds()
   testDisplayPercentMilestoneOne()
+  testRubricRemoteHydrationAndMilestoneEdgeCases()
   testPortfolioRows()
   testForbiddenSubstringsInKeyLearnerFiles()
   console.log('verify-course1-ai-essentials-continuity: OK')

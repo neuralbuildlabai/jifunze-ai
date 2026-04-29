@@ -4,6 +4,7 @@ import { aiLabsPublic, PUBLIC_AI_LABS_BASE_PATH } from '../../data/teaching/aiLa
 import { PUBLIC_AI_FOUNDATIONS_BASE_PATH } from '../../data/publicStarterLibraries/aiFoundations'
 import { TeachingLabArticle } from '../teaching/TeachingLabArticle'
 import { PublicStarterLibraryChrome } from './PublicStarterLibraryChrome'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { LearnerHelpAssistant } from '../teaching/LearnerHelpAssistant'
 
@@ -51,9 +52,13 @@ export function PublicAiTeachingLabsPage() {
         </div>
 
         <div className="mt-5 flex flex-wrap gap-3 text-[12px] text-zinc-500">
-          <Link className="font-semibold text-violet-300/90 hover:text-violet-200" to="/pricing">
-            Unlock deeper AI labs (eligible plans)
-          </Link>
+          {LEARNER_MONETIZATION_UI_DISABLED ? (
+            <span className="font-medium text-zinc-600">Paid lab tiers are not listed in this release.</span>
+          ) : (
+            <Link className="font-semibold text-violet-300/90 hover:text-violet-200" to="/pricing">
+              Unlock deeper AI labs (eligible plans)
+            </Link>
+          )}
           <span aria-hidden>·</span>
           <Link className="font-semibold text-zinc-500 hover:text-zinc-200" to={LEGAL_ROUTES.disclaimer}>
             Disclaimer

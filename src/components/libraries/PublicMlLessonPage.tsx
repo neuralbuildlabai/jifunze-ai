@@ -9,6 +9,7 @@ import {
   getMlCurriculumPlacement,
 } from '../../data/learning/machineLearningCurriculum'
 import { resolveMlLessonReaderSections } from '../../data/learning/mlLessonReaderContent'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { useMlCurriculumLocalProgress } from '../../hooks/useMlCurriculumLocalProgress'
 import { loadMlCurriculumProgress } from '../../lib/mlCurriculumLocalProgress'
@@ -125,20 +126,29 @@ export function PublicMlLessonPage() {
                 Create free account
               </Link>
             ) : lesson.access === 'premium' ? (
-              <>
+              LEARNER_MONETIZATION_UI_DISABLED ? (
                 <Link
-                  to="/pricing"
+                  to="/dashboard"
                   className="inline-flex items-center justify-center rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-950/25 transition hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/60"
                 >
-                  View plans &amp; modules
+                  Open workspace
                 </Link>
-                <Link
-                  to="/settings/subscription"
-                  className="inline-flex items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] px-5 py-2.5 text-sm font-semibold text-zinc-100 transition hover:border-emerald-400/25 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/55"
-                >
-                  Subscription status
-                </Link>
-              </>
+              ) : (
+                <>
+                  <Link
+                    to="/pricing"
+                    className="inline-flex items-center justify-center rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-950/25 transition hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/60"
+                  >
+                    View plans &amp; modules
+                  </Link>
+                  <Link
+                    to="/settings/subscription"
+                    className="inline-flex items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] px-5 py-2.5 text-sm font-semibold text-zinc-100 transition hover:border-emerald-400/25 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/55"
+                  >
+                    Subscription status
+                  </Link>
+                </>
+              )
             ) : (
               <Link
                 to="/dashboard"

@@ -3,6 +3,7 @@ import type { ExtendedPublicLibraryConfig } from '../../data/learning/extendedPu
 import { firstPublicLessonPreviewLinks, getStandaloneCourseScanStats } from '../../data/learning/standaloneCourseScanStats'
 import { STANDALONE_COURSE_DISCOVERY_META } from '../../data/learning/standaloneCourseDiscoveryMeta'
 import { paletteForStandaloneCourse } from '../../data/learning/standaloneCoursePalettes'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { TrustBoundaryStrip } from '../TrustBoundaryStrip'
 import { PublicStarterLibraryChrome } from '../libraries/PublicStarterLibraryChrome'
@@ -105,7 +106,11 @@ export function PublicStandaloneCourseLandingPage({ config }: { config: Extended
 
       <div className="rounded-2xl border border-white/[0.07] bg-white/[0.03] p-5 sm:p-6">
         <p className="text-[13px] leading-relaxed text-zinc-300">{config.subtitle}</p>
-        <p className="mt-4 text-[12px] leading-relaxed text-zinc-600">{commerceHint(config)}</p>
+        <p className="mt-4 text-[12px] leading-relaxed text-zinc-600">
+          {LEARNER_MONETIZATION_UI_DISABLED
+            ? 'Public checkout is not active in this release—use the curriculum map and labeled previews below.'
+            : commerceHint(config)}
+        </p>
         <div className="mt-5 flex flex-wrap gap-3">
           <Link
             to={curriculumHref}
@@ -120,13 +125,15 @@ export function PublicStandaloneCourseLandingPage({ config }: { config: Extended
           >
             Browse courses hub
           </Link>
-          <Link
-            to={LEGAL_ROUTES.pricing}
-            className="inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-medium text-zinc-500 transition hover:text-zinc-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/55"
-            data-testid="standalone-course-secondary-plans"
-          >
-            Simple plans
-          </Link>
+          {LEARNER_MONETIZATION_UI_DISABLED ? null : (
+            <Link
+              to={LEGAL_ROUTES.pricing}
+              className="inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-medium text-zinc-500 transition hover:text-zinc-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/55"
+              data-testid="standalone-course-secondary-plans"
+            >
+              Simple plans
+            </Link>
+          )}
           <Link
             to="/library"
             className="inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-medium text-zinc-500 transition hover:text-zinc-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/55"

@@ -1,4 +1,5 @@
 import { LegalPageShell } from './LegalPageShell'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES, TRUST_COPY } from '../../training/trustCopy'
 import { Link } from 'react-router-dom'
 
@@ -47,18 +48,25 @@ export function FullDisclaimerPage() {
 
       <section className="mt-8 space-y-3">
         <h2 className="text-base font-semibold text-zinc-100">Subscriptions do not imply outcomes</h2>
-        <p>
-          Paying for access adds features and limits according to your plan; it does not guarantee grades, credentials,
-          employment, publication acceptance, or exam passage. Compare{' '}
-          <Link className="text-violet-300 underline-offset-2 hover:underline" to={LEGAL_ROUTES.pricing}>
-            public pricing
-          </Link>{' '}
-          and workspace-specific controls under{' '}
-          <Link className="text-violet-300 underline-offset-2 hover:underline" to={LEGAL_ROUTES.workspaceSubscription}>
-            Plans &amp; subscription
-          </Link>
-          .
-        </p>
+        {LEARNER_MONETIZATION_UI_DISABLED ? (
+          <p>
+            When paid tiers return, access will add features and limits according to your plan; it will not guarantee grades, credentials,
+            employment, publication acceptance, or exam passage. Public checkout is not active in this release.
+          </p>
+        ) : (
+          <p>
+            Paying for access adds features and limits according to your plan; it does not guarantee grades, credentials,
+            employment, publication acceptance, or exam passage. Compare{' '}
+            <Link className="text-violet-300 underline-offset-2 hover:underline" to={LEGAL_ROUTES.pricing}>
+              public pricing
+            </Link>{' '}
+            and workspace-specific controls under{' '}
+            <Link className="text-violet-300 underline-offset-2 hover:underline" to={LEGAL_ROUTES.workspaceSubscription}>
+              Plans &amp; subscription
+            </Link>
+            .
+          </p>
+        )}
       </section>
     </LegalPageShell>
   )

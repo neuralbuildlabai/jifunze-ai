@@ -6,6 +6,7 @@ import {
   resolveChatbotStarterLinkHref,
 } from '../../data/learning/chatbotLibraryCatalog'
 import { CHATBOT_LIBRARY_FAMILY, chatbotCurriculumStats } from '../../data/learning/chatbotEverydayCurriculum'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { CurriculumDepthSection } from '../libraries/CurriculumDepthSection'
 
@@ -33,18 +34,26 @@ export function WorkspaceChatbotLibraryPage() {
           >
             Open free chatbot starter
           </Link>
-          <Link
-            to="/pricing"
-            className="inline-flex items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] px-5 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-cyan-400/25 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400/55"
-          >
-            Unlock deeper chatbot learning
-          </Link>
-          <Link
-            to="/settings/subscription"
-            className="inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-medium text-zinc-500 transition hover:text-zinc-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400/55"
-          >
-            Manage subscription or billing
-          </Link>
+          {LEARNER_MONETIZATION_UI_DISABLED ? (
+            <p className="max-w-xl text-[12px] leading-relaxed text-zinc-500">
+              Paid checkout is not active in this release—use the public chatbot starter link above.
+            </p>
+          ) : (
+            <>
+              <Link
+                to="/pricing"
+                className="inline-flex items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] px-5 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-cyan-400/25 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400/55"
+              >
+                Unlock deeper chatbot learning
+              </Link>
+              <Link
+                to="/settings/subscription"
+                className="inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-medium text-zinc-500 transition hover:text-zinc-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400/55"
+              >
+                Manage subscription or billing
+              </Link>
+            </>
+          )}
         </div>
       </header>
 
@@ -138,12 +147,16 @@ export function WorkspaceChatbotLibraryPage() {
                   ))}
                 </ul>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <Link
-                    to="/pricing"
-                    className="inline-flex items-center justify-center rounded-lg bg-white/[0.06] px-3 py-1.5 text-[11px] font-semibold text-zinc-100 ring-1 ring-white/[0.08] transition hover:bg-white/[0.09] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400/55"
-                  >
-                    Explore premium chatbot tracks
-                  </Link>
+                  {LEARNER_MONETIZATION_UI_DISABLED ? (
+                    <span className="text-[11px] text-zinc-600">Premium tracks are not listed in this release.</span>
+                  ) : (
+                    <Link
+                      to="/pricing"
+                      className="inline-flex items-center justify-center rounded-lg bg-white/[0.06] px-3 py-1.5 text-[11px] font-semibold text-zinc-100 ring-1 ring-white/[0.08] transition hover:bg-white/[0.09] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400/55"
+                    >
+                      Explore premium chatbot tracks
+                    </Link>
+                  )}
                 </div>
               </div>
             </article>
@@ -161,12 +174,16 @@ export function WorkspaceChatbotLibraryPage() {
               chatbot ROI, rankings, or job placement.
             </p>
           </div>
-          <Link
-            to="/pricing"
-            className="text-sm font-semibold text-cyan-300/95 hover:text-cyan-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400/55"
-          >
-            Check pricing →
-          </Link>
+          {LEARNER_MONETIZATION_UI_DISABLED ? (
+            <span className="text-sm text-zinc-600">Pricing paused.</span>
+          ) : (
+            <Link
+              to="/pricing"
+              className="text-sm font-semibold text-cyan-300/95 hover:text-cyan-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400/55"
+            >
+              Check pricing →
+            </Link>
+          )}
         </div>
 
         <div className="mt-8 grid gap-4 lg:grid-cols-2">
@@ -182,12 +199,16 @@ export function WorkspaceChatbotLibraryPage() {
                 </span>
               </div>
               <p className="mt-2 text-[13px] leading-relaxed text-zinc-400">{track.summary}</p>
-              <Link
-                to="/pricing"
-                className="mt-4 inline-flex text-[12px] font-semibold text-cyan-200/95 hover:text-cyan-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400/55"
-              >
-                Check availability on pricing →
-              </Link>
+              {LEARNER_MONETIZATION_UI_DISABLED ? (
+                <p className="mt-4 text-[12px] text-zinc-600">Availability on pricing — not listed in this release.</p>
+              ) : (
+                <Link
+                  to="/pricing"
+                  className="mt-4 inline-flex text-[12px] font-semibold text-cyan-200/95 hover:text-cyan-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400/55"
+                >
+                  Check availability on pricing →
+                </Link>
+              )}
             </article>
           ))}
         </div>

@@ -47,7 +47,7 @@ A useful weekly distribution is roughly:
 - **Reading the core lesson:** about 25 to 30 percent of module time. This is foundational; do not rush it. If a module estimates two hours, expect to spend thirty to forty minutes on the core lesson.
 - **Studying the worked examples:** about 15 to 20 percent. Read each example slowly, with the prompts and outputs visible. The examples are where the abstract teaching becomes concrete.
 - **Completing the practice tasks:** about 25 to 30 percent. This is the largest chunk after reading. Do every practice task; do not skip the ones that feel familiar.
-- **Answering pause-and-check questions and the checkpoint quiz:** about 10 to 15 percent. The pause-and-check questions are short and embedded; the checkpoint quiz at the end is six scored questions plus one applied scenario. Pass threshold is 80 percent.
+- **Answering pause-and-check questions and the checkpoint quiz:** about 10 to 15 percent. The pause-and-check questions are short and embedded; the checkpoint quiz at the end is six scored questions plus one applied scenario. Pass threshold is at least 6 of 8 correct.
 - **Producing and saving the portfolio artifact:** about 15 to 20 percent. Some modules' artifacts are fast (a checklist, a table). Others are slower (a prompt pack, a synthesis brief). Budget more time on the application modules from Module 7 onward.
 
 If a module is taking more than 50 percent longer than its estimate, that is a signal to slow down rather than speed up: you may be missing a prerequisite, or the artifact may need a clearer scope. Re-read the module overview and ask yourself which specific task is taking the time.
@@ -78,7 +78,7 @@ Each module follows the same workflow. Treat this as your standard checklist.
 
 **Answer the pause-and-check questions.** These are short questions embedded in the module that ask you to re-state a concept or apply it to a tiny scenario. Answer them out loud or in writing before you read on. They exist to keep you active rather than passive.
 
-**Complete the checkpoint quiz.** Each module ends with six scored questions plus one applied scenario. The pass threshold is 80 percent. If you score below that, do not move on; instead, identify which questions you got wrong, return to the relevant section, and re-attempt the failed questions after a short break. Treat the quiz as a learning tool, not just a gate.
+**Complete the checkpoint quiz.** Each module ends with six scored questions plus one applied scenario. The pass threshold is at least 6 of 8 correct. If you score below that, do not move on; instead, identify which questions you got wrong, return to the relevant section, and re-attempt the failed questions after a short break. Treat the quiz as a learning tool, not just a gate.
 
 **Produce the portfolio artifact.** Every module has a defined artifact — a checklist, a rewrite, a brief, a workflow map, a prompt pack section, a decision memo. Produce yours using the module's specification. The artifact should be tied to a real task you do or a realistic scenario, not a generic example. Date it. Keep it short, complete, and reviewable by another person.
 
@@ -246,7 +246,7 @@ Run this short check at the end of every module. If any item is "no," return to 
 - I read every worked example with the prompts and outputs visible.
 - I completed every practice task and saved my outputs.
 - I answered the pause-and-check questions before reading on.
-- I scored at least 80 percent on the checkpoint quiz, or I returned and re-attempted the failed questions.
+- I scored at least 6 of 8 on the checkpoint quiz, or I returned and re-attempted the failed questions.
 - I produced the portfolio artifact this module asks for, tied to a realistic task.
 - The artifact is saved in the correct module folder, with the correct filename pattern, with a context note that includes an AI-disclosure line.
 - I can teach back the module's main idea in five to seven sentences from memory.

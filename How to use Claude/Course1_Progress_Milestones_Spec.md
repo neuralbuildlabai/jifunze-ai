@@ -10,7 +10,7 @@ Course 1 — AI Essentials has sixteen modules, but the product requirement is t
 
 This document fixes the milestone model so every dashboard, course page, pathway view, reports view, and certificate-readiness view shows the same percentage for the same learner state.
 
-It does not change what counts as completion of a module. Module-level completion logic (checkpoint passed at 80% + portfolio artifact uploaded + revision-guidance addressed where applicable) is unchanged.
+It does not change what counts as completion of a module. Module-level completion logic in the app (including the module quiz pass rule: **at least 6 of 8** correct, plus mastery checkpoints and other gates as implemented) plus portfolio artifact uploaded and revision-guidance addressed where applicable is unchanged.
 
 ---
 
@@ -73,7 +73,7 @@ The safest change order is:
 
 **Capstone partial state.** A learner who has uploaded the Module 16 bundle but has not yet self-graded against the rubric sits at 90%, not 100%. Milestone 10 requires both the upload *and* the rubric self-grade at *Ready* or higher on every criterion. This avoids the case where a learner uploads a draft bundle and the dashboard reports the course as complete.
 
-**Revision below threshold.** A learner who completes Module N and later has its checkpoint score fall below 80% (rare, but possible if the platform reopens a checkpoint for a fresh attempt) regresses out of the milestone group that includes Module N until the checkpoint clears 80% again. Module-completion writes already handle this correctly today; the milestone mapping inherits that behaviour.
+**Revision below threshold.** A learner who completes Module N and later has its **module quiz** fall below **6 of 8** correct (rare, but possible if the platform allows a fresh attempt) regresses out of the milestone group that includes Module N until the quiz passes again (at least 6 of 8). Module-completion writes already handle this correctly today; the milestone mapping inherits that behaviour.
 
 **Pathway-only learners.** A learner enrolled in a pathway that includes AI Essentials sees the same milestone-mapped percentage in the pathway view as in the course view. The pathway's own *course weight* (e.g., AI Essentials is 1 of 4 courses in pathway X) sits on top of the AI Essentials percentage, not under it.
 

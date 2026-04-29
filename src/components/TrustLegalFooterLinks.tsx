@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../training/trustCopy'
 
 type Props = {
@@ -41,12 +42,16 @@ export function TrustLegalFooterLinks(props: Props) {
       <Link to={LEGAL_ROUTES.refunds} className="text-zinc-400 underline-offset-2 hover:text-zinc-100 hover:underline">
         Refunds
       </Link>
-      <span className="text-zinc-600" aria-hidden>
-        ·
-      </span>
-      <Link to={LEGAL_ROUTES.pricing} className="text-zinc-400 underline-offset-2 hover:text-zinc-100 hover:underline">
-        Pricing
-      </Link>
+      {LEARNER_MONETIZATION_UI_DISABLED ? null : (
+        <>
+          <span className="text-zinc-600" aria-hidden>
+            ·
+          </span>
+          <Link to={LEGAL_ROUTES.pricing} className="text-zinc-400 underline-offset-2 hover:text-zinc-100 hover:underline">
+            Pricing
+          </Link>
+        </>
+      )}
     </nav>
   )
 }

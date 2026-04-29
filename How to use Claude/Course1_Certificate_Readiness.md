@@ -31,11 +31,11 @@ It is not a legal, financial, medical, or regulatory credential. Nothing in the 
 To be certificate-ready, the learner must satisfy every item below. Partial completion does not qualify.
 
 - All sixteen modules completed in full, including readings, worked examples, and practice activities.
-- All sixteen module checkpoints passed at 80% or higher. Each checkpoint is six scored questions plus one applied scenario.
+- All sixteen module quizzes passed with at least 6 of 8 correct each. Each checkpoint is six scored questions plus one applied scenario.
 - All required portfolio artifacts completed for every module (see *Evidence required* below) and assembled into a single portfolio.
 - The Module 16 capstone completed end to end: problem framing, workflow design, prompt set, review and verification, safety boundaries, presentation, self-critique, and reflection.
 - A disclosure statement included with the portfolio that names how AI was used in producing the artifacts and the capstone.
-- Revision completed where needed. Any checkpoint below 80% on first attempt, or any capstone criterion judged weak in self-critique, must be revised before the certificate is issued.
+- Revision completed where needed. Any checkpoint below 6 of 8 on first attempt, or any capstone criterion judged weak in self-critique, must be revised before the certificate is issued.
 
 The standard is met when all six conditions are true at the same time. There is no waiver path.
 
@@ -96,7 +96,7 @@ The capstone must score at or above the rubric's "strong evidence" threshold on 
 
 The statement below is offered as a starting point for a profile, portfolio, or résumé entry. Learners should adapt the language to their voice and context, and should not embellish beyond what the certificate actually represents.
 
-> *I completed Course 1 — AI Essentials with Jifunze. The course required sixteen module checkpoints at 80% or higher, sixteen portfolio artifacts, and an end-to-end capstone workflow with self-critique and revision. I can use AI tools to support writing, learning, research, decision-making, and workflow design while applying verification, privacy, and accountability standards. My portfolio shows the actual work, including the prompts I wrote, the outputs I reviewed, and the boundaries I applied. The certificate represents demonstrated practice in foundational AI fluency. It is not a credential in any specialized domain.*
+> *I completed Course 1 — AI Essentials with Jifunze. The course required sixteen module quizzes at at least 6 of 8 correct each, sixteen portfolio artifacts, and an end-to-end capstone workflow with self-critique and revision. I can use AI tools to support writing, learning, research, decision-making, and workflow design while applying verification, privacy, and accountability standards. My portfolio shows the actual work, including the prompts I wrote, the outputs I reviewed, and the boundaries I applied. The certificate represents demonstrated practice in foundational AI fluency. It is not a credential in any specialized domain.*
 
 Learners are encouraged to link to the portfolio rather than rely on the statement alone. The artifacts are stronger evidence than the description.
 
@@ -114,7 +114,7 @@ For clients evaluating a freelancer who holds the certificate, the same applies.
 
 Course 1 is built around the assumption that learners will not pass everything on the first try, and that the path to certificate readiness includes deliberate revision. The rules below describe what happens when something falls short.
 
-If a learner scores below 80% on a module checkpoint, they revisit the module sections that map to the missed questions, redo the relevant practice activity, and retake the checkpoint. Checkpoints can be retaken until passed; the highest passing score is recorded. There is no penalty for taking the checkpoint more than once. The intent is mastery, not speed.
+If a learner scores below 6 of 8 on a module checkpoint, they revisit the module sections that map to the missed questions, redo the relevant practice activity, and retake the checkpoint. Checkpoints can be retaken until passed; the highest passing score is recorded. There is no penalty for taking the checkpoint more than once. The intent is mastery, not speed.
 
 If a portfolio artifact is incomplete or does not meet the acceptance criteria stated in the module's completion-evidence section, the learner returns to the module, redoes the artifact, and replaces the earlier version in the portfolio. Earlier drafts can be kept as appendices to show the revision trail, but the portfolio carries the final version.
 

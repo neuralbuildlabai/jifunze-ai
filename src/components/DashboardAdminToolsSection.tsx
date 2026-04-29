@@ -68,10 +68,6 @@ export function DashboardAdminToolsSection({ navVariant, canManageInstitutionTra
             <span className="text-sm font-medium text-zinc-100">Studio</span>
             <span className="text-[11px] text-zinc-500">Packages and adaptation</span>
           </Link>
-          <Link to={LEGAL_ROUTES.workspaceSubscription} className={adminTileClass}>
-            <span className="text-sm font-medium text-zinc-100">Billing / Plan</span>
-            <span className="text-[11px] text-zinc-500">Subscription</span>
-          </Link>
           <Link to="/settings" className={adminTileClass}>
             <span className="text-sm font-medium text-zinc-100">Settings</span>
             <span className="text-[11px] text-zinc-500">Workspace preferences</span>
@@ -114,10 +110,6 @@ export function DashboardAdminToolsSection({ navVariant, canManageInstitutionTra
           <Link to="/studio" className={adminTileClass}>
             <span className="text-sm font-medium text-zinc-100">Studio</span>
             <span className="text-[11px] text-zinc-500">Packages and adaptation</span>
-          </Link>
-          <Link to={LEGAL_ROUTES.workspaceSubscription} className={adminTileClass}>
-            <span className="text-sm font-medium text-zinc-100">Billing / Plan</span>
-            <span className="text-[11px] text-zinc-500">Plans</span>
           </Link>
           <Link to="/settings" className={adminTileClass}>
             <span className="text-sm font-medium text-zinc-100">Settings</span>

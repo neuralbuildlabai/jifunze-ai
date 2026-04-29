@@ -24,6 +24,17 @@ import {
   moduleSessionsAllDone,
   priorModulesQuizSatisfied,
 } from '../../lib/flagshipCourseProgressDerived'
+import {
+  AI_ESSENTIALS_MODULE_MILESTONE_LINE,
+  AI_ESSENTIALS_MODULE_TIME_HINT,
+  AI_ESSENTIALS_STAGE_SECTION_LABEL,
+} from '../../lib/aiEssentialsCourseUiMeta'
+import {
+  AI_ESSENTIALS_SLUG,
+  getAiEssentialsMilestonesReachedCount,
+  getAiEssentialsNextMilestoneHint,
+} from '../../lib/aiEssentialsProgressMilestones'
+import { MODULE_QUIZ_DRAW_COUNT, MODULE_QUIZ_MIN_CORRECT } from '../../lib/flagshipModuleQuizPools'
 import { FlagshipModuleQuizPanel } from './FlagshipModuleQuizPanel'
 
 const STAGE_FLOW = ['foundations', 'applied_practice', 'professional_execution', 'mastery_outputs'] as const
@@ -186,6 +197,8 @@ export function FlagshipCourseLearningPath(props: {
   const { courseSlug, curriculum, sessions, progress, layout: layoutProp } = props
   const layout = layoutProp ?? 'default'
   const compactRows = layout === 'accordion'
+  const isAe = courseSlug === AI_ESSENTIALS_SLUG
+  const isAeAccordion = isAe && layout === 'accordion'
   const commerce = useLearnerCommerceOptional()
   const purchaseGateEnabled = commerce?.purchaseGateEnabled ?? false
   const hasCourseAccess = commerce?.hasCourseAccess(courseSlug) ?? true
@@ -278,12 +291,36 @@ export function FlagshipCourseLearningPath(props: {
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
+              {isAeAccordion ? (
+                <p className="mt-3 max-w-2xl text-[12px] leading-relaxed text-[color:var(--jf-muted)]" data-testid="ae-curriculum-milestone-line">
+                  <span className="font-medium text-[color:var(--jf-text)]">
+                    {getAiEssentialsMilestonesReachedCount(progressPercent)} / 10 milestones
+                  </span>
+                  {' · '}
+                  {getAiEssentialsNextMilestoneHint(curriculum, sessions, state)}
+                </p>
+              ) : null}
             </div>
             <div className="flex flex-wrap gap-2 text-[12px] text-[color:var(--jf-muted)]">
               <span className="rounded-full border border-[color:var(--jf-border)] px-2.5 py-1">
                 Active stage focus: <span className="font-medium text-[color:var(--jf-text)]">{currentStageLabel}</span>
               </span>
-              {!capstoneUnlocked ? (
+              {isAe ? (
+                !capstoneUnlocked ? (
+                  <span className="rounded-full border border-[color:var(--jf-border)] px-2.5 py-1">
+                    Capstone prep unlocks when prior modules, module quizzes, and mastery checkpoints satisfy the course gates (not a raw
+                    session count).
+                  </span>
+                ) : !capstonePrepAccessible ? (
+                  <span className="rounded-full border border-amber-900/35 bg-amber-950/[0.12] px-2.5 py-1 text-amber-100/90">
+                    Capstone prep: checkpoints pending
+                  </span>
+                ) : (
+                  <span className="rounded-full border border-emerald-900/25 bg-emerald-950/[0.15] px-2.5 py-1 text-emerald-100/90">
+                    Capstone prep ready
+                  </span>
+                )
+              ) : !capstoneUnlocked ? (
                 <span className="rounded-full border border-[color:var(--jf-border)] px-2.5 py-1">
                   Capstone path: <span className="font-medium text-[color:var(--jf-text)]">{remainingBeforeCapstone}</span> sessions left before prep
                 </span>
@@ -425,7 +462,9 @@ export function FlagshipCourseLearningPath(props: {
         {modulesByStage.map(({ stage, modules }) => (
           <div key={stage}>
             <div className="border-b border-[color:var(--jf-border)] pb-3">
-              <h3 className="text-[13px] font-semibold uppercase tracking-[0.16em] text-[color:var(--jf-muted)]">{flagshipStageLabel(stage)}</h3>
+              <h3 className="text-[13px] font-semibold uppercase tracking-[0.16em] text-[color:var(--jf-muted)]">
+                {isAe ? AI_ESSENTIALS_STAGE_SECTION_LABEL[stage] : flagshipStageLabel(stage)}
+              </h3>
             </div>
             <div className={layout === 'accordion' ? 'mt-6 space-y-3' : 'mt-6 space-y-8'}>
               {modules.map((mod) => {
@@ -434,11 +473,28 @@ export function FlagshipCourseLearningPath(props: {
                 const fullyComplete = moduleFullyComplete(mod.id, sessions, completed, state)
                 const sessionsOnlyDone = moduleSessionsAllDone(mod.id, sessions, completed)
                 const moduleExpanded = layout !== 'accordion' || expandedModuleId === mod.id
+                const firstSess = modSessions[0]
+                const canEnterFirst =
+                  !!firstSess &&
+                  sessionOpenForLearner(completed, firstSess, {
+                    capstonePrepAccessible,
+                    curriculum,
+                    progressState: state,
+                  })
+                const lockedModule = isAe && !fullyComplete && !sessionsOnlyDone && stats.done === 0 && !canEnterFirst
+                const moduleShellClass =
+                  isAe && fullyComplete
+                    ? 'rounded-2xl border border-emerald-900/35 bg-emerald-950/[0.1] p-4 sm:p-5'
+                    : isAe && sessionsOnlyDone
+                      ? 'rounded-2xl border border-amber-900/35 bg-amber-950/[0.12] p-4 sm:p-5'
+                      : isAe && lockedModule
+                        ? 'rounded-2xl border border-dashed border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)]/55 p-4 sm:p-5'
+                        : 'rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-4 sm:p-5'
                 const header = (
                   <div className="flex min-w-0 flex-1 flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-mono text-[11px] font-semibold text-[color:var(--jf-muted)]">{String(mod.order).padStart(2, '0')}</span>
+                        <span className="font-mono text-[11px] font-semibold text-[color:var(--jf-muted)]">Module {mod.order}</span>
                         {fullyComplete ? (
                           <span className="rounded-full border border-emerald-900/35 bg-emerald-950/[0.2] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-100/85">
                             Module complete
@@ -448,13 +504,36 @@ export function FlagshipCourseLearningPath(props: {
                             Quiz pending
                           </span>
                         ) : (
-                          <span className="rounded-full border border-[color:var(--jf-border)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[color:var(--jf-muted)]">
-                            {stats.done}/{stats.total} sessions
-                          </span>
+                          <>
+                            <span className="rounded-full border border-[color:var(--jf-border)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[color:var(--jf-muted)]">
+                              {stats.done}/{stats.total} sessions
+                            </span>
+                            {lockedModule ? (
+                              <span className="rounded-full border border-zinc-600/40 bg-zinc-950/30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-200/90">
+                                Locked
+                              </span>
+                            ) : null}
+                          </>
                         )}
                       </div>
                       <p className="mt-2 text-[16px] font-semibold text-[color:var(--jf-text)]">{mod.title}</p>
-                      {!compactRows ? (
+                      {compactRows && isAe ? (
+                        <div className="mt-2 space-y-1">
+                          {mod.expectedOutputs?.[0] ? (
+                            <p className="text-[12px] leading-snug text-[color:var(--jf-muted)]">
+                              <span className="font-medium text-[color:var(--jf-text)]">Output: </span>
+                              {mod.expectedOutputs[0]}
+                              {mod.expectedOutputs.length > 1 ? ` (+${mod.expectedOutputs.length - 1} more)` : ''}
+                            </p>
+                          ) : null}
+                          <p className="text-[11px] leading-snug text-[color:var(--jf-subtle)]">
+                            Est. {AI_ESSENTIALS_MODULE_TIME_HINT[mod.id] ?? '~2–3h'} · Checkpoint: 3 mastery items on practice · Module quiz:{' '}
+                            {MODULE_QUIZ_DRAW_COUNT} questions (at least {MODULE_QUIZ_MIN_CORRECT} of {MODULE_QUIZ_DRAW_COUNT} correct)
+                          </p>
+                          <p className="text-[11px] leading-snug text-emerald-200/75">{AI_ESSENTIALS_MODULE_MILESTONE_LINE[mod.id]}</p>
+                          <p className="text-[12px] leading-snug text-[color:var(--jf-muted)]">{mod.summary}</p>
+                        </div>
+                      ) : !compactRows ? (
                         <p className="mt-1 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{mod.summary}</p>
                       ) : moduleExpanded ? (
                         <p className="mt-1 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{mod.summary}</p>
@@ -468,7 +547,7 @@ export function FlagshipCourseLearningPath(props: {
                   </div>
                 )
                 return (
-                  <div id={`flagship-module-${mod.id}`} key={mod.id} className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-4 sm:p-5">
+                  <div id={`flagship-module-${mod.id}`} key={mod.id} className={moduleShellClass}>
                     {layout === 'accordion' ? (
                       <button
                         type="button"
@@ -523,28 +602,58 @@ export function FlagshipCourseLearningPath(props: {
 
       {/* Capstone prep block — navigational */}
       {sessions.some((s) => s.moduleId === FLAGSHIP_CAPSTONE_MODULE_ID) ? (
-        <div className="mt-12 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-5 py-6">
+        <div
+          className={
+            isAeAccordion
+              ? 'mt-12 rounded-2xl border border-violet-900/25 bg-violet-950/[0.1] px-5 py-6 sm:px-7'
+              : 'mt-12 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-5 py-6'
+          }
+        >
           <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:var(--jf-muted)]">Capstone preparation session</p>
-          <p className="mt-3 text-[15px] font-semibold text-[color:var(--jf-text)]">
-            {!capstoneUnlocked ? 'Still preparing' : capstonePrepAccessible ? 'Ready when you are' : 'Checkpoints before prep'}
-          </p>
-          <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-            {layout === 'accordion'
-              ? !capstoneUnlocked
-                ? `${remainingBeforeCapstone} sessions left before capstone prep opens.`
-                : !capstonePrepAccessible
-                  ? 'Finish mastery checkpoints on practice sessions, then capstone prep unlocks.'
-                  : capstonePrepComplete
-                    ? 'Capstone prep is complete—you can still refine deliverables.'
-                    : 'Open the prep session when you are ready to align deliverables with the brief.'
-              : !capstoneUnlocked
-                ? `Complete the remaining ${remainingBeforeCapstone} sessions across modules to reach capstone preparation.`
-                : !capstonePrepAccessible
-                  ? 'All sessions are marked complete—finish mastery checkpoints on each module’s practice session so capstone prep reflects defensible readiness.'
-                  : capstonePrepComplete
-                    ? 'You marked capstone preparation complete—keep iterating on deliverables until they meet your own bar.'
-                    : 'Walk through the prep session to align deliverables with the brief before you call the capstone finished.'}
-          </p>
+          {isAeAccordion ? (
+            <>
+              <p className="mt-3 text-[15px] font-semibold text-[color:var(--jf-text)]">Final capstone: End-to-End AI-Supported Workflow</p>
+              <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
+                Capstone prep opens after required lessons, module quizzes, and mastery checkpoints clear the product gates—not after a raw
+                session tally.
+              </p>
+              <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
+                100% milestone progress requires Module 16 completion plus every capstone rubric row at Ready or Strong.
+              </p>
+              {!capstonePrepAccessible ? (
+                <p className="mt-2 text-[12px] text-[color:var(--jf-subtle)]">
+                  Finish pending checkpoints on practice sessions where shown; prep unlocks automatically when the path is consistent.
+                </p>
+              ) : capstonePrepComplete ? (
+                <p className="mt-2 text-[12px] text-emerald-200/85">Capstone prep is marked complete—you can still refine deliverables.</p>
+              ) : (
+                <p className="mt-2 text-[12px] text-[color:var(--jf-subtle)]">Open the prep session to align filenames, rubric rows, and disclosure with the Module 16 brief.</p>
+              )}
+            </>
+          ) : (
+            <>
+              <p className="mt-3 text-[15px] font-semibold text-[color:var(--jf-text)]">
+                {!capstoneUnlocked ? 'Still preparing' : capstonePrepAccessible ? 'Ready when you are' : 'Checkpoints before prep'}
+              </p>
+              <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
+                {layout === 'accordion'
+                  ? !capstoneUnlocked
+                    ? `${remainingBeforeCapstone} sessions left before capstone prep opens.`
+                    : !capstonePrepAccessible
+                      ? 'Finish mastery checkpoints on practice sessions, then capstone prep unlocks.'
+                      : capstonePrepComplete
+                        ? 'Capstone prep is complete—you can still refine deliverables.'
+                        : 'Open the prep session when you are ready to align deliverables with the brief.'
+                  : !capstoneUnlocked
+                    ? `Complete the remaining ${remainingBeforeCapstone} sessions across modules to reach capstone preparation.`
+                    : !capstonePrepAccessible
+                      ? 'All sessions are marked complete—finish mastery checkpoints on each module’s practice session so capstone prep reflects defensible readiness.'
+                      : capstonePrepComplete
+                        ? 'You marked capstone preparation complete—keep iterating on deliverables until they meet your own bar.'
+                        : 'Walk through the prep session to align deliverables with the brief before you call the capstone finished.'}
+              </p>
+            </>
+          )}
           {capstonePrepAccessible ? (
             <div className="mt-5 flex flex-wrap gap-3">
               <Link

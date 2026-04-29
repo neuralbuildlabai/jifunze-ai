@@ -4,7 +4,7 @@
 
 ## Checkpoint quiz
 
-Eight questions. Pass threshold: 80% (six out of eight). Use a paper notebook or a separate file. Do not look back at Part A while answering. After you finish, mark yourself against the answer key in the next section.
+Eight questions. Pass threshold: at least 6 of 8 questions correct. Use a paper notebook or a separate file. Do not look back at Part A while answering. After you finish, mark yourself against the answer key in the next section.
 
 1. *(Multiple choice)* Module 4 extends Module 3's T-C-C-F-A model into the R-T-C-C-O-R model. Which two elements are genuinely new in Module 4?
    a. Task and Context.
@@ -66,7 +66,7 @@ Eight questions. Pass threshold: 80% (six out of eight). Use a paper notebook or
       Any three of the four earn full marks; naming only two earns half.
    b. Strong answers propose targeted edits that remove real noise. Examples that pass: *"Pick one tone direction (warm and direct) and delete the other six tone words."* *"Pick one format (a short paragraph followed by three labelled detail lines) and delete the contradictory instruction."* *"Cut the content list to the four items the customer actually needs to act on — original date, new date, reason, next step — and move the loyalty programme, social media handles, and 'our values' to a separate message or delete entirely."* *"Replace the eight decoration adjectives in the Role line with one function and one quality, such as 'a careful customer-care lead at a small business.'"* The marker should look for whether the learner is removing real noise rather than just lowering the word count.
 
-A learner who scores six or more out of eight has met the 80% threshold. A learner who scores four or five should review specific Part A sub-sections — the Revision guidance section below names which one matches each weakness.
+A learner who scores six or more out of eight has met the pass bar (at least 6 of 8). A learner who scores four or five should review specific Part A sub-sections — the Revision guidance section below names which one matches each weakness.
 
 ## Portfolio artifact
 
@@ -115,7 +115,7 @@ If you skip the artifact or save a thin version of it, three later modules becom
 
 The following outputs together prove that you have completed Module 4 meaningfully. Keep them in your portfolio folder.
 
-- The 8-question checkpoint quiz, completed at 80% or higher (six or more correct).
+- The 8-question checkpoint quiz, completed with at least 6 of 8 correct.
 - Practice activity 1 submitted as three engineered R-T-C-C-O-R prompts (one per supplied weak prompt), with every slot labelled and every slot doing real work, plus a three- to five-sentence analysis per prompt naming the element that made the biggest difference, whether the Review cue produced anything useful, and one element that could be cut without changing the output.
 - Practice activity 2 submitted as three AI outputs (one per Output format — brief, table, step-by-step) for the same source document, plus a roughly 200-word comparison naming which design fit which next step best and which design you would default to.
 - Practice activity 3 submitted as five sets of constraints (one per task), each set containing at least three engineered constraints, at least one negative constraint, a one-sentence rationale per constraint, and a *control* or *decoration* mark per constraint, with any decoration constraints rewritten until they are control.
@@ -128,7 +128,7 @@ A learner with all of the above has finished Module 4 at the expected depth. A l
 
 ## Revision guidance
 
-If you scored under 80% on the checkpoint, or if any of the situations below describe you, return to the named section before moving on.
+If you scored below 6 of 8 on the checkpoint, or if any of the situations below describe you, return to the named section before moving on.
 
 **Your prompt has a Role line but the Role does not improve the output.** Re-read the *Role* sub-section of the core lesson in Part A. The most common cause of an inert Role line is that it names a generic quality the AI was already going to attempt — *"a helpful expert,"* *"an experienced professional,"* *"a knowledgeable assistant."* Apply the test from Part A: *can I predict what the output will not sound like once the Role is in place?* If the answer is no, the Role is decoration. Rewrite the Role line to name a function (HR business partner, payroll accountant, customer-care lead, study coach, operations lead) and one quality that matters for the task (*evidence-based*, *plain-English*, *deadline-driven*, *cautious about over-promising*). Worked example 3 (the HR feedback note) is the cleanest example of a Role line doing real work.
 
@@ -170,7 +170,7 @@ This section is for the platform team mapping Module 4 into Cursor. It is not pa
 - *Artifact upload* — the portfolio artifact, with the filename pattern enforced by the upload widget.
 - *Remediation* — the Revision guidance section, mapped to deep-link buttons that jump back to the named Part A sub-sections.
 
-**Quiz mapping notes.** Eight questions, four formats. Two are machine-checkable multiple choice (Q1, Q2) and can be scored automatically. The remaining six (Q3 through Q8) are rubric-checkable: each has a model answer plus criteria in the answer key. The platform should render Q3, Q4, Q5, Q6, Q7, and Q8 as text-area inputs with a learner-side self-assessment rubric (collapsible) below each. The pass threshold of 80% means the learner must mark themselves as correct on at least six of eight using the supplied criteria. Q7 (the supplier follow-up rewrite) is the most rubric-heavy and benefits from a side-by-side display of the learner's rewrite and the six element-checks from the answer key. Q8 (the cluttered prompt diagnosis) benefits from a tagged-clause view of the prompt, with the four named clutter patterns from Part A available as selectable tags.
+**Quiz mapping notes.** Eight questions, four formats. Two are machine-checkable multiple choice (Q1, Q2) and can be scored automatically. The remaining six (Q3 through Q8) are rubric-checkable: each has a model answer plus criteria in the answer key. The platform should render Q3, Q4, Q5, Q6, Q7, and Q8 as text-area inputs with a learner-side self-assessment rubric (collapsible) below each. The pass rule means the learner must mark themselves as correct on at least six of eight using the supplied criteria. Q7 (the supplier follow-up rewrite) is the most rubric-heavy and benefits from a side-by-side display of the learner's rewrite and the six element-checks from the answer key. Q8 (the cluttered prompt diagnosis) benefits from a tagged-clause view of the prompt, with the four named clutter patterns from Part A available as selectable tags.
 
 **Portfolio artifact mapping notes.** Upload widget should accept `.pdf` and `.docx` only. Filename must match the pattern `Module04_Structured_Prompt_Template_*.{pdf,docx}` — enforce on upload. The widget should expose all six required parts as a checklist the learner ticks before submission, so partial uploads are caught at the point of submission rather than at the start of Module 5. Tag the artifact in storage as `feeds:m05, feeds:m15, feeds:m16` so later modules can surface it automatically when needed. The three patterns should also be stored as separate, individually-retrievable artifacts inside the file so Module 15's prompt-pack assembly tool can pull them in directly without requiring the learner to copy-paste.
 

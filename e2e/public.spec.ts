@@ -77,8 +77,8 @@ test.describe('Public surfaces', () => {
 
   test('public pricing page loads without auth', async ({ page }) => {
     await page.goto('/pricing')
-    await expect(page.getByRole('heading', { name: /choose your plan/i })).toBeVisible()
-    await expect(page.getByTestId('public-pricing-plans-grid')).toBeVisible()
+    await expect(page.getByRole('heading', { name: /plans are not available yet/i })).toBeVisible()
+    await expect(page.getByTestId('public-pricing-focused')).toBeVisible()
   })
 
   test('public AI foundations library index loads without auth', async ({ page }) => {

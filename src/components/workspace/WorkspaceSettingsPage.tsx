@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useAppAccess } from '../../access/useAppAccess'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES, TRUST_COPY } from '../../training/trustCopy'
 import { TrustBoundaryStrip } from '../TrustBoundaryStrip'
 import { useWorkspaceGeneratorReady } from '../../workspace/WorkspaceGeneratorContext'
@@ -56,29 +57,38 @@ function WorkspaceSettingsPageInner() {
           </p>
         </section>
 
-        <section className="rounded-2xl border border-zinc-800/80 bg-zinc-900/35 p-4 space-y-2">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">Plan &amp; billing</h2>
-          <TrustBoundaryStrip compact dataTestId="settings-billing-trust-boundary" />
-          <p className="text-[11px] leading-relaxed text-zinc-600">{TRUST_COPY.affiliationCheckoutReminder}</p>
-          <p className="text-[12px] leading-relaxed text-zinc-500">
-            Compare{' '}
-            <Link className="font-medium text-violet-300 hover:text-violet-200" to={LEGAL_ROUTES.pricing}>
-              public pricing
-            </Link>
-            , then open{' '}
-            <Link className="font-medium text-violet-300 hover:text-violet-200" to={LEGAL_ROUTES.workspaceSubscription}>
-              Plans &amp; subscription
-            </Link>{' '}
-            for your workspace tier and billing readiness—paid access remains assistive tooling only (
-            <Link className="text-violet-300 hover:text-violet-200" to={LEGAL_ROUTES.refunds}>
-              refunds policy
-            </Link>
-            ).
-          </p>
-          <p className="text-[11px] leading-relaxed text-zinc-600">{TRUST_COPY.subscriptionProductBoundary}</p>
-          <p className="text-[11px] leading-relaxed text-zinc-600">{TRUST_COPY.notAnAccreditedInstitution}</p>
-          <p className="text-[11px] leading-relaxed text-zinc-600">{TRUST_COPY.selfServeAgeGuidance}</p>
-        </section>
+        {LEARNER_MONETIZATION_UI_DISABLED ? (
+          <section className="rounded-2xl border border-zinc-800/80 bg-zinc-900/35 p-4 space-y-2">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">Plans</h2>
+            <p className="text-[12px] leading-relaxed text-zinc-500">
+              Paid plans and checkout are not surfaced in this product phase. Learning routes stay open for workspace review.
+            </p>
+          </section>
+        ) : (
+          <section className="rounded-2xl border border-zinc-800/80 bg-zinc-900/35 p-4 space-y-2">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">Plan &amp; billing</h2>
+            <TrustBoundaryStrip compact dataTestId="settings-billing-trust-boundary" />
+            <p className="text-[11px] leading-relaxed text-zinc-600">{TRUST_COPY.affiliationCheckoutReminder}</p>
+            <p className="text-[12px] leading-relaxed text-zinc-500">
+              Compare{' '}
+              <Link className="font-medium text-violet-300 hover:text-violet-200" to={LEGAL_ROUTES.pricing}>
+                public pricing
+              </Link>
+              , then open{' '}
+              <Link className="font-medium text-violet-300 hover:text-violet-200" to={LEGAL_ROUTES.workspaceSubscription}>
+                Plans &amp; subscription
+              </Link>{' '}
+              for your workspace tier and billing readiness—paid access remains assistive tooling only (
+              <Link className="text-violet-300 hover:text-violet-200" to={LEGAL_ROUTES.refunds}>
+                refunds policy
+              </Link>
+              ).
+            </p>
+            <p className="text-[11px] leading-relaxed text-zinc-600">{TRUST_COPY.subscriptionProductBoundary}</p>
+            <p className="text-[11px] leading-relaxed text-zinc-600">{TRUST_COPY.notAnAccreditedInstitution}</p>
+            <p className="text-[11px] leading-relaxed text-zinc-600">{TRUST_COPY.selfServeAgeGuidance}</p>
+          </section>
+        )}
 
     </WorkspaceRouteShell>
   )

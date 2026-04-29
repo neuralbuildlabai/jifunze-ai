@@ -10,7 +10,6 @@ import { WorkspaceRouteReady, WorkspaceRouteShell } from './WorkspaceRouteReady'
 import { isBillingCheckoutInteractive, isBillingLiveConfigured } from '../../lib/billingEnv'
 import { openStripeBillingPortal, startStripeCheckout } from '../../lib/billingStripe'
 import type { PricingSkuKey } from '../../subscription/pricingSkuRegistry'
-
 export function WorkspaceSubscriptionPage() {
   const { tier, tierLoading, refreshAccessTier } = useAppAccess()
   const tierLabel = tierLoading ? 'Loading…' : humanAccessTierLabel(tier)

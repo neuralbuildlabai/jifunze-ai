@@ -312,7 +312,7 @@ If the original prompt would have contained Tier 4 content, do not paste the ori
 
 ## Checkpoint quiz
 
-Eight questions. Pass threshold: 80% (six out of eight). Use a paper notebook or a separate file. Do not look back at Part A while answering. After you finish, mark yourself against the answer key in the next section.
+Eight questions. Pass threshold: at least 6 of 8 questions correct. Use a paper notebook or a separate file. Do not look back at Part A while answering. After you finish, mark yourself against the answer key in the next section.
 
 1. *(Multiple choice)* The *minimum necessary information* test asks one specific question before you paste anything into an AI tool. Which of the following is that question?
    a. *What is the most professional way to phrase this prompt?*
@@ -368,7 +368,7 @@ Eight questions. Pass threshold: 80% (six out of eight). Use a paper notebook or
    - v. *Restricted to Never-enter, depending on policy.* A formal disciplinary notice naming all parties is Tier 3 or Tier 4 — it touches HR, legal, and disciplinary content at once. Most organisations restrict AI use on documents like this; some forbid it.
    A strong answer also notes, for the item the learner was *least* sure about, what would shift it. A common honest answer is item iii (the child photograph): blurring the face *and* removing the school identifier shifts it down toward Tier 2; conversely, any context that re-identifies the child shifts it back to Tier 4. Another defensible answer is item iv: replacing *"a finance team"* with the specific team and the named manager would lift it from Safe-to-Caution into Tier 3. Half-credit for an answer that gets four of the five tiers right but cannot give the *what would shift it* sentence. Unacceptable: any answer that places item ii or item v in *Safe*, since both miss the central lesson of Part A (third-party identifiers and disciplinary content are not Safe).
 
-A learner who scores six or more out of eight has met the 80% threshold. A learner who scores four or five should review the specific Part A sub-sections named in the *Revision guidance* section below, then retry. The most common pattern of failure on this checkpoint is over-classifying items as *Safe* — the revision guidance addresses that pattern directly.
+A learner who scores six or more out of eight has met the pass bar (at least 6 of 8). A learner who scores four or five should review the specific Part A sub-sections named in the *Revision guidance* section below, then retry. The most common pattern of failure on this checkpoint is over-classifying items as *Safe* — the revision guidance addresses that pattern directly.
 
 ## Portfolio artifact
 
@@ -417,7 +417,7 @@ If you skip the artifact or save a thin version of it, five later modules become
 
 The following outputs together prove that you have completed Module 10 meaningfully. Keep them in your portfolio folder.
 
-- The 8-question checkpoint quiz, completed at 80% or higher (six or more correct).
+- The 8-question checkpoint quiz, completed with at least 6 of 8 correct.
 - Practice activity 1 submitted as a 20-item sensitivity sort with the tier name and a one-line reason for each item, plus the additional what-would-shift-the-tier note for items 5, 9, and 16.
 - Practice activity 2 submitted as four minimum-necessary rewrites (one per supplied risky prompt), each with a short paragraph naming what was removed and why.
 - Practice activity 3 submitted as five boundary-check decisions (one per supplied use case), each with a 3–5 sentence paragraph of reasoning naming the specific factor that drove the *appropriate / appropriate after redaction or abstraction / pause and escalate* call.
@@ -430,7 +430,7 @@ A learner with all of the above has finished Module 10 at the expected depth. A 
 
 ## Revision guidance
 
-If you scored under 80% on the checkpoint, or if any of the situations below describe you, return to the named Part A section before moving on. The five revision triggers below cover the most common failure patterns on this module.
+If you scored below 6 of 8 on the checkpoint, or if any of the situations below describe you, return to the named Part A section before moving on. The five revision triggers below cover the most common failure patterns on this module.
 
 **You are classifying too much information as *Safe*.** Re-read the *Four-tier sensitivity classification* sub-section of the core lesson and the *Privacy risk by context* sub-section. The most common cause of over-classifying as Safe is treating *familiar to me* as *not sensitive* — a customer's name feels safe because you see it every day, a salary figure feels safe because it is on a spreadsheet you open every Friday, a child's photo feels safe because the parent shared it with you. None of those are Safe by default. Re-read the four-tier definitions and apply the test in Part A: *would this item be Safe, Caution, Restricted, or Never-enter if a colleague who has never seen it before encountered it for the first time?* If the answer changes when you imagine that colleague, you were treating familiarity as safety. Redo Practice activity 1 (the 20-item sensitivity sort) and pay specific attention to items that involve a third party (a customer, a colleague, a student, a patient, a counterparty), a salary or payment figure, an identifier (ID, KRA PIN, phone number), or a child. Almost none of those are Safe.
 
@@ -470,7 +470,7 @@ This section is for the platform team mapping Module 10 into Cursor. It is not p
 - *Artifact upload* — the portfolio artifact, with the filename pattern enforced by the upload widget.
 - *Remediation* — the Revision guidance section, mapped to deep-link buttons that jump back to the named Part A sub-sections.
 
-**Quiz mapping notes.** Eight questions, four formats. Two are machine-checkable multiple choice (Q1, Q2) and can be scored automatically. The remaining six (Q3 through Q8) are rubric-checkable: each has a model answer plus criteria in the answer key. The platform should render Q3, Q4, Q5, Q6, Q7, and Q8 as text-area inputs with a learner-side self-assessment rubric (collapsible) below each. Q7 (the salon customer rewrite) is the most rubric-heavy and benefits from a side-by-side display of the learner's rewrite and the named identifiers from the original prompt — the learner should be able to tick each removed identifier as a self-check before scoring. Q8 (the five-item sensitivity sort) benefits from the same four-tier selector used in Practice activity 1 so the learner is using one consistent UI for tier classification across the module. The pass threshold of 80% means the learner must mark themselves as correct on at least six of eight using the supplied criteria.
+**Quiz mapping notes.** Eight questions, four formats. Two are machine-checkable multiple choice (Q1, Q2) and can be scored automatically. The remaining six (Q3 through Q8) are rubric-checkable: each has a model answer plus criteria in the answer key. The platform should render Q3, Q4, Q5, Q6, Q7, and Q8 as text-area inputs with a learner-side self-assessment rubric (collapsible) below each. Q7 (the salon customer rewrite) is the most rubric-heavy and benefits from a side-by-side display of the learner's rewrite and the named identifiers from the original prompt — the learner should be able to tick each removed identifier as a self-check before scoring. Q8 (the five-item sensitivity sort) benefits from the same four-tier selector used in Practice activity 1 so the learner is using one consistent UI for tier classification across the module. The pass rule means the learner must mark themselves as correct on at least six of eight using the supplied criteria.
 
 **Portfolio artifact mapping notes.** Upload widget should accept `.pdf` and `.docx` only. Filename must match the pattern `Module10_Privacy_Safety_Checklist_*.{pdf,docx}` — enforce on upload as a soft prompt (override allowed). The widget should expose all six required parts (classification table, safer prompt rewrite, redaction/abstraction example, pause/escalate example, operational safety checklist, disclosure note) as a checklist the learner ticks before submission, so partial uploads are caught at the point of submission. The acceptance-criteria block (the six (a)–(f) criteria from the *Portfolio artifact* section above) should render as a self-check rubric next to the upload control, not after submission. Tag the artifact in storage as `feeds:m11, feeds:m12, feeds:m14, feeds:m15, feeds:m16` so later modules can surface it automatically when needed. The classification table and the operational checklist should also be stored as separately retrievable sub-artifacts inside the file so Module 12 (workflow design) and Module 14 (team AI use) can pull them in directly without requiring the learner to copy-paste.
 

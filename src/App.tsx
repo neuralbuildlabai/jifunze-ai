@@ -4,6 +4,7 @@ import { AuthSignInPage } from './components/auth/AuthSignInPage'
 import { AuthSignUpPage } from './components/auth/AuthSignUpPage'
 import { MyLearningPage } from './components/learning/MyLearningPage'
 import { LearnerCommerceProvider } from './learner/LearnerCommerceContext'
+import { LEARNER_MONETIZATION_UI_DISABLED } from './learner/learnerCommerceConstants'
 import { LearnerDeviceLimitModal } from './components/learn/LearnerDeviceLimitModal'
 import { LearnerCheckoutPage } from './components/learn/LearnerCheckoutPage'
 import { ReadinessChallengePage } from './components/learn/ReadinessChallengePage'
@@ -12,6 +13,7 @@ import { LearningAccessProvider } from './learning/LearningAccessContext'
 import { AuthProvider, useAuth } from './auth/AuthContext'
 import { FullDisclaimerPage } from './components/legal/FullDisclaimerPage'
 import { PrivacyPolicyPage } from './components/legal/PrivacyPolicyPage'
+import { PublicPausedSubscriptionPage } from './components/legal/PublicPausedSubscriptionPage'
 import { PublicPricingPage } from './components/legal/PublicPricingPage'
 import { RefundPolicyPage } from './components/legal/RefundPolicyPage'
 import { TermsOfServicePage } from './components/legal/TermsOfServicePage'
@@ -156,13 +158,15 @@ function HomeEntryPage() {
             >
               Explore courses
             </Link>
-            <Link
-              to={LEGAL_ROUTES.pricing}
-              className="rounded-full px-3 py-2 text-xs font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:bg-white/[0.06] hover:text-[color:var(--jf-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-              data-testid="home-nav-plans"
-            >
-              View plans
-            </Link>
+            {LEARNER_MONETIZATION_UI_DISABLED ? null : (
+              <Link
+                to={LEGAL_ROUTES.pricing}
+                className="rounded-full px-3 py-2 text-xs font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:bg-white/[0.06] hover:text-[color:var(--jf-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+                data-testid="home-nav-plans"
+              >
+                View plans
+              </Link>
+            )}
             {isSupabaseConfigured() ? (
               <>
                 <Link
@@ -215,12 +219,14 @@ function HomeEntryPage() {
                 >
                   Explore courses
                 </Link>
-                <Link
-                  to={LEGAL_ROUTES.pricing}
-                  className="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-white/[0.08] px-6 py-3 text-[14px] font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:border-white/[0.12] hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-                >
-                  View plans
-                </Link>
+                {LEARNER_MONETIZATION_UI_DISABLED ? null : (
+                  <Link
+                    to={LEGAL_ROUTES.pricing}
+                    className="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-white/[0.08] px-6 py-3 text-[14px] font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:border-white/[0.12] hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+                  >
+                    View plans
+                  </Link>
+                )}
                 <a
                   href="#try-jifunze"
                   data-testid="landing-hero-explore"
@@ -323,6 +329,9 @@ export default function App() {
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
         <Route path="/refunds" element={<RefundPolicyPage />} />
         <Route path="/pricing" element={<PublicPricingPage />} />
+        {LEARNER_MONETIZATION_UI_DISABLED ? (
+          <Route path="/settings/subscription" element={<PublicPausedSubscriptionPage />} />
+        ) : null}
         <Route path="/paths" element={<EmployablePathwaysPage />} />
         <Route path="/paths/:pathwaySlug" element={<PathwayDetailPage />} />
         <Route path="/learn" element={<LearningDiscoveryHubPage />} />
@@ -577,7 +586,9 @@ export default function App() {
               />
               <Route path="/account" element={<LearnerAccountPage />} />
               <Route path="/settings" element={<WorkspaceSettingsOrAccountPage />} />
-              <Route path="/settings/subscription" element={<WorkspaceSubscriptionPage />} />
+              {!LEARNER_MONETIZATION_UI_DISABLED ? (
+                <Route path="/settings/subscription" element={<WorkspaceSubscriptionPage />} />
+              ) : null}
             </Route>
             <Route
               path="/platform"

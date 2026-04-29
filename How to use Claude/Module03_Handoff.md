@@ -52,7 +52,7 @@ Sixteen sections in this order (matching Modules 1, 2, 5, 6):
 
 **Structural conventions.**
 - Eight-question checkpoint, not six.
-- Pass threshold: 80%.
+- Pass threshold: at least 6 of 8 questions correct.
 - Portfolio artifact filename pattern: `ModuleXX_ArtifactName_[YourName].pdf` or `.docx`.
 - Each module ends with a forward-pointing transition into the next module.
 - "Pause and check" sits between core lesson + worked examples and the knowledge-to-output task.
@@ -118,7 +118,7 @@ Tone: natural, practical, serious. No marketing words ("premium," "transformativ
 No promises about jobs, income, or accreditation. Examples practical for Kenya, 
 understandable globally. No facilitator-only language. No boilerplate tail. 
 8-question checkpoint with multiple-choice, scenario, short-answer, and application 
-formats. Pass threshold 80%. End with a forward-pointing transition into Module 4.
+formats. Pass threshold: at least 6 of 8 correct. End with a forward-pointing transition into Module 4.
 
 Reference for tone, structure, and depth: 
 /Users/omoke/jifunze-ai/How to use Claude/Jifunze_Course1_Modules_1_2_5_6_Improved.md

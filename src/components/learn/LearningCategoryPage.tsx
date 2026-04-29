@@ -1,6 +1,7 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { CATEGORY_BROWSE_BADGES } from '../../data/learning/discoveryBrowseLabels'
 import { learningDiscoveryCategoryBySlug } from '../../data/learning/learningDiscoveryCatalog'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { TrustBoundaryStrip } from '../TrustBoundaryStrip'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
@@ -29,9 +30,11 @@ export function LearningCategoryPage() {
             <Link className="text-xs font-medium text-zinc-400 hover:text-zinc-200" to="/generate">
               Try generation
             </Link>
-            <Link className="text-xs font-medium text-zinc-500 hover:text-zinc-200" to={LEGAL_ROUTES.pricing}>
-              Plans
-            </Link>
+            {LEARNER_MONETIZATION_UI_DISABLED ? null : (
+              <Link className="text-xs font-medium text-zinc-500 hover:text-zinc-200" to={LEGAL_ROUTES.pricing}>
+                Plans
+              </Link>
+            )}
           </div>
         </header>
 
@@ -54,21 +57,35 @@ export function LearningCategoryPage() {
         <section className="rounded-2xl border border-emerald-400/15 bg-emerald-500/[0.06] p-5 sm:p-7">
           <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-200/75">Subscriptions · claim-safe framing</p>
           <p className="mt-2 text-[13px] leading-relaxed text-zinc-200">{category.subscriptionNote}</p>
-          <div className="mt-4 flex flex-wrap gap-3">
-            <Link
-              to={LEGAL_ROUTES.pricing}
-              className="inline-flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-2 text-[12px] font-semibold text-white shadow-lg shadow-emerald-950/25 transition hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/60"
-              data-testid={`category-pricing-cta-${category.slug}`}
-            >
-              View subscription options
-            </Link>
-            <Link
-              to="/learn"
-              className="inline-flex items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2 text-[12px] font-semibold text-zinc-100 transition hover:border-emerald-400/25 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/55"
-            >
-              Back to discovery hub
-            </Link>
-          </div>
+          {LEARNER_MONETIZATION_UI_DISABLED ? (
+            <div className="mt-4 space-y-3">
+              <p className="text-[12px] leading-relaxed text-zinc-400">
+                Public checkout is not active in this release—browse the catalog and pathways while access stays open for review.
+              </p>
+              <Link
+                to="/learn"
+                className="inline-flex items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2 text-[12px] font-semibold text-zinc-100 transition hover:border-emerald-400/25 hover:bg-white/[0.06]"
+              >
+                Back to discovery hub
+              </Link>
+            </div>
+          ) : (
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Link
+                to={LEGAL_ROUTES.pricing}
+                className="inline-flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-2 text-[12px] font-semibold text-white shadow-lg shadow-emerald-950/25 transition hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/60"
+                data-testid={`category-pricing-cta-${category.slug}`}
+              >
+                View subscription options
+              </Link>
+              <Link
+                to="/learn"
+                className="inline-flex items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2 text-[12px] font-semibold text-zinc-100 transition hover:border-emerald-400/25 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/55"
+              >
+                Back to discovery hub
+              </Link>
+            </div>
+          )}
         </section>
 
         {category.featuredCourses.length ? (

@@ -265,12 +265,12 @@ This document is your portfolio artifact for the module. You will revise it in M
 Your AI Use Boundary will appear again in Module 9, where you will revise it after building more skill, and in the Module 16 capstone, where the boundary helps you scope what AI does and does not do in your end-to-end workflow. Save it where you will be able to find it.
 
 ## Module completion evidence
-- The 8-question checkpoint completed at 80% or higher.
+- The 8-question checkpoint completed with at least 6 of 8 correct.
 - A *My AI Use Boundary* document saved to your portfolio folder.
 - Practice activities 1-4 completed in your working notes.
 
 ## Revision guidance
-- If you scored under 80% on the checkpoint, return to the section on misconceptions and the section on AI task types.
+- If you scored below 6 of 8 on the checkpoint, return to the section on misconceptions and the section on AI task types.
 - If your AI Use Boundary feels generic, revise it. Replace abstract phrases like "be careful with AI" with specific situations from your real life.
 - If you found yourself uncertain on practice activity 4, re-read the "What AI does not do well" section and try the rewrite again.
 
@@ -296,7 +296,7 @@ You now have a working mental model of what AI is. Module 2 takes that model and
 
 **Likely content block types.** Text/markdown for concept and reflection blocks. Card components for worked examples. Sort/drag component (or fallback radio) for the sentence-sort activity. Two-column table component for the capability/limitation table. Free-text component for the AI Use Boundary draft.
 
-**Quiz mapping notes.** Q1–Q2 multiple-choice, auto-checkable. Q3–Q4 scenario short-answer with rubric from answer key. Q5–Q6 short-answer definitional. Q7 application item that returns a structured five-line capability/limitation reflection; render as a structured form. Q8 application item that returns a one-paragraph use-boundary statement; render as a free-text input with a three-criterion rubric (concrete, includes both *will use* and *will not use* lines, names a real context). Pass threshold: 80%.
+**Quiz mapping notes.** Q1–Q2 multiple-choice, auto-checkable. Q3–Q4 scenario short-answer with rubric from answer key. Q5–Q6 short-answer definitional. Q7 application item that returns a structured five-line capability/limitation reflection; render as a structured form. Q8 application item that returns a one-paragraph use-boundary statement; render as a free-text input with a three-criterion rubric (concrete, includes both *will use* and *will not use* lines, names a real context). Pass threshold: at least 6 of 8 questions correct.
 
 **Portfolio artifact mapping notes.** Filename pattern: `Module01_AI_Use_Boundary_[YourName].pdf` or `.docx`. Acceptable formats: .pdf, .docx, .md. Acceptance criterion: a non-Course-1 reader can name two specific tasks the learner will use AI for and two they will not, with a one-sentence reason for each. Forward-link the artifact record to Module 9 (revisited) and Module 16 (capstone scoping).
 
@@ -591,7 +591,7 @@ This is your portfolio artifact. You will use it again in Module 9 (Responsibili
 Your Responsible Judgment Checklist informs every later module — verification (Module 6), responsibility (Module 9), privacy (Module 10), and the capstone (Module 16). Save it where you can find it.
 
 ## Module completion evidence
-- Checkpoint completed at 80% or higher.
+- Checkpoint completed with at least 6 of 8 correct.
 - Responsible Judgment Checklist saved to your portfolio folder.
 - Practice activities 1-4 completed in your working notes.
 - Belief-poll reclassification completed.
@@ -623,7 +623,7 @@ You now have a review posture. Modules 3 through 5 take that posture into the mo
 
 **Likely content block types.** Text/markdown for concept and reflection blocks. Card components for worked examples. Two-column *myth/reality* component for the myth correction worksheet (degrades to a sequential list if the component is unavailable). Risk-ladder component (a vertical sortable list) for the risk ladder activity, with a fallback drag-into-bucket implementation.
 
-**Quiz mapping notes.** Q1–Q2 multiple-choice, auto-checkable. Q3–Q4 scenario short-answer with rubric. Q5–Q6 short-answer definitional/list items. Q7 application item that returns a four-step T-R-E-J check on a supplied scenario; render as a structured form with one short text field per T-R-E-J element. Q8 application item that returns a structured *bias review* output; render as a structured form with one field per bias category checked. Pass threshold: 80%.
+**Quiz mapping notes.** Q1–Q2 multiple-choice, auto-checkable. Q3–Q4 scenario short-answer with rubric. Q5–Q6 short-answer definitional/list items. Q7 application item that returns a four-step T-R-E-J check on a supplied scenario; render as a structured form with one short text field per T-R-E-J element. Q8 application item that returns a structured *bias review* output; render as a structured form with one field per bias category checked. Pass threshold: at least 6 of 8 questions correct.
 
 **Portfolio artifact mapping notes.** Filename pattern: `Module02_Responsible_Judgment_Checklist_[YourName].pdf` or `.docx`. Acceptable formats: .pdf, .docx, .md. Acceptance criterion: the checklist names at least three myths the learner has personally seen circulate, the bias review section identifies at least two bias-types they will check before trusting an AI output, and the T-R-E-J reflection cites a real context. Forward-link the artifact record to Module 6 (verification), Module 9 (responsibility), Module 10 (privacy floor), and Module 16 (capstone bias/verification rubric criteria).
 
@@ -930,7 +930,7 @@ This is your portfolio artifact. It will be reused in Module 15 as the basis for
 Your Prompt Version Log is one of the assets you will package into a reusable prompt pack in Module 15, and the workflow you build there feeds directly into the Module 16 capstone. Save the file and remember which task it covers — you will extend it later.
 
 ## Module completion evidence
-- Checkpoint completed at 80% or higher.
+- Checkpoint completed with at least 6 of 8 correct.
 - Prompt Version Log saved to your portfolio folder.
 - Practice activities 1-4 completed in your working notes.
 
@@ -961,7 +961,7 @@ Stronger prompts and reviewable workflows do not, by themselves, make AI outputs
 
 **Likely content block types.** Text/markdown for concept and reflection. Card components for worked examples. Side-by-side rendering for V1/V2/V3 prompt comparisons (degrades to sequential rendering with sub-headings). Tabbed component (one tab per version) for the prompt comparison grid where supported.
 
-**Quiz mapping notes.** Q1–Q2 multiple-choice, auto-checkable. Q3–Q4 scenario short-answer with rubric. Q5–Q6 short-answer (one definitional, one diagnostic — *what changed between V1 and V2 in this log*?). Q7 application item that returns a structured three-version log on a supplied prompt-and-output pair; render as a structured form with three rows (V1/V2/V3) and three columns (prompt change, output change, named weakness addressed). Q8 application item that returns a *revise or restart* decision with a one-line reason; render as a radio-plus-text component. Pass threshold: 80%.
+**Quiz mapping notes.** Q1–Q2 multiple-choice, auto-checkable. Q3–Q4 scenario short-answer with rubric. Q5–Q6 short-answer (one definitional, one diagnostic — *what changed between V1 and V2 in this log*?). Q7 application item that returns a structured three-version log on a supplied prompt-and-output pair; render as a structured form with three rows (V1/V2/V3) and three columns (prompt change, output change, named weakness addressed). Q8 application item that returns a *revise or restart* decision with a one-line reason; render as a radio-plus-text component. Pass threshold: at least 6 of 8 questions correct.
 
 **Portfolio artifact mapping notes.** Filename pattern: `Module05_Prompt_Version_Log_[YourName].pdf` or `.docx`. Acceptable formats: .pdf, .docx, .md. Acceptance criterion: the log shows at least three versions of one prompt with the named weakness addressed at each version, the comparison matrix labels the strongest version with a one-line reason, and the artifact ends with a final-prompt-with-rationale paragraph. Forward-link to Module 15 (prompt pack inputs) and Module 16 (capstone prompt set).
 
@@ -1230,7 +1230,7 @@ Then write one paragraph at the end describing what you found and what you will 
 Verification habits show up again in Module 9 (Responsibility), Module 11 (Research and Synthesis), and Module 13 (Decision Support). The Claim Verification Table you produce here is reused in Module 11's research workflow and contributes to the safety and verification rubric in the Module 16 capstone.
 
 ## Module completion evidence
-- Checkpoint completed at 80% or higher.
+- Checkpoint completed with at least 6 of 8 correct.
 - Claim Verification Table saved to your portfolio folder.
 - Practice activities 1-4 completed in your working notes.
 
@@ -1261,7 +1261,7 @@ Verification gives you the discipline to stand behind what AI produces. Module 7
 
 **Likely content block types.** Text/markdown for concept and reflection. Card components for worked examples. Table component for the claim verification table (columns: claim, source needed, status, action, confidence label). Quoted-text components for supplied AI outputs in the practice activities so the source material is visually distinct from the task instructions.
 
-**Quiz mapping notes.** Q1–Q2 multiple-choice, auto-checkable, including one diagnostic *spot the fabricated citation* item. Q3–Q4 scenario short-answer with rubric. Q5–Q6 short-answer (one definitional on the C-S-V-E model, one diagnostic on summary drift). Q7 application item that returns a four-row claim verification table on a supplied AI paragraph; render as a structured form with one row per claim and one column per C-S-V-E element. Q8 application item that returns a source-bounded prompt rewrite with explicit *if missing, label as unresolved* handling; render as free-text with a three-criterion rubric. Pass threshold: 80%.
+**Quiz mapping notes.** Q1–Q2 multiple-choice, auto-checkable, including one diagnostic *spot the fabricated citation* item. Q3–Q4 scenario short-answer with rubric. Q5–Q6 short-answer (one definitional on the C-S-V-E model, one diagnostic on summary drift). Q7 application item that returns a four-row claim verification table on a supplied AI paragraph; render as a structured form with one row per claim and one column per C-S-V-E element. Q8 application item that returns a source-bounded prompt rewrite with explicit *if missing, label as unresolved* handling; render as free-text with a three-criterion rubric. Pass threshold: at least 6 of 8 questions correct.
 
 **Portfolio artifact mapping notes.** Filename pattern: `Module06_Claim_Verification_Table_[YourName].pdf` or `.docx`. Acceptable formats: .pdf, .docx, .md. Acceptance criterion: the table contains at least four claims, each with a named source-or-source-need, a verification status, an action taken, and a confidence label; the artifact ends with a one-paragraph revised answer that uses the confidence labels in the prose itself. Forward-link the artifact record to Module 9 (verification as guardrail), Module 11 (research synthesis), Module 13 (decision input verification), and Module 16 (capstone verification rubric criterion).
 
@@ -1283,7 +1283,7 @@ A fully written worked example contains the actual prompt sent to AI, the actual
 Practice materials supply the source content. If the activity asks learners to sort statements, the statements are listed. If the activity asks learners to compare outputs, the outputs are written. If the activity asks learners to verify claims, the claims are provided. The minimum quantity is enough for the learner to do the activity meaningfully — typically eight to ten items for sorting, two to three full output sets for comparison, and one or two source documents for any document-based task. Activities that say *"the facilitator will provide…"* or *"choose any scenario…"* without supplying examples do not meet the benchmark.
 
 ## 4. What makes a checkpoint acceptable
-A checkpoint contains at least eight scored items in a mix of formats: at least two multiple-choice, at least two scenario-based, at least two short-answer, and at least one application item that requires the learner to do something with module content rather than recall it. Each item must align to a specific learner outcome from the module. The answer key explains why the correct answer is correct, not only which option is correct, and gives the criteria for strong scenario and application answers. The checkpoint pass threshold is 80%.
+A checkpoint contains at least eight scored items in a mix of formats: at least two multiple-choice, at least two scenario-based, at least two short-answer, and at least one application item that requires the learner to do something with module content rather than recall it. Each item must align to a specific learner outcome from the module. The answer key explains why the correct answer is correct, not only which option is correct, and gives the criteria for strong scenario and application answers. The checkpoint pass threshold is at least 6 of 8 questions correct.
 
 ## 5. What makes a portfolio artifact credible
 A credible portfolio artifact is concrete, specific to the learner's real context, and reviewable by someone who was not in the lesson. It has a defined format, a saved filename pattern (e.g., `Module07_Audience_Fit_Rewrites_[YourName].pdf`), and at least one clear acceptance criterion the learner can self-check against. It connects to a future module — usually the capstone — so the learner sees why it matters. Generic or templated artifacts that any learner could produce identically are not credible portfolio evidence.

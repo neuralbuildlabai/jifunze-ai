@@ -461,7 +461,7 @@ Produce three artifacts in a single file. Together they form the portfolio deliv
 
 ## Checkpoint quiz
 
-Eight questions. The pass threshold is 80% (six correct out of eight). Take this once you have completed the worked examples, the practice activities, and the knowledge-to-output task.
+Eight questions. The pass threshold is at least 6 of 8 questions correct. Take this once you have completed the worked examples, the practice activities, and the knowledge-to-output task.
 
 **1.** *(Multiple choice)* Which of the following best describes the role of AI in decision-support work as taught in this module?
 
@@ -551,7 +551,7 @@ You have completed Module 13 meaningfully when:
 - You have produced the three-part portfolio artifact and saved it under the required filename.
 - Your decision memo names the criteria before discussing the options, names at least one tradeoff explicitly, includes at least one *needs verification* label inside the analysis (not in a footnote), names at least one stakeholder beyond you, and addresses reversibility.
 - The memo is recognisably *yours* — a different learner using the same AI tool with the same decision could not produce the same memo because the reasoning includes context only you have.
-- You scored at least 80% on the checkpoint quiz, and your scenario and application answers meet the strong-answer criteria above.
+- You scored at least 6 of 8 on the checkpoint quiz, and your scenario and application answers meet the strong-answer criteria above.
 - The disclosure note describes any AI assistance you used, and the human review notes describe what you accepted, changed, and flagged as still uncertain.
 - No information you classified as Tier 3 or Tier 4 (Module 10) was pasted into an AI tool in raw form during this work.
 

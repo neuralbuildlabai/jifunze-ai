@@ -3,6 +3,7 @@ import type { CurriculumLesson } from '../../data/learning/aiEverydayWorkCurricu
 import type { TeachingLibraryId } from '../../data/teaching/teachingTypes'
 import { flattenLessonsForCurriculum } from '../../data/learning/extendedLibrariesCurricula'
 import type { ExtendedPublicLibraryConfig } from '../../data/learning/extendedPublicLibraryConfigs'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { CurriculumDepthSection } from '../libraries/CurriculumDepthSection'
 
@@ -37,18 +38,26 @@ export function WorkspaceExtendedLibraryPage({ config }: { config: ExtendedPubli
           >
             Open public browse (shareable)
           </Link>
-          <Link
-            to="/pricing"
-            className="inline-flex items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] px-5 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-violet-400/25 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/55"
-          >
-            Unlock deeper materials on pricing
-          </Link>
-          <Link
-            to="/settings/subscription"
-            className="inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-medium text-zinc-500 transition hover:text-zinc-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/55"
-          >
-            Manage subscription or bundles
-          </Link>
+          {LEARNER_MONETIZATION_UI_DISABLED ? (
+            <p className="max-w-md text-[12px] leading-relaxed text-zinc-500">
+              Paid checkout is not active in this release—open the public browse map above.
+            </p>
+          ) : (
+            <>
+              <Link
+                to="/pricing"
+                className="inline-flex items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] px-5 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-violet-400/25 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/55"
+              >
+                Unlock deeper materials on pricing
+              </Link>
+              <Link
+                to="/settings/subscription"
+                className="inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-medium text-zinc-500 transition hover:text-zinc-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/55"
+              >
+                Manage subscription or bundles
+              </Link>
+            </>
+          )}
           <Link
             to="/library"
             className="inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-medium text-zinc-500 transition hover:text-zinc-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/55"

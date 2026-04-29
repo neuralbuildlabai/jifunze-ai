@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components -- context module exports companion hooks */
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FLAGSHIP_PURCHASE_GATE_ENABLED } from '@/learner/learnerCommerceConstants'
+import { FLAGSHIP_PURCHASE_GATE_ENABLED, LEARNER_MONETIZATION_UI_DISABLED } from '@/learner/learnerCommerceConstants'
 import type { FirstCourseDiscountState, LearnerEntitlement, PendingLearnerRedirect } from '@/learner/learnerEntitlementTypes'
 import {
   readOrCreateDeviceId,
@@ -101,7 +101,7 @@ export function LearnerCommerceProvider({ children }: { children: ReactNode }) {
 
   const hasCourseAccess = useCallback(
     (courseSlug: string) => {
-      if (!FLAGSHIP_PURCHASE_GATE_ENABLED) return true
+      if (LEARNER_MONETIZATION_UI_DISABLED || !FLAGSHIP_PURCHASE_GATE_ENABLED) return true
       if (entitlement.mode === 'all_access') return true
       if (entitlement.mode === 'single' && entitlement.courseSlug === courseSlug) return true
       return false
@@ -126,7 +126,7 @@ export function LearnerCommerceProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<LearnerCommerceContextValue>(
     () => ({
-      purchaseGateEnabled: FLAGSHIP_PURCHASE_GATE_ENABLED,
+      purchaseGateEnabled: LEARNER_MONETIZATION_UI_DISABLED ? false : FLAGSHIP_PURCHASE_GATE_ENABLED,
       entitlement,
       discount,
       setEntitlement,

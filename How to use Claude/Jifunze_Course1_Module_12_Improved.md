@@ -537,7 +537,7 @@ Privacy reminder: if your chosen task involves Tier 3 or Tier 4 content from Mod
 
 ## Checkpoint quiz
 
-Eight questions. Pass threshold: 80% (six correct, or — for short-answer and application items — meeting the strong-answer criteria below).
+Eight questions. Pass threshold: at least 6 of 8 correct (six correct, or — for short-answer and application items — meeting the strong-answer criteria below).
 
 **1. *(Multiple choice — workflow elements.)*** Which of the following is most accurate?
 
@@ -632,7 +632,7 @@ You have completed Module 12 meaningfully when:
 - You have produced the four-part portfolio artifact and saved it under the required filename.
 - Every stage in your workflow map traces to a row in the decision table and a paragraph in the SOP, and the agent-readiness assessment names which stages (if any) are candidates for agentic execution.
 - The workflow respects Module 10 boundaries: any Tier 3 or Tier 4 input has an explicit abstraction or redaction step, and the SOP names that step rather than burying it.
-- You scored at least 80% on the checkpoint quiz, and your scenario and application answers meet the strong-answer criteria.
+- You scored at least 6 of 8 on the checkpoint quiz, and your scenario and application answers meet the strong-answer criteria.
 - The disclosure note describes any AI assistance used in producing the artifact, and the human review notes describe what you accepted, changed, and flagged as still uncertain.
 
 ## Revision guidance
@@ -676,7 +676,7 @@ Module 13 takes the next step. Workflows produce decisions: which option to take
 
 **Likely content block types.** Text/markdown for the concept, examples, and reflection blocks. Card-style components for worked examples and practice activities, with embedded scenarios as quoted-text components. Tabular component for the AI-Assist Decision Table template (offered to the learner in the artifact upload block as an optional starting structure). The agent-readiness check in Practice Activity 4 and Checkpoint Question 7 maps cleanly to a six-question structured-input component if the platform supports one; otherwise free-text input with a six-row rubric is sufficient.
 
-**Quiz mapping notes.** Questions 1, 2, and 5 are multiple-choice with a single correct answer (auto-checkable). Questions 3 and 4 are scenario short-answer items; render as free-text with the strong-answer criteria from the answer key as the rubric. Question 6 is a short-answer definitional item; render as free-text with rubric. Questions 7 and 8 are application items; render as free-text with multi-criterion rubrics drawn from the answer key. Pass threshold: 80%, with auto-graded items contributing to the score and rubric-graded items either self-assessed against the answer key or facilitator-assessed depending on the deployment mode.
+**Quiz mapping notes.** Questions 1, 2, and 5 are multiple-choice with a single correct answer (auto-checkable). Questions 3 and 4 are scenario short-answer items; render as free-text with the strong-answer criteria from the answer key as the rubric. Question 6 is a short-answer definitional item; render as free-text with rubric. Questions 7 and 8 are application items; render as free-text with multi-criterion rubrics drawn from the answer key. Pass threshold: at least 6 of 8 correct, with auto-graded items contributing to the score and rubric-graded items either self-assessed against the answer key or facilitator-assessed depending on the deployment mode.
 
 **Portfolio artifact mapping notes.** Single combined artifact, four internal sections. Filename pattern: `Module12_Workflow_Agent_Readiness_[YourName].pdf` or `.docx`. Acceptable formats: .pdf, .docx, .md. The acceptance criterion (three random stages traceable through the decision table, the SOP, and the agent-readiness assessment) is suitable for self-check; for facilitator review it converts directly into a three-item checklist. Connect the artifact record forward to Module 13 (decision memo), Module 14 (team standards), Module 15 (prompt pack), and Module 16 (capstone).
 

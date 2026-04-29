@@ -30,6 +30,7 @@ import type { TeachingConcept } from '../data/teaching/teachingTypes'
 import { recordTeachingSignal } from '../data/teaching/teachingSignals'
 import { getFlagshipCurriculum } from '../data/learning/flagshipCourseCurricula'
 import { curriculumOutlineSnippet, resolveTopicToCourses } from './courseTopicResolver'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../training/trustCopy'
 
 export type LearnerHelpCitation = {
@@ -332,7 +333,9 @@ export function answerLearnerHelpQuestion(params: LearnerHelpQueryParams): Learn
         'Jifunze answers from indexed KB atoms + curriculum links—not generic web guessing.',
       ],
       citations: [
-        ...(params.flagshipCourseAccess === 'locked' ? [{ label: 'Plans & pricing', href: LEGAL_ROUTES.pricing }] : []),
+        ...(params.flagshipCourseAccess === 'locked' && !LEARNER_MONETIZATION_UI_DISABLED
+          ? [{ label: 'Plans & pricing', href: LEGAL_ROUTES.pricing }]
+          : []),
         ...here,
         { label: 'AI library', href: PUBLIC_AI_FOUNDATIONS_BASE_PATH },
         { label: 'ML library', href: PUBLIC_ML_LIBRARY_BASE_PATH },
@@ -363,11 +366,17 @@ export function answerLearnerHelpQuestion(params: LearnerHelpQueryParams): Learn
               'Open the course player for full lessons, embedded labs, checkpoints, and resources—those stay inside the canonical path.',
             ]
           : ['Use the course link below to enter the structured module order.']),
-        'If a destination is outside your subscription or assignment, the player will route you through checkout or upgrade—not unrestricted lesson bodies here.',
+        ...(LEARNER_MONETIZATION_UI_DISABLED
+          ? ['Workspace preview: open the course player from the link below when your role allows it.']
+          : [
+              'If a destination is outside your subscription or assignment, the player will route you through checkout or upgrade—not unrestricted lesson bodies here.',
+            ]),
       ],
       citations: [
         { label: `Open ${flagshipHit.courseTitle}`, href: flagshipHit.primaryHref },
-        ...(params.flagshipCourseAccess === 'locked' ? [{ label: 'Plans & pricing', href: LEGAL_ROUTES.pricing }] : []),
+        ...(params.flagshipCourseAccess === 'locked' && !LEARNER_MONETIZATION_UI_DISABLED
+          ? [{ label: 'Plans & pricing', href: LEGAL_ROUTES.pricing }]
+          : []),
         ...altCitations,
       ],
       confidence: flagshipHit.confidence >= 0.85 ? 'high' : 'medium',

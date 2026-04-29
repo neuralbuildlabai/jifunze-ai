@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { useAuth } from '../../auth/AuthContext'
 import { useLearnerCommerceOptional } from '../../learner/LearnerCommerceContext'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { FLAGSHIP_SCHOOLS, getFlagshipCourseBySlug } from '../../data/learning/flagshipCoursesCatalog'
 import { getFlagshipCurriculum } from '../../data/learning/flagshipCourseCurricula'
 import { useFlagshipCourseProgress } from '../../hooks/useFlagshipCourseProgress'
@@ -284,9 +285,13 @@ export function FlagshipCourseDetailPage() {
 
         <section className="mt-14 flex flex-col gap-4 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)] px-6 py-8 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-[15px] font-semibold text-[color:var(--jf-text)]">Build your plan</p>
+            <p className="text-[15px] font-semibold text-[color:var(--jf-text)]">
+              {LEARNER_MONETIZATION_UI_DISABLED ? 'Start learning' : 'Build your plan'}
+            </p>
             <p className="mt-1 text-[13px] text-[color:var(--jf-muted)]">
-              Compare access options—then learn with guided progression and practical outputs.
+              {LEARNER_MONETIZATION_UI_DISABLED
+                ? 'Open your first session when ready—modules unlock in order with checkpoints where marked.'
+                : 'Compare access options—then learn with guided progression and practical outputs.'}
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -294,20 +299,24 @@ export function FlagshipCourseDetailPage() {
               to={
                 firstLaunchSession && slug
                   ? `/learn/courses/${slug}/session/${firstLaunchSession.id}`
-                  : LEGAL_ROUTES.pricing
+                  : LEARNER_MONETIZATION_UI_DISABLED
+                    ? LEGAL_ROUTES.learn
+                    : LEGAL_ROUTES.pricing
               }
               className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
               data-testid="flagship-cta-start"
             >
               Start course
             </Link>
-            <Link
-              to="/learn/checkout?plan=all"
-              className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-white/[0.12] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-              data-testid="flagship-cta-plan"
-            >
-              All-access checkout
-            </Link>
+            {LEARNER_MONETIZATION_UI_DISABLED ? null : (
+              <Link
+                to="/learn/checkout?plan=all"
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-white/[0.12] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+                data-testid="flagship-cta-plan"
+              >
+                All-access checkout
+              </Link>
+            )}
             <Link
               to={LEGAL_ROUTES.learn}
               className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"

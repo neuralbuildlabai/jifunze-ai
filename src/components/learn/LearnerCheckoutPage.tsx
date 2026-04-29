@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { getFlagshipCourseBySlug } from '@/data/learning/flagshipCoursesCatalog'
 import { PUBLIC_ANNUAL_USD, PUBLIC_MONTHLY_DISPLAY_USD, PUBLIC_SINGLE_COURSE_USD, formatUsdWhole } from '@/data/learning/publicPricingStory'
 import { LEGAL_ROUTES } from '@/training/trustCopy'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '@/learner/learnerCommerceConstants'
 import { useLearnerCommerce } from '@/learner/LearnerCommerceContext'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { isBillingLiveConfigured } from '@/lib/billingEnv'
@@ -37,6 +38,33 @@ export function LearnerCheckoutPage() {
 
   const showSimulatedCheckout = !import.meta.env.PROD
   const liveBilling = isBillingLiveConfigured()
+
+  if (LEARNER_MONETIZATION_UI_DISABLED) {
+    return (
+      <div className="jf-public-surface min-h-screen w-full bg-[var(--jf-bg-page)] text-[color:var(--jf-text)]">
+        <header className="border-b border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 backdrop-blur-sm">
+          <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-4 px-5 py-5 sm:px-8">
+            <Link to="/learn" className="text-[12px] font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]">
+              ← Catalog
+            </Link>
+            <JifunzeBrandLogo to="/" size="sm" surface="dark" />
+          </div>
+        </header>
+        <main className="mx-auto max-w-lg px-5 pb-24 pt-10 sm:px-8">
+          <h1 className="text-xl font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-2xl">Checkout not available</h1>
+          <p className="mt-4 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+            Paid checkout is paused in this product phase. Continue from the catalog and course pages while access stays open for workspace review.
+          </p>
+          <Link
+            to={LEGAL_ROUTES.learn}
+            className="mt-6 inline-flex rounded-full bg-[var(--jf-brand)] px-5 py-2.5 text-sm font-semibold text-zinc-950 hover:bg-[var(--jf-brand-hover)]"
+          >
+            Back to catalog
+          </Link>
+        </main>
+      </div>
+    )
+  }
 
   if (!mode) {
     return <Navigate to={LEGAL_ROUTES.learn} replace />

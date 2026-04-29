@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 
@@ -16,9 +17,11 @@ export function EmployablePathwaysPublicNav() {
         <Link className={linkClass} to={LEGAL_ROUTES.learn}>
           Courses
         </Link>
-        <Link className={linkClass} to={LEGAL_ROUTES.pricing}>
-          Plans
-        </Link>
+        {LEARNER_MONETIZATION_UI_DISABLED ? null : (
+          <Link className={linkClass} to={LEGAL_ROUTES.pricing}>
+            Plans
+          </Link>
+        )}
         <Link className={linkClass} to="/">
           Home
         </Link>

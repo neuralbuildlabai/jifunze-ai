@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { LEARNING_DISCOVERY_CATEGORIES } from '../../data/learning/learningDiscoveryCatalog'
 import { FLAGSHIP_COURSES } from '../../data/learning/flagshipCoursesCatalog'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { TrustBoundaryStrip } from '../TrustBoundaryStrip'
 import { FlagshipCourseCard } from '../learn/FlagshipCourseCard'
@@ -88,13 +89,15 @@ export function LandingMarketingSections() {
             >
               Open the full catalog
             </Link>
-            <Link
-              to={LEGAL_ROUTES.pricing}
-              className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-white/[0.1] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:border-white/[0.14] hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-              data-testid="landing-catalog-pricing"
-            >
-              Compare plans
-            </Link>
+            {LEARNER_MONETIZATION_UI_DISABLED ? null : (
+              <Link
+                to={LEGAL_ROUTES.pricing}
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-white/[0.1] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:border-white/[0.14] hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+                data-testid="landing-catalog-pricing"
+              >
+                Compare plans
+              </Link>
+            )}
           </div>
         </div>
       </section>
@@ -241,12 +244,14 @@ export function LandingMarketingSections() {
             >
               Learning hub
             </Link>
-            <Link
-              to={LEGAL_ROUTES.pricing}
-              className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-white/[0.1] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:border-white/[0.14] hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-            >
-              Compare plans
-            </Link>
+            {LEARNER_MONETIZATION_UI_DISABLED ? null : (
+              <Link
+                to={LEGAL_ROUTES.pricing}
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-white/[0.1] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:border-white/[0.14] hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+              >
+                Compare plans
+              </Link>
+            )}
           </div>
 
           <div className="mx-auto mt-10 max-w-2xl">
@@ -261,35 +266,60 @@ export function LandingMarketingSections() {
         </div>
       </section>
 
-      {/* Pricing entry */}
-      <section
-        aria-labelledby="landing-pricing-teaser-heading"
-        className="mx-auto max-w-6xl rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)] px-6 py-8 ring-1 ring-white/[0.04] sm:flex sm:items-center sm:justify-between sm:gap-8 sm:px-10 sm:py-10"
-        data-testid="landing-pricing-teaser"
-      >
-        <div className="max-w-xl">
-          <h2 id="landing-pricing-teaser-heading" className="text-lg font-semibold text-[color:var(--jf-text)] sm:text-xl">
-            Simple ways to access deep tracks
-          </h2>
-          <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-            Monthly, annual, single-course, or free tier—pick what matches how you learn. Details and billing notes live on the pricing page.
-          </p>
-        </div>
-        <div className="mt-6 flex shrink-0 flex-wrap gap-3 sm:mt-0">
-          <Link
-            to={LEGAL_ROUTES.pricing}
-            className="inline-flex items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-          >
-            View pricing
-          </Link>
-          <Link
-            to={LEGAL_ROUTES.learn}
-            className="inline-flex items-center justify-center rounded-full border border-white/[0.12] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-          >
-            Browse courses first
-          </Link>
-        </div>
-      </section>
+      {/* Pricing entry — hidden when public monetization CTAs are paused */}
+      {LEARNER_MONETIZATION_UI_DISABLED ? (
+        <section
+          aria-labelledby="landing-access-teaser-heading"
+          className="mx-auto max-w-6xl rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)] px-6 py-8 ring-1 ring-white/[0.04] sm:flex sm:items-center sm:justify-between sm:gap-8 sm:px-10 sm:py-10"
+          data-testid="landing-pricing-teaser"
+        >
+          <div className="max-w-xl">
+            <h2 id="landing-access-teaser-heading" className="text-lg font-semibold text-[color:var(--jf-text)] sm:text-xl">
+              Open catalog access
+            </h2>
+            <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+              Paid tiers are not listed in this release. Explore flagship courses and pathways; workspace sign-in saves progress where configured.
+            </p>
+          </div>
+          <div className="mt-6 flex shrink-0 flex-wrap gap-3 sm:mt-0">
+            <Link
+              to={LEGAL_ROUTES.learn}
+              className="inline-flex items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+            >
+              Open catalog
+            </Link>
+          </div>
+        </section>
+      ) : (
+        <section
+          aria-labelledby="landing-pricing-teaser-heading"
+          className="mx-auto max-w-6xl rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)] px-6 py-8 ring-1 ring-white/[0.04] sm:flex sm:items-center sm:justify-between sm:gap-8 sm:px-10 sm:py-10"
+          data-testid="landing-pricing-teaser"
+        >
+          <div className="max-w-xl">
+            <h2 id="landing-pricing-teaser-heading" className="text-lg font-semibold text-[color:var(--jf-text)] sm:text-xl">
+              Simple ways to access deep tracks
+            </h2>
+            <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+              Monthly, annual, single-course, or free tier—pick what matches how you learn. Details and billing notes live on the pricing page.
+            </p>
+          </div>
+          <div className="mt-6 flex shrink-0 flex-wrap gap-3 sm:mt-0">
+            <Link
+              to={LEGAL_ROUTES.pricing}
+              className="inline-flex items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+            >
+              View pricing
+            </Link>
+            <Link
+              to={LEGAL_ROUTES.learn}
+              className="inline-flex items-center justify-center rounded-full border border-white/[0.12] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+            >
+              Browse courses first
+            </Link>
+          </div>
+        </section>
+      )}
     </div>
   )
 }

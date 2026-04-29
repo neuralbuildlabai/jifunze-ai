@@ -311,7 +311,7 @@ This artifact feeds into Module 9 (your accountability statement uses real examp
 
 ## Checkpoint quiz
 
-Eight questions. Pass threshold: 80% (six correct out of eight). Mixed formats per the Course Assessment Standards.
+Eight questions. Pass threshold: at least 6 of 8 questions correct. Mixed formats per the Course Assessment Standards.
 
 1. *(Multiple choice)* The "Truth" check in A-T-V-F-R is mainly designed to catch:
    a. Long sentences that should be shortened.
@@ -396,7 +396,7 @@ This artifact is reused in the rest of Course 1.
 
 You have completed Module 7 meaningfully when all of the following are true:
 
-- The checkpoint quiz is passed at 80% or higher.
+- The checkpoint quiz is passed with at least 6 of 8 correct.
 - The Audience-Fit Communication Pack is saved with the required filename and contains all seven sections (original message, three rewrites, tone rationale, voice-preservation note, professional/job-search artifact, human review notes, disclosure).
 - Practice activities 1–4 have been worked through in your working notes (the rewrites and rationales exist somewhere in your folder, even if only the strongest pieces ended up in the pack).
 - You can run A-T-V-F-R from memory on a message someone shows you, without looking back at this module.
@@ -435,7 +435,7 @@ Module 8 turns that same discipline inward. It asks: how do you use AI for your 
 
 **Likely content block types.** Text/markdown for the concept, examples, and reflection blocks. Card components for worked examples and practice activities, with embedded message excerpts as quoted-text components. The original-vs-AI-rewrite-vs-improved pattern in Worked examples 1 and 4 benefits from side-by-side rendering where supported, sequential rendering with sub-headings otherwise. The three-audience rewrite in Worked example 2 benefits from a tabbed component (one tab per audience).
 
-**Quiz mapping notes.** Questions 1 and 2 are multiple-choice with a single correct answer (auto-checkable). Questions 3 and 4 are scenario short-answer items; render as free-text input with the strong-answer criteria from the answer key as the rubric. Questions 5 and 6 are short-answer definitional/list items; render as free-text with rubric. Question 7 is an applied two-line rewrite; render as two separate short text inputs with a combined three-criterion rubric (all three facts preserved, audience-appropriate framing for the parent, audience-appropriate framing for the HR manager). Question 8 is the application item that returns a structured five-part comment; render as a structured form with one short text field per A-T-V-F-R check plus a final field for "send or rewrite, with reason." Pass threshold: 80%, with auto-graded items contributing to the score and rubric-graded items either self-assessed against the answer key or facilitator-assessed depending on the deployment mode.
+**Quiz mapping notes.** Questions 1 and 2 are multiple-choice with a single correct answer (auto-checkable). Questions 3 and 4 are scenario short-answer items; render as free-text input with the strong-answer criteria from the answer key as the rubric. Questions 5 and 6 are short-answer definitional/list items; render as free-text with rubric. Question 7 is an applied two-line rewrite; render as two separate short text inputs with a combined three-criterion rubric (all three facts preserved, audience-appropriate framing for the parent, audience-appropriate framing for the HR manager). Question 8 is the application item that returns a structured five-part comment; render as a structured form with one short text field per A-T-V-F-R check plus a final field for "send or rewrite, with reason." Pass threshold: at least 6 of 8 correct, with auto-graded items contributing to the score and rubric-graded items either self-assessed against the answer key or facilitator-assessed depending on the deployment mode.
 
 **Portfolio artifact mapping notes.** Single combined artifact, seven internal sections. Filename pattern: `Module07_Audience_Fit_Communication_[YourName].pdf` or `.docx`. Acceptable formats: .pdf, .docx, .md. The acceptance criterion (a non-lesson reader can identify the source message, each audience, where tone changed but truth did not, where voice was flattened and fixed, and where the human took responsibility) is suitable for self-check; for facilitator review, it converts directly into a five-item checklist. Forward-link the artifact record to Module 9 (accountability statement), Module 14 (team communication standards), Module 15 (prompt pack), and Module 16 (capstone).
 

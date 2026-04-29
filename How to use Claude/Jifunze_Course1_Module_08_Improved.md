@@ -406,7 +406,7 @@ The artifact is reviewable by someone who was not in the lesson if it shows the 
 
 ## Checkpoint quiz
 
-Pass threshold: 80% — six correct out of eight. Self-grade against the answer key below.
+Pass threshold: at least 6 of 8 questions correct. Self-grade against the answer key below.
 
 **Question 1.** *(Multiple choice)* A learner reads a clear, well-organized AI explanation of a concept and feels confident they understand it. Which of the following is the strongest evidence that they actually do?
 
@@ -515,7 +515,7 @@ A passing checkpoint plus an artifact that meets the acceptance criteria is the 
 
 ## Revision guidance
 
-If you scored under 80% on the checkpoint, or if your artifact does not yet meet the acceptance criteria, return to the specific sub-sections below before retrying. Three common failure modes and the targeted repair for each:
+If you scored below 6 of 8 on the checkpoint, or if your artifact does not yet meet the acceptance criteria, return to the specific sub-sections below before retrying. Three common failure modes and the targeted repair for each:
 
 **If you confused reading with understanding** — that is, if your retrieval answers were thin even though the AI explanation was clear, or if your weak-area diagnosis is missing — return to the *Convenience versus understanding* and *Why clear explanations create false confidence* sub-sections of the core lesson, and re-read Worked Example 1 (the false-confidence example). Re-do Practice Activity 2 (the retrieval builder) on a different topic of your choice. The fix is more retrieval, not more reading.
 
@@ -543,7 +543,7 @@ Module 8 helped you use AI to support learning without replacing your own effort
 - **Guided example block.** The four worked examples. Render each as its own collapsible card, with the false-confidence example expanded by default. Roughly 30–40 minutes.
 - **Practice block.** The four supplied practice activities. Activity 1 (scenario sorting) is a structured-input form (eight items, four-option dropdown plus a one-sentence justification field). Activities 2–4 are long-form text-area submissions, self-graded against the answer key.
 - **Reflection block.** The *Pause and check* questions. Light-touch, three short text fields, no scoring.
-- **Checkpoint block.** The eight-question checkpoint. Two multiple-choice (auto-graded), two scenario (rubric-graded), two short-answer (rubric-graded), two application (rubric-graded). Pass threshold 80% (6.0/8.0). Three attempts, 24-hour cooldown or one revision-block visit between attempts.
+- **Checkpoint block.** The eight-question checkpoint. Two multiple-choice (auto-graded), two scenario (rubric-graded), two short-answer (rubric-graded), two application (rubric-graded). Pass threshold: at least 6 of 8 correct (6.0/8.0 when partial credit is summed). Three attempts, 24-hour cooldown or one revision-block visit between attempts.
 - **Artifact upload block.** Accepts `.pdf` or `.docx` matching the filename pattern `Module08_AI_Learning_Repair_Plan_[YourName].pdf`. Display the eight required components as a self-check list above the upload field.
 - **Remediation block.** The *Revision guidance* section. Each named sub-section in the guidance is rendered as a *go to section* link that scrolls or opens the corresponding sub-section of the concept block.
 

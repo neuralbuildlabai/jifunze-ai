@@ -7,6 +7,7 @@ import { teachingLabRubricRows } from '../../data/teaching/teachingTypes'
 import { clearTeachingLabDraft, readTeachingLabDrafts, writeTeachingLabDraft } from '../../lib/teachingLabDrafts'
 import { canAccessTeachingLab, teachingLabAccessLabel } from '../../lib/teachingLabAccess'
 import { lessonPublicHref } from '../../lib/learnerHelpEngine'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { recordTeachingSignal } from '../../data/teaching/teachingSignals'
 
@@ -190,20 +191,29 @@ export function TeachingLabArticle({ lab }: { lab: TeachingLab }) {
                 </Link>
               ) : null}
               {lab.labAccess === 'premium' ? (
-                <>
+                LEARNER_MONETIZATION_UI_DISABLED ? (
                   <Link
-                    to="/pricing"
+                    to="/dashboard"
                     className="rounded-lg bg-violet-500 px-4 py-2 text-white shadow-md shadow-violet-950/25 transition hover:bg-violet-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/60"
                   >
-                    Unlock deeper AI labs
+                    Open workspace
                   </Link>
-                  <Link
-                    to="/settings/subscription"
-                    className="rounded-lg border border-white/[0.1] px-4 py-2 text-zinc-300 transition hover:border-violet-400/25 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/55"
-                  >
-                    Continue with advanced workflow labs
-                  </Link>
-                </>
+                ) : (
+                  <>
+                    <Link
+                      to="/pricing"
+                      className="rounded-lg bg-violet-500 px-4 py-2 text-white shadow-md shadow-violet-950/25 transition hover:bg-violet-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/60"
+                    >
+                      Unlock deeper AI labs
+                    </Link>
+                    <Link
+                      to="/settings/subscription"
+                      className="rounded-lg border border-white/[0.1] px-4 py-2 text-zinc-300 transition hover:border-violet-400/25 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/55"
+                    >
+                      Continue with advanced workflow labs
+                    </Link>
+                  </>
+                )
               ) : null}
               <Link
                 to="/learning/labs"

@@ -15,6 +15,7 @@ import {
   type FlagshipSchoolId,
 } from '../../data/learning/flagshipCoursesCatalog'
 import type { ExtendedPublicLibraryKey } from '../../data/learning/extendedPublicLibraryConfigs'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { DiscoveryBadgeChips } from './DiscoveryBadgeChips'
@@ -43,7 +44,7 @@ function SectionHeading(props: { eyebrow: string; title: string; description?: s
 }
 
 export function LearningDiscoveryHubPage() {
-  const featuredFlagship = FLAGSHIP_COURSES.filter((c) => c.featured)
+  const featuredFlagship = FLAGSHIP_COURSES.filter((c) => c.featured).slice(0, 8)
 
   return (
     <div className="jf-public-surface min-h-screen w-full bg-[var(--jf-bg-page)] px-4 py-10 text-[color:var(--jf-text)] sm:px-6">
@@ -66,9 +67,6 @@ export function LearningDiscoveryHubPage() {
             <Link className="text-xs font-medium text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)]" to="/">
               Home
             </Link>
-            <Link className="text-xs font-medium text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)]" to={LEGAL_ROUTES.pricing}>
-              Plans
-            </Link>
           </div>
         </header>
 
@@ -78,29 +76,31 @@ export function LearningDiscoveryHubPage() {
             Flagship learning paths built for depth
           </h1>
           <p className="mt-4 max-w-3xl text-[15px] leading-relaxed text-[color:var(--jf-muted)]">
-            Explore 15 deep courses across AI, digital fluency, business, career growth, communication, leadership, and learning systems — all designed to move
-            learners from understanding into practice, execution, and real output creation.
+            Structured flagship courses across AI, digital fluency, business, career, and leadership—designed for practice, evidence, and portfolio-ready outputs.
           </p>
-          <div className="mt-6 flex flex-wrap gap-2">
-            {LEARNING_DISCOVERY_CATEGORIES.map((c) => (
-              <Link
-                key={`shortcut-${c.slug}`}
-                to={`/learn/category/${c.slug}`}
-                className="inline-flex items-center rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-3 py-1.5 text-[11px] font-semibold text-[color:var(--jf-text)] shadow-[var(--jf-shadow-soft)] transition hover:bg-[color:var(--jf-surface-elevated)]"
-                data-testid={`discovery-topic-shortcut-${c.slug}`}
-              >
-                {c.eyebrow}
-              </Link>
-            ))}
-          </div>
+          <details className="mt-6 rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-3">
+            <summary className="cursor-pointer text-[12px] font-semibold text-[color:var(--jf-text)]">Browse by topic shortcuts</summary>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {LEARNING_DISCOVERY_CATEGORIES.map((c) => (
+                <Link
+                  key={`shortcut-${c.slug}`}
+                  to={`/learn/category/${c.slug}`}
+                  className="inline-flex items-center rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-3 py-1.5 text-[11px] font-semibold text-[color:var(--jf-text)] transition hover:bg-[color:var(--jf-surface-elevated)]"
+                  data-testid={`discovery-topic-shortcut-${c.slug}`}
+                >
+                  {c.eyebrow}
+                </Link>
+              ))}
+            </div>
+          </details>
         </div>
 
         {/* Entry by school — each school opens its own catalog page */}
         <section className="space-y-4" data-testid="discovery-school-chooser">
           <SectionHeading
             eyebrow="Browse"
-            title="Choose a school"
-            description="Four flagship schools — open one for the full course list without scrolling through everything at once."
+            title="Browse by school"
+            description="Four schools—each opens a focused list of flagship courses."
           />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {SCHOOL_ORDER.map((schoolId) => {
@@ -129,12 +129,17 @@ export function LearningDiscoveryHubPage() {
         <section className="space-y-6" data-testid="discovery-section-flagship-featured">
           <SectionHeading
             eyebrow="Featured"
-            title="Strongest flagship paths"
-            description="Eight curated tracks—each framed as a mastery path with progressive depth, not a shallow intro."
+            title="Featured courses"
+            description="Curated flagship entries—open a card for the full course overview and sessions."
           />
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
             {featuredFlagship.map((course) => (
-              <FlagshipCourseCard key={course.slug} course={course} testId={`discovery-featured-${course.slug}`} />
+              <FlagshipCourseCard
+                key={course.slug}
+                course={course}
+                testId={`discovery-featured-${course.slug}`}
+                maxOutputs={3}
+              />
             ))}
           </div>
         </section>
@@ -241,13 +246,15 @@ export function LearningDiscoveryHubPage() {
               title="Specialist course links"
               description="Quick links to every standalone specialist product—curriculum maps and lesson access as labeled."
             />
-            <Link
-              to={LEGAL_ROUTES.pricing}
-              className="inline-flex items-center justify-center rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-4 py-2 text-[12px] font-semibold text-[color:var(--jf-text)] transition hover:border-white/[0.14] hover:bg-[color:var(--jf-surface-elevated)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-              data-testid="discovery-plans-secondary"
-            >
-              Compare plans
-            </Link>
+            {LEARNER_MONETIZATION_UI_DISABLED ? null : (
+              <Link
+                to={LEGAL_ROUTES.pricing}
+                className="inline-flex items-center justify-center rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-4 py-2 text-[12px] font-semibold text-[color:var(--jf-text)] transition hover:border-white/[0.14] hover:bg-[color:var(--jf-surface-elevated)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+                data-testid="discovery-plans-secondary"
+              >
+                Compare plans
+              </Link>
+            )}
           </div>
           <ul className="grid gap-2 md:grid-cols-2">
             {ALL_STANDALONE_KEYS.map((key) => {

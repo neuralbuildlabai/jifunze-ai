@@ -23,7 +23,7 @@ export type FlagshipModuleQuizRecord = {
   reviewAcknowledgedAt?: string
 }
 
-/** Module 16 capstone rubric self-grade (AI Essentials only; local-first; omitted from Supabase upsert until a column exists). */
+/** Module 16 capstone rubric self-grade (AI Essentials only; synced to Supabase `ae_capstone_rubric_self_grade`). */
 export type AeCapstoneRubricId =
   | 'problemFraming'
   | 'promptWorkflow'
@@ -65,17 +65,31 @@ export function aeCapstoneRubricAllCriteriaReadyPlus(state: FlagshipCourseProgre
   return AI_ESSENTIALS_CAPSTONE_RUBRIC_IDS.every((id) => g[id] === 'ready' || g[id] === 'strong')
 }
 
+/**
+ * Merge two rubric maps: per criterion, keep the higher level (never downgrades Ready/Strong vs lower).
+ * When levels tie, `tiePreferB` picks the side (e.g. newer remote snapshot vs local).
+ */
 export function mergeAeCapstoneRubricSelfGrade(
   a: AeCapstoneRubricSelfGrade | undefined,
   b: AeCapstoneRubricSelfGrade | undefined,
+  opts?: { tiePreferB?: boolean },
 ): AeCapstoneRubricSelfGrade | undefined {
   if (!a && !b) return undefined
-  const out: AeCapstoneRubricSelfGrade = { ...(a ?? {}), ...(b ?? {}) }
+  const tiePreferB = opts?.tiePreferB ?? false
+  const out: AeCapstoneRubricSelfGrade = {}
   for (const id of AI_ESSENTIALS_CAPSTONE_RUBRIC_IDS) {
     const va = a?.[id]
     const vb = b?.[id]
-    if (va && vb) out[id] = rubricLevelRank(va) >= rubricLevelRank(vb) ? va : vb
-    else out[id] = va ?? vb ?? out[id]
+    if (va == null && vb == null) continue
+    if (va != null && vb != null) {
+      const ra = rubricLevelRank(va)
+      const rb = rubricLevelRank(vb)
+      if (ra > rb) out[id] = va
+      else if (rb > ra) out[id] = vb
+      else out[id] = tiePreferB ? vb : va
+    } else {
+      out[id] = (va ?? vb)!
+    }
   }
   return Object.keys(out).length ? out : undefined
 }
@@ -91,8 +105,10 @@ export type FlagshipCourseProgressState = {
   completedMasteryCheckpointIds?: string[]
   /** Module id → quiz completion / lock state (local-first; server row may omit). */
   moduleQuiz?: Record<string, FlagshipModuleQuizRecord>
-  /** AI Essentials Module 16 — rubric self-grade for milestone 10 / certificate (local-first). */
+  /** AI Essentials Module 16 — rubric self-grade for milestone 10 / certificate. */
   aeCapstoneRubricSelfGrade?: AeCapstoneRubricSelfGrade
+  /** ISO time when the learner last changed any rubric row (merge + remote hydration). */
+  aeCapstoneRubricSelfGradeUpdatedAt?: string
   lastActiveSessionId?: string
   lastActiveAt?: string
   startedAt?: string

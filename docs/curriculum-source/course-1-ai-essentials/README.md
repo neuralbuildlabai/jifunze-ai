@@ -12,7 +12,7 @@ Authoritative narrative and assessment standards live under the repo’s `How to
 | Module quizzes | `src/data/learning/course1AiEssentialsQuizBank.ts` + `src/lib/flagshipModuleQuizPools.ts` |
 | Mastery checkpoints | `src/lib/flagshipAssessmentBespokeModules.ts`, `src/lib/flagshipAssessmentCompletion.ts` |
 | Ten-milestone learner % | `src/lib/aiEssentialsProgressMilestones.ts` (`getFlagshipCourseDisplayProgressPercent`) |
-| Capstone rubric self-grade (local state; not in Supabase row yet) | `src/lib/flagshipCourseProgressDerived.ts`, UI `src/components/learn/AeCapstoneRubricSelfGradePanel.tsx` on Module 16 / capstone prep |
+| Capstone rubric self-grade (JSONB `ae_capstone_rubric_self_grade` on `flagship_course_progress`) | `src/lib/flagshipCourseProgressDerived.ts`, `src/services/learning/flagshipCourseProgressRemote.ts`, `src/lib/aeCapstoneRubricPersistence.ts`, UI `src/components/learn/AeCapstoneRubricSelfGradePanel.tsx` on Module 16 / capstone prep |
 | Portfolio hints | `src/data/learning/portfolioOutputsCatalog.ts` (`po-ai-m01` … `po-ai-m16`) |
 | Continuity checks | `npm run verify:course1-ai-essentials` |
 

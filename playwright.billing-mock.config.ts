@@ -1,6 +1,11 @@
 import { defineConfig, devices } from '@playwright/test'
 
 /**
+ * This suite always runs with commerce UI on (override host shell so `isLearnerMonetizationUiDisabled()` matches Vite).
+ */
+process.env.VITE_LEARNER_MONETIZATION_UI_DISABLED = 'false'
+
+/**
  * Billing wiring E2E with **mocked** Supabase Edge Function responses (no live Stripe charges).
  * Uses a dedicated dev-server port so `reuseExistingServer` does not accidentally attach to the default guest suite (5173).
  */
@@ -20,7 +25,7 @@ export default defineConfig({
   webServer: {
     command: 'npm run dev -- --host 127.0.0.1 --port 5174 --strictPort',
     url: 'http://127.0.0.1:5174',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: process.env.CI ? false : process.env.PLAYWRIGHT_REUSE_DEV_SERVER === '1',
     timeout: 120_000,
     env: {
       ...process.env,
@@ -31,6 +36,9 @@ export default defineConfig({
       /** Synthetic checkout responses in `billingStripe.ts` — never ship `true` to production. */
       VITE_E2E_BILLING_INVOKE_MOCK: 'true',
       VITE_ACCESS_TIER_EMAIL_FALLBACK: 'false',
+      VITE_MAINTENANCE_BYPASS_TOKEN: 'playwright-maintenance-bypass',
+      /** Full PricingSkuCards + workspace subscription route (not the public paused surface). */
+      VITE_LEARNER_MONETIZATION_UI_DISABLED: 'false',
     },
   },
 })

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import type { TeachingLibraryId } from '../../data/teaching/teachingTypes'
 import { TEACHING_LABS } from '../../data/teaching/teachingLabsCatalog'
 import { TeachingLabArticle } from '../teaching/TeachingLabArticle'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 
 const LIBRARY_ORDER: TeachingLibraryId[] = [
@@ -71,10 +72,14 @@ export function WorkspaceTeachingLabsPage() {
           <Link className="font-semibold text-violet-300/90 hover:text-violet-200" to="/library">
             Library overview
           </Link>
-          <span aria-hidden>·</span>
-          <Link className="font-semibold text-violet-300/90 hover:text-violet-200" to="/pricing">
-            Upgrade for deeper materials
-          </Link>
+          {LEARNER_MONETIZATION_UI_DISABLED ? null : (
+            <>
+              <span aria-hidden>·</span>
+              <Link className="font-semibold text-violet-300/90 hover:text-violet-200" to="/pricing">
+                Upgrade for deeper materials
+              </Link>
+            </>
+          )}
           <span aria-hidden>·</span>
           <Link className="font-semibold text-zinc-500 hover:text-zinc-200" to={LEGAL_ROUTES.disclaimer}>
             Disclaimer

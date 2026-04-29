@@ -610,7 +610,7 @@ If all four pass, the artifact meets the standard. If any one fails, identify th
 
 ## Checkpoint quiz
 
-Answer all eight questions. Mark your own answers using the answer key that follows. Pass threshold: 80% (at least 7 of 8 substantively correct, with strong-answer criteria met where named).
+Answer all eight questions. Mark your own answers using the answer key that follows. Pass threshold: at least 6 of 8 questions correct (substantively correct per strong-answer criteria where rubric-graded).
 
 **1. (Multiple choice.)** Which of the following best describes the difference between a one-time prompt and a reusable system?
 
@@ -722,7 +722,7 @@ The learner has completed Module 15 meaningfully when:
 - The artifact passes all four quality tests at self-check.
 - Module 10 privacy boundaries, Module 12 review points, Module 13 decision-ownership, and Module 14 standards alignment are visibly present.
 - The disclosure note is present and substantively follows Course1_Disclosure_Note.md.
-- The checkpoint quiz reaches at least 80%, with the application questions meeting the strong-answer criteria.
+- The checkpoint quiz reaches at least 6 of 8, with the application questions meeting the strong-answer criteria.
 
 ## Revision guidance
 
@@ -776,7 +776,7 @@ Module 16 is the final capstone, where you use that toolkit in an end-to-end AI-
   - Callout blocks for the four quality tests and the version-control habits, since those are referenced from elsewhere in the module.
   - A pinned reference card showing the nine pack elements and the eight playbook elements would help the learner during the activities.
 
-- **Quiz mapping notes.** Questions 1, 2, 3, 4 are auto-scored multiple choice (radio button, single correct answer). Questions 5 and 6 are short answer with rubric-checked correctness against the strong-answer criteria; in the platform UI, present the question, allow free-text answer, and show the answer key only after submission. Questions 7 and 8 are application items with rubric scoring; they should accept longer free-text input and provide the strong-answer criteria as the self-check. Pass threshold is 80% (7 of 8 substantively correct). The *strong-answer criteria* in the answer key are the rubric the platform should display for self-grading on the open items.
+- **Quiz mapping notes.** Questions 1, 2, 3, 4 are auto-scored multiple choice (radio button, single correct answer). Questions 5 and 6 are short answer with rubric-checked correctness against the strong-answer criteria; in the platform UI, present the question, allow free-text answer, and show the answer key only after submission. Questions 7 and 8 are application items with rubric scoring; they should accept longer free-text input and provide the strong-answer criteria as the self-check. Pass threshold is at least 6 of 8 substantively correct. The *strong-answer criteria* in the answer key are the rubric the platform should display for self-grading on the open items.
 
 - **Portfolio artifact mapping notes.** Upload format: `.pdf` or `.docx`. Filename pattern: `Module15_Prompt_Pack_Playbook_[YourName].(pdf|docx)`. The platform's artifact-upload block should present the twelve required-contents items as a checklist the learner ticks against their uploaded document. The four quality-test self-checks should be presented as a separate review checklist before submission, with each test ticked individually so the learner has surfaced any failing test before uploading. A *capstone-link* note should appear on the upload confirmation, telling the learner that this artifact is the input to Module 16 and reminding them to keep an editable copy accessible.
 

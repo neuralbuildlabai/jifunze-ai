@@ -24,16 +24,16 @@ test.describe('Workspace routes (demo / no Supabase env)', () => {
     await expect(page.getByRole('heading', { name: /^settings$/i }).first()).toBeVisible({ timeout: 15_000 })
   })
 
-  test('plans & subscription page loads (demo guest)', async ({ page }) => {
+  test('plans & billing page shows paused copy (demo guest)', async ({ page }) => {
     await page.goto('/settings/subscription')
-    await expect(page.getByRole('heading', { name: /plans & subscription/i })).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByTestId('plan-card-free')).toBeVisible()
+    await expect(page.getByRole('heading', { name: /plans & billing/i })).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByText(/plans are not available yet/i)).toBeVisible()
   })
 
   test('dashboard route loads (demo guest)', async ({ page }) => {
     await page.goto('/dashboard')
     await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByText(/continue your pathway, build portfolio-ready proof/i)).toBeVisible()
+    await expect(page.getByText(/continue your learning path and build portfolio-ready proof/i)).toBeVisible()
     await expect(page.getByTestId('dashboard-your-pathway')).toBeVisible()
   })
 

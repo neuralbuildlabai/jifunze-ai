@@ -11,6 +11,7 @@ import { resolveExtendedLessonReaderSections } from '../../data/learning/extende
 import type { ExtendedPublicLibraryConfig } from '../../data/learning/extendedPublicLibraryConfigs'
 import { recordLibraryLessonSurface } from '../../data/learning/curriculumEvolutionSignals'
 import { recordTeachingSignal } from '../../data/teaching/teachingSignals'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { PublicStarterLibraryChrome } from './PublicStarterLibraryChrome'
 import { useLearningAccess } from '../../learning/LearningAccessContext'
@@ -116,30 +117,39 @@ export function PublicExtendedCatalogLessonPage({ config }: { config: ExtendedPu
                 Create free account
               </Link>
             ) : lesson.access === 'premium' ? (
-              <>
+              LEARNER_MONETIZATION_UI_DISABLED ? (
                 <Link
-                  to="/pricing"
-                  onClick={() =>
-                    recordTeachingSignal({
-                      kind: 'premium_interest_signal',
-                      payload: {
-                        from: 'extended_lesson_gate',
-                        libraryKey: config.key,
-                        lessonSlug: lesson.slug,
-                      },
-                    })
-                  }
+                  to="/dashboard"
                   className="inline-flex items-center justify-center rounded-xl bg-violet-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-950/25 transition hover:bg-violet-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/60"
                 >
-                  View plans &amp; modules
+                  Open workspace
                 </Link>
-                <Link
-                  to="/settings/subscription"
-                  className="inline-flex items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] px-5 py-2.5 text-sm font-semibold text-zinc-100 transition hover:border-violet-400/25 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/55"
-                >
-                  Subscription status
-                </Link>
-              </>
+              ) : (
+                <>
+                  <Link
+                    to="/pricing"
+                    onClick={() =>
+                      recordTeachingSignal({
+                        kind: 'premium_interest_signal',
+                        payload: {
+                          from: 'extended_lesson_gate',
+                          libraryKey: config.key,
+                          lessonSlug: lesson.slug,
+                        },
+                      })
+                    }
+                    className="inline-flex items-center justify-center rounded-xl bg-violet-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-950/25 transition hover:bg-violet-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/60"
+                  >
+                    View plans &amp; modules
+                  </Link>
+                  <Link
+                    to="/settings/subscription"
+                    className="inline-flex items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] px-5 py-2.5 text-sm font-semibold text-zinc-100 transition hover:border-violet-400/25 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400/55"
+                  >
+                    Subscription status
+                  </Link>
+                </>
+              )
             ) : (
               <Link
                 to="/dashboard"
