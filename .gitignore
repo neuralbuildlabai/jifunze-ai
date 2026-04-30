@@ -36,3 +36,5 @@ e2e/demo-artifacts/screenshots/*.png
 # Playwright test runner output
 /playwright-report/
 /test-results/
+.vercel
+.env*.local
