@@ -205,8 +205,9 @@ export function ReadinessChallengePage() {
             <div className="mt-8 space-y-5">
               <p className="text-[15px] leading-relaxed text-[color:var(--jf-text)]">Nice effort — you can still continue.</p>
               <p className="text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-                This challenge only unlocks a small first-course discount. It isn&apos;t an admissions gate. Explore courses, sign up when you&apos;re ready, and start
-                learning at your pace.
+                {LEARNER_MONETIZATION_UI_DISABLED
+                  ? 'This check is not an admissions gate. Explore courses, sign in when you are ready, and continue learning at your pace.'
+                  : 'This challenge only unlocks a small first-course discount. It isn&apos;t an admissions gate. Explore courses, sign up when you&apos;re ready, and start learning at your pace.'}
               </p>
               {st.failReason === 'impossible' ? (
                 <p className="text-[13px] leading-relaxed text-[color:var(--jf-subtle)]">
