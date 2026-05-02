@@ -17,7 +17,10 @@ const goalBuckets: { label: string; match: (goals: string[]) => boolean }[] = [
 export function EmployablePathwaysPage() {
   const featured = featuredEmployablePathways()
   const featuredSlugs = useMemo(() => new Set(featured.map((p) => p.slug)), [featured])
-  const otherPathways = useMemo(() => EMPLOYABLE_PATHWAYS.filter((p) => !featuredSlugs.has(p.slug)), [featuredSlugs])
+  const otherPathways = useMemo(
+    () => EMPLOYABLE_PATHWAYS.filter((p) => !featuredSlugs.has(p.slug) && p.status === 'active'),
+    [featuredSlugs],
+  )
 
   return (
     <div className="jf-public-surface min-h-screen w-full bg-[var(--jf-bg-page)] px-4 py-10 text-[color:var(--jf-text)] sm:px-6">
@@ -27,11 +30,11 @@ export function EmployablePathwaysPage() {
         <section className="mx-auto max-w-3xl text-center sm:text-left">
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[color:var(--jf-muted)]">Employable pathways</p>
           <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-[2.1rem] sm:leading-tight">
-            Learn skills. Build proof. Become employable.
+            Structured learning. Clear pathways. Evidence you can show.
           </h1>
           <p className="mt-4 text-[15px] leading-relaxed text-[color:var(--jf-muted)]">
-            A pathway is a curated sequence: flagship courses you can start today, honest roadmap items still in preparation, and portfolio-ready outputs that help
-            you show evidence—not a job guarantee or external accreditation.
+            A pathway is a curated sequence of flagship courses, portfolio-ready output guidance, and certificate-readiness framing that matches in-app rules—plus
+            an honest roadmap for items still in preparation. This is not a job guarantee or external accreditation.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3 sm:justify-start">
             <a
@@ -44,7 +47,7 @@ export function EmployablePathwaysPage() {
               to={LEGAL_ROUTES.learn}
               className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-6 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-white/[0.06]"
             >
-              Explore courses
+              Open catalog
             </Link>
             {LEARNER_MONETIZATION_UI_DISABLED ? null : (
               <Link
@@ -106,7 +109,7 @@ export function EmployablePathwaysPage() {
           </p>
           <div className="flex flex-wrap gap-2">
             {goalBuckets.map((b) => {
-              const paths = EMPLOYABLE_PATHWAYS.filter((p) => b.match(p.learnerGoals))
+              const paths = EMPLOYABLE_PATHWAYS.filter((p) => p.status === 'active' && b.match(p.learnerGoals))
               if (!paths.length) return null
               return (
                 <div

@@ -37,7 +37,7 @@ export function DashboardLearnerHub() {
   const { user, supabase } = useAuth()
   const { selectedPathway, loading: prefLoading } = useSelectedPathway()
 
-  const pathwaysForRanking = useMemo(() => featuredEmployablePathways().filter((p) => p.status === 'active'), [])
+  const pathwaysForRanking = useMemo(() => featuredEmployablePathways(), [])
 
   const pathwaySync: PathwayProgressSyncContext = useMemo(() => {
     if (!user || !supabase || !isSupabaseConfigured()) return null
@@ -148,15 +148,10 @@ export function DashboardLearnerHub() {
               </p>
             ) : null}
             <div className="mt-4 flex flex-wrap gap-2">
-              {nextAction && nextAction.kind !== 'planned_only' ? (
-                <Link className={btnPrimary} to={nextAction.href} data-testid="dashboard-your-pathway-continue">
-                  Continue
-                </Link>
-              ) : null}
               <Link className={btnGhost} to={LEGAL_ROUTES.paths}>
-                Choose pathway
+                Change pathway
               </Link>
-              <Link className={btnGhost} to={`/paths/${selectedPathway.slug}`}>
+              <Link className={btnPrimary} to={`/paths/${selectedPathway.slug}`} data-testid="dashboard-your-pathway-view">
                 View pathway
               </Link>
             </div>
@@ -177,9 +172,6 @@ export function DashboardLearnerHub() {
             <div className="mt-4 flex flex-wrap gap-2">
               <Link className={btnPrimary} to={LEGAL_ROUTES.paths} data-testid="dashboard-choose-pathway">
                 Choose a pathway
-              </Link>
-              <Link className={btnGhost} to={`/paths/${topPick.pathway.slug}`}>
-                Preview {topPick.pathway.shortTitle}
               </Link>
             </div>
           </>
@@ -210,10 +202,7 @@ export function DashboardLearnerHub() {
             )}
             <div className="mt-4 flex flex-wrap gap-2">
               <Link className={btnPrimary} to="/reports">
-                Reports
-              </Link>
-              <Link className={btnGhost} to={LEGAL_ROUTES.learn}>
-                Catalog
+                Open reports
               </Link>
             </div>
           </>
@@ -241,39 +230,13 @@ export function DashboardLearnerHub() {
               </ul>
             ) : null}
             <p className="mt-3 text-[12px] leading-relaxed text-zinc-500">{certTeaser(primaryPathway)}</p>
-            <Link className={`${btnGhost} mt-4 inline-flex`} to={`/paths/${primaryPathway.slug}#pathway-portfolio-guidance`}>
+            <Link className={`${btnPrimary} mt-4 inline-flex`} to={`/paths/${primaryPathway.slug}#pathway-portfolio-guidance`}>
               View portfolio outputs
             </Link>
           </>
         )}
       </section>
 
-      <section className={`${surface} border-dashed border-white/[0.06]`} data-testid="dashboard-next-action">
-        <p className={eyebrow}>Next recommended action</p>
-        {!nextAction || nextAction.kind === 'planned_only' ? (
-          <p className="mt-2 text-sm text-zinc-500">
-            {primaryPathway ? 'When sessions are available, your best next step will surface here.' : 'Choose a pathway in Pathways to get a tailored next step.'}
-          </p>
-        ) : (
-          <p className="mt-2 text-sm text-zinc-400">
-            <span className="font-medium text-zinc-200">{nextAction.buttonLabel}</span>
-            <span className="mx-1.5 text-zinc-600">·</span>
-            <Link className="font-medium text-violet-300 hover:underline" to={nextAction.href}>
-              Go
-            </Link>
-          </p>
-        )}
-        <p className="mt-3 text-[12px] text-zinc-600">
-          More paths:{' '}
-          <Link className="text-violet-300/90 hover:text-violet-200" to={LEGAL_ROUTES.paths}>
-            Pathways
-          </Link>
-          {' · '}
-          <Link className="text-violet-300/90 hover:text-violet-200" to={LEGAL_ROUTES.learn}>
-            Catalog
-          </Link>
-        </p>
-      </section>
     </div>
   )
 }

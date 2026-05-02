@@ -1,7 +1,5 @@
-import { Link } from 'react-router-dom'
 import { useAppAccess } from '../access/useAppAccess'
 import { humanAccessTierLabel } from '../access/appAccess'
-import { LEGAL_ROUTES } from '../training/trustCopy'
 import { useAuth } from '../auth/AuthContext'
 import { isSupabaseConfigured } from '../config/supabaseEnv'
 import { LEARNER_MONETIZATION_UI_DISABLED } from '../learner/learnerCommerceConstants'
@@ -12,9 +10,6 @@ import { DashboardSuperAdminHub } from './DashboardSuperAdminHub'
 
 const cardClass =
   'rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 shadow-[0_12px_40px_rgba(0,0,0,0.2)] ring-1 ring-white/[0.04]'
-
-const linkTileClass =
-  'flex flex-col gap-1 rounded-lg border border-white/[0.06] bg-zinc-950/40 px-3 py-2.5 text-left transition hover:border-violet-400/25 hover:bg-white/[0.04]'
 
 /**
  * Role-specific dashboard: super-admin operations hub, learner learning-first hub, or admin workspace view without learner pathway mixing.
@@ -90,7 +85,7 @@ export function DashboardPage() {
         <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">Dashboard</p>
         <h1 className="mt-1 text-xl font-semibold text-white">Welcome back</h1>
         <p className="mt-2 max-w-2xl text-sm text-zinc-400">
-          Continue your learning path and build portfolio-ready proof.
+          Structured courses, pathways, session progress, and portfolio-oriented outputs—use Reports for evidence and Settings for your account.
         </p>
       </header>
     ) : (
@@ -111,7 +106,7 @@ export function DashboardPage() {
 
       {navVariant === 'learner' ? <DashboardLearnerHub /> : null}
 
-      {navVariant !== 'super_admin' ? (
+      {navVariant === 'institution_admin' || navVariant === 'platform_admin' ? (
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
             <DashboardTeamAssignmentsWidget />
@@ -145,38 +140,6 @@ export function DashboardPage() {
           </section>
         )}
       </div>
-
-      {navVariant === 'learner' ? (
-        <section className="space-y-3">
-          <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Shortcuts</h2>
-          <div className="grid gap-2 sm:grid-cols-2">
-            <Link to="/my-learning" className={linkTileClass}>
-              <span className="text-sm font-medium text-zinc-100">My Learning</span>
-              <span className="text-[11px] text-zinc-500">Assignments and enrolled paths</span>
-            </Link>
-            <Link to="/reports" className={linkTileClass}>
-              <span className="text-sm font-medium text-zinc-100">Reports</span>
-              <span className="text-[11px] text-zinc-500">Session and module progress</span>
-            </Link>
-            <Link to={LEGAL_ROUTES.paths} className={linkTileClass}>
-              <span className="text-sm font-medium text-zinc-100">Pathways</span>
-              <span className="text-[11px] text-zinc-500">Employability tracks</span>
-            </Link>
-            <Link to={LEGAL_ROUTES.learn} className={linkTileClass}>
-              <span className="text-sm font-medium text-zinc-100">Catalog</span>
-              <span className="text-[11px] text-zinc-500">Browse courses</span>
-            </Link>
-            <Link to="/library" className={linkTileClass}>
-              <span className="text-sm font-medium text-zinc-100">Library</span>
-              <span className="text-[11px] text-zinc-500">Extended readers</span>
-            </Link>
-            <Link to="/settings" className={linkTileClass}>
-              <span className="text-sm font-medium text-zinc-100">Settings</span>
-              <span className="text-[11px] text-zinc-500">Preferences and account</span>
-            </Link>
-          </div>
-        </section>
-      ) : null}
 
       {navVariant === 'super_admin' ? null : (
         <DashboardAdminToolsSection

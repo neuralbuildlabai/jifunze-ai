@@ -20,8 +20,6 @@ import { DisclaimerAcknowledgmentModal } from './auth/DisclaimerAcknowledgmentMo
 import { EmailVerificationGate } from './auth/EmailVerificationGate'
 import { recordTeachingSignal } from '../data/teaching/teachingSignals'
 import { useAppAccess } from '../access/useAppAccess'
-import { LEGAL_ROUTES } from '../training/trustCopy'
-
 const WORKSPACE_ENTRY_ONCE_KEY = 'jifunze.signal.workspaceEntryOnce.v1'
 
 export function SignedInHomePage() {
@@ -177,7 +175,7 @@ export function SignedInHomePage() {
 
         <SignedInWelcomeBlock user={user!} brand={brand} identity={workspaceIdentity} />
 
-        <SignedInContinueLearning supabase={supabase} userId={user!.id} />
+        {isLearnerNav ? null : <SignedInContinueLearning supabase={supabase} userId={user!.id} />}
 
         {isLearnerNav ? <LearnerPathwayOverview /> : null}
 
@@ -205,51 +203,32 @@ export function SignedInHomePage() {
           </section>
         ) : null}
 
-        <SignedInEngagementStrip brand={brand} onApplyPrompt={applyEngagementPrompt} />
+        {isLearnerNav ? null : (
+          <>
+            <SignedInEngagementStrip brand={brand} onApplyPrompt={applyEngagementPrompt} />
 
-        <div className="mt-8">
-          <SignedInQuickCreatePanel
-            supabase={supabase}
-            sectionId="signed-in-create"
-            promptInjection={promptInjection}
-          />
-        </div>
+            <div className="mt-8">
+              <SignedInQuickCreatePanel
+                supabase={supabase}
+                sectionId="signed-in-create"
+                promptInjection={promptInjection}
+              />
+            </div>
+          </>
+        )}
 
         {isLearnerNav ? (
           <section className="mt-10 rounded-2xl border border-white/[0.07] bg-white/[0.03] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.12)] ring-1 ring-white/[0.03] sm:p-6">
-            <h2 className="text-sm font-semibold text-white">Keep learning</h2>
+            <h2 className="text-sm font-semibold text-white">Learning workspace</h2>
             <p className="mt-1 max-w-2xl text-[12px] leading-relaxed text-zinc-500/90">
-              Pick up structured courses, save progress, and return anytime.
+              Your dashboard is the home for continue learning, pathway progress, portfolio outputs, and reports—use the top navigation for a single path into each
+              area.
             </p>
-            <ul className="mt-4 grid gap-3 sm:grid-cols-3">
-              <li className="rounded-xl border border-white/[0.06] bg-zinc-950/25 px-3 py-3">
-                <p className="text-[13px] font-medium text-zinc-100">My Learning</p>
-                <p className="mt-1 text-[12px] leading-relaxed text-zinc-500/90">
-                  <Link to="/my-learning" className="text-violet-300/90 hover:text-violet-200">
-                    Continue where you left off
-                  </Link>
-                  .
-                </p>
-              </li>
-              <li className="rounded-xl border border-white/[0.06] bg-zinc-950/25 px-3 py-3">
-                <p className="text-[13px] font-medium text-zinc-100">Employable pathways</p>
-                <p className="mt-1 text-[12px] leading-relaxed text-zinc-500/90">
-                  <Link to={LEGAL_ROUTES.paths} className="text-violet-300/90 hover:text-violet-200">
-                    Browse pathways
-                  </Link>{' '}
-                  for skills, proof, and role direction.
-                </p>
-              </li>
-              <li className="rounded-xl border border-white/[0.06] bg-zinc-950/25 px-3 py-3">
-                <p className="text-[13px] font-medium text-zinc-100">Catalog</p>
-                <p className="mt-1 text-[12px] leading-relaxed text-zinc-500/90">
-                  <Link to={LEGAL_ROUTES.learn} className="text-violet-300/90 hover:text-violet-200">
-                    Browse the catalog
-                  </Link>{' '}
-                  for flagship paths and libraries.
-                </p>
-              </li>
-            </ul>
+            <p className="mt-4 text-[13px] text-zinc-300">
+              <Link to="/dashboard" className="font-semibold text-violet-300/90 hover:text-violet-200">
+                Open dashboard
+              </Link>
+            </p>
           </section>
         ) : (
           <>

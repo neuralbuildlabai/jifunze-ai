@@ -1,15 +1,20 @@
 import { expect, test } from '@playwright/test'
+import { seedFlagshipLocalProgress } from './helpers/seedFlagshipLocalProgress'
+import { applyPublicE2eMaintenanceBypass } from './helpers/publicE2eMaintenanceBypass'
 
 test.describe('Learning discovery (public)', () => {
-  test('/learn hub renders flagship catalog + specialist courses + category cards', async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
+    await applyPublicE2eMaintenanceBypass(page)
+  })
+
+  test('/learn hub renders learner catalog (complete flagship courses only)', async ({ page }) => {
     await page.goto('/learn')
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByRole('heading', { name: /flagship learning paths built for depth/i })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /structured flagship courses/i })).toBeVisible()
     await expect(page.getByTestId('discovery-section-flagship-catalog')).toBeVisible()
     await expect(page.getByTestId('discovery-featured-ai-essentials')).toBeVisible()
-    await expect(page.getByTestId('discovery-trending-course_chatgpt_everyday')).toBeVisible()
-    await expect(page.getByTestId('discovery-section-course-index')).toBeVisible()
-    await expect(page.getByTestId('learning-discovery-category-card-chatgpt')).toBeVisible()
+    await expect(page.getByTestId('discovery-school-chooser')).toBeVisible()
+    await expect(page.getByTestId('discovery-school-card-ai_digital')).toBeVisible()
   })
 
   test('category page renders browse surface + subscription note', async ({ page }) => {
@@ -28,17 +33,15 @@ test.describe('Learning discovery (public)', () => {
   test('flagship course detail exposes curriculum depth beyond original six tracks', async ({ page }) => {
     await page.goto('/learn/courses/ai-essentials')
     await expect(page.getByRole('heading', { name: /^AI Essentials$/ })).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByTestId('flagship-module-count')).toContainText('10')
-    await expect(page.getByTestId('flagship-curriculum-structure')).toBeVisible()
+    await expect(page.getByText(/16 modules/i).first()).toBeVisible()
     await expect(page.getByTestId('flagship-learning-path')).toBeVisible()
     await expect(page.getByTestId('flagship-progress-summary')).toBeVisible()
     await expect(page.getByTestId('flagship-modules-with-sessions')).toBeVisible()
+    await page.getByRole('button', { name: /Module 1.*What AI Is and What It Is Not/i }).click()
     await expect(page.getByTestId('flagship-session-row-ae-m01-lesson')).toBeVisible()
-    await expect(page.getByTestId('flagship-resume-primary')).toBeVisible()
-    await expect(page.getByTestId('flagship-capstone-deep')).toBeVisible()
-    await expect(page.getByRole('heading', { name: /^Course promise$/ })).toBeVisible()
-    await expect(page.getByRole('heading', { name: /^Course structure overview$/ })).toBeVisible()
-    await expect(page.getByRole('link', { name: /^Start course$/ })).toBeVisible()
+    await expect(page.getByTestId('ae-hero-primary-cta')).toBeVisible()
+    await expect(page.getByTestId('ae-capstone-section')).toBeVisible()
+    await expect(page.getByRole('heading', { name: /^Curriculum$/ }).first()).toBeVisible()
 
     await page.goto('/learn/courses/clear-communication')
     await expect(page.getByTestId('flagship-module-count')).toContainText('10')
@@ -53,19 +56,20 @@ test.describe('Learning discovery (public)', () => {
 
   test('flagship session page renders instructional blocks + completion control', async ({ page }) => {
     await page.goto('/learn/courses/ai-essentials/session/ae-m01-lesson')
-    await expect(page.getByRole('heading', { name: /How modern AI behaves/i })).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByText(/Self-paced · foundations depth · study block/i)).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: /What AI Is and What It Is Not/i })).toBeVisible({ timeout: 20_000 })
+    await expect(page.getByText('Self-paced · foundations depth · study block').first()).toBeVisible()
     await expect(page.getByTestId('flagship-session-content')).toBeVisible()
     await expect(page.locator('[data-block-type="concept_explanation"]').first()).toBeVisible()
     await expect(page.locator('[data-block-type="worked_example"]').first()).toBeVisible()
     await expect(page.getByTestId('flagship-session-complete-toggle')).toBeVisible()
-    await expect(page.getByTestId('flagship-session-next')).toBeVisible()
+    await expect(page.getByRole('navigation', { name: 'Session navigation' })).toBeVisible()
   })
 
   test('flagship practice session renders practice_task blocks + mastery checkpoints panel', async ({ page }) => {
+    await seedFlagshipLocalProgress(page, 'marketing-and-growth', ['mg-m01-lesson'])
     await page.goto('/learn/courses/marketing-and-growth/session/mg-m01-practice')
     await expect(page.getByTestId('flagship-session-content')).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByText(/Self-paced · foundations depth · practice block/i)).toBeVisible()
+    await expect(page.getByText('Self-paced · foundations depth · practice block').first()).toBeVisible()
     await expect(page.locator('[data-block-type="practice_task"]').first()).toBeVisible()
     await expect(page.locator('[data-block-type="output_prompt"]').first()).toBeVisible()
     await expect(page.getByTestId('flagship-session-assessment-panel')).toBeVisible()
@@ -73,6 +77,7 @@ test.describe('Learning discovery (public)', () => {
   })
 
   test('bespoke mastery checkpoint shows hand-authored assessment copy', async ({ page }) => {
+    await seedFlagshipLocalProgress(page, 'marketing-and-growth', ['mg-m01-lesson'])
     await page.goto('/learn/courses/marketing-and-growth/session/mg-m01-practice')
     await expect(page.getByTestId('flagship-session-assessment-panel')).toBeVisible({ timeout: 20_000 })
     await expect(page.getByText(/Hypotheses tied to observable signals/i)).toBeVisible()
@@ -82,30 +87,6 @@ test.describe('Learning discovery (public)', () => {
     await page.goto('/learn/courses/data-and-decisions/session/dd-m01-lesson')
     await expect(page.getByTestId('flagship-session-content')).toBeVisible({ timeout: 20_000 })
     await expect(page.getByText(/From dashboard tile to disciplined question/i)).toBeVisible()
-  })
-
-  test('mid-course lesson renders bespoke instructional override blocks', async ({ page }) => {
-    await page.goto('/learn/courses/ai-essentials/session/ae-m05-lesson')
-    await expect(page.getByTestId('flagship-session-content')).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByRole('heading', { name: /Separation of practice from substitution/i })).toBeVisible()
-    await page.goto('/learn/courses/data-and-decisions/session/dd-m07-lesson')
-    await expect(page.getByText(/Dashboards become harmful when they answer/i)).toBeVisible({ timeout: 20_000 })
-  })
-
-  test('mid-course practice shows bespoke mastery checkpoint copy', async ({ page }) => {
-    await page.goto('/learn/courses/marketing-and-growth/session/mg-m05-practice')
-    await expect(page.getByTestId('flagship-session-assessment-panel')).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByText(/Engagement rises but pipeline is flat/i)).toBeVisible()
-  })
-
-  test('long-tail lesson uses completion override (not generator-only shell)', async ({ page }) => {
-    await page.goto('/learn/courses/ai-essentials/session/ae-m02-lesson')
-    await expect(page.getByTestId('flagship-session-content')).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByRole('heading', { name: /Operational truth conditions for this module/i })).toBeVisible()
-    await page.goto('/learn/courses/marketing-and-growth/session/mg-m03-lesson')
-    await expect(page.getByRole('heading', { name: /Decisions and tradeoffs this module must clarify/i })).toBeVisible({
-      timeout: 20_000,
-    })
   })
 
   test('School of Business & Growth courses render tightened catalog copy', async ({ page }) => {

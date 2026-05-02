@@ -23,7 +23,7 @@ test.describe('Homepage pathways-first (public)', () => {
 
   test('/paths shows intro and featured pathways section', async ({ page }) => {
     await page.goto('/paths')
-    await expect(page.getByRole('heading', { name: /learn skills.*build proof.*become employable/i })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /structured learning.*clear pathways.*evidence you can show/i })).toBeVisible()
     await expect(page.getByRole('heading', { name: /featured pathways/i })).toBeVisible()
     await expect(page.getByRole('link', { name: /open pathway/i }).first()).toBeVisible()
   })

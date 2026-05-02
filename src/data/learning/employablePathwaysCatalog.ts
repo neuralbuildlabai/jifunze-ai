@@ -346,7 +346,7 @@ export function canLearnerSelectPathwayAsPrimary(pathway: EmployablePathway | un
 }
 
 export function featuredEmployablePathways(): EmployablePathway[] {
-  return EMPLOYABLE_PATHWAYS.filter((p) => p.featured)
+  return EMPLOYABLE_PATHWAYS.filter((p) => p.featured && p.status === 'active')
 }
 
 export function employablePathwaysByStatus(status: EmployablePathway['status']): EmployablePathway[] {

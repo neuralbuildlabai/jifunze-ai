@@ -6,7 +6,6 @@ import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { TrustBoundaryStrip } from '../TrustBoundaryStrip'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { DiscoveryBadgeChips } from './DiscoveryBadgeChips'
-import { StandaloneCourseDiscoveryCard } from './StandaloneCourseDiscoveryCard'
 
 export function LearningCategoryPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -25,10 +24,7 @@ export function LearningCategoryPage() {
           <JifunzeBrandLogo to="/" size="sm" variant="compact" />
           <div className="flex flex-wrap items-center gap-3">
             <Link className="text-xs font-medium text-violet-300/90 hover:text-violet-200" to="/learn">
-              All categories
-            </Link>
-            <Link className="text-xs font-medium text-zinc-400 hover:text-zinc-200" to="/generate">
-              Try generation
+              Catalog
             </Link>
             {LEARNER_MONETIZATION_UI_DISABLED ? null : (
               <Link className="text-xs font-medium text-zinc-500 hover:text-zinc-200" to={LEGAL_ROUTES.pricing}>
@@ -88,54 +84,15 @@ export function LearningCategoryPage() {
           )}
         </section>
 
-        {category.featuredCourses.length ? (
-          <section className="space-y-4" data-testid={`category-featured-${category.slug}`}>
-            <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-zinc-500">Featured courses</p>
-              <h2 className="mt-2 text-xl font-semibold text-white">Browse products in this lane</h2>
-              <p className="mt-2 max-w-3xl text-[13px] leading-relaxed text-zinc-500">
-                Each card includes previews where available, inclusion framing, and curriculum depth cues—purchase paths follow your billing setup.
-              </p>
-            </div>
-
-            <div className="grid gap-4 lg:grid-cols-2">
-              {category.featuredCourses.map((item) => (
-                <StandaloneCourseDiscoveryCard key={item.libraryKey} libraryKey={item.libraryKey} />
-              ))}
-            </div>
-          </section>
-        ) : (
-          <section className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 sm:p-7">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-zinc-500">Featured courses</p>
-            <p className="mt-2 text-[14px] leading-relaxed text-zinc-300">
-              This browse surface emphasizes flagship libraries first. Jump into a library map below, then decide whether you want broader access via
-              subscription or to keep browsing publicly where lesson labels allow.
-            </p>
-          </section>
-        )}
-
-        <section className="space-y-4">
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-zinc-500">Supporting paths</p>
-            <h2 className="mt-2 text-xl font-semibold text-white">Continue with structured libraries</h2>
-            <p className="mt-2 max-w-3xl text-[13px] leading-relaxed text-zinc-500">
-              Deep reader maps stay instructional—never outcome guarantees—always verify before professional reliance.
-            </p>
-          </div>
-
-          <div className="grid gap-3 md:grid-cols-2">
-            {category.supportingPaths.map((p) => (
-              <Link
-                key={p.href}
-                to={p.href}
-                className="rounded-2xl border border-white/[0.06] bg-[rgba(18,16,26,0.45)] p-5 transition hover:border-violet-400/25 hover:bg-[rgba(22,18,32,0.72)]"
-              >
-                <p className="text-[14px] font-semibold text-white">{p.label}</p>
-                {p.description ? <p className="mt-2 text-[13px] leading-relaxed text-zinc-400">{p.description}</p> : null}
-                <p className="mt-3 text-[12px] font-semibold text-violet-300/90">Open library →</p>
-              </Link>
-            ))}
-          </div>
+        <section className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 sm:p-7" data-testid={`category-featured-${category.slug}`}>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-zinc-500">Structured flagship catalog</p>
+          <p className="mt-2 text-[14px] leading-relaxed text-zinc-300">
+            Topic pages stay as orientation and FAQ. For session-based flagship courses that are open in this release, use the main{' '}
+            <Link className="font-semibold text-violet-300/90 hover:text-violet-200" to="/learn">
+              learning catalog
+            </Link>{' '}
+            and your pathway view for sequencing.
+          </p>
         </section>
 
         {category.faq?.length ? (

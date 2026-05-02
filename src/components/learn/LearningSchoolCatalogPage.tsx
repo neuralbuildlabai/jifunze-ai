@@ -1,9 +1,6 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
-import {
-  FLAGSHIP_SCHOOLS,
-  flagshipCoursesForSchool,
-  type FlagshipSchoolId,
-} from '../../data/learning/flagshipCoursesCatalog'
+import { FLAGSHIP_SCHOOLS, type FlagshipSchoolId } from '../../data/learning/flagshipCoursesCatalog'
+import { learnerPublicCatalogCoursesForSchool } from '../../data/learning/flagshipLearnerCatalogPolicy'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { FlagshipCourseCard } from './FlagshipCourseCard'
@@ -17,7 +14,11 @@ export function LearningSchoolCatalogPage() {
   }
   const id = schoolId as FlagshipSchoolId
   const school = FLAGSHIP_SCHOOLS[id]
-  const courses = flagshipCoursesForSchool(id)
+  const courses = learnerPublicCatalogCoursesForSchool(id)
+
+  if (!courses.length) {
+    return <Navigate to="/learn" replace />
+  }
 
   return (
     <div className="jf-public-surface min-h-screen w-full bg-[var(--jf-bg-page)] px-4 py-10 text-[color:var(--jf-text)] sm:px-6">
