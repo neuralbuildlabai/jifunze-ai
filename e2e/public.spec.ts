@@ -10,12 +10,12 @@ test.describe('Public surfaces', () => {
     page,
   }) => {
     await gotoPublicHomeAnonymous(page)
-    await expect(
-      page.getByRole('heading', { level: 1, name: /learn skills.*build proof.*become employable/i }),
-    ).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole('heading', { level: 1, name: /structured learning for practical ai fluency/i })).toBeVisible({
+      timeout: 15_000,
+    })
     const heroPrimary = page.getByTestId('landing-hero-primary-cta')
     await expect(heroPrimary).toBeVisible()
-    await expect(heroPrimary).toHaveAttribute('href', /\/paths$/)
+    await expect(heroPrimary).toHaveAttribute('href', /\/learn$/)
     await expect(page.getByTestId('home-nav-pathways')).toBeVisible()
     await expect(page.locator('header').getByRole('link', { name: /^training$/i })).toHaveCount(0)
     await expect(page.getByTestId('landing-cta-trust-line')).toBeVisible()

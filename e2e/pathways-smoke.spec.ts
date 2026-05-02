@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test'
 test.describe('Employable pathways smoke', () => {
   test('/paths renders and public nav includes Pathways without training console', async ({ page }) => {
     await page.goto('/paths')
-    await expect(page.getByRole('heading', { name: /structured learning.*clear pathways.*evidence you can show/i })).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: /choose a learning pathway/i })).toBeVisible({ timeout: 15_000 })
     const nav = page.getByRole('navigation', { name: 'Public' })
     await expect(nav.getByRole('link', { name: /^pathways$/i })).toBeVisible()
     await expect(nav.getByRole('link', { name: /^training$/i })).toHaveCount(0)

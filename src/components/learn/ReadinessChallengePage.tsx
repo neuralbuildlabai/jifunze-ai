@@ -4,6 +4,7 @@ import { buildReadinessBankForSlug } from '@/data/learning/readinessChallengeBui
 import type { ReadinessQuestion } from '@/data/learning/readinessChallengeTypes'
 import { evaluateAdaptiveStep, READINESS_MAX_QUESTIONS } from '@/learner/readinessChallengeAdaptive'
 import { useLearnerCommerce } from '@/learner/LearnerCommerceContext'
+import { LEARNER_MONETIZATION_UI_DISABLED } from '@/learner/learnerCommerceConstants'
 import { getFlagshipCourseBySlug } from '@/data/learning/flagshipCoursesCatalog'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
@@ -120,8 +121,9 @@ export function ReadinessChallengePage() {
         <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:var(--jf-muted)]">Course Readiness Challenge</p>
         <h1 className="mt-3 text-xl font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-2xl">{course.title}</h1>
         <p className="mt-4 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-          A calm, course-aware check—not trivia. Results can unlock a one-time 5% discount on your first eligible single-course purchase for this track. All-access
-          subscriptions are unchanged.
+          {LEARNER_MONETIZATION_UI_DISABLED
+            ? 'A calm, course-aware check—not trivia. Use it to see how this course expects you to work through material.'
+            : 'A calm, course-aware check—not trivia. Results can unlock a one-time 5% discount on your first eligible single-course purchase for this track. All-access subscriptions are unchanged.'}
         </p>
 
         <div className="mt-8 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-5 shadow-[var(--jf-shadow-soft)] sm:p-7">
@@ -160,28 +162,42 @@ export function ReadinessChallengePage() {
               <p className="text-[15px] leading-relaxed text-[color:var(--jf-text)]">
                 Strong alignment with how this course expects you to work through material.
               </p>
-              <p className="text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-                You&apos;ve unlocked a one-time 5% discount on your first eligible single-course checkout for{' '}
-                <span className="font-medium text-[color:var(--jf-text)]">{course.title}</span>, if you haven&apos;t used it yet.
-              </p>
-              <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                <Link
-                  className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)]"
-                  to={`/learn/checkout?course=${slug}`}
-                  data-testid="readiness-goto-checkout"
-                >
-                  Continue to checkout
-                </Link>
-                <Link
-                  className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-6 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.05]"
-                  to={`/learn/courses/${slug}`}
-                >
-                  Back to course overview
-                </Link>
-              </div>
-              {discount.consumed ? (
-                <p className="text-[12px] text-[color:var(--jf-subtle)]">Note: discount already used on an earlier purchase.</p>
-              ) : null}
+              {LEARNER_MONETIZATION_UI_DISABLED ? (
+                <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                  <Link
+                    className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)]"
+                    to={`/learn/courses/${slug}`}
+                    data-testid="readiness-back-to-course"
+                  >
+                    Back to course overview
+                  </Link>
+                </div>
+              ) : (
+                <>
+                  <p className="text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+                    You&apos;ve unlocked a one-time 5% discount on your first eligible single-course checkout for{' '}
+                    <span className="font-medium text-[color:var(--jf-text)]">{course.title}</span>, if you haven&apos;t used it yet.
+                  </p>
+                  <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                    <Link
+                      className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)]"
+                      to={`/learn/checkout?course=${slug}`}
+                      data-testid="readiness-goto-checkout"
+                    >
+                      Continue to checkout
+                    </Link>
+                    <Link
+                      className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-6 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.05]"
+                      to={`/learn/courses/${slug}`}
+                    >
+                      Back to course overview
+                    </Link>
+                  </div>
+                  {discount.consumed ? (
+                    <p className="text-[12px] text-[color:var(--jf-subtle)]">Note: discount already used on an earlier purchase.</p>
+                  ) : null}
+                </>
+              )}
             </div>
           ) : null}
 

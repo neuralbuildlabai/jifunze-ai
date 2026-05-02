@@ -57,14 +57,22 @@ export function LearningCategoryPage() {
 
         <TrustBoundaryStrip density="legalLink" variant="inline" compact />
 
-        <section className="rounded-2xl border border-emerald-400/15 bg-emerald-500/[0.06] p-5 sm:p-7">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-200/75">Subscriptions · claim-safe framing</p>
-          <p className="mt-2 text-[13px] leading-relaxed text-zinc-200">{category.subscriptionNote}</p>
+        <section className="rounded-2xl border border-emerald-400/15 bg-emerald-500/[0.06] p-5 sm:p-7" data-testid={`category-access-note-${category.slug}`}>
+          {LEARNER_MONETIZATION_UI_DISABLED ? (
+            <>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-200/75">Learning focus</p>
+              <p className="mt-2 text-[13px] leading-relaxed text-zinc-200">
+                Use the catalog for complete courses and pathways for direction. Topic pages summarize how this track fits structured learning.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-200/75">Subscriptions · claim-safe framing</p>
+              <p className="mt-2 text-[13px] leading-relaxed text-zinc-200">{category.subscriptionNote}</p>
+            </>
+          )}
           {LEARNER_MONETIZATION_UI_DISABLED ? (
             <div className="mt-4 space-y-3">
-              <p className="text-[12px] leading-relaxed text-zinc-400">
-                Public checkout is not active in this release—browse the catalog and pathways while access stays open for review.
-              </p>
               <Link
                 to="/learn"
                 className="inline-flex items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2 text-[12px] font-semibold text-zinc-100 transition hover:border-emerald-400/25 hover:bg-white/[0.06]"

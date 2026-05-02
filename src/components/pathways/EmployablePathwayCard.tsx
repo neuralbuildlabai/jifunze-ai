@@ -26,9 +26,17 @@ function statusPill(pathway: EmployablePathway): { label: string; className: str
 }
 
 /**
- * Browse card for /paths and homepage — not the authenticated pathway progress panel.
+ * Browse card for /paths — not the authenticated pathway progress panel.
  */
-export function EmployablePathwayCard({ pathway, compact = false }: { pathway: EmployablePathway; compact?: boolean }) {
+export function EmployablePathwayCard({
+  pathway,
+  compact = false,
+  presentation = 'default',
+}: {
+  pathway: EmployablePathway
+  compact?: boolean
+  presentation?: 'default' | 'browse'
+}) {
   const available = getPathwayAvailableCourses(pathway).length
   const planned = pathway.plannedCourseSlugs.length
   const portfolioCount = pathway.portfolioOutputs.length
@@ -36,6 +44,25 @@ export function EmployablePathwayCard({ pathway, compact = false }: { pathway: E
   const pad = compact ? 'p-5' : 'p-6 sm:p-7'
   const skillsPreview = pathway.skillsGained.slice(0, 3).join(' · ')
   const rolesPreview = pathway.possibleRoles.slice(0, 2).join(' · ')
+
+  if (presentation === 'browse') {
+    return (
+      <Link to={`/paths/${pathway.slug}`} className={`${shell} ${pad}`}>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">
+          {FLAGSHIP_SCHOOLS[pathway.schoolId].shortLabel}
+        </p>
+        <h3 className="mt-3 text-left text-lg font-semibold tracking-tight text-[color:var(--jf-text)] group-hover:text-[color:var(--jf-text)] sm:text-[1.05rem]">
+          {pathway.shortTitle}
+        </h3>
+        <p className="mt-2 line-clamp-3 text-left text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{pathway.description}</p>
+        <p className="mt-4 text-left text-[12px] leading-snug text-[color:var(--jf-muted)]">
+          <span className="font-medium text-[color:var(--jf-text)]">Best for: </span>
+          {pathway.targetLearner}
+        </p>
+        <span className="mt-auto pt-4 text-left text-[12px] font-semibold text-[color:var(--jf-text)] underline-offset-2 group-hover:underline">Open pathway</span>
+      </Link>
+    )
+  }
 
   return (
     <Link to={`/paths/${pathway.slug}`} className={`${shell} ${pad}`}>

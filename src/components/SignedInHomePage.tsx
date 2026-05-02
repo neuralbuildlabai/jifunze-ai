@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { useLearnerCommerceOptional } from '../learner/LearnerCommerceContext'
 import { getFlagshipCourseBySlug } from '../data/learning/flagshipCoursesCatalog'
 import { useAuth } from '../auth/AuthContext'
@@ -146,6 +146,10 @@ export function SignedInHomePage() {
         <div className="w-full max-w-2xl text-center text-sm text-zinc-500">No brand profile loaded.</div>
       </div>
     )
+  }
+
+  if (isLearnerNav) {
+    return <Navigate to="/dashboard" replace />
   }
 
   return (

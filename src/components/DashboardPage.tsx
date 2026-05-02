@@ -84,9 +84,7 @@ export function DashboardPage() {
       <header className="border-b border-white/[0.06] pb-6">
         <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">Dashboard</p>
         <h1 className="mt-1 text-xl font-semibold text-white">Welcome back</h1>
-        <p className="mt-2 max-w-2xl text-sm text-zinc-400">
-          Structured courses, pathways, session progress, and portfolio-oriented outputs—use Reports for evidence and Settings for your account.
-        </p>
+        <p className="mt-2 max-w-2xl text-sm text-zinc-400">Continue your learning and track your progress.</p>
       </header>
     ) : (
       <header className="border-b border-white/[0.06] pb-6">
@@ -130,7 +128,7 @@ export function DashboardPage() {
             <p className="mt-2 text-sm font-medium text-zinc-100">{tierLoading ? 'Loading…' : tierLabel}</p>
             {LEARNER_MONETIZATION_UI_DISABLED ? (
               <p className="mt-1 text-[11px] leading-relaxed text-zinc-500">
-                Administrative actions are enforced on the server. Learner-facing purchase flows are paused in this product phase.
+                Administrative actions are enforced on the server.
               </p>
             ) : (
               <p className="mt-1 text-[11px] leading-relaxed text-zinc-500">

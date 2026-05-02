@@ -94,7 +94,6 @@ import { LEGAL_ROUTES } from './training/trustCopy'
 import { MaintenancePublicGate } from './components/maintenance/MaintenancePublicGate'
 import { EmployablePathwaysPage } from './components/pathways/EmployablePathwaysPage'
 import { PathwayDetailPage } from './components/pathways/PathwayDetailPage'
-import { EmployablePathwaysHomeSection } from './components/pathways/EmployablePathwaysHomeSection'
 import { NotFoundPage } from './components/NotFoundPage'
 
 function RedirectLegacyLibrariesAiFoundationsToCanonical() {
@@ -144,18 +143,18 @@ function HomeEntryPage() {
           </div>
           <nav className="flex flex-wrap items-center justify-end gap-1 sm:gap-2">
             <Link
+              to={LEGAL_ROUTES.learn}
+              className="rounded-full px-3 py-2 text-xs font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:bg-white/[0.06] hover:text-[color:var(--jf-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+              data-testid="home-nav-courses"
+            >
+              Courses
+            </Link>
+            <Link
               to={LEGAL_ROUTES.paths}
               className="rounded-full px-3 py-2 text-xs font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:bg-white/[0.06] hover:text-[color:var(--jf-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
               data-testid="home-nav-pathways"
             >
               Pathways
-            </Link>
-            <Link
-              to={LEGAL_ROUTES.learn}
-              className="rounded-full px-3 py-2 text-xs font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:bg-white/[0.06] hover:text-[color:var(--jf-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-              data-testid="home-nav-courses"
-            >
-              Explore courses
             </Link>
             {LEARNER_MONETIZATION_UI_DISABLED ? null : (
               <Link
@@ -194,30 +193,39 @@ function HomeEntryPage() {
           <div className="relative z-10 mx-auto max-w-4xl pt-2 text-center lg:max-w-5xl lg:text-left">
             <div className="mx-auto max-w-3xl space-y-5 lg:mx-0 sm:space-y-6">
               <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-[color:var(--jf-muted)] sm:text-[14px]">
-                Jifunze · employability pathways
+                Jifunze · structured learning
               </p>
               <h1 className="text-[1.9rem] font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-[2.25rem] sm:leading-[1.15] lg:text-[2.5rem] lg:leading-[1.1]">
-                Learn skills. Build proof. Become employable.
+                Structured learning for practical AI fluency.
               </h1>
               <p className="text-[15px] leading-[1.65] text-[color:var(--jf-muted)] sm:text-[17px] sm:leading-relaxed">
-                Jifunze is built around <strong className="font-semibold text-[color:var(--jf-text)]">employable pathways</strong>: flagship courses, practical
-                projects, and portfolio-ready outputs—clearly separated from roadmap work. Proof you can show, not job or income guarantees.
+                Complete focused courses, build portfolio-ready outputs, and track your progress through guided learning pathways.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-3 pt-1 lg:justify-start">
                 <Link
-                  to={LEGAL_ROUTES.paths}
+                  to={LEGAL_ROUTES.learn}
                   data-testid="landing-hero-primary-cta"
                   className="inline-flex min-h-[3rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-8 py-3 text-[15px] font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition-colors duration-200 hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
                 >
-                  Browse pathways
-                </Link>
-                <Link
-                  to={LEGAL_ROUTES.learn}
-                  data-testid="landing-hero-secondary-courses"
-                  className="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-white/[0.1] px-7 py-3 text-[15px] font-semibold text-[color:var(--jf-text)] transition-colors duration-200 hover:border-white/[0.14] hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-                >
                   Explore courses
                 </Link>
+                {isSupabaseConfigured() ? (
+                  <Link
+                    to={LEGAL_ROUTES.authSignIn}
+                    data-testid="landing-hero-secondary-courses"
+                    className="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-white/[0.1] px-7 py-3 text-[15px] font-semibold text-[color:var(--jf-text)] transition-colors duration-200 hover:border-white/[0.14] hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+                  >
+                    Sign in
+                  </Link>
+                ) : (
+                  <Link
+                    to={LEGAL_ROUTES.paths}
+                    data-testid="landing-hero-secondary-courses"
+                    className="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-white/[0.1] px-7 py-3 text-[15px] font-semibold text-[color:var(--jf-text)] transition-colors duration-200 hover:border-white/[0.14] hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+                  >
+                    Browse pathways
+                  </Link>
+                )}
                 {LEARNER_MONETIZATION_UI_DISABLED ? null : (
                   <Link
                     to={LEGAL_ROUTES.pricing}
@@ -239,8 +247,6 @@ function HomeEntryPage() {
             </div>
           </div>
         </div>
-
-        <EmployablePathwaysHomeSection />
 
         <LandingMarketingSections />
 

@@ -193,8 +193,10 @@ export function FlagshipCourseLearningPath(props: {
   progress: FlagshipCourseProgressApi
   /** Accordion: one module expanded at a time; calmer session rows (Course 1 overview). */
   layout?: FlagshipLearningPathLayout
+  /** When false, the parent supplies the Curriculum heading and intro copy (avoid duplicate h2). */
+  showSectionIntro?: boolean
 }) {
-  const { courseSlug, curriculum, sessions, progress, layout: layoutProp } = props
+  const { courseSlug, curriculum, sessions, progress, layout: layoutProp, showSectionIntro = true } = props
   const layout = layoutProp ?? 'default'
   const compactRows = layout === 'accordion'
   const isAe = courseSlug === AI_ESSENTIALS_SLUG
@@ -260,19 +262,27 @@ export function FlagshipCourseLearningPath(props: {
   }
 
   return (
-    <section className="mt-14" aria-labelledby="learning-path-heading" data-testid="flagship-learning-path">
-      <h2 id="learning-path-heading" className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
-        {layout === 'accordion' ? 'Curriculum' : 'Your learning path'}
-      </h2>
-      <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-        {layout === 'accordion'
-          ? 'Expand a module to see its sessions. Complete them in order, then take the short module quiz to unlock the next module. Progress saves on this device.'
-          : 'Each module is a sequence of sessions—complete them in order, then pass the module quiz to unlock the next module. Progress saves on this device.'}
-      </p>
+    <section
+      className={showSectionIntro ? 'mt-14' : 'mt-0'}
+      aria-labelledby={showSectionIntro ? 'learning-path-heading' : undefined}
+      data-testid="flagship-learning-path"
+    >
+      {showSectionIntro ? (
+        <>
+          <h2 id="learning-path-heading" className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
+            {layout === 'accordion' ? 'Curriculum' : 'Your learning path'}
+          </h2>
+          <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+            {layout === 'accordion'
+              ? 'Expand a module to see its sessions. Complete them in order, then take the short module quiz to unlock the next module. Progress saves on this device.'
+              : 'Each module is a sequence of sessions—complete them in order, then pass the module quiz to unlock the next module. Progress saves on this device.'}
+          </p>
+        </>
+      ) : null}
 
       {/* Progress summary */}
       <div
-        className="mt-8 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-5 shadow-[var(--jf-shadow-soft)] sm:px-6 sm:py-6"
+        className={`rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-5 shadow-[var(--jf-shadow-soft)] sm:px-6 sm:py-6 ${showSectionIntro ? 'mt-8' : 'mt-0'}`}
         data-testid="flagship-progress-summary"
       >
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">

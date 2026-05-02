@@ -7,22 +7,21 @@ test.describe('Learning discovery (public)', () => {
     await applyPublicE2eMaintenanceBypass(page)
   })
 
-  test('/learn hub renders learner catalog (complete flagship courses only)', async ({ page }) => {
+  test('/learn hub shows Available courses and allowlisted catalog only', async ({ page }) => {
     await page.goto('/learn')
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByRole('heading', { name: /structured flagship courses/i })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /^Available courses$/ })).toBeVisible()
     const catalogSection = page.getByTestId('discovery-section-flagship-catalog')
     await expect(catalogSection).toBeVisible()
     await expect(page.getByTestId('discovery-featured-ai-essentials')).toBeVisible()
     await expect(catalogSection.locator('[data-testid^="discovery-featured-"]')).toHaveCount(1)
-    await expect(page.getByTestId('discovery-school-chooser')).toBeVisible()
-    await expect(page.getByTestId('discovery-school-card-ai_digital')).toBeVisible()
+    await expect(page.getByTestId('discovery-school-chooser')).toHaveCount(0)
   })
 
-  test('category page renders browse surface + subscription note', async ({ page }) => {
+  test('category page renders browse surface without subscription framing', async ({ page }) => {
     await page.goto('/learn/category/cybersecurity')
     await expect(page.getByTestId('learning-discovery-category-cybersecurity')).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByText(/Subscriptions · claim-safe framing/i)).toBeVisible()
+    await expect(page.getByTestId('category-access-note-cybersecurity')).toContainText(/learning focus/i)
     await expect(page.getByTestId('category-faq-cybersecurity')).toBeVisible()
     await expect(page.getByTestId('category-learn-more-cybersecurity')).toBeVisible()
   })
@@ -32,10 +31,11 @@ test.describe('Learning discovery (public)', () => {
     await expect(page).toHaveURL(/\/learn$/)
   })
 
-  test('flagship course detail exposes curriculum depth beyond original six tracks', async ({ page }) => {
+  test('AI Essentials course detail: one Curriculum heading and core sections', async ({ page }) => {
     await page.goto('/learn/courses/ai-essentials')
     await expect(page.getByRole('heading', { name: /^AI Essentials$/ })).toBeVisible({ timeout: 20_000 })
     await expect(page.getByText(/16 modules/i).first()).toBeVisible()
+    await expect(page.getByRole('heading', { name: /^Curriculum$/ })).toHaveCount(1)
     await expect(page.getByTestId('flagship-learning-path')).toBeVisible()
     await expect(page.getByTestId('flagship-progress-summary')).toBeVisible()
     await expect(page.getByTestId('flagship-modules-with-sessions')).toBeVisible()
@@ -43,17 +43,6 @@ test.describe('Learning discovery (public)', () => {
     await expect(page.getByTestId('flagship-session-row-ae-m01-lesson')).toBeVisible()
     await expect(page.getByTestId('ae-hero-primary-cta')).toBeVisible()
     await expect(page.getByTestId('ae-capstone-section')).toBeVisible()
-    await expect(page.getByRole('heading', { name: /^Curriculum$/ }).first()).toBeVisible()
-
-    await page.goto('/learn/courses/clear-communication')
-    await expect(page.getByTestId('flagship-module-count')).toContainText('10')
-    await expect(page.getByTestId('flagship-capstone-deep')).toBeVisible()
-
-    await page.goto('/learn/courses/data-and-decisions')
-    await expect(page.getByRole('heading', { name: /^Data and Decisions$/ })).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByTestId('flagship-module-count')).toContainText('10')
-    await expect(page.getByTestId('flagship-curriculum-structure')).toBeVisible()
-    await expect(page.getByTestId('flagship-learning-path')).toBeVisible()
   })
 
   test('flagship session page renders curated layout, blocks, and completion footer', async ({ page }) => {
@@ -77,9 +66,9 @@ test.describe('Learning discovery (public)', () => {
     await expect(page.getByRole('navigation', { name: 'Session navigation' })).toBeVisible()
   })
 
-  test('flagship practice session renders practice_task blocks + mastery checkpoints panel', async ({ page }) => {
-    await seedFlagshipLocalProgress(page, 'marketing-and-growth', ['mg-m01-lesson'])
-    await page.goto('/learn/courses/marketing-and-growth/session/mg-m01-practice')
+  test('AI Essentials practice session renders practice_task blocks + mastery checkpoints panel', async ({ page }) => {
+    await seedFlagshipLocalProgress(page, 'ai-essentials', ['ae-m01-lesson'])
+    await page.goto('/learn/courses/ai-essentials/session/ae-m01-practice')
     await expect(page.getByTestId('flagship-session-content')).toBeVisible({ timeout: 20_000 })
     await expect(page.locator('[data-session-presentation="practice-lab"]')).toBeVisible()
     await expect(page.locator('#flagship-practice-goal')).toBeVisible()
@@ -98,45 +87,5 @@ test.describe('Learning discovery (public)', () => {
     const firstResponse = page.locator('[data-testid^="flagship-learner-response-"]').first()
     await expect(firstResponse).toBeVisible()
     await expect(firstResponse).toContainText(/sign in to save|save draft/i)
-  })
-
-  test('bespoke mastery checkpoint shows hand-authored assessment copy', async ({ page }) => {
-    await seedFlagshipLocalProgress(page, 'marketing-and-growth', ['mg-m01-lesson'])
-    await page.goto('/learn/courses/marketing-and-growth/session/mg-m01-practice')
-    await expect(page.getByTestId('flagship-session-assessment-panel')).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByText(/Hypotheses tied to observable signals/i)).toBeVisible()
-  })
-
-  test('data session opening includes KPI dashboard worked example block', async ({ page }) => {
-    await page.goto('/learn/courses/data-and-decisions/session/dd-m01-lesson')
-    await expect(page.getByTestId('flagship-session-content')).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByText(/From dashboard tile to disciplined question/i)).toBeVisible()
-  })
-
-  test('School of Business & Growth courses render tightened catalog copy', async ({ page }) => {
-    await page.goto('/learn/courses/business-builder')
-    await expect(page.getByRole('heading', { name: /^Business Builder$/ })).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByText(/diligence-minded operating pack/i)).toBeVisible()
-    await page.goto('/learn/courses/money-and-finance')
-    await expect(page.getByRole('heading', { name: /^Money and Finance$/ })).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByText(/reviewer-ready finance action pack/i)).toBeVisible()
-  })
-
-  test('multiple flagship tracks expose blueprint depth', async ({ page }) => {
-    const slugs = ['smart-workflows-with-ai', 'business-builder', 'research-and-critical-thinking'] as const
-    for (const slug of slugs) {
-      await page.goto(`/learn/courses/${slug}`)
-      await expect(page.getByTestId('flagship-module-count')).toContainText(/modules/i, { timeout: 20_000 })
-      await expect(page.getByTestId('flagship-learning-path')).toBeVisible()
-      await expect(page.getByTestId('flagship-capstone-deep')).toBeVisible()
-    }
-  })
-
-  test('digital-safety flagship course renders full blueprint (all 15 tracks covered)', async ({ page }) => {
-    await page.goto('/learn/courses/digital-safety')
-    await expect(page.getByRole('heading', { name: /^Digital Safety$/ })).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByTestId('flagship-module-count')).toContainText('10')
-    await expect(page.getByTestId('flagship-curriculum-structure')).toBeVisible()
-    await expect(page.getByTestId('flagship-learning-path')).toBeVisible()
   })
 })
