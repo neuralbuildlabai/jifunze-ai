@@ -37,7 +37,7 @@ export default defineConfig({
       VITE_SUPABASE_URL: '',
       VITE_SUPABASE_ANON_KEY: '',
       VITE_ACCESS_TIER_EMAIL_FALLBACK: 'false',
-      // Anonymous E2E can reach marketing surfaces while `FORCE_PUBLIC_MAINTENANCE_UI` is on.
+      // Optional bypass token when `VITE_MAINTENANCE_MODE=true` in the dev server env.
       VITE_MAINTENANCE_BYPASS_TOKEN: 'playwright-maintenance-bypass',
       VITE_LEARNER_MONETIZATION_UI_DISABLED:
         process.env.VITE_LEARNER_MONETIZATION_UI_DISABLED === 'false' ? 'false' : 'true',

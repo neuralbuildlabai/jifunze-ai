@@ -2,8 +2,8 @@ import type { Page } from '@playwright/test'
 
 /**
  * Must match `webServer.env.VITE_MAINTENANCE_BYPASS_TOKEN` in `playwright.config.ts`.
- * Lets anonymous Playwright sessions see marketing surfaces while `FORCE_PUBLIC_MAINTENANCE_UI`
- * is enabled in `maintenanceMode.ts`.
+ * Optional: sets session bypass when maintenance is on and `VITE_MAINTENANCE_BYPASS_TOKEN` matches.
+ * With default local dev (maintenance off), this is a no-op but keeps E2E stable if you opt into `VITE_MAINTENANCE_MODE=true`.
  */
 export const PUBLIC_E2E_MAINTENANCE_BYPASS_TOKEN = 'playwright-maintenance-bypass'
 

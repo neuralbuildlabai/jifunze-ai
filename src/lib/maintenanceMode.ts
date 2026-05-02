@@ -3,33 +3,53 @@
  * When enabled, anonymous visitors are steered away from marketing and course surfaces;
  * auth, legal, and (optionally) a secret bypass remain available.
  *
- * Why `VITE_*` alone can look "broken" on Vercel:
+ * Rules:
+ * - **Local dev** (`import.meta.env.DEV`): maintenance is **off** by default so `localhost` shows the full
+ *   public app. Set `VITE_MAINTENANCE_MODE=true` to test the maintenance shell locally.
+ * - **Production build** (`import.meta.env.PROD`): maintenance is **on** by default so production stays gated.
+ *   Set `VITE_MAINTENANCE_MODE=false` at build time when you intentionally ship a public-open bundle.
+ * - Only the strings `true` / `false` are honored (avoids accidental `"1"` truthiness).
+ *
+ * Why `VITE_*` on Vercel:
  * - Vite replaces `import.meta.env.VITE_*` at **build** time. Changing env in the dashboard does not
- *   change already-built static assets until a **new** production deploy runs `vite build`.
- * - The value must be exactly the string `true` (not `1`, not `True`).
- * - Confirm the variable is enabled for the **Production** environment and that branch deploys use it.
+ *   change already-built static assets until a **new** deploy runs `vite build`.
  */
 
 const SESSION_BYPASS_KEY = 'jf_maintenance_preview_v1'
 /** Query param name for optional internal preview bypass (must match `VITE_MAINTENANCE_BYPASS_TOKEN`). */
 export const MAINTENANCE_BYPASS_QUERY = 'jf_maintenance_bypass'
 
+/** True when running the Vite dev server (`npm run dev`). */
+export function isLocalDev(): boolean {
+  return import.meta.env.DEV
+}
+
+type MaintenanceEnv = 'on' | 'off' | 'unset'
+
+function maintenanceEnv(): MaintenanceEnv {
+  const v = import.meta.env.VITE_MAINTENANCE_MODE
+  if (v === 'true') return 'on'
+  if (v === 'false') return 'off'
+  return 'unset'
+}
+
 /**
- * TODO: Restore env-controlled maintenance after rebuild by using VITE_MAINTENANCE_MODE only.
- * Set to `false` after the learning experience ships and you want toggling via hosting env only
- * (remember: still requires a fresh build for Vite to pick up changes).
+ * Anonymous public maintenance shell should be shown (before bypass / auth exemptions).
+ * - Dev + unset → false (full local app).
+ * - Dev + `true` → true (opt-in local test).
+ * - Prod + unset → true (production stays gated by default).
+ * - Prod + `false` → false (explicit public-open build).
  */
-const FORCE_PUBLIC_MAINTENANCE_UI = true
-
-/** Strict: only the string "true" enables maintenance via env (avoids accidental truthy env). */
-function isMaintenanceEnvVarEnabled(): boolean {
-  return import.meta.env.VITE_MAINTENANCE_MODE === 'true'
-}
-
-/** True when the public anonymous experience should use the maintenance shell (code force OR env). */
 export function isMaintenanceModeEnabled(): boolean {
-  return FORCE_PUBLIC_MAINTENANCE_UI || isMaintenanceEnvVarEnabled()
+  const e = maintenanceEnv()
+  if (e === 'on') return true
+  if (e === 'off') return false
+  if (import.meta.env.DEV) return false
+  return true
 }
+
+/** Alias for readability at call sites. */
+export const shouldShowMaintenance = isMaintenanceModeEnabled
 
 function normalizePathname(pathname: string): string {
   if (!pathname) return '/'

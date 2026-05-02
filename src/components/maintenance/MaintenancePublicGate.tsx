@@ -25,9 +25,8 @@ function AuthResolvingPlaceholder() {
 }
 
 /**
- * When maintenance mode is enabled (env and/or `FORCE_PUBLIC_MAINTENANCE_UI` in
- * `src/lib/maintenanceMode.ts`), anonymous users on non-exempt paths see the public
- * maintenance page; signed-in users and optional preview bypass keep normal routing.
+ * When maintenance mode is enabled (`src/lib/maintenanceMode.ts`), anonymous users on non-exempt
+ * paths see the public maintenance page; signed-in users and optional preview bypass keep normal routing.
  */
 export function MaintenancePublicGate() {
   const { user, loading } = useAuth()

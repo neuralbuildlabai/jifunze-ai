@@ -3,7 +3,8 @@ import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { LEGAL_ROUTES, SUPPORT_CONTACT_EMAIL } from '../../training/trustCopy'
 
 /**
- * Full-screen coming-soon surface for anonymous visitors when `VITE_MAINTENANCE_MODE=true`.
+ * Full-screen coming-soon surface for anonymous visitors when public maintenance is enabled
+ * (`src/lib/maintenanceMode.ts`).
  * No course links, no pricing CTAs, no internal rebuild copy.
  */
 export function PublicMaintenancePage() {

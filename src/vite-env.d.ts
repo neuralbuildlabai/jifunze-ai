@@ -37,8 +37,9 @@ interface ImportMetaEnv {
    */
   readonly VITE_E2E_BILLING_INVOKE_MOCK?: string
   /**
-   * When `true`, anonymous visitors see the public maintenance / coming-soon surface instead of
-   * marketing and course pages. Auth, legal, and signed-in app routes remain available.
+   * `true` | `false` only (other values ignored → dev default off, prod default on).
+   * Dev: omit/`false` = full public app; `true` = test maintenance locally.
+   * Prod build: omit/`true` = gated; `false` = explicit public-open bundle.
    */
   readonly VITE_MAINTENANCE_MODE?: string
   /**
