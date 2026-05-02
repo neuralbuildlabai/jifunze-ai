@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { useAppAccess } from '../../access/useAppAccess'
+import { LearnerTopNav } from '../learner-shell/LearnerTopNav'
 
 const linkClass =
   'rounded-lg px-2.5 py-1.5 text-[11px] font-medium text-zinc-400 transition-colors hover:text-zinc-100'
@@ -89,25 +90,7 @@ export function WorkspaceNav({ className = '' }: { className?: string }) {
       aria-label="Workspace"
       data-testid="workspace-nav-primary"
     >
-      {navVariant === 'learner' ? (
-        <>
-          <NavLink to="/dashboard" className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
-            Dashboard
-          </NavLink>
-          <NavLink to={LEGAL_ROUTES.learn} className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
-            Catalog
-          </NavLink>
-          <NavLink to={LEGAL_ROUTES.paths} className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
-            Pathways
-          </NavLink>
-          <NavLink to="/reports" className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
-            Reports
-          </NavLink>
-          <NavLink end to="/settings" className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
-            Settings
-          </NavLink>
-        </>
-      ) : null}
+      {navVariant === 'learner' ? <LearnerTopNav /> : null}
 
       {(navVariant === 'institution_admin' || navVariant === 'platform_admin') ? <OperationalAdminNav /> : null}
 

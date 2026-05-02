@@ -37,7 +37,7 @@ test.describe('Learning discovery (public)', () => {
     await expect(page.getByText(/16 modules/i).first()).toBeVisible()
     await expect(page.getByRole('heading', { name: /^Curriculum$/ })).toHaveCount(1)
     await expect(page.getByTestId('flagship-learning-path')).toBeVisible()
-    await expect(page.getByTestId('flagship-progress-summary')).toBeVisible()
+    await expect(page.getByTestId('ae-milestone-progress')).toBeVisible()
     await expect(page.getByTestId('flagship-modules-with-sessions')).toBeVisible()
     await page.getByRole('button', { name: /Module 1.*What AI Is and What It Is Not/i }).click()
     await expect(page.getByTestId('flagship-session-row-ae-m01-lesson')).toBeVisible()

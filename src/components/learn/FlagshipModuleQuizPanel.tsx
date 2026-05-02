@@ -170,10 +170,12 @@ export function FlagshipModuleQuizPanel(props: {
           Activity signals recorded for review.
         </span>
       ) : null}
-      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">Module understanding check</p>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">Module checkpoint</p>
+      <p className="mt-1 text-[13px] font-medium text-[color:var(--jf-text)]">
+        {MODULE_QUIZ_DRAW_COUNT} questions · pass with at least {MODULE_QUIZ_MIN_CORRECT} correct
+      </p>
       <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-        Answer {MODULE_QUIZ_DRAW_COUNT} questions drawn from this module&apos;s sessions. Pass requires at least {MODULE_QUIZ_MIN_CORRECT} of {MODULE_QUIZ_DRAW_COUNT}{' '}
-        correct to unlock the next module (count rule—do not round this to &quot;80%&quot;). Questions change between attempts.
+        Questions are drawn from this module&apos;s sessions. Pass unlocks the next module when earlier gates allow. Questions change between attempts.
       </p>
       {locked ? (
         <p className="mt-3 text-[13px] text-amber-200/90">

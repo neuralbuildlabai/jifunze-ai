@@ -86,7 +86,7 @@ export function buildGroupedLessonNav(args: {
   if (args.hasLearn) items.push({ anchorId: 'flagship-step-learn', label: 'Learn' })
   if (args.hasExample) items.push({ anchorId: 'flagship-step-example', label: 'Example' })
   if (args.hasCheck) items.push({ anchorId: 'flagship-step-check', label: 'Check' })
-  if (args.hasMore) items.push({ anchorId: 'flagship-step-more', label: 'More' })
+  // Optional "More" blocks stay on the page; rail stays Start → Learn → Example → Check → Complete only.
   items.push({ anchorId: 'flagship-session-completion', label: 'Complete' })
   return items
 }

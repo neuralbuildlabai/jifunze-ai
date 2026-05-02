@@ -4,7 +4,7 @@ import { EMPLOYABLE_PATHWAYS, featuredEmployablePathways } from '../../data/lear
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { EmployablePathwaysPublicNav } from './EmployablePathwaysPublicNav'
 import { TrustLegalFooterLinks } from '../TrustLegalFooterLinks'
-import { EmployablePathwayCard } from './EmployablePathwayCard'
+import { LearnerPathwayCard } from '../learner-shell/LearnerPathwayCard'
 import type { EmployablePathway } from '../../data/learning/employablePathwaysCatalog'
 
 const MAX_BROWSE_PATHWAYS = 5
@@ -56,7 +56,7 @@ export function EmployablePathwaysPage() {
           </h2>
           <div className="grid gap-5 sm:grid-cols-2">
             {browsePathways.map((p) => (
-              <EmployablePathwayCard key={p.slug} pathway={p} presentation="browse" />
+              <LearnerPathwayCard key={p.slug} pathway={p} />
             ))}
           </div>
         </section>

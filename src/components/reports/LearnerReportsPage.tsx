@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../../auth/AuthContext'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
 import {
-  FLAGSHIP_COURSES,
   FLAGSHIP_SCHOOLS,
   getFlagshipCourseBySlug,
 } from '../../data/learning/flagshipCoursesCatalog'
@@ -13,6 +12,7 @@ import {
 } from '../../data/learning/employablePathwaysCatalog'
 import { getFlagshipCurriculum } from '../../data/learning/flagshipCourseCurricula'
 import { buildSessionsForCurriculum } from '../../data/learning/flagshipCourseSessions'
+import { learnerPublicCatalogFlagshipCourses } from '../../data/learning/flagshipLearnerCatalogPolicy'
 import { getFlagshipCourseDisplayProgressPercent } from '../../lib/aiEssentialsProgressMilestones'
 import {
   completionSet,
@@ -25,14 +25,13 @@ import {
 import { getPathwayNextAction, getPathwayProgressSummary } from '../../lib/pathwayNextAction'
 import { isFlagshipCoursePublished } from '../../lib/pathwayProgressDerived'
 import { mergeLocalRemoteReconciledForSlug } from '../../lib/flagshipCourseProgressLocalRemoteMerge'
-import { listLocalFlagshipCourseSlugs } from '../../lib/flagshipCourseLocalProgress'
 import {
   fetchFlagshipProgressRowsForUser,
   flagshipProgressRowToState,
 } from '../../services/learning/flagshipCourseProgressRemote'
 import { useSelectedPathway } from '../../hooks/useSelectedPathway'
-import { WorkspaceNav } from '../workspace/WorkspaceNav'
-import { WorkspaceRouteReady, WorkspaceRouteShell } from '../workspace/WorkspaceRouteReady'
+import { WorkspaceRouteReady } from '../workspace/WorkspaceRouteReady'
+import { LearnerPageShell } from '../learner-shell/LearnerPageShell'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 
 type CourseReportRow = {
@@ -65,13 +64,7 @@ export function LearnerReportsPage() {
   const [loading, setLoading] = useState(true)
   const [selectedPathwayHint, setSelectedPathwayHint] = useState<SelectedPathwayReportHint | null>(null)
 
-  const slugsToConsider = useMemo(() => {
-    const fromCatalog = new Set(FLAGSHIP_COURSES.map((c) => c.slug))
-    const local = listLocalFlagshipCourseSlugs()
-    const merged = new Set<string>([...fromCatalog])
-    for (const s of local) merged.add(s)
-    return [...merged]
-  }, [])
+  const catalogAllowSlugs = useMemo(() => new Set(learnerPublicCatalogFlagshipCourses().map((c) => c.slug)), [])
 
   useEffect(() => {
     let cancelled = false
@@ -90,11 +83,10 @@ export function LearnerReportsPage() {
       }
       if (cancelled) return
 
-      /** Same “hydrated” rule as pathways: only merge server rows when signed in with Supabase. */
       const applyRemote = Boolean(user && supabase && isSupabaseConfigured())
 
       const out: CourseReportRow[] = []
-      for (const slug of slugsToConsider) {
+      for (const slug of catalogAllowSlugs) {
         const course = getFlagshipCourseBySlug(slug)
         const curriculum = getFlagshipCurriculum(slug)
         if (!course || !curriculum) continue
@@ -143,9 +135,10 @@ export function LearnerReportsPage() {
         const pathway = getPathwayBySlug(selectedPathwaySlug)
         if (pathway && canLearnerSelectPathwayAsPrimary(pathway)) {
           const progressMap: Record<string, FlagshipCourseProgressState> = {}
-          for (const slug of pathway.includedCourseSlugs) {
-            if (!isFlagshipCoursePublished(slug)) continue
-            progressMap[slug] = mergeLocalRemoteReconciledForSlug(slug, remoteBySlug.get(slug) ?? null, applyRemote)
+          for (const s of pathway.includedCourseSlugs) {
+            if (!isFlagshipCoursePublished(s)) continue
+            if (!catalogAllowSlugs.has(s)) continue
+            progressMap[s] = mergeLocalRemoteReconciledForSlug(s, remoteBySlug.get(s) ?? null, applyRemote)
           }
           const summary = getPathwayProgressSummary(pathway, progressMap)
           const na = getPathwayNextAction(pathway, progressMap)
@@ -168,35 +161,33 @@ export function LearnerReportsPage() {
     return () => {
       cancelled = true
     }
-  }, [user, supabase, slugsToConsider, selectedPathwaySlug])
+  }, [user, supabase, catalogAllowSlugs, selectedPathwaySlug])
 
   return (
     <WorkspaceRouteReady>
-      <WorkspaceRouteShell
+      <LearnerPageShell
         title="Reports"
-        subtitle="Flagship progress aligned with pathways: chapters, module quizzes, and resume—merged the same way as pathway views when you are signed in."
+        purpose="Course progress, checkpoints, and your next session—aligned with how progress is saved on your account."
+        wide
       >
-        <WorkspaceNav className="mb-8 w-full justify-start" />
-
         {!loading && selectedPathwayHint ? (
           <div
-            className="mb-6 rounded-xl border border-violet-500/20 bg-violet-950/15 px-4 py-3 text-[13px] text-zinc-300"
+            className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-4 text-[13px] text-zinc-300"
             data-testid="reports-selected-pathway-summary"
           >
-            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-violet-300/90">Your pathway</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-zinc-500">Pathway</p>
             <p className="mt-1 font-medium text-zinc-100">{selectedPathwayHint.title}</p>
             <p className="mt-1 text-[12px] text-zinc-400">
-              Session progress (included courses):{' '}
-              <span className="tabular-nums text-zinc-200">{selectedPathwayHint.progressPct}%</span>
+              Included courses (session view): <span className="tabular-nums text-zinc-200">{selectedPathwayHint.progressPct}%</span>
               <span className="mx-1.5 text-zinc-600">·</span>
               Next: {selectedPathwayHint.nextSummary}
             </p>
-            <Link className="mt-2 inline-block text-[12px] font-semibold text-violet-200 hover:underline" to={`/paths/${selectedPathwayHint.slug}`}>
-              Open pathway overview →
+            <Link className="mt-2 inline-block text-[12px] font-semibold text-violet-300 hover:underline" to={`/paths/${selectedPathwayHint.slug}`}>
+              Open pathway
             </Link>
             {selectedPathwayHint.nextHref ? (
               <Link className="ml-3 inline-block text-[12px] font-medium text-zinc-500 hover:text-zinc-300 hover:underline" to={selectedPathwayHint.nextHref}>
-                Go to next step →
+                Continue
               </Link>
             ) : null}
           </div>
@@ -206,34 +197,33 @@ export function LearnerReportsPage() {
           <p className="text-sm text-zinc-400">Loading your progress…</p>
         ) : rows.length === 0 ? (
           <p className="text-sm text-zinc-400">
-            No catalog courses loaded. Open{' '}
+            No courses in your catalog yet. Open the{' '}
             <Link className="text-violet-300 hover:underline" to={LEGAL_ROUTES.learn}>
-              Discover
-            </Link>{' '}
-            to start a path.
+              catalog
+            </Link>
+            .
           </p>
         ) : (
-          <div className="overflow-x-auto rounded-2xl border border-zinc-800/80 bg-zinc-950/35">
-            <table className="min-w-[640px] w-full text-left text-[13px] text-zinc-300">
+          <div className="overflow-x-auto rounded-xl border border-white/[0.06] bg-white/[0.02]">
+            <table className="min-w-[560px] w-full text-left text-[13px] text-zinc-300">
               <thead>
-                <tr className="border-b border-zinc-800/90 text-[11px] uppercase tracking-wide text-zinc-500">
+                <tr className="border-b border-white/[0.06] text-[11px] uppercase tracking-wide text-zinc-500">
                   <th className="px-4 py-3 font-medium">Course</th>
-                  <th className="px-4 py-3 font-medium">School</th>
-                  <th className="px-4 py-3 font-medium">Chapters / sessions</th>
-                  <th className="px-4 py-3 font-medium">Modules done</th>
-                  <th className="px-4 py-3 font-medium">Module quizzes</th>
+                  <th className="px-4 py-3 font-medium">Sessions</th>
+                  <th className="px-4 py-3 font-medium">Modules</th>
+                  <th className="px-4 py-3 font-medium">Checkpoints</th>
                   <th className="px-4 py-3 font-medium">Next</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((r) => (
-                  <tr key={r.slug} className="border-b border-zinc-800/60 last:border-0">
+                  <tr key={r.slug} className="border-b border-white/[0.04] last:border-0">
                     <td className="px-4 py-3">
                       <Link className="font-medium text-zinc-100 hover:underline" to={`/learn/courses/${r.slug}`}>
                         {r.title}
                       </Link>
+                      <p className="text-[11px] text-zinc-500">{r.schoolLabel}</p>
                     </td>
-                    <td className="px-4 py-3 text-zinc-400">{r.schoolLabel}</td>
                     <td className="px-4 py-3 tabular-nums">
                       {r.sessionDone}/{r.sessionTotal} ({r.progressPct}%)
                     </td>
@@ -249,7 +239,7 @@ export function LearnerReportsPage() {
                           {r.nextLabel}
                         </Link>
                       ) : r.progressPct >= 100 ? (
-                        <span className="text-emerald-400/90">Path complete</span>
+                        <span className="text-emerald-400/90">Complete</span>
                       ) : (
                         <span className="text-zinc-500">—</span>
                       )}
@@ -260,12 +250,7 @@ export function LearnerReportsPage() {
             </table>
           </div>
         )}
-
-        <p className="mt-8 text-[11px] leading-relaxed text-zinc-600">
-          Percentages and resume links use the same local + account merge as employable pathways—use them to spot revision gaps, not as a job promise. Workspace
-          training assignments from your admin appear under My Learning when your organization assigns plans.
-        </p>
-      </WorkspaceRouteShell>
+      </LearnerPageShell>
     </WorkspaceRouteReady>
   )
 }

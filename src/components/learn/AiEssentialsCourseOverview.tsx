@@ -8,10 +8,7 @@ import {
 import type { FlagshipCourseProgressApi } from '../../hooks/useFlagshipCourseProgress'
 import { sessionOpenForLearner } from '../../learner/flagshipSessionPrereq'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
-import {
-  getAiEssentialsMilestonesReachedCount,
-  getAiEssentialsNextMilestoneHint,
-} from '../../lib/aiEssentialsProgressMilestones'
+import { getAiEssentialsMilestonesReachedCount } from '../../lib/aiEssentialsProgressMilestones'
 import { MODULE_QUIZ_DRAW_COUNT, MODULE_QUIZ_MIN_CORRECT } from '../../lib/flagshipModuleQuizPools'
 import { AI_ESSENTIALS_PATHWAY_BLURBS, AI_ESSENTIALS_PORTFOLIO_SHOWCASE } from '../../lib/aiEssentialsCourseUiMeta'
 import { TrustBoundaryStrip } from '../TrustBoundaryStrip'
@@ -88,7 +85,6 @@ export function AiEssentialsCourseOverview(props: Props) {
           : `/learn/courses/${slug}#curriculum`
 
   const milestonesReached = getAiEssentialsMilestonesReachedCount(progressPercent)
-  const nextMilestoneHint = getAiEssentialsNextMilestoneHint(curriculum, sessions, state)
   const quizPassLine = `${MODULE_QUIZ_DRAW_COUNT} questions · pass with at least ${MODULE_QUIZ_MIN_CORRECT} of ${MODULE_QUIZ_DRAW_COUNT} correct`
   const sessionDone = sessions.filter((s) => completed.has(s.id)).length
 
@@ -96,7 +92,7 @@ export function AiEssentialsCourseOverview(props: Props) {
     <div className="space-y-12">
       <section
         id="ai-essentials-hero"
-        className="scroll-mt-24 overflow-hidden rounded-2xl border border-[color:var(--jf-border)] bg-gradient-to-br from-[color:var(--jf-surface)] via-[color:var(--jf-surface)] to-[color:var(--jf-bg-page)] px-5 py-8 shadow-[var(--jf-shadow-soft)] sm:px-9 sm:py-11"
+        className="scroll-mt-24 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-5 py-8 shadow-[var(--jf-shadow-soft)] sm:px-9 sm:py-11"
         aria-labelledby="ae-hero-title"
       >
         <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[color:var(--jf-muted)]">AI Essentials</p>
@@ -166,7 +162,15 @@ export function AiEssentialsCourseOverview(props: Props) {
             <>Complete Module 1 lesson, practice, and quiz to reach 10%.</>
           )}
         </p>
-        <p className="mt-3 text-[13px] leading-relaxed text-[color:var(--jf-subtle)]">{nextMilestoneHint}</p>
+        <div className="mt-5">
+          <Link
+            to={primaryHref}
+            className="inline-flex min-h-[2.5rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-5 py-2 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)]"
+            data-testid="ae-progress-resume"
+          >
+            {primaryLabel}
+          </Link>
+        </div>
         <details className="mt-6 border-t border-[color:var(--jf-border)] pt-4" data-testid="ae-certificate-readiness">
           <summary className="cursor-pointer text-[13px] font-medium text-[color:var(--jf-muted)]">
             Certificate readiness (in-product rules)
@@ -222,6 +226,7 @@ export function AiEssentialsCourseOverview(props: Props) {
           progress={progress}
           layout="accordion"
           showSectionIntro={false}
+          hideProgressSummary
         />
       </div>
 

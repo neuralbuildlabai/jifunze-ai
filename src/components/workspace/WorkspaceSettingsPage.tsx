@@ -57,14 +57,7 @@ function WorkspaceSettingsPageInner() {
           </p>
         </section>
 
-        {LEARNER_MONETIZATION_UI_DISABLED ? (
-          <section className="rounded-2xl border border-zinc-800/80 bg-zinc-900/35 p-4 space-y-2">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">Plans</h2>
-            <p className="text-[12px] leading-relaxed text-zinc-500">
-              Paid plans and checkout are not surfaced in this product phase. Learning routes stay open for workspace review.
-            </p>
-          </section>
-        ) : (
+        {LEARNER_MONETIZATION_UI_DISABLED ? null : (
           <section className="rounded-2xl border border-zinc-800/80 bg-zinc-900/35 p-4 space-y-2">
             <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">Plan &amp; billing</h2>
             <TrustBoundaryStrip compact dataTestId="settings-billing-trust-boundary" />

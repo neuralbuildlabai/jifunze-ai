@@ -195,8 +195,10 @@ export function FlagshipCourseLearningPath(props: {
   layout?: FlagshipLearningPathLayout
   /** When false, the parent supplies the Curriculum heading and intro copy (avoid duplicate h2). */
   showSectionIntro?: boolean
+  /** When true, omit the large embedded progress panel (parent shows a simple progress card). */
+  hideProgressSummary?: boolean
 }) {
-  const { courseSlug, curriculum, sessions, progress, layout: layoutProp, showSectionIntro = true } = props
+  const { courseSlug, curriculum, sessions, progress, layout: layoutProp, showSectionIntro = true, hideProgressSummary = false } = props
   const layout = layoutProp ?? 'default'
   const compactRows = layout === 'accordion'
   const isAe = courseSlug === AI_ESSENTIALS_SLUG
@@ -280,11 +282,11 @@ export function FlagshipCourseLearningPath(props: {
         </>
       ) : null}
 
-      {/* Progress summary */}
-      <div
-        className={`rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-5 shadow-[var(--jf-shadow-soft)] sm:px-6 sm:py-6 ${showSectionIntro ? 'mt-8' : 'mt-0'}`}
-        data-testid="flagship-progress-summary"
-      >
+      {!hideProgressSummary ? (
+        <div
+          className={`rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-5 shadow-[var(--jf-shadow-soft)] sm:px-6 sm:py-6 ${showSectionIntro ? 'mt-8' : 'mt-0'}`}
+          data-testid="flagship-progress-summary"
+        >
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div className="min-w-0 flex-1 space-y-4">
             <div>
@@ -465,7 +467,8 @@ export function FlagshipCourseLearningPath(props: {
             </ul>
           </div>
         ) : null}
-      </div>
+        </div>
+      ) : null}
 
       {/* Modules + sessions */}
       <div className="mt-12 space-y-12" data-testid="flagship-modules-with-sessions">

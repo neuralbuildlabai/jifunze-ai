@@ -7,20 +7,14 @@ import { getFlagshipCurriculum } from '../data/learning/flagshipCourseCurricula'
 import { buildSessionsForCurriculum, firstSessionInCourseOrder } from '../data/learning/flagshipCourseSessions'
 import { useFlagshipCourseProgress } from '../hooks/useFlagshipCourseProgress'
 import { useSelectedPathway } from '../hooks/useSelectedPathway'
-import { getAiEssentialsMilestonesReachedCount, getAiEssentialsNextMilestoneHint } from '../lib/aiEssentialsProgressMilestones'
+import { getAiEssentialsMilestonesReachedCount } from '../lib/aiEssentialsProgressMilestones'
 import { FLAGSHIP_PROGRESS_EVENT } from '../lib/flagshipCourseLocalProgress'
 import { sessionOpenForLearner } from '../learner/flagshipSessionPrereq'
 import { LEGAL_ROUTES } from '../training/trustCopy'
+import { LearnerActionCard } from './learner-shell/LearnerActionCard'
+import { learnerShellTokens } from './learner-shell/learnerShellTokens'
 
 const AI_SLUG = 'ai-essentials' as const
-
-const surface =
-  'rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 shadow-[0_12px_40px_rgba(0,0,0,0.2)] ring-1 ring-white/[0.04]'
-const eyebrow = 'text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500'
-const btnPrimary =
-  'inline-flex min-h-[2.5rem] items-center justify-center rounded-lg bg-violet-600/90 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-500'
-const btnGhost =
-  'inline-flex min-h-[2.5rem] items-center justify-center rounded-lg border border-white/[0.1] px-4 py-2 text-sm font-medium text-zinc-200 hover:bg-white/[0.04]'
 
 /**
  * Learning-first dashboard: continue AI Essentials, progress, pathway, portfolio entry.
@@ -61,7 +55,6 @@ export function DashboardLearnerHub() {
   const continueLabel = progress.completed.size === 0 ? 'Start course' : 'Continue'
 
   const milestonesReached = getAiEssentialsMilestonesReachedCount(progress.progressPercent)
-  const nextMilestoneHint = getAiEssentialsNextMilestoneHint(curriculum, sessions, progress.state)
   const sessionDone = sessions.filter((s) => progress.completed.has(s.id)).length
 
   const [tick, refresh] = useReducer((n: number) => n + 1, 0)
@@ -76,76 +69,91 @@ export function DashboardLearnerHub() {
 
   return (
     <div className="space-y-6">
-      <section className={surface} data-testid="dashboard-continue-learning">
-        <p className={eyebrow}>Continue learning</p>
-        <h2 className="mt-2 text-lg font-semibold text-white">AI Essentials</h2>
-        <p className="mt-2 text-sm text-zinc-400">
-          {next && nextOpen ? (
+      <LearnerActionCard
+        eyebrow="Continue learning"
+        title="AI Essentials"
+        description={
+          next && nextOpen ? (
             <>
               Next: <span className="font-medium text-zinc-200">{next.title}</span>
             </>
           ) : (
             <>Begin with Module 1 and complete your first checkpoint.</>
-          )}
-        </p>
-        <p className="mt-2 text-sm text-zinc-500">
-          Progress: <span className="font-semibold tabular-nums text-zinc-200">{progress.progressPercent}%</span>
-        </p>
-        <Link className={`${btnPrimary} mt-4 inline-flex`} to={continueHref} data-testid="dashboard-continue-primary">
-          {continueLabel}
-        </Link>
-      </section>
+          )
+        }
+        footer={
+          <p>
+            Progress:{' '}
+            <span className="font-semibold tabular-nums text-zinc-200">{progress.progressPercent}%</span>
+          </p>
+        }
+        action={
+          <Link className={learnerShellTokens.primaryButton} to={continueHref} data-testid="dashboard-continue-primary">
+            {continueLabel}
+          </Link>
+        }
+        data-testid="dashboard-continue-learning"
+      />
 
-      <section className={surface} data-testid="dashboard-my-progress">
-        <p className={eyebrow}>My progress</p>
-        <p className="mt-2 text-sm text-zinc-400">
-          <span className="font-semibold tabular-nums text-zinc-100">{progress.progressPercent}%</span> complete ·{' '}
-          <span className="tabular-nums text-zinc-300">{milestonesReached}</span> / 10 milestones ·{' '}
-          <span className="tabular-nums text-zinc-300">{sessionDone}</span> / {sessions.length} sessions complete
-        </p>
-        <p className="mt-3 text-[13px] leading-relaxed text-zinc-500">{nextMilestoneHint}</p>
-        <Link className={`${btnPrimary} mt-4 inline-flex`} to="/reports">
-          View reports
-        </Link>
-      </section>
-
-      <section className={surface} data-testid="dashboard-your-pathway">
-        <p className={eyebrow}>My pathway</p>
-        {prefLoading ? <p className="mt-2 text-sm text-zinc-500">Loading pathway…</p> : null}
-        {selectedPathway && canLearnerSelectPathwayAsPrimary(selectedPathway) ? (
+      <LearnerActionCard
+        eyebrow="My progress"
+        title={`${progress.progressPercent}% complete`}
+        description={
           <>
-            <h2 className="mt-2 text-lg font-semibold text-white">{selectedPathway.title}</h2>
-            <p className="mt-2 text-sm text-zinc-400">{selectedPathway.description}</p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <Link className={btnGhost} to={LEGAL_ROUTES.paths}>
+            <span className="tabular-nums text-zinc-300">{milestonesReached}</span> / 10 milestones ·{' '}
+            <span className="tabular-nums text-zinc-300">{sessionDone}</span> / {sessions.length} sessions complete
+          </>
+        }
+        action={
+          <Link className={learnerShellTokens.primaryButton} to="/reports">
+            View reports
+          </Link>
+        }
+        data-testid="dashboard-my-progress"
+      />
+
+      <LearnerActionCard
+        eyebrow="My pathway"
+        title={selectedPathway && canLearnerSelectPathwayAsPrimary(selectedPathway) ? selectedPathway.title : 'Choose a pathway'}
+        description={
+          prefLoading ? (
+            'Loading pathway…'
+          ) : selectedPathway && canLearnerSelectPathwayAsPrimary(selectedPathway) ? (
+            selectedPathway.description
+          ) : (
+            'Pick the direction that matches your goal. You can change it later.'
+          )
+        }
+        action={
+          selectedPathway && canLearnerSelectPathwayAsPrimary(selectedPathway) ? (
+            <>
+              <Link className={learnerShellTokens.ghostButton} to={LEGAL_ROUTES.paths}>
                 Change pathway
               </Link>
-              <Link className={btnPrimary} to={`/paths/${selectedPathway.slug}`} data-testid="dashboard-your-pathway-view">
+              <Link className={learnerShellTokens.primaryButton} to={`/paths/${selectedPathway.slug}`} data-testid="dashboard-your-pathway-view">
                 View pathway
               </Link>
-            </div>
-          </>
-        ) : (
-          <>
-            <p className="mt-2 text-sm text-zinc-400">
-              Pick the direction that matches your goal. You can change it later.
-            </p>
-            <Link className={`${btnPrimary} mt-4 inline-flex`} to={LEGAL_ROUTES.paths} data-testid="dashboard-choose-pathway">
+            </>
+          ) : (
+            <Link className={learnerShellTokens.primaryButton} to={LEGAL_ROUTES.paths} data-testid="dashboard-choose-pathway">
               Choose pathway
             </Link>
-          </>
-        )}
-      </section>
+          )
+        }
+        data-testid="dashboard-your-pathway"
+      />
 
-      <section className={surface} data-testid="dashboard-build-proof">
-        <p className={eyebrow}>Portfolio outputs</p>
-        <p className="mt-2 text-sm text-zinc-400">
-          Complete sessions in AI Essentials to build checkpoint and portfolio evidence tracked in Reports.
-        </p>
-        <Link className={`${btnPrimary} mt-4 inline-flex`} to={`/learn/courses/${AI_SLUG}`}>
-          View course
-        </Link>
-      </section>
+      <LearnerActionCard
+        eyebrow="Portfolio outputs"
+        title="Evidence in AI Essentials"
+        description="Complete sessions to build checkpoint and portfolio evidence tracked in Reports."
+        action={
+          <Link className={learnerShellTokens.primaryButton} to={`/learn/courses/${AI_SLUG}`}>
+            View course
+          </Link>
+        }
+        data-testid="dashboard-build-proof"
+      />
     </div>
   )
 }

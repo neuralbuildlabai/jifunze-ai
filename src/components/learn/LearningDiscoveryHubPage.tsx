@@ -10,8 +10,12 @@ import {
 } from '../../data/learning/flagshipLearnerCatalogPolicy'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
-import { FlagshipCourseCard } from './FlagshipCourseCard'
+import { LearnerCourseCard } from '../learner-shell/LearnerCourseCard'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
+
+const AE_CATALOG_DESCRIPTION =
+  'Build practical AI fluency: prompt clearly, verify outputs, use AI responsibly, and complete a guided capstone workflow.'
+const AE_CATALOG_META = '16 modules · 32–45 hours · 10 milestones · Portfolio + capstone'
 
 export function LearningDiscoveryHubPage() {
   const catalogCourses = learnerPublicCatalogFlagshipCourses()
@@ -75,11 +79,12 @@ export function LearningDiscoveryHubPage() {
         <section className="space-y-6" data-testid="discovery-section-flagship-catalog">
           <div className="grid gap-5">
             {catalogCourses.map((course) => (
-              <FlagshipCourseCard
+              <LearnerCourseCard
                 key={course.slug}
                 course={course}
                 testId={`discovery-featured-${course.slug}`}
-                maxOutputs={3}
+                subtitleOverride={AE_CATALOG_DESCRIPTION}
+                metaLine={AE_CATALOG_META}
               />
             ))}
           </div>

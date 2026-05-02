@@ -46,6 +46,8 @@ import {
   FlagshipSessionRevisionLessonLinks,
 } from './flagshipSession/FlagshipSessionPlayerSurfaces'
 import { FlagshipSessionSectionRail } from './flagshipSession/FlagshipSessionSectionRail'
+import { GuidedLessonShell } from '../learner-shell/GuidedLessonShell'
+import { PracticeLabShell } from '../learner-shell/PracticeLabShell'
 
 function neighborSessions(sessions: FlagshipSession[], current: FlagshipSession): {
   prev?: FlagshipSession
@@ -308,6 +310,18 @@ export function FlagshipCourseSessionPage() {
       ? flagshipNextSessionBlockedReason(prev, progress.completed, curriculum, progress.state, progress.capstonePrepAccessible)
       : null
   const totalSessions = sessions.length
+  const aeSessionBreadcrumb =
+    slug === 'ai-essentials'
+      ? (() => {
+          if (session.type === 'lesson') {
+            const lessons = sessions.filter((s) => s.type === 'lesson').sort((a, b) => a.orderInCourse - b.orderInCourse)
+            const li = lessons.findIndex((s) => s.id === session.id)
+            const n = li >= 0 ? li + 1 : session.orderInCourse
+            return `${course.title} · Module ${moduleOrdinal} · Lesson ${n} of ${lessons.length}`
+          }
+          return `${course.title} · Module ${moduleOrdinal} · Session ${session.orderInCourse} of ${totalSessions}`
+        })()
+      : null
   const moduleMeta = curriculum.modules.find((m: FlagshipCurriculumModule) => m.id === session.moduleId)
   const showPracticeAssessment = session.type === 'practice' && Boolean(moduleMeta)
   const practiceLabLayout = session.type === 'practice' && contentBlocks.length > 0
@@ -335,11 +349,19 @@ export function FlagshipCourseSessionPage() {
             ) : null}
             <JifunzeBrandLogo to={user ? '/dashboard' : '/'} size="sm" surface="dark" />
             <div className="w-full min-w-0 sm:ml-2 sm:w-auto">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[color:var(--jf-muted)]">{course.title}</p>
-              <p className="text-[11px] font-medium text-[color:var(--jf-subtle)]">
-                Session {session.orderInCourse} of {totalSessions} · {FLAGSHIP_SESSION_TYPE_LABEL[session.type]} ·{' '}
-                {flagshipSessionEffortDisplay(session)}
-              </p>
+              {aeSessionBreadcrumb ? (
+                <p className="text-[11px] font-medium leading-snug text-[color:var(--jf-muted)]" data-testid="flagship-session-ae-context">
+                  {aeSessionBreadcrumb}
+                </p>
+              ) : (
+                <>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[color:var(--jf-muted)]">{course.title}</p>
+                  <p className="text-[11px] font-medium text-[color:var(--jf-subtle)]">
+                    Session {session.orderInCourse} of {totalSessions} · {FLAGSHIP_SESSION_TYPE_LABEL[session.type]} ·{' '}
+                    {flagshipSessionEffortDisplay(session)}
+                  </p>
+                </>
+              )}
             </div>
           </div>
           {user ? (
@@ -459,22 +481,26 @@ export function FlagshipCourseSessionPage() {
           Not enabled here to preserve existing flagship progress + certificate rules.
         */}
         {practiceLabLayout ? (
-          <FlagshipSessionBlocks
-            layout="practice-lab"
-            blocks={contentBlocks}
-            responseContext={responseContext}
-            sessionType={session.type}
-            sessionSummary={session.summary}
-          />
+          <PracticeLabShell>
+            <FlagshipSessionBlocks
+              layout="practice-lab"
+              blocks={contentBlocks}
+              responseContext={responseContext}
+              sessionType={session.type}
+              sessionSummary={session.summary}
+            />
+          </PracticeLabShell>
         ) : lessonTeachingFirst ? (
-          <FlagshipSessionBlocks
-            layout="lesson-teaching-first"
-            blocks={contentBlocks}
-            responseContext={responseContext}
-            sessionType={session.type}
-            objectives={session.objectives}
-            sessionSummary={session.summary}
-          />
+          <GuidedLessonShell>
+            <FlagshipSessionBlocks
+              layout="lesson-teaching-first"
+              blocks={contentBlocks}
+              responseContext={responseContext}
+              sessionType={session.type}
+              objectives={session.objectives}
+              sessionSummary={session.summary}
+            />
+          </GuidedLessonShell>
         ) : (
           <FlagshipSessionBlocks
             layout="default"
