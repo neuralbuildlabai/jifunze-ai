@@ -6,6 +6,7 @@ import {
   sessionApplySectionTitle,
   sessionLearningSectionTitle,
 } from '../../../lib/flagshipSessionBlockLayout'
+import { blockStartsCollapsed } from '../../../lib/flagshipSessionLessonFlow'
 import { blockAllowsLearnerResponse } from '../../../lib/flagshipSessionResponseBlocks'
 import { FlagshipSessionBlock } from './FlagshipSessionBlock'
 import type { FlagshipSessionResponseContext } from './flagshipSessionResponseTypes'
@@ -16,7 +17,7 @@ function SessionOverviewCard({ summary }: { summary: string }) {
   return (
     <div
       id="session-overview"
-      className="relative mt-12 overflow-hidden rounded-xl border border-white/[0.07] bg-white/[0.03] px-4 py-5 sm:px-6 sm:py-5"
+      className="relative mt-8 scroll-mt-28 overflow-hidden rounded-xl border border-white/[0.07] bg-white/[0.03] px-4 py-5 sm:px-6 sm:py-5"
     >
       <div
         className="pointer-events-none absolute inset-y-0 left-0 w-[3px] bg-gradient-to-b from-violet-500/45 via-violet-400/20 to-transparent"
@@ -30,8 +31,8 @@ function SessionOverviewCard({ summary }: { summary: string }) {
 
 function ObjectivesStrip({ objectives }: { objectives: readonly string[] }) {
   return (
-    <section className="mt-8" aria-labelledby="session-objectives-heading">
-      <h2 id="session-objectives-heading" className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-subtle)]">
+    <section id="session-objectives-heading" className="mt-8 scroll-mt-28" aria-labelledby="session-objectives-title">
+      <h2 id="session-objectives-title" className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-subtle)]">
         Learning objectives
       </h2>
       <ul className="mt-3 space-y-2">
@@ -54,14 +55,14 @@ function SectionShell(props: {
 }) {
   const { title, sectionId, children, rightSlot } = props
   return (
-    <section className="mt-12" aria-labelledby={sectionId}>
+    <section className="mt-8 scroll-mt-24" aria-labelledby={sectionId}>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <h2 id={sectionId} className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[color:var(--jf-text)]">
           {title}
         </h2>
         {rightSlot ? <div className="shrink-0">{rightSlot}</div> : null}
       </div>
-      <div className="mt-8 space-y-10">{children}</div>
+      <div className="mt-5 space-y-6">{children}</div>
     </section>
   )
 }
@@ -85,21 +86,23 @@ export function FlagshipSessionBlocks(props: {
     [applyBlocks],
   )
 
+  const blockGlobalIndex = (b: FlagshipSessionContentBlock) => blocks.findIndex((x) => x.id === b.id)
+
+  const renderBlock = (block: FlagshipSessionContentBlock) => (
+    <FlagshipSessionBlock
+      key={block.id}
+      block={block}
+      responseContext={responseContext ?? undefined}
+      isFirstLearnerResponseBlock={block.id === firstLearnerResponseBlockId}
+      defaultCollapsed={blockStartsCollapsed(block, blockGlobalIndex(block), blocks)}
+    />
+  )
+
   if (blocks.length === 0) return null
 
   const learningTitle = sessionLearningSectionTitle(sessionType)
   const applyTitle = sessionApplySectionTitle(sessionType)
   const showObjectives = objectives.length > 0 && layout === 'lesson-teaching-first'
-
-  const overviewLink =
-    sessionType === 'lesson' ? (
-      <a
-        href="#session-overview"
-        className="text-[11px] font-semibold text-[color:var(--jf-muted)] underline-offset-2 transition hover:text-[color:var(--jf-text)] hover:underline"
-      >
-        Jump to session overview
-      </a>
-    ) : undefined
 
   if (layout === 'lesson-teaching-first' && sessionSummary) {
     return (
@@ -107,15 +110,8 @@ export function FlagshipSessionBlocks(props: {
         {showObjectives ? <ObjectivesStrip objectives={objectives} /> : null}
 
         {teachingBlocks.length > 0 ? (
-          <SectionShell title={learningTitle} sectionId="flagship-learning-material-heading" rightSlot={overviewLink}>
-            {teachingBlocks.map((block) => (
-              <FlagshipSessionBlock
-                key={block.id}
-                block={block}
-                responseContext={responseContext ?? undefined}
-                isFirstLearnerResponseBlock={block.id === firstLearnerResponseBlockId}
-              />
-            ))}
+          <SectionShell title={learningTitle} sectionId="flagship-learning-material-heading">
+            {teachingBlocks.map((block) => renderBlock(block))}
           </SectionShell>
         ) : null}
 
@@ -123,14 +119,7 @@ export function FlagshipSessionBlocks(props: {
 
         {applyBlocks.length > 0 ? (
           <SectionShell title={applyTitle} sectionId="flagship-apply-heading">
-            {applyBlocks.map((block) => (
-              <FlagshipSessionBlock
-                key={block.id}
-                block={block}
-                responseContext={responseContext ?? undefined}
-                isFirstLearnerResponseBlock={block.id === firstLearnerResponseBlockId}
-              />
-            ))}
+            {applyBlocks.map((block) => renderBlock(block))}
           </SectionShell>
         ) : null}
       </div>
@@ -142,28 +131,14 @@ export function FlagshipSessionBlocks(props: {
       {showObjectives ? <ObjectivesStrip objectives={objectives} /> : null}
 
       {teachingBlocks.length > 0 ? (
-        <SectionShell title={learningTitle} sectionId="flagship-learning-material-heading" rightSlot={overviewLink}>
-          {teachingBlocks.map((block) => (
-            <FlagshipSessionBlock
-              key={block.id}
-              block={block}
-              responseContext={responseContext ?? undefined}
-              isFirstLearnerResponseBlock={block.id === firstLearnerResponseBlockId}
-            />
-          ))}
+        <SectionShell title={learningTitle} sectionId="flagship-learning-material-heading">
+          {teachingBlocks.map((block) => renderBlock(block))}
         </SectionShell>
       ) : null}
 
       {applyBlocks.length > 0 ? (
         <SectionShell title={applyTitle} sectionId="flagship-apply-heading">
-          {applyBlocks.map((block) => (
-            <FlagshipSessionBlock
-              key={block.id}
-              block={block}
-              responseContext={responseContext ?? undefined}
-              isFirstLearnerResponseBlock={block.id === firstLearnerResponseBlockId}
-            />
-          ))}
+          {applyBlocks.map((block) => renderBlock(block))}
         </SectionShell>
       ) : null}
     </div>

@@ -22,6 +22,8 @@ import {
   masteryCheckpointCompletionSet,
   moduleFullyComplete,
 } from '../../lib/flagshipCourseProgressDerived'
+import { partitionFlagshipSessionBlocks } from '../../lib/flagshipSessionBlockLayout'
+import { buildLessonNavFull } from '../../lib/flagshipSessionLessonFlow'
 import { flagshipNextSessionBlockedReason } from '../../lib/flagshipSessionNavigationHints'
 import { blockAllowsLearnerResponse } from '../../lib/flagshipSessionResponseBlocks'
 import { archiveLocalDraftsForModule } from '../../lib/learnerCourseArtifactsLocal'
@@ -34,12 +36,15 @@ import { FlagshipSessionAssessment } from './flagshipSession/FlagshipSessionAsse
 import type { FlagshipSessionResponseContext } from './flagshipSession/flagshipSessionResponseTypes'
 import { AeCapstoneRubricSelfGradePanel } from './AeCapstoneRubricSelfGradePanel'
 import { FlagshipSessionBlocks } from './flagshipSession/FlagshipSessionBlocks'
+import { FlagshipSessionCompletionFooter } from './flagshipSession/FlagshipSessionCompletionFooter'
+import { FlagshipSessionMobileSectionMenu } from './flagshipSession/FlagshipSessionMobileSectionMenu'
 import {
   FlagshipSessionModuleStepper,
   FlagshipSessionPlayerHeader,
   FlagshipSessionPracticeLessonReminder,
   FlagshipSessionRevisionLessonLinks,
 } from './flagshipSession/FlagshipSessionPlayerSurfaces'
+import { FlagshipSessionSectionRail } from './flagshipSession/FlagshipSessionSectionRail'
 
 function neighborSessions(sessions: FlagshipSession[], current: FlagshipSession): {
   prev?: FlagshipSession
@@ -81,6 +86,36 @@ export function FlagshipCourseSessionPage() {
     if (!session) return []
     return getFlagshipSessionContentBlocks(session, curriculum)
   }, [session, curriculum])
+
+  const showStandaloneObjectives = Boolean(session) && contentBlocks.length === 0
+  const lessonTeachingFirst = Boolean(session && session.type === 'lesson' && contentBlocks.length > 0)
+
+  const { teachingBlocks, applyBlocks } = useMemo(
+    () => partitionFlagshipSessionBlocks(contentBlocks),
+    [contentBlocks],
+  )
+
+  const lessonNavItems = useMemo(() => {
+    if (!session) return []
+    const prefix: { anchorId: string; label: string }[] = []
+    const ltf = session.type === 'lesson' && contentBlocks.length > 0
+    const standalone = contentBlocks.length === 0
+    if (ltf && session.objectives.length > 0) {
+      prefix.push({ anchorId: 'session-objectives-heading', label: 'Objectives' })
+    }
+    if (!ltf) {
+      prefix.push({ anchorId: 'session-overview', label: 'Start here · overview' })
+    }
+    if (standalone) {
+      prefix.push({ anchorId: 'obj-heading', label: 'Objectives' })
+    }
+    return buildLessonNavFull({
+      prefix,
+      teachingBlocks,
+      middleOverview: ltf && Boolean(session.summary),
+      applyBlocks,
+    })
+  }, [session, contentBlocks, teachingBlocks, applyBlocks])
 
   const learnerReachable = Boolean(session && sessionOpenForLearner(progress.completed, session, openOpts))
 
@@ -168,6 +203,7 @@ export function FlagshipCourseSessionPage() {
               <Link
                 to={`/learn/courses/${slug}`}
                 className="inline-flex min-h-[2.5rem] items-center text-[12px] font-medium text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)]"
+                data-testid="flagship-session-back-to-course"
               >
                 ← Back to course
               </Link>
@@ -187,6 +223,7 @@ export function FlagshipCourseSessionPage() {
                 disabled={signOutPending}
                 onClick={() => void signOut()}
                 className="inline-flex min-h-[2.5rem] items-center rounded-full border border-[color:var(--jf-border)] px-3 text-[12px] font-medium text-[color:var(--jf-muted)] transition hover:border-white/20 hover:text-[color:var(--jf-text)] disabled:opacity-50"
+                data-testid="flagship-session-header-sign-out"
               >
                 {signOutPending ? 'Signing out…' : 'Sign out'}
               </button>
@@ -255,19 +292,18 @@ export function FlagshipCourseSessionPage() {
       ? flagshipNextSessionBlockedReason(prev, progress.completed, curriculum, progress.state, progress.capstonePrepAccessible)
       : null
   const totalSessions = sessions.length
-  const showStandaloneObjectives = contentBlocks.length === 0
-  const lessonTeachingFirst = session.type === 'lesson' && contentBlocks.length > 0
   const moduleMeta = curriculum.modules.find((m: FlagshipCurriculumModule) => m.id === session.moduleId)
   const showPracticeAssessment = session.type === 'practice' && Boolean(moduleMeta)
 
   return (
     <div className="jf-public-surface min-h-screen w-full bg-[var(--jf-bg-page)] text-[color:var(--jf-text)]">
       <header className="border-b border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-8">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-8">
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2 sm:gap-3">
             <Link
               to={`/learn/courses/${slug}`}
               className="inline-flex min-h-[2.5rem] items-center text-[12px] font-medium text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)]"
+              data-testid="flagship-session-back-to-course"
             >
               ← Back to course
             </Link>
@@ -280,9 +316,13 @@ export function FlagshipCourseSessionPage() {
               </Link>
             ) : null}
             <JifunzeBrandLogo to={user ? '/dashboard' : '/'} size="sm" surface="dark" />
-            <p className="w-full text-[11px] font-medium text-[color:var(--jf-muted)] sm:ml-2 sm:w-auto">
-              {session.orderInCourse} / {totalSessions} · {FLAGSHIP_SESSION_TYPE_LABEL[session.type]}
-            </p>
+            <div className="w-full min-w-0 sm:ml-2 sm:w-auto">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[color:var(--jf-muted)]">{course.title}</p>
+              <p className="text-[11px] font-medium text-[color:var(--jf-subtle)]">
+                Session {session.orderInCourse} of {totalSessions} · {FLAGSHIP_SESSION_TYPE_LABEL[session.type]} ·{' '}
+                {flagshipSessionEffortDisplay(session)}
+              </p>
+            </div>
           </div>
           {user ? (
             <button
@@ -290,6 +330,7 @@ export function FlagshipCourseSessionPage() {
               disabled={signOutPending}
               onClick={() => void signOut()}
               className="inline-flex min-h-[2.5rem] shrink-0 items-center rounded-full border border-[color:var(--jf-border)] px-3 text-[12px] font-medium text-[color:var(--jf-muted)] transition hover:border-white/20 hover:text-[color:var(--jf-text)] disabled:opacity-50"
+              data-testid="flagship-session-header-sign-out"
             >
               {signOutPending ? 'Signing out…' : 'Sign out'}
             </button>
@@ -297,60 +338,62 @@ export function FlagshipCourseSessionPage() {
         </div>
       </header>
 
-      <main className="jf-reading-surface mx-auto max-w-3xl px-5 pb-28 pt-10 sm:px-8">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[color:var(--jf-muted)]">{course.title}</p>
+      <main className="jf-reading-surface mx-auto max-w-6xl px-5 pb-28 pt-8 sm:px-8 lg:pt-10">
+        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_15.5rem] lg:gap-x-10 lg:items-start">
+          <div className="min-w-0">
+            <FlagshipSessionMobileSectionMenu navItems={lessonNavItems} />
 
-        {playerModuleMeta ? (
-          <>
-            <FlagshipSessionPlayerHeader
-              courseTitle={course.title}
-              moduleMeta={playerModuleMeta}
-              moduleOrdinal={moduleOrdinal}
-              session={session}
-              sessionsInModule={sessionsInModule}
-              allSessions={sessions}
-              completed={progress.completed}
-              sessionDone={done}
-            />
-            <FlagshipSessionModuleStepper
-              slug={slug}
-              sessionsInModule={sessionsInModule}
-              currentSessionId={session.id}
-              completed={progress.completed}
-              openOpts={openOpts}
-              progressState={progress.state}
-              moduleId={session.moduleId}
-              showModuleQuizStep={session.moduleId !== FLAGSHIP_CAPSTONE_MODULE_ID}
-            />
-          </>
-        ) : null}
+            {playerModuleMeta ? (
+              <>
+                <FlagshipSessionPlayerHeader
+                  courseTitle={course.title}
+                  moduleMeta={playerModuleMeta}
+                  moduleOrdinal={moduleOrdinal}
+                  session={session}
+                  sessionsInModule={sessionsInModule}
+                  allSessions={sessions}
+                  completed={progress.completed}
+                  sessionDone={done}
+                  density="compact"
+                />
+                <FlagshipSessionModuleStepper
+                  slug={slug}
+                  sessionsInModule={sessionsInModule}
+                  currentSessionId={session.id}
+                  completed={progress.completed}
+                  openOpts={openOpts}
+                  progressState={progress.state}
+                  moduleId={session.moduleId}
+                  showModuleQuizStep={session.moduleId !== FLAGSHIP_CAPSTONE_MODULE_ID}
+                />
+              </>
+            ) : null}
 
-        {(session.type === 'revision' || session.type === 'recap') && (
-          <FlagshipSessionRevisionLessonLinks
-            slug={slug}
-            lesson={lessonInModule}
-            practice={practiceInModule}
-            lessonOpen={lessonOpen}
-            practiceOpen={practiceOpen}
-          />
-        )}
+            {(session.type === 'revision' || session.type === 'recap') && (
+              <FlagshipSessionRevisionLessonLinks
+                slug={slug}
+                lesson={lessonInModule}
+                practice={practiceInModule}
+                lessonOpen={lessonOpen}
+                practiceOpen={practiceOpen}
+              />
+            )}
 
-        {session.type === 'practice' ? (
-          <FlagshipSessionPracticeLessonReminder slug={slug} lesson={lessonInModule} lessonOpen={lessonOpen} />
-        ) : null}
+            {session.type === 'practice' ? (
+              <FlagshipSessionPracticeLessonReminder slug={slug} lesson={lessonInModule} lessonOpen={lessonOpen} />
+            ) : null}
 
-        <div className="mt-8 flex flex-wrap items-center gap-2">
-          {done ? (
-            <span className="rounded-full border border-emerald-900/35 bg-emerald-950/[0.2] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-100/85">
-              Chapter complete
-            </span>
-          ) : null}
-          <span className="text-[12px] text-[color:var(--jf-subtle)]">{flagshipSessionEffortDisplay(session)}</span>
-        </div>
+            <div className="mt-6 flex flex-wrap items-center gap-2">
+              {done ? (
+                <span className="rounded-full border border-emerald-900/35 bg-emerald-950/[0.2] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-100/85">
+                  Chapter complete
+                </span>
+              ) : null}
+            </div>
 
-        <h1 className="mt-4 text-[1.65rem] font-semibold leading-snug tracking-tight text-[color:var(--jf-text)] sm:text-[1.85rem]">
-          {session.title}
-        </h1>
+            <h1 className="mt-3 text-[1.65rem] font-semibold leading-snug tracking-tight text-[color:var(--jf-text)] sm:text-[1.85rem]">
+              {session.title}
+            </h1>
         {session.type === 'revision' ? (
           <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-[color:var(--jf-muted)]">
             Use this checkpoint to tighten your understanding before moving forward.
@@ -365,7 +408,7 @@ export function FlagshipCourseSessionPage() {
         {!lessonTeachingFirst ? (
           <div
             id="session-overview"
-            className="relative mt-6 overflow-hidden rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 px-5 py-6 shadow-[var(--jf-shadow-soft)] ring-1 ring-black/[0.03] sm:px-7 sm:py-7"
+            className="relative mt-6 scroll-mt-28 overflow-hidden rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 px-5 py-6 shadow-[var(--jf-shadow-soft)] ring-1 ring-black/[0.03] sm:px-7 sm:py-7"
           >
             <div
               className="pointer-events-none absolute inset-y-0 left-0 w-[3px] bg-gradient-to-b from-violet-500/50 via-violet-400/25 to-transparent"
@@ -377,8 +420,8 @@ export function FlagshipCourseSessionPage() {
         ) : null}
 
         {showStandaloneObjectives ? (
-          <section className="mt-10" aria-labelledby="obj-heading">
-            <h2 id="obj-heading" className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">
+          <section id="obj-heading" className="mt-10 scroll-mt-28" aria-labelledby="obj-heading-title">
+            <h2 id="obj-heading-title" className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">
               Objectives
             </h2>
             <ul className="mt-4 space-y-2">
@@ -430,126 +473,41 @@ export function FlagshipCourseSessionPage() {
           />
         ) : null}
 
-        <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-          {done ? (
-            <p className="text-[13px] font-medium text-emerald-200/90" data-testid="flagship-session-complete-toggle">
-              Chapter complete — progression is saved. Use &quot;Flag for later review&quot; if you want a reminder to revisit.
-            </p>
-          ) : (
-            <button
-              type="button"
-              disabled={!canMarkThisChapterComplete}
-              onClick={() => progress.markSessionComplete(session.id, true)}
-              className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)] disabled:cursor-not-allowed disabled:opacity-40"
-              data-testid="flagship-session-complete-toggle"
-              title={
-                !canMarkThisChapterComplete
-                  ? 'Complete earlier sessions in order, or pass the previous module quiz, before marking this chapter complete.'
-                  : undefined
-              }
-            >
-              Mark chapter complete
-            </button>
-          )}
-          <label className="inline-flex cursor-pointer items-center gap-2 text-[13px] text-[color:var(--jf-muted)]">
-            <input
-              type="checkbox"
-              checked={progress.state.flaggedForReviewSessionIds.includes(session.id)}
-              onChange={(e) => progress.toggleReviewFlag(session.id, e.target.checked)}
-              className="rounded border-[color:var(--jf-border)]"
-            />
-            Flag for later review
-          </label>
-        </div>
-
-        {learningGuidanceLine || readinessDetailHint ? (
-          <p
-            className="mt-10 text-[13px] leading-relaxed text-[color:var(--jf-subtle)]"
-            data-testid="flagship-session-guidance"
-          >
-            {learningGuidanceLine ?? readinessDetailHint}
-          </p>
-        ) : null}
-
-        <nav
-          className="mt-16 grid gap-8 border-t border-white/[0.06] pt-10 sm:grid-cols-3 sm:gap-6"
-          aria-label="Session navigation"
-        >
-          <div className="space-y-2">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-subtle)]">Previous</p>
-            {prev && prevReachable ? (
-              <Link
-                className="inline-flex text-[14px] font-semibold text-[color:var(--jf-text)] underline-offset-2 hover:underline"
-                to={`/learn/courses/${slug}/session/${prev.id}`}
+            {learningGuidanceLine || readinessDetailHint ? (
+              <p
+                className="mt-10 text-[13px] leading-relaxed text-[color:var(--jf-subtle)]"
+                data-testid="flagship-session-guidance"
               >
-                ← {prev.title}
-              </Link>
-            ) : prev ? (
-              <div className="space-y-1">
-                <span className="block text-[13px] text-[color:var(--jf-subtle)]">Locked</span>
-                {prevBlockedReason ? (
-                  <p className="text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">{prevBlockedReason}</p>
-                ) : null}
-              </div>
-            ) : (
-              <span className="text-[13px] text-[color:var(--jf-subtle)]">First in course order</span>
-            )}
-          </div>
-
-          <div className="space-y-3 border-y border-white/[0.05] py-6 sm:border-y-0 sm:py-0 sm:text-center">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-subtle)] sm:sr-only">
-              Course
-            </p>
-            <Link
-              className="block text-[14px] font-semibold text-[color:var(--jf-text)] underline-offset-2 hover:underline"
-              to={`/learn/courses/${slug}`}
-            >
-              Course overview
-            </Link>
-            {playerModuleMeta && session.moduleId !== FLAGSHIP_CAPSTONE_MODULE_ID ? (
-              <Link
-                className="block text-[13px] font-medium text-[color:var(--jf-muted)] underline-offset-2 hover:text-[color:var(--jf-text)] hover:underline"
-                to={`/learn/courses/${slug}#flagship-module-${session.moduleId}`}
-              >
-                This module · quiz
-              </Link>
-            ) : playerModuleMeta ? (
-              <Link
-                className="block text-[13px] font-medium text-[color:var(--jf-muted)] underline-offset-2 hover:text-[color:var(--jf-text)] hover:underline"
-                to={`/learn/courses/${slug}`}
-              >
-                Capstone on course overview
-              </Link>
+                {learningGuidanceLine ?? readinessDetailHint}
+              </p>
             ) : null}
+
+            <FlagshipSessionCompletionFooter
+              sessionTitle={session.title}
+              objectives={session.objectives}
+              done={done}
+              canMarkThisChapterComplete={canMarkThisChapterComplete}
+              onMarkComplete={() => progress.markSessionComplete(session.id, true)}
+              flagged={progress.state.flaggedForReviewSessionIds.includes(session.id)}
+              onToggleFlag={(checked) => progress.toggleReviewFlag(session.id, checked)}
+              slug={slug}
+              prev={prev}
+              next={next}
+              prevReachable={prevReachable}
+              nextReachable={nextReachable}
+              prevBlockedReason={prevBlockedReason}
+              nextBlockedReason={nextBlockedReason}
+              moduleAnchorId={session.moduleId !== FLAGSHIP_CAPSTONE_MODULE_ID ? session.moduleId : null}
+              capstoneLinkOnly={session.moduleId === FLAGSHIP_CAPSTONE_MODULE_ID}
+            />
           </div>
 
-          <div className="space-y-2 sm:text-right">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-subtle)]">Next</p>
-            {next && nextReachable ? (
-              <Link
-                className="inline-flex text-[14px] font-semibold text-[color:var(--jf-text)] underline-offset-2 hover:underline"
-                to={`/learn/courses/${slug}/session/${next.id}`}
-                data-testid="flagship-session-next"
-              >
-                {next.title} →
-              </Link>
-            ) : next ? (
-              <div className="space-y-1 sm:ml-auto sm:max-w-xs">
-                <span className="block text-[13px] text-[color:var(--jf-subtle)]">Locked</span>
-                {nextBlockedReason ? (
-                  <p className="text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">{nextBlockedReason}</p>
-                ) : null}
-              </div>
-            ) : (
-              <Link
-                className="inline-flex text-[14px] font-semibold text-[color:var(--jf-text)] underline-offset-2 hover:underline"
-                to={`/learn/courses/${slug}`}
-              >
-                Course overview →
-              </Link>
-            )}
-          </div>
-        </nav>
+          <aside className="mt-10 hidden lg:block">
+            <div className="sticky top-24 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-4">
+              <FlagshipSessionSectionRail navItems={lessonNavItems} />
+            </div>
+          </aside>
+        </div>
       </main>
       <LearnerHelpAssistant />
     </div>

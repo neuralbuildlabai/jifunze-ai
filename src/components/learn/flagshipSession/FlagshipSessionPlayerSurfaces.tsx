@@ -25,13 +25,38 @@ export function FlagshipSessionPlayerHeader(props: {
   allSessions: FlagshipSession[]
   completed: Set<string>
   sessionDone: boolean
+  /** Calmer header when a curated layout already carries session context */
+  density?: 'default' | 'compact'
 }) {
-  const { courseTitle, moduleMeta, moduleOrdinal, session, sessionsInModule, allSessions, completed, sessionDone } = props
+  const { courseTitle, moduleMeta, moduleOrdinal, session, sessionsInModule, allSessions, completed, sessionDone, density = 'default' } = props
   const chapterN = chapterOrdinalInModule(session, allSessions)
   const chaptersInModule = sessionsInModule.length
   const chaptersDone = sessionsInModule.filter((s) => completed.has(s.id)).length
   const badgeLabel =
     session.type === 'capstone_prep' ? 'Capstone' : FLAGSHIP_SESSION_TYPE_LABEL[session.type]
+
+  if (density === 'compact') {
+    return (
+      <div className="mt-5 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-3 sm:px-4">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[color:var(--jf-subtle)]">{courseTitle}</p>
+        <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+          <p className="min-w-0 text-[12px] font-semibold leading-snug text-[color:var(--jf-text)]">
+            Module {moduleOrdinal}: <span className="font-medium text-[color:var(--jf-muted)]">{moduleMeta.title}</span>
+          </p>
+          <span className="inline-flex shrink-0 rounded-full border border-white/[0.1] bg-white/[0.04] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[color:var(--jf-text)]">
+            {badgeLabel}
+          </span>
+        </div>
+        <p className="mt-1.5 text-[11px] text-[color:var(--jf-muted)]">
+          Chapter {chapterN} of {chaptersInModule} · {flagshipSessionEffortDisplay(session)}
+          <span className="text-[color:var(--jf-subtle)]">
+            {' '}
+            · {chaptersDone}/{chaptersInModule} done{sessionDone ? ' · this chapter complete' : ''}
+          </span>
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div className="mt-6 rounded-xl border border-white/[0.07] bg-white/[0.025] px-4 py-5 sm:px-5">

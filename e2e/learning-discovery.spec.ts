@@ -56,11 +56,14 @@ test.describe('Learning discovery (public)', () => {
     await expect(page.getByTestId('flagship-learning-path')).toBeVisible()
   })
 
-  test('flagship session page renders instructional blocks + completion control', async ({ page }) => {
+  test('flagship session page renders curated layout, blocks, and completion footer', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 })
     await page.goto('/learn/courses/ai-essentials/session/ae-m01-lesson')
     await expect(page.getByRole('heading', { level: 1, name: /What AI Is and What It Is Not/i })).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByText('Self-paced · foundations depth · study block').first()).toBeVisible()
+    await expect(page.getByTestId('flagship-session-back-to-course')).toBeVisible()
     await expect(page.getByTestId('flagship-session-content')).toBeVisible()
+    await expect(page.getByTestId('flagship-session-curated-nav')).toBeVisible()
+    await expect(page.getByTestId('flagship-session-completion-footer')).toBeVisible()
     await expect(page.locator('[data-block-type="concept_explanation"]').first()).toBeVisible()
     await expect(page.locator('[data-block-type="worked_example"]').first()).toBeVisible()
     await expect(page.getByTestId('flagship-session-complete-toggle')).toBeVisible()

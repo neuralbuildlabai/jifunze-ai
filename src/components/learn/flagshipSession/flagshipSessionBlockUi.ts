@@ -28,6 +28,28 @@ export function flagshipBlockAccentClass(type: FlagshipSessionBlockType): string
   }
 }
 
+/** Background + border tone — restrained hierarchy on dark surfaces */
+export function flagshipBlockCardClass(type: FlagshipSessionBlockType): string {
+  switch (type) {
+    case 'worked_example':
+      return 'bg-emerald-950/[0.06] border-white/[0.07]'
+    case 'practice_task':
+    case 'output_prompt':
+      return 'bg-amber-950/[0.05] border-white/[0.08]'
+    case 'reflection_prompt':
+      return 'bg-fuchsia-950/[0.05] border-white/[0.07]'
+    case 'recap':
+      return 'bg-sky-950/[0.06] border-white/[0.07]'
+    case 'intro':
+      return 'bg-violet-950/[0.08] border-white/[0.08]'
+    case 'takeaway':
+    case 'next_step':
+      return 'bg-black/[0.2] border-white/[0.05]'
+    default:
+      return 'bg-[color:var(--jf-surface)]/35 border-white/[0.06]'
+  }
+}
+
 export function flagshipBlockEyebrowLabel(type: FlagshipSessionBlockType): string {
   switch (type) {
     case 'intro':
