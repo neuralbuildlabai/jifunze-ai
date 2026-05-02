@@ -1,16 +1,16 @@
 import type { LessonSectionNavItem } from '../../../lib/flagshipSessionLessonFlow'
 
-export function FlagshipSessionSectionRail(props: { navItems: LessonSectionNavItem[] }) {
-  const { navItems } = props
+export function FlagshipSessionSectionRail(props: { navItems: LessonSectionNavItem[]; navTitle?: string }) {
+  const { navItems, navTitle = 'This session' } = props
 
   return (
     <nav
-      aria-label="Lesson sections"
+      aria-label={navTitle}
       data-testid="flagship-session-curated-nav"
-      className="border-b border-white/[0.06] pb-6 lg:border-b-0 lg:pb-0"
+      className="border-b border-white/[0.06] pb-5 lg:border-b-0 lg:pb-0"
     >
-      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-subtle)]">Lesson sections</p>
-      <ul className="mt-2 space-y-1.5">
+      <p className="text-[12px] font-medium text-[color:var(--jf-muted)]">{navTitle}</p>
+      <ul className="mt-2 space-y-1" data-testid="flagship-session-curated-nav-links">
         {navItems.map((item) => (
           <li key={item.anchorId}>
             <a

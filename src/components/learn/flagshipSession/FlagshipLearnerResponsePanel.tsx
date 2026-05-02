@@ -138,8 +138,10 @@ export function FlagshipLearnerResponsePanel(props: {
   ctx: FlagshipSessionResponseContext
   /** When false, the short portfolio helper line is omitted (first block in session shows it). */
   isFirstLearnerResponseBlock?: boolean
+  /** Larger, calmer surface for practice-lab task workspaces */
+  surface?: 'default' | 'workspace'
 }) {
-  const { block, ctx, isFirstLearnerResponseBlock = true } = props
+  const { block, ctx, isFirstLearnerResponseBlock = true, surface = 'default' } = props
   const {
     courseSlug,
     moduleId,
@@ -421,21 +423,30 @@ export function FlagshipLearnerResponsePanel(props: {
 
   if (!userId) {
     return (
-      <div className="mt-5 rounded-lg border border-white/[0.06] bg-[color:var(--jf-bg-page)]/50 px-3 py-3 text-[13px] text-[color:var(--jf-muted)] sm:px-4">
+      <div
+        className="mt-5 rounded-lg border border-white/[0.06] bg-[color:var(--jf-bg-page)]/50 px-3 py-3 text-[13px] text-[color:var(--jf-muted)] sm:px-4"
+        data-testid={`flagship-learner-response-${block.id}`}
+      >
         Sign in to save your written work for this block. Lesson progress still saves through the course as usual.
       </div>
     )
   }
 
   const shellBorder = needsAttention ? 'border-amber-900/20' : 'border-white/[0.06]'
+  const workspaceShell =
+    surface === 'workspace'
+      ? `mt-5 rounded-xl border ${shellBorder} bg-zinc-950/30 px-4 py-4 sm:px-5 sm:py-4`
+      : `mt-5 rounded-lg border ${shellBorder} bg-[color:var(--jf-bg-page)]/50 px-3 py-3 sm:px-4 sm:py-3.5`
+  const responseLabel = surface === 'workspace' ? 'Your workspace' : 'Your response'
+  const responseLabelClass =
+    surface === 'workspace'
+      ? 'text-[12px] font-semibold text-[color:var(--jf-muted)]'
+      : 'text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-subtle)]'
 
   return (
-    <div
-      className={`mt-5 rounded-lg border ${shellBorder} bg-[color:var(--jf-bg-page)]/50 px-3 py-3 sm:px-4 sm:py-3.5`}
-      data-testid={`flagship-learner-response-${block.id}`}
-    >
+    <div className={workspaceShell} data-testid={`flagship-learner-response-${block.id}`}>
       <div className="flex flex-col gap-1.5 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-3">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-subtle)]">Your response</p>
+        <p className={responseLabelClass}>{responseLabel}</p>
         {row ? (
           <div className="flex flex-col items-start gap-1 sm:items-end">
             <span
@@ -500,7 +511,7 @@ export function FlagshipLearnerResponsePanel(props: {
           ) : null}
 
           <label className="sr-only" htmlFor={`jf-response-${block.id}`}>
-            Your response
+            {responseLabel}
           </label>
           <textarea
             ref={textareaRef}

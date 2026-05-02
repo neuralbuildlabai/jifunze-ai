@@ -1,9 +1,15 @@
 import { Link } from 'react-router-dom'
 import type { FlagshipSession } from '../../../data/learning/flagshipCourseSessions'
 
+export type FlagshipSessionCompletionKind = 'lesson' | 'practice' | 'other'
+
 export function FlagshipSessionCompletionFooter(props: {
   sessionTitle: string
   objectives: readonly string[]
+  /** Lesson vs practice copy and checklist framing */
+  completionKind?: FlagshipSessionCompletionKind
+  /** Practice footer: include mastery checkpoint line when the session shows checkpoints */
+  hasMasteryCheckpoint?: boolean
   done: boolean
   canMarkThisChapterComplete: boolean
   onMarkComplete: () => void
@@ -22,6 +28,8 @@ export function FlagshipSessionCompletionFooter(props: {
   const {
     sessionTitle,
     objectives,
+    completionKind = 'other',
+    hasMasteryCheckpoint = false,
     done,
     canMarkThisChapterComplete,
     onMarkComplete,
@@ -38,14 +46,51 @@ export function FlagshipSessionCompletionFooter(props: {
     capstoneLinkOnly,
   } = props
 
-  const checklist =
+  const lessonLead =
+    objectives.length > 0
+      ? `You're ready to complete this lesson if you can do the following with ${sessionTitle}:`
+      : `You're ready to complete this lesson if you can:`
+
+  const practiceLead = `You're ready to complete this practice if you have:`
+
+  const lessonChecklist =
     objectives.length > 0
       ? objectives.slice(0, 5)
       : [
-          'You followed the core sections above in order',
-          'You can restate the session goal in your own words',
-          'Any required responses or checkpoints for this chapter are satisfied',
+          'Summarized the core idea in your own words',
+          'Worked through the example and checks above',
+          'Completed any written responses this chapter expects',
         ]
+
+  const practiceChecklist = [
+    'Completed each task response in the workspace above',
+    'Saved a draft or run Save & Check on your answers',
+    'Produced the named artifact or output this practice describes',
+    ...(hasMasteryCheckpoint ? ['Confirmed any mastery checkpoints shown in the review section'] : []),
+  ]
+
+  const genericChecklist = [
+    'You followed the core sections above in order',
+    'You can restate the session goal in your own words',
+    'Any required responses or checkpoints for this chapter are satisfied',
+  ]
+
+  const lead =
+    completionKind === 'lesson'
+      ? lessonLead
+      : completionKind === 'practice'
+        ? practiceLead
+        : `You're ready to mark ${sessionTitle} complete if you can check most of the following:`
+
+  const checklist =
+    completionKind === 'lesson' ? lessonChecklist : completionKind === 'practice' ? practiceChecklist : genericChecklist
+
+  const heading =
+    completionKind === 'lesson'
+      ? 'Complete this lesson'
+      : completionKind === 'practice'
+        ? 'Complete this practice'
+        : 'Ready to complete this chapter?'
 
   return (
     <footer
@@ -53,11 +98,9 @@ export function FlagshipSessionCompletionFooter(props: {
       className="scroll-mt-28 mt-12 border-t border-white/[0.08] pt-10"
       data-testid="flagship-session-completion-footer"
     >
-      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-subtle)]">Before you continue</p>
-      <h2 className="mt-2 text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">Ready to complete this chapter?</h2>
-      <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-        You&apos;re ready to mark <span className="font-medium text-[color:var(--jf-text)]">{sessionTitle}</span> complete if you can check most of the following:
-      </p>
+      <p className="text-[12px] font-medium text-[color:var(--jf-muted)]">Before you continue</p>
+      <h2 className="mt-2 text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">{heading}</h2>
+      <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{lead}</p>
       <ul className="mt-4 max-w-2xl space-y-2">
         {checklist.map((line) => (
           <li key={line} className="flex gap-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
@@ -160,12 +203,13 @@ export function FlagshipSessionCompletionFooter(props: {
               {next.title} →
             </Link>
           ) : next ? (
-            <div className="space-y-1 sm:ml-auto sm:max-w-xs">
-              <span className="block text-[13px] text-[color:var(--jf-subtle)]">Next session locked</span>
-              {nextBlockedReason ? (
-                <p className="text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">{nextBlockedReason}</p>
-              ) : null}
-            </div>
+            <p
+              className="text-[13px] leading-relaxed text-[color:var(--jf-muted)] sm:ml-auto sm:max-w-sm sm:text-right"
+              data-testid="flagship-session-next-locked"
+            >
+              {nextBlockedReason?.trim() ||
+                'The next session stays locked until earlier chapters or quizzes in this course are satisfied.'}
+            </p>
           ) : (
             <Link
               className="inline-flex text-[14px] font-semibold text-[color:var(--jf-text)] underline-offset-2 hover:underline"

@@ -22,15 +22,45 @@ function BlockArticle(props: {
   responseContext?: FlagshipSessionResponseContext | null
   isFirstLearnerResponseBlock?: boolean
   variant?: 'card' | 'plain'
+  presentation?: 'default' | 'practice-task'
+  taskNumber?: number
+  hidePromptInArticle?: boolean
 }) {
-  const { block, responseContext, isFirstLearnerResponseBlock, variant = 'card' } = props
-  const accent = flagshipBlockAccentClass(block.type)
-  const surface = flagshipBlockCardClass(block.type)
+  const {
+    block,
+    responseContext,
+    isFirstLearnerResponseBlock,
+    variant = 'card',
+    presentation = 'default',
+    taskNumber,
+    hidePromptInArticle = false,
+  } = props
   const eyebrow = getLearnerFacingEyebrow(block)
+  const isPracticeTask = presentation === 'practice-task'
   const shell =
     variant === 'plain'
       ? 'rounded-lg border-0 bg-transparent py-4 pl-2 pr-3 sm:pl-3'
-      : `rounded-xl border pl-4 pr-5 py-5 sm:pl-5 ${surface} ${accent} border-l-[3px]`
+      : isPracticeTask
+        ? 'rounded-xl border border-white/[0.06] bg-zinc-950/20 px-4 py-5 sm:px-5 sm:py-5'
+        : `rounded-xl border pl-4 pr-5 py-5 sm:pl-5 ${flagshipBlockCardClass(block.type)} ${flagshipBlockAccentClass(block.type)} border-l-[3px]`
+
+  const promptBlock = block.prompt
+    ? hidePromptInArticle
+      ? (
+          <div className="mt-4 rounded-lg border border-white/[0.05] bg-black/25 px-3 py-3 sm:px-4">
+            <p className="text-[12px] font-medium text-[color:var(--jf-muted)]">Instructions</p>
+            <pre className="mt-2 whitespace-pre-wrap font-sans text-[14px] leading-relaxed text-[color:var(--jf-text)]">{block.prompt}</pre>
+          </div>
+        )
+      : (
+          <div className="rounded-xl border border-white/[0.06] bg-[color:var(--jf-bg-page)]/90 px-4 py-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-subtle)]">
+              {block.type === 'output_prompt' ? 'Your prompt' : 'Task'}
+            </p>
+            <pre className="mt-3 whitespace-pre-wrap font-sans text-[14px] leading-relaxed text-[color:var(--jf-text)]">{block.prompt}</pre>
+          </div>
+        )
+    : null
 
   return (
     <article
@@ -39,7 +69,11 @@ function BlockArticle(props: {
       className={shell}
     >
       <header className="space-y-1">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[color:var(--jf-subtle)]">{eyebrow}</p>
+        {isPracticeTask && taskNumber != null ? (
+          <p className="text-[12px] font-medium text-[color:var(--jf-muted)]">Task {taskNumber}</p>
+        ) : (
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[color:var(--jf-subtle)]">{eyebrow}</p>
+        )}
         {block.title ? (
           <h2 className="text-[17px] font-semibold tracking-tight text-[color:var(--jf-text)]">{block.title}</h2>
         ) : null}
@@ -59,14 +93,7 @@ function BlockArticle(props: {
           </ul>
         ) : null}
 
-        {block.prompt ? (
-          <div className="rounded-xl border border-white/[0.06] bg-[color:var(--jf-bg-page)]/90 px-4 py-4">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-subtle)]">
-              {block.type === 'output_prompt' ? 'Your prompt' : 'Task'}
-            </p>
-            <pre className="mt-3 whitespace-pre-wrap font-sans text-[14px] leading-relaxed text-[color:var(--jf-text)]">{block.prompt}</pre>
-          </div>
-        ) : null}
+        {promptBlock}
 
         {block.example ? (
           <div className="rounded-xl border border-emerald-900/25 bg-emerald-950/[0.08] px-4 py-4">
@@ -77,7 +104,7 @@ function BlockArticle(props: {
           </div>
         ) : null}
 
-        {block.outputExpectation && block.type !== 'output_prompt' ? (
+        {block.outputExpectation && block.type !== 'output_prompt' && !isPracticeTask ? (
           <p className="text-[13px] leading-relaxed text-[color:var(--jf-subtle)]">
             <span className="font-medium text-[color:var(--jf-muted)]">Done means: </span>
             {block.outputExpectation}
@@ -89,6 +116,7 @@ function BlockArticle(props: {
             block={block}
             ctx={responseContext}
             isFirstLearnerResponseBlock={isFirstLearnerResponseBlock}
+            surface={isPracticeTask ? 'workspace' : 'default'}
           />
         ) : null}
       </div>
@@ -96,16 +124,32 @@ function BlockArticle(props: {
   )
 }
 
+export type FlagshipSessionBlockCollapseSummaryStyle = 'verbose' | 'short'
+
 export function FlagshipSessionBlock(props: {
   block: FlagshipSessionContentBlock
   responseContext?: FlagshipSessionResponseContext | null
   isFirstLearnerResponseBlock?: boolean
-  /** Supplemental blocks start collapsed — content stays in DOM for anchors and screen readers */
   defaultCollapsed?: boolean
+  presentation?: 'default' | 'practice-task'
+  taskNumber?: number
+  hidePromptInArticle?: boolean
+  collapseSummaryStyle?: FlagshipSessionBlockCollapseSummaryStyle
 }) {
-  const { block, responseContext, isFirstLearnerResponseBlock, defaultCollapsed = false } = props
+  const {
+    block,
+    responseContext,
+    isFirstLearnerResponseBlock,
+    defaultCollapsed = false,
+    presentation = 'default',
+    taskNumber,
+    hidePromptInArticle,
+    collapseSummaryStyle = 'verbose',
+  } = props
   const summaryEyebrow = getLearnerFacingEyebrow(block)
   const summaryTitle = block.title?.trim() || summaryEyebrow
+  const hint =
+    collapseSummaryStyle === 'short' ? 'Optional — tap to expand' : 'Supplemental — expand to read in full'
 
   const inner = (
     <BlockArticle
@@ -113,6 +157,9 @@ export function FlagshipSessionBlock(props: {
       responseContext={responseContext}
       isFirstLearnerResponseBlock={isFirstLearnerResponseBlock}
       variant={defaultCollapsed ? 'plain' : 'card'}
+      presentation={presentation}
+      taskNumber={taskNumber}
+      hidePromptInArticle={hidePromptInArticle}
     />
   )
 
@@ -124,7 +171,7 @@ export function FlagshipSessionBlock(props: {
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[color:var(--jf-subtle)]">{summaryEyebrow}</p>
               <p className="mt-1 text-[13px] font-medium text-[color:var(--jf-text)]">{summaryTitle}</p>
-              <p className="mt-0.5 text-[11px] text-[color:var(--jf-muted)]">Supplemental — expand to read in full</p>
+              <p className="mt-0.5 text-[11px] text-[color:var(--jf-muted)]">{hint}</p>
             </div>
             <span className="shrink-0 text-[11px] font-semibold text-[color:var(--jf-muted)] group-open:hidden">Expand</span>
             <span className="hidden shrink-0 text-[11px] font-semibold text-[color:var(--jf-muted)] group-open:inline">Collapse</span>

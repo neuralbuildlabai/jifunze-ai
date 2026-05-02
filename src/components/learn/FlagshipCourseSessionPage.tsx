@@ -22,6 +22,7 @@ import {
   masteryCheckpointCompletionSet,
   moduleFullyComplete,
 } from '../../lib/flagshipCourseProgressDerived'
+import { buildPracticeLabNav, computeGuidedLessonNavItems } from '../../lib/flagshipSessionGuidedLayout'
 import { partitionFlagshipSessionBlocks } from '../../lib/flagshipSessionBlockLayout'
 import { buildLessonNavFull } from '../../lib/flagshipSessionLessonFlow'
 import { flagshipNextSessionBlockedReason } from '../../lib/flagshipSessionNavigationHints'
@@ -95,14 +96,29 @@ export function FlagshipCourseSessionPage() {
     [contentBlocks],
   )
 
-  const lessonNavItems = useMemo(() => {
+  const sessionNavItems = useMemo(() => {
     if (!session) return []
-    const prefix: { anchorId: string; label: string }[] = []
-    const ltf = session.type === 'lesson' && contentBlocks.length > 0
     const standalone = contentBlocks.length === 0
-    if (ltf && session.objectives.length > 0) {
-      prefix.push({ anchorId: 'session-objectives-heading', label: 'Objectives' })
+    const ltf = session.type === 'lesson' && contentBlocks.length > 0
+    const practiceWithBlocks = session.type === 'practice' && contentBlocks.length > 0
+    const practiceModuleMeta = curriculum?.modules.find((m) => m.id === session.moduleId)
+
+    if (practiceWithBlocks) {
+      return buildPracticeLabNav({
+        hasArtifact: applyBlocks.length > 0,
+        hasReview: Boolean(practiceModuleMeta),
+      })
     }
+    if (ltf) {
+      return computeGuidedLessonNavItems({
+        teachingBlocks,
+        applyBlocks,
+        objectivesCount: session.objectives.length,
+        sessionSummary: session.summary,
+      })
+    }
+
+    const prefix: { anchorId: string; label: string }[] = []
     if (!ltf) {
       prefix.push({ anchorId: 'session-overview', label: 'Start here · overview' })
     }
@@ -112,10 +128,10 @@ export function FlagshipCourseSessionPage() {
     return buildLessonNavFull({
       prefix,
       teachingBlocks,
-      middleOverview: ltf && Boolean(session.summary),
+      middleOverview: false,
       applyBlocks,
     })
-  }, [session, contentBlocks, teachingBlocks, applyBlocks])
+  }, [session, curriculum, contentBlocks, teachingBlocks, applyBlocks])
 
   const learnerReachable = Boolean(session && sessionOpenForLearner(progress.completed, session, openOpts))
 
@@ -294,6 +310,8 @@ export function FlagshipCourseSessionPage() {
   const totalSessions = sessions.length
   const moduleMeta = curriculum.modules.find((m: FlagshipCurriculumModule) => m.id === session.moduleId)
   const showPracticeAssessment = session.type === 'practice' && Boolean(moduleMeta)
+  const practiceLabLayout = session.type === 'practice' && contentBlocks.length > 0
+  const sidebarNavTitle = practiceLabLayout ? 'Practice lab' : lessonTeachingFirst ? 'Lesson steps' : 'This session'
 
   return (
     <div className="jf-public-surface min-h-screen w-full bg-[var(--jf-bg-page)] text-[color:var(--jf-text)]">
@@ -339,9 +357,9 @@ export function FlagshipCourseSessionPage() {
       </header>
 
       <main className="jf-reading-surface mx-auto max-w-6xl px-5 pb-28 pt-8 sm:px-8 lg:pt-10">
-        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_15.5rem] lg:gap-x-10 lg:items-start">
+        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_13rem] lg:gap-x-8 lg:items-start">
           <div className="min-w-0">
-            <FlagshipSessionMobileSectionMenu navItems={lessonNavItems} />
+            <FlagshipSessionMobileSectionMenu navItems={sessionNavItems} navTitle={sidebarNavTitle} />
 
             {playerModuleMeta ? (
               <>
@@ -355,6 +373,7 @@ export function FlagshipCourseSessionPage() {
                   completed={progress.completed}
                   sessionDone={done}
                   density="compact"
+                  hideCourseTitle={practiceLabLayout}
                 />
                 <FlagshipSessionModuleStepper
                   slug={slug}
@@ -405,7 +424,7 @@ export function FlagshipCourseSessionPage() {
           </p>
         ) : null}
 
-        {!lessonTeachingFirst ? (
+        {!lessonTeachingFirst && !practiceLabLayout ? (
           <div
             id="session-overview"
             className="relative mt-6 scroll-mt-28 overflow-hidden rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 px-5 py-6 shadow-[var(--jf-shadow-soft)] ring-1 ring-black/[0.03] sm:px-7 sm:py-7"
@@ -439,7 +458,15 @@ export function FlagshipCourseSessionPage() {
           TODO(stricter-gating): optionally require accepted learner artifacts before marking some practice sessions complete.
           Not enabled here to preserve existing flagship progress + certificate rules.
         */}
-        {lessonTeachingFirst ? (
+        {practiceLabLayout ? (
+          <FlagshipSessionBlocks
+            layout="practice-lab"
+            blocks={contentBlocks}
+            responseContext={responseContext}
+            sessionType={session.type}
+            sessionSummary={session.summary}
+          />
+        ) : lessonTeachingFirst ? (
           <FlagshipSessionBlocks
             layout="lesson-teaching-first"
             blocks={contentBlocks}
@@ -459,11 +486,17 @@ export function FlagshipCourseSessionPage() {
         )}
 
         {showPracticeAssessment && moduleMeta ? (
-          <FlagshipSessionAssessment
-            module={moduleMeta}
-            completedIds={checkpointDone}
-            onToggleCheckpoint={(id, done) => progress.toggleMasteryCheckpoint(id, done)}
-          />
+          <section id="flagship-practice-review" className="scroll-mt-28 space-y-4" aria-label="Review checklist">
+            <h2 className="mt-10 text-[13px] font-semibold text-[color:var(--jf-text)]">Review checklist</h2>
+            <p className="max-w-2xl text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+              Work through each checkpoint below when you are ready to claim mastery for this module.
+            </p>
+            <FlagshipSessionAssessment
+              module={moduleMeta}
+              completedIds={checkpointDone}
+              onToggleCheckpoint={(id, done) => progress.toggleMasteryCheckpoint(id, done)}
+            />
+          </section>
         ) : null}
 
         {slug === 'ai-essentials' && (session.type === 'capstone_prep' || session.moduleId === 'ae-m16') ? (
@@ -473,7 +506,7 @@ export function FlagshipCourseSessionPage() {
           />
         ) : null}
 
-            {learningGuidanceLine || readinessDetailHint ? (
+            {!lessonTeachingFirst && !practiceLabLayout && (learningGuidanceLine || readinessDetailHint) ? (
               <p
                 className="mt-10 text-[13px] leading-relaxed text-[color:var(--jf-subtle)]"
                 data-testid="flagship-session-guidance"
@@ -485,6 +518,10 @@ export function FlagshipCourseSessionPage() {
             <FlagshipSessionCompletionFooter
               sessionTitle={session.title}
               objectives={session.objectives}
+              completionKind={
+                session.type === 'lesson' ? 'lesson' : session.type === 'practice' ? 'practice' : 'other'
+              }
+              hasMasteryCheckpoint={showPracticeAssessment}
               done={done}
               canMarkThisChapterComplete={canMarkThisChapterComplete}
               onMarkComplete={() => progress.markSessionComplete(session.id, true)}
@@ -504,7 +541,7 @@ export function FlagshipCourseSessionPage() {
 
           <aside className="mt-10 hidden lg:block">
             <div className="sticky top-24 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-4">
-              <FlagshipSessionSectionRail navItems={lessonNavItems} />
+              <FlagshipSessionSectionRail navItems={sessionNavItems} navTitle={sidebarNavTitle} />
             </div>
           </aside>
         </div>

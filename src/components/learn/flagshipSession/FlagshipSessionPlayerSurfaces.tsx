@@ -27,8 +27,21 @@ export function FlagshipSessionPlayerHeader(props: {
   sessionDone: boolean
   /** Calmer header when a curated layout already carries session context */
   density?: 'default' | 'compact'
+  /** Top site header already shows the course title */
+  hideCourseTitle?: boolean
 }) {
-  const { courseTitle, moduleMeta, moduleOrdinal, session, sessionsInModule, allSessions, completed, sessionDone, density = 'default' } = props
+  const {
+    courseTitle,
+    moduleMeta,
+    moduleOrdinal,
+    session,
+    sessionsInModule,
+    allSessions,
+    completed,
+    sessionDone,
+    density = 'default',
+    hideCourseTitle = false,
+  } = props
   const chapterN = chapterOrdinalInModule(session, allSessions)
   const chaptersInModule = sessionsInModule.length
   const chaptersDone = sessionsInModule.filter((s) => completed.has(s.id)).length
@@ -38,8 +51,10 @@ export function FlagshipSessionPlayerHeader(props: {
   if (density === 'compact') {
     return (
       <div className="mt-5 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-3 sm:px-4">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[color:var(--jf-subtle)]">{courseTitle}</p>
-        <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+        {hideCourseTitle ? null : (
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[color:var(--jf-subtle)]">{courseTitle}</p>
+        )}
+        <div className={`flex flex-wrap items-center justify-between gap-2 ${hideCourseTitle ? '' : 'mt-2'}`}>
           <p className="min-w-0 text-[12px] font-semibold leading-snug text-[color:var(--jf-text)]">
             Module {moduleOrdinal}: <span className="font-medium text-[color:var(--jf-muted)]">{moduleMeta.title}</span>
           </p>
