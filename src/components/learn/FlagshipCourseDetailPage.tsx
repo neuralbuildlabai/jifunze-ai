@@ -79,6 +79,7 @@ export function FlagshipCourseDetailPage() {
                 disabled={signOutPending}
                 onClick={() => void signOut()}
                 className="inline-flex min-h-[2.5rem] items-center rounded-full border border-[color:var(--jf-border)] px-3 text-[12px] font-medium text-[color:var(--jf-muted)] transition hover:border-white/20 hover:text-[color:var(--jf-text)] disabled:opacity-50"
+                data-testid="flagship-course-header-sign-out"
               >
                 {signOutPending ? 'Signing out…' : 'Sign out'}
               </button>
@@ -132,58 +133,60 @@ export function FlagshipCourseDetailPage() {
           dataTestId="flagship-course-trust"
         />
 
-        <section
-          className="mt-10 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-5 py-6 sm:px-7"
-          aria-labelledby="access-model-heading"
-        >
-          <h2 id="access-model-heading" className="text-[15px] font-semibold tracking-tight text-[color:var(--jf-text)]">
-            Access & progression
-          </h2>
-          <p className="mt-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-            You can purchase this course alone or subscribe for all-access to every flagship track. Either way, modules unlock progressively—purchase opens the course, not
-            every session at once. Support sheets unlock alongside your milestones.
-          </p>
-          <ul className="mt-4 space-y-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-            <li>· Single-course checkout opens only this path on your account.</li>
-            <li>· All-access lets you enter each flagship course while pacing stays intact inside each one.</li>
-            <li>· The Readiness Challenge is course-specific and can unlock a one-time 5% first single-course discount (not for all-access).</li>
-            <li>· Learners may keep two active browser sessions—phone and laptop is fine.</li>
-          </ul>
-          <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-            <Link
-              className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-5 py-2.5 text-center text-[13px] font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)]"
-              to={`/learn/checkout?course=${slug}`}
-              data-testid="flagship-cta-checkout-course"
-            >
-              Buy this course
-            </Link>
-            <Link
-              className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.05]"
-              to={`/learn/readiness/${slug}`}
-            >
-              Course Readiness Challenge
-            </Link>
-            <Link
-              className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.05]"
-              to="/learn/checkout?plan=all"
-            >
-              All-access subscription
-            </Link>
-          </div>
-          {purchaseGateEnabled && hasCourseAccess ? (
-            <p className="mt-4 text-[12px] leading-relaxed text-emerald-200/80">You have access to this course on this browser—your full path stays below with clear locked and open states.</p>
-          ) : purchaseGateEnabled && !hasCourseAccess ? (
-            <p className="mt-4 text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">Preview the structure below; checkout unlocks interactive sessions.</p>
-          ) : import.meta.env.DEV ? (
-            <p className="mt-4 text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">
-              Dev: enable purchase gate via env to exercise checkout flows.
+        {LEARNER_MONETIZATION_UI_DISABLED ? null : (
+          <section
+            className="mt-10 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-5 py-6 sm:px-7"
+            aria-labelledby="access-model-heading"
+          >
+            <h2 id="access-model-heading" className="text-[15px] font-semibold tracking-tight text-[color:var(--jf-text)]">
+              Access & progression
+            </h2>
+            <p className="mt-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+              You can purchase this course alone or subscribe for all-access to every flagship track. Either way, modules unlock progressively—purchase opens the course, not
+              every session at once. Support sheets unlock alongside your milestones.
             </p>
-          ) : (
-            <p className="mt-4 text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">
-              Preview the structure below; purchase unlocks the full interactive path when billing is on.
-            </p>
-          )}
-        </section>
+            <ul className="mt-4 space-y-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
+              <li>· Single-course checkout opens only this path on your account.</li>
+              <li>· All-access lets you enter each flagship course while pacing stays intact inside each one.</li>
+              <li>· The Readiness Challenge is course-specific and can unlock a one-time 5% first single-course discount (not for all-access).</li>
+              <li>· Learners may keep two active browser sessions—phone and laptop is fine.</li>
+            </ul>
+            <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+              <Link
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-5 py-2.5 text-center text-[13px] font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)]"
+                to={`/learn/checkout?course=${slug}`}
+                data-testid="flagship-cta-checkout-course"
+              >
+                Buy this course
+              </Link>
+              <Link
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.05]"
+                to={`/learn/readiness/${slug}`}
+              >
+                Course Readiness Challenge
+              </Link>
+              <Link
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.05]"
+                to="/learn/checkout?plan=all"
+              >
+                All-access subscription
+              </Link>
+            </div>
+            {purchaseGateEnabled && hasCourseAccess ? (
+              <p className="mt-4 text-[12px] leading-relaxed text-emerald-200/80">You have access to this course on this browser—your full path stays below with clear locked and open states.</p>
+            ) : purchaseGateEnabled && !hasCourseAccess ? (
+              <p className="mt-4 text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">Preview the structure below; checkout unlocks interactive sessions.</p>
+            ) : import.meta.env.DEV ? (
+              <p className="mt-4 text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">
+                Dev: enable purchase gate via env to exercise checkout flows.
+              </p>
+            ) : (
+              <p className="mt-4 text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">
+                Preview the structure below; purchase unlocks the full interactive path when billing is on.
+              </p>
+            )}
+          </section>
+        )}
 
         <section className="mt-14 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 shadow-[var(--jf-shadow-soft)] ring-1 ring-black/[0.03] sm:p-8">
           <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">Course promise</h2>

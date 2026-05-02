@@ -3,25 +3,29 @@ import { applyPublicE2eMaintenanceBypass } from './helpers/publicE2eMaintenanceB
 
 /**
  * Supabase env cleared for E2E: app runs in **demo persistence** (local tenant + demo brands).
- * Workspace surfaces load without a Supabase session — distinct from production “sign in” gating.
+ * Member-tier demo users are routed like learners: operator-only tools redirect away; learning catalog stays open.
  */
 test.describe('Workspace routes (demo / no Supabase env)', () => {
   test.beforeEach(async ({ page }) => {
     await applyPublicE2eMaintenanceBypass(page)
   })
-  test('ideas page loads', async ({ page }) => {
+
+  test('member guest hitting Ideas is redirected to dashboard (operator-only)', async ({ page }) => {
     await page.goto('/ideas')
-    await expect(page.getByRole('heading', { name: /^ideas$/i }).first()).toBeVisible({ timeout: 15_000 })
+    await expect(page).toHaveURL(/\/dashboard$/, { timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible()
   })
 
-  test('studio page loads', async ({ page }) => {
+  test('member guest hitting Studio is redirected to dashboard (operator-only)', async ({ page }) => {
     await page.goto('/studio')
-    await expect(page.getByRole('heading', { name: /^studio$/i }).first()).toBeVisible({ timeout: 15_000 })
+    await expect(page).toHaveURL(/\/dashboard$/, { timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible()
   })
 
-  test('settings page loads', async ({ page }) => {
+  test('settings route loads learner Account surface (demo guest)', async ({ page }) => {
     await page.goto('/settings')
-    await expect(page.getByRole('heading', { name: /^settings$/i }).first()).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: /^account$/i }).first()).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole('button', { name: /^sign out$/i })).toBeVisible()
   })
 
   test('plans & billing page shows paused copy (demo guest)', async ({ page }) => {
@@ -33,18 +37,22 @@ test.describe('Workspace routes (demo / no Supabase env)', () => {
   test('dashboard route loads (demo guest)', async ({ page }) => {
     await page.goto('/dashboard')
     await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByText(/continue your learning path and build portfolio-ready proof/i)).toBeVisible()
+    await expect(
+      page.getByText(/Structured courses, pathways, session progress, and portfolio-oriented outputs/i),
+    ).toBeVisible()
     await expect(page.getByTestId('dashboard-your-pathway')).toBeVisible()
   })
 
-  test('training route loads (demo guest)', async ({ page }) => {
+  test('member guest hitting training admin is redirected to My Learning', async ({ page }) => {
     await page.goto('/training')
-    await expect(page.getByRole('heading', { name: /plans.*cohort/i })).toBeVisible({ timeout: 15_000 })
+    await expect(page).toHaveURL(/\/my-learning$/, { timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: /my learning/i })).toBeVisible()
   })
 
-  test('team members route loads (demo guest)', async ({ page }) => {
+  test('member guest hitting team members is redirected to dashboard', async ({ page }) => {
     await page.goto('/team/members')
-    await expect(page.getByRole('heading', { name: /^members$/i })).toBeVisible({ timeout: 15_000 })
+    await expect(page).toHaveURL(/\/dashboard$/, { timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible()
   })
 
   test('team assignments route loads (demo guest)', async ({ page }) => {
@@ -54,24 +62,22 @@ test.describe('Workspace routes (demo / no Supabase env)', () => {
     })
   })
 
-  test('trends route loads (demo guest)', async ({ page }) => {
+  test('member guest hitting trends is redirected to dashboard (operator-only)', async ({ page }) => {
     await page.goto('/trends')
-    await expect(page.getByRole('heading', { name: /trend insights/i })).toBeVisible({ timeout: 15_000 })
+    await expect(page).toHaveURL(/\/dashboard$/, { timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible()
   })
 
-  test('teaching labs route loads with structured lab capture (demo guest)', async ({ page }) => {
+  test('legacy teaching labs URL redirects to public learn catalog', async ({ page }) => {
     await page.goto('/learning/labs')
-    await expect(page.getByRole('heading', { name: /guided, practice, and test labs/i })).toBeVisible({
-      timeout: 15_000,
-    })
-    await expect(page.getByRole('heading', { name: /^Structured learner capture$/i }).first()).toBeVisible()
+    await expect(page).toHaveURL(/\/learn$/, { timeout: 15_000 })
+    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible()
   })
 
-  test('member-tier guest cannot access /lab (tier guard redirects to settings)', async ({
-    page,
-  }) => {
+  test('member guest /lab redirects to public learn catalog', async ({ page }) => {
     await page.goto('/lab')
-    await expect(page).toHaveURL(/\/settings$/, { timeout: 15_000 })
+    await expect(page).toHaveURL(/\/learn$/, { timeout: 15_000 })
+    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible()
   })
 
   test('member-tier guest cannot access /platform (redirects to home)', async ({ page }) => {
@@ -86,10 +92,9 @@ test.describe('Navigation smoke (guest)', () => {
     await applyPublicE2eMaintenanceBypass(page)
   })
 
-  test('insights route loads (demo brands when Supabase env is cleared)', async ({ page }) => {
+  test('member guest hitting insights is redirected to dashboard (platform-only)', async ({ page }) => {
     await page.goto('/insights')
-    await expect(page.getByRole('heading', { name: /what jifunze learned/i })).toBeVisible({
-      timeout: 20_000,
-    })
+    await expect(page).toHaveURL(/\/dashboard$/, { timeout: 20_000 })
+    await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible()
   })
 })

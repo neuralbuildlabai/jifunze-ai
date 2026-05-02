@@ -6,6 +6,7 @@ import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { TrustBoundaryStrip } from '../TrustBoundaryStrip'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { DiscoveryBadgeChips } from './DiscoveryBadgeChips'
+import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
 
 export function LearningCategoryPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -22,15 +23,21 @@ export function LearningCategoryPage() {
       <div className="mx-auto w-full max-w-6xl space-y-10">
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
           <JifunzeBrandLogo to="/" size="sm" variant="compact" />
-          <div className="flex flex-wrap items-center gap-3">
-            <Link className="text-xs font-medium text-violet-300/90 hover:text-violet-200" to="/learn">
-              Catalog
-            </Link>
-            {LEARNER_MONETIZATION_UI_DISABLED ? null : (
-              <Link className="text-xs font-medium text-zinc-500 hover:text-zinc-200" to={LEGAL_ROUTES.pricing}>
-                Plans
+          <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <Link className="text-xs font-medium text-violet-300/90 hover:text-violet-200" to="/learn">
+                Catalog
               </Link>
-            )}
+              <Link className="text-xs font-medium text-zinc-500 hover:text-zinc-200" to={LEGAL_ROUTES.paths}>
+                Pathways
+              </Link>
+              {LEARNER_MONETIZATION_UI_DISABLED ? null : (
+                <Link className="text-xs font-medium text-zinc-500 hover:text-zinc-200" to={LEGAL_ROUTES.pricing}>
+                  Plans
+                </Link>
+              )}
+            </div>
+            <SignedInPublicLearningActions />
           </div>
         </header>
 

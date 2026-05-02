@@ -1,6 +1,8 @@
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { FLAGSHIP_COURSES } from '../../data/learning/flagshipCoursesCatalog'
+import { learnerPublicCatalogFlagshipCourses } from '../../data/learning/flagshipLearnerCatalogPolicy'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { useAppAccess } from '../../access/useAppAccess'
 import { useAuth } from '../../auth/AuthContext'
 import { useTeamAssignmentsBoard } from '../../training/teamTrainingHooks'
 import { SignedInContinueLearning } from '../SignedInContinueLearning'
@@ -10,8 +12,10 @@ const card =
 
 export function MyLearningPage() {
   const { supabase, user, workspaceShellReady } = useAuth()
+  const { navVariant } = useAppAccess()
   const { rows: myAssignments, loading: assignLoading, error: assignError } = useTeamAssignmentsBoard('self')
-  const recommended = FLAGSHIP_COURSES.slice(0, 4)
+  const isLearner = navVariant === 'learner'
+  const catalogCourses = useMemo(() => learnerPublicCatalogFlagshipCourses(), [])
 
   return (
     <div className="mx-auto w-full max-w-3xl space-y-8 px-4 py-10 text-zinc-100">
@@ -19,7 +23,9 @@ export function MyLearningPage() {
         <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">Learning</p>
         <h1 className="mt-1 text-xl font-semibold text-white">My Learning</h1>
         <p className="mt-2 max-w-xl text-sm text-zinc-400">
-          Continue flagship courses, open assignments from your workspace, and browse the catalog to add what you want to learn next.
+          {isLearner
+            ? 'Continue structured courses from the catalog, track checkpoints, and review reports—your pathway stays the primary guide.'
+            : 'Continue flagship courses, open assignments from your workspace, and browse the catalog to add what you want to learn next.'}
         </p>
       </header>
 
@@ -28,14 +34,16 @@ export function MyLearningPage() {
           to={LEGAL_ROUTES.learn}
           className="inline-flex rounded-lg bg-violet-600/90 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-violet-950/25 transition hover:bg-violet-500"
         >
-          Browse courses
+          {isLearner ? 'Open catalog' : 'Browse courses'}
         </Link>
-        <Link
-          to="/library"
-          className="inline-flex rounded-lg border border-white/[0.1] px-4 py-2 text-sm font-medium text-zinc-100 transition hover:border-violet-400/25"
-        >
-          Library
-        </Link>
+        {isLearner ? null : (
+          <Link
+            to="/library"
+            className="inline-flex rounded-lg border border-white/[0.1] px-4 py-2 text-sm font-medium text-zinc-100 transition hover:border-violet-400/25"
+          >
+            Library
+          </Link>
+        )}
       </section>
 
       <SignedInContinueLearning supabase={supabase} userId={user?.id} />
@@ -79,23 +87,29 @@ export function MyLearningPage() {
         )}
       </section>
 
-      <section className={card}>
-        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Recommended next</p>
-        <p className="mt-1 text-sm text-zinc-400">Popular flagship paths from the catalog.</p>
-        <ul className="mt-4 space-y-2">
-          {recommended.map((c) => (
-            <li key={c.slug}>
-              <Link
-                to={`/learn/courses/${c.slug}`}
-                className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-white/[0.06] bg-zinc-950/40 px-3 py-2 text-sm text-zinc-100 transition hover:border-violet-400/25"
-              >
-                <span>{c.title}</span>
-                <span className="text-[11px] text-violet-300/90">View course</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
+      {catalogCourses.length ? (
+        <section className={card} data-testid="my-learning-catalog-courses">
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">
+            {isLearner ? 'Courses in this catalog' : 'Recommended next'}
+          </p>
+          <p className="mt-1 text-sm text-zinc-400">
+            {isLearner ? 'Structured flagship courses available for your learner journey right now.' : 'Popular flagship paths from the catalog.'}
+          </p>
+          <ul className="mt-4 space-y-2">
+            {catalogCourses.map((c) => (
+              <li key={c.slug}>
+                <Link
+                  to={`/learn/courses/${c.slug}`}
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-white/[0.06] bg-zinc-950/40 px-3 py-2 text-sm text-zinc-100 transition hover:border-violet-400/25"
+                >
+                  <span>{c.title}</span>
+                  <span className="text-[11px] text-violet-300/90">View course</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
     </div>
   )
 }

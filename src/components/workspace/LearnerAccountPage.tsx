@@ -31,6 +31,7 @@ export function LearnerAccountPage() {
             disabled={signOutPending}
             onClick={() => void signOut()}
             className="rounded-lg border border-zinc-600 bg-zinc-800/80 px-4 py-2 text-sm font-medium text-zinc-100 hover:bg-zinc-800 disabled:opacity-50"
+            data-testid="learner-account-sign-out"
           >
             Sign out
           </button>

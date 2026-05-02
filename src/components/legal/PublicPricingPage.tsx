@@ -44,11 +44,8 @@ export function PublicPricingPage() {
             <Link className="text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)]" to={LEGAL_ROUTES.paths}>
               Pathways
             </Link>
-            <Link className="text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)]" to="/generate">
-              Try preview
-            </Link>
             <Link className="text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)]" to={LEGAL_ROUTES.learn}>
-              Explore courses
+              Catalog
             </Link>
             <Link className="text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)]" to="/">
               Home

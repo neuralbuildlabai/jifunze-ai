@@ -20,15 +20,15 @@ test.describe('Public surfaces', () => {
     await expect(page.locator('header').getByRole('link', { name: /^training$/i })).toHaveCount(0)
     await expect(page.getByTestId('landing-cta-trust-line')).toBeVisible()
     await expect(page.getByTestId('landing-cta-trust-line')).toContainText('Read disclaimer')
-    await expect(page.getByTestId('home-generate-trust-boundary')).toBeVisible()
-    await expect(page.getByTestId('home-generate-trust-boundary')).toContainText('Review for accuracy before posting')
+    await expect(page.getByTestId('home-generate-trust-boundary')).toHaveCount(0)
     await expect(page.getByTestId('trust-legal-footer-links')).toBeVisible()
     await expect(page.getByTestId('landing-marketing-slim')).toBeVisible()
     await expect(page.getByTestId('landing-browse-courses-cta')).toBeVisible()
   })
 
-  test('/generate loads public generation flow', async ({ page }) => {
+  test('/generate remains a direct-only public route (unpromoted from homepage)', async ({ page }) => {
     await page.goto('/generate')
+    await expect(page.getByTestId('public-generate-unpromoted-notice')).toBeVisible()
     await expect(page.getByRole('heading', { name: /start from context you can verify/i })).toBeVisible()
     await expect(page.getByTestId('public-generate-trust-boundary')).toBeVisible()
     await expect(page.getByTestId('public-generate-trust-boundary')).toContainText('Review for accuracy before posting')

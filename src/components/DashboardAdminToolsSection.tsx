@@ -61,12 +61,12 @@ export function DashboardAdminToolsSection({ navVariant, canManageInstitutionTra
             </Link>
           ) : null}
           <Link to="/ideas" className={adminTileClass}>
-            <span className="text-sm font-medium text-zinc-100">Ideas</span>
-            <span className="text-[11px] text-zinc-500">Operator workspace</span>
+            <span className="text-sm font-medium text-zinc-100">Ideas (internal)</span>
+            <span className="text-[11px] text-zinc-500">Operator discovery workspace</span>
           </Link>
           <Link to="/studio" className={adminTileClass}>
-            <span className="text-sm font-medium text-zinc-100">Studio</span>
-            <span className="text-[11px] text-zinc-500">Packages and adaptation</span>
+            <span className="text-sm font-medium text-zinc-100">Studio (internal)</span>
+            <span className="text-[11px] text-zinc-500">Packaging and adaptation tools</span>
           </Link>
           <Link to="/settings" className={adminTileClass}>
             <span className="text-sm font-medium text-zinc-100">Settings</span>
@@ -104,12 +104,12 @@ export function DashboardAdminToolsSection({ navVariant, canManageInstitutionTra
             </Link>
           ) : null}
           <Link to="/ideas" className={adminTileClass}>
-            <span className="text-sm font-medium text-zinc-100">Ideas</span>
-            <span className="text-[11px] text-zinc-500">Operator workspace</span>
+            <span className="text-sm font-medium text-zinc-100">Ideas (internal)</span>
+            <span className="text-[11px] text-zinc-500">Operator discovery workspace</span>
           </Link>
           <Link to="/studio" className={adminTileClass}>
-            <span className="text-sm font-medium text-zinc-100">Studio</span>
-            <span className="text-[11px] text-zinc-500">Packages and adaptation</span>
+            <span className="text-sm font-medium text-zinc-100">Studio (internal)</span>
+            <span className="text-[11px] text-zinc-500">Packaging and adaptation tools</span>
           </Link>
           <Link to="/settings" className={adminTileClass}>
             <span className="text-sm font-medium text-zinc-100">Settings</span>

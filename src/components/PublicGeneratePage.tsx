@@ -153,6 +153,21 @@ export function PublicGeneratePage() {
           </div>
         </header>
 
+        <p
+          className="text-center text-[11px] leading-relaxed text-[color:var(--jf-muted)]"
+          data-testid="public-generate-unpromoted-notice"
+        >
+          Jifunze is a learning platform first—open{' '}
+          <Link to={LEGAL_ROUTES.paths} className="font-medium text-[color:var(--jf-text)] underline-offset-2 hover:underline">
+            pathways
+          </Link>{' '}
+          or the{' '}
+          <Link to={LEGAL_ROUTES.learn} className="font-medium text-[color:var(--jf-text)] underline-offset-2 hover:underline">
+            catalog
+          </Link>
+          . This preview is not linked from the public homepage.
+        </p>
+
         <section className="space-y-2 text-center">
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">
             Caption preview

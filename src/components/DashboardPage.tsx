@@ -156,6 +156,7 @@ export function DashboardPage() {
           disabled={signOutPending}
           onClick={() => void signOut()}
           className="rounded-lg border border-zinc-600 bg-zinc-800/80 px-3 py-1.5 text-xs text-zinc-200 hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
+          data-testid="dashboard-sign-out"
         >
           Sign out
         </button>

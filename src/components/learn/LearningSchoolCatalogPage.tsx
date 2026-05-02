@@ -4,6 +4,7 @@ import { learnerPublicCatalogCoursesForSchool } from '../../data/learning/flagsh
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { FlagshipCourseCard } from './FlagshipCourseCard'
+import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
 
 const VALID_SCHOOL_IDS = new Set<string>(Object.keys(FLAGSHIP_SCHOOLS))
 
@@ -25,14 +26,17 @@ export function LearningSchoolCatalogPage() {
       <div className="mx-auto w-full max-w-6xl space-y-10">
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[color:var(--jf-border)] pb-6">
           <JifunzeBrandLogo to="/" size="sm" variant="compact" />
-          <nav className="flex flex-wrap items-center gap-3 text-xs font-medium">
-            <Link className="text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to={LEGAL_ROUTES.learn}>
-              ← All schools
-            </Link>
-            <Link className="text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to="/">
-              Home
-            </Link>
-          </nav>
+          <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
+            <nav className="flex flex-wrap items-center gap-3 text-xs font-medium">
+              <Link className="text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to={LEGAL_ROUTES.learn}>
+                ← All schools
+              </Link>
+              <Link className="text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to="/">
+                Home
+              </Link>
+            </nav>
+            <SignedInPublicLearningActions />
+          </div>
         </header>
 
         <div>

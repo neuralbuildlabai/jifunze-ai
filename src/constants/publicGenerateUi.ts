@@ -14,7 +14,7 @@ export const PUBLIC_TONE_OPTIONS: Array<{ id: PublicTone; label: string }> = [
   { id: 'educational', label: 'Educational' },
 ]
 
-/** Short, realistic starters for the public generator (home + /generate). */
+/** Short, realistic starters for the public generator (/generate direct route). */
 export const PUBLIC_SAMPLE_TOPICS: readonly string[] = [
   'Revising smarter with spaced practice',
   'Launching a calm product update this quarter',

@@ -11,6 +11,7 @@ import {
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { FlagshipCourseCard } from './FlagshipCourseCard'
+import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
 
 function SectionHeading(props: { eyebrow: string; title: string; description?: string }) {
   const { eyebrow, title, description } = props
@@ -32,16 +33,19 @@ export function LearningDiscoveryHubPage() {
       <div className="mx-auto w-full max-w-6xl space-y-14 sm:space-y-16">
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[color:var(--jf-border)] pb-6">
           <JifunzeBrandLogo to="/" size="sm" variant="compact" />
-          <div className="flex flex-wrap items-center gap-3">
-            <Link
-              className="text-xs font-medium text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)]"
-              to={LEGAL_ROUTES.paths}
-            >
-              Pathways
-            </Link>
-            <Link className="text-xs font-medium text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)]" to="/">
-              Home
-            </Link>
+          <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <Link
+                className="text-xs font-medium text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)]"
+                to={LEGAL_ROUTES.paths}
+              >
+                Pathways
+              </Link>
+              <Link className="text-xs font-medium text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)]" to="/">
+                Home
+              </Link>
+            </div>
+            <SignedInPublicLearningActions />
           </div>
         </header>
 

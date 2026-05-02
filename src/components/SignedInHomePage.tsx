@@ -239,16 +239,16 @@ export function SignedInHomePage() {
               </p>
               <ul className="mt-4 grid gap-3 sm:grid-cols-3">
                 <li className="rounded-xl border border-white/[0.06] bg-zinc-950/25 px-3 py-3">
-                  <p className="text-[13px] font-medium text-zinc-100">Ideas &amp; Studio</p>
+                  <p className="text-[13px] font-medium text-zinc-100">Internal packaging tools</p>
                   <p className="mt-1 text-[12px] leading-relaxed text-zinc-500/90">
                     <Link to="/ideas" className="text-violet-300/90 hover:text-violet-200">
-                      Ideas
+                      Ideas workspace
                     </Link>{' '}
                     and{' '}
                     <Link to="/studio" className="text-violet-300/90 hover:text-violet-200">
                       Studio
                     </Link>{' '}
-                    for packaging and generation workflows.
+                    for operator-side packaging—not shown to learners.
                   </p>
                 </li>
                 <li className="rounded-xl border border-white/[0.06] bg-zinc-950/25 px-3 py-3">

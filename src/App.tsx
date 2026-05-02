@@ -47,7 +47,6 @@ import { TeamLearningReportsPage } from './components/reports/TeamLearningReport
 import { TrainingPlansPage } from './components/training/TrainingPlansPage'
 import { TrainingQuizPage } from './components/training/TrainingQuizPage'
 import { SignedInHomePage } from './components/SignedInHomePage'
-import { HomePublicGeneratePanel } from './components/HomePublicGeneratePanel'
 import { LandingMarketingSections } from './components/landing/LandingMarketingSections'
 import { PublicAiFoundationsLessonPage } from './components/libraries/PublicAiFoundationsLessonPage'
 import { PublicAiFoundationsLibraryPage } from './components/libraries/PublicAiFoundationsLibraryPage'
@@ -227,13 +226,6 @@ function HomeEntryPage() {
                     View plans
                   </Link>
                 )}
-                <a
-                  href="#try-jifunze"
-                  data-testid="landing-hero-explore"
-                  className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full px-4 py-2.5 text-[13px] font-medium text-[color:var(--jf-subtle)] underline-offset-4 hover:text-[color:var(--jf-muted)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-                >
-                  Optional: try a quick draft preview ↓
-                </a>
               </div>
               <TrustBoundaryStrip
                 variant="inline"
@@ -249,25 +241,6 @@ function HomeEntryPage() {
         </div>
 
         <EmployablePathwaysHomeSection />
-
-        {/* Supporting: optional draft preview — narrowed so it does not compete with the learning story */}
-        <section
-          aria-labelledby="landing-preview-heading"
-          className="relative z-10 mx-auto mt-12 max-w-6xl border-t border-[color:var(--jf-border)] pt-10 sm:mt-14 sm:pt-12"
-        >
-          <div className="mx-auto max-w-2xl text-center">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">Optional visitor tool</p>
-            <h2 id="landing-preview-heading" className="mt-2 text-base font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-lg">
-              Quick draft preview (not the core product)
-            </h2>
-            <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-              A lightweight topic-to-caption helper for social drafts. Learning, pathways, and proof stay above this fold.
-            </p>
-          </div>
-          <div className="mx-auto mt-8 max-w-xl">
-            <HomePublicGeneratePanel sectionId="try-jifunze" landingMinimalTrust supportingPlacement />
-          </div>
-        </section>
 
         <LandingMarketingSections />
 
