@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
 import { learnerShellTokens } from './learnerShellTokens'
 
+/** Compact progress block — import from this file when needed; not re-exported from `index.ts` yet. */
+
 type Props = {
   title?: string
   percent: number

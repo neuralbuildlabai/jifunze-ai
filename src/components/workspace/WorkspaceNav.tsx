@@ -84,14 +84,16 @@ function SuperAdminNav() {
 export function WorkspaceNav({ className = '' }: { className?: string }) {
   const { navVariant } = useAppAccess()
 
+  if (navVariant === 'learner') {
+    return <LearnerTopNav className={className} />
+  }
+
   return (
     <nav
       className={`flex flex-wrap items-center gap-1 border border-white/[0.06] bg-zinc-950/35 p-1.5 ${className}`}
       aria-label="Workspace"
       data-testid="workspace-nav-primary"
     >
-      {navVariant === 'learner' ? <LearnerTopNav /> : null}
-
       {(navVariant === 'institution_admin' || navVariant === 'platform_admin') ? <OperationalAdminNav /> : null}
 
       {navVariant === 'super_admin' ? <SuperAdminNav /> : null}

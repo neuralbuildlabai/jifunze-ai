@@ -4,6 +4,8 @@ import { learnerShellTokens } from './learnerShellTokens'
 
 type Props = {
   course: FlagshipCourse
+  /** Second line under the course title (e.g. “Course 1” positioning). Defaults to level range when omitted. */
+  secondaryHeadline?: string
   /** Overrides catalog card when the allowlisted course has fixed learner copy. */
   subtitleOverride?: string
   metaLine?: string
@@ -18,6 +20,7 @@ type Props = {
  */
 export function LearnerCourseCard({
   course,
+  secondaryHeadline,
   subtitleOverride,
   metaLine,
   ctaLabel = 'Open course',
@@ -41,9 +44,7 @@ export function LearnerCourseCard({
   return (
     <article data-testid={testId} className={shell}>
       <p className={`text-[11px] font-medium uppercase tracking-[0.12em] ${eyebrow}`}>{course.title}</p>
-      <h2 className={`mt-2 text-lg font-semibold ${title}`}>
-        {course.slug === 'ai-essentials' ? 'AI and Digital Fluency — Course 1' : course.levelRange}
-      </h2>
+      <h2 className={`mt-2 text-lg font-semibold ${title}`}>{secondaryHeadline ?? course.levelRange}</h2>
       <p className={`mt-3 text-sm leading-relaxed ${body}`}>{subtitle}</p>
       {metaLine ? <p className={`mt-4 text-[13px] ${meta}`}>{metaLine}</p> : null}
       <Link to={`/learn/courses/${course.slug}`} className={`${btn} mt-6 inline-flex w-full justify-center sm:w-auto`}>

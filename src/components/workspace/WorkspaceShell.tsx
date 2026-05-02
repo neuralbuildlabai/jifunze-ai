@@ -13,10 +13,7 @@ export function WorkspaceShell() {
   const { user, signOut, signOutPending } = useAuth()
   const isLearner = navVariant === 'learner'
 
-  const workspaceBlurb =
-    navVariant === 'learner'
-      ? 'Structured courses, pathways, progress, and reports—your account tools stay under Settings.'
-      : 'Continue courses, manage your workspace, and open account tools from here.'
+  const workspaceBlurb = 'Continue courses, manage your workspace, and open account tools from here.'
 
   return (
     <WorkspaceGeneratorProvider>

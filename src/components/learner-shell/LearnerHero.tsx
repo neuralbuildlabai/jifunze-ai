@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 
+/** Presentational hero — import from this file when wiring marketing/course landings; not re-exported from `index.ts` yet. */
+
 type Props = {
   eyebrow?: string
   title: string

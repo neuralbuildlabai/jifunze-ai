@@ -83,8 +83,9 @@ export function LearningDiscoveryHubPage() {
                 key={course.slug}
                 course={course}
                 testId={`discovery-featured-${course.slug}`}
-                subtitleOverride={AE_CATALOG_DESCRIPTION}
-                metaLine={AE_CATALOG_META}
+                secondaryHeadline={course.slug === 'ai-essentials' ? 'AI and Digital Fluency — Course 1' : undefined}
+                subtitleOverride={course.slug === 'ai-essentials' ? AE_CATALOG_DESCRIPTION : undefined}
+                metaLine={course.slug === 'ai-essentials' ? AE_CATALOG_META : undefined}
               />
             ))}
           </div>
