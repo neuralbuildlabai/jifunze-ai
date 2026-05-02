@@ -69,7 +69,7 @@ export function DashboardPage() {
 
   const email = user?.email ?? '—'
   const tierLabel = humanAccessTierLabel(tier)
-  const maxWidth = navVariant === 'super_admin' ? 'max-w-5xl' : 'max-w-4xl'
+  const maxWidth = navVariant === 'super_admin' ? 'max-w-5xl' : 'max-w-3xl'
 
   const header =
     navVariant === 'super_admin' ? (
@@ -81,10 +81,9 @@ export function DashboardPage() {
         </p>
       </header>
     ) : navVariant === 'learner' ? (
-      <header className="border-b border-white/[0.06] pb-6">
-        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">Dashboard</p>
-        <h1 className="mt-1 text-xl font-semibold text-white">Welcome back</h1>
-        <p className="mt-2 max-w-2xl text-sm text-zinc-400">Continue your learning and track your progress.</p>
+      <header className="pb-8">
+        <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-[1.65rem]">Welcome back.</h1>
+        <p className="mt-2 max-w-md text-sm leading-relaxed text-zinc-400">Continue your course and track your progress.</p>
       </header>
     ) : (
       <header className="border-b border-white/[0.06] pb-6">
@@ -112,17 +111,12 @@ export function DashboardPage() {
         </div>
       ) : null}
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <section className={navVariant === 'learner' ? `${cardClass} sm:col-span-2` : cardClass}>
-          <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Account</h2>
-          <p className="mt-2 text-sm text-zinc-200">{email}</p>
-          {navVariant === 'learner' ? (
-            <p className="mt-3 text-[13px] leading-relaxed text-zinc-400">
-              Open Settings for workspace preferences and sign-in help. Learning evidence lives in Reports and Pathways.
-            </p>
-          ) : null}
-        </section>
-        {navVariant === 'learner' ? null : (
+      {navVariant === 'learner' ? null : (
+        <div className="grid gap-4 sm:grid-cols-2">
+          <section className={cardClass}>
+            <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Account</h2>
+            <p className="mt-2 text-sm text-zinc-200">{email}</p>
+          </section>
           <section className={cardClass}>
             <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Role</h2>
             <p className="mt-2 text-sm font-medium text-zinc-100">{tierLoading ? 'Loading…' : tierLabel}</p>
@@ -136,8 +130,8 @@ export function DashboardPage() {
               </p>
             )}
           </section>
-        )}
-      </div>
+        </div>
+      )}
 
       {navVariant === 'super_admin' ? null : (
         <DashboardAdminToolsSection
@@ -147,18 +141,20 @@ export function DashboardPage() {
         />
       )}
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06] pt-6">
-        <p className="text-[11px] text-zinc-600">Need help? Open Settings or sign out and back in after confirming email.</p>
-        <button
-          type="button"
-          disabled={signOutPending}
-          onClick={() => void signOut()}
-          className="rounded-lg border border-zinc-600 bg-zinc-800/80 px-3 py-1.5 text-xs text-zinc-200 hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
-          data-testid="dashboard-sign-out"
-        >
-          Sign out
-        </button>
-      </div>
+      {navVariant === 'learner' ? null : (
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06] pt-6">
+          <p className="text-[11px] text-zinc-600">Need help? Open Settings or sign out and back in after confirming email.</p>
+          <button
+            type="button"
+            disabled={signOutPending}
+            onClick={() => void signOut()}
+            className="rounded-lg border border-zinc-600 bg-zinc-800/80 px-3 py-1.5 text-xs text-zinc-200 hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
+            data-testid="dashboard-sign-out"
+          >
+            Sign out
+          </button>
+        </div>
+      )}
     </div>
   )
 }

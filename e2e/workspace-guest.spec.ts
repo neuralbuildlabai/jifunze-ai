@@ -37,7 +37,7 @@ test.describe('Workspace routes (demo / no Supabase env)', () => {
   test('dashboard route loads (demo guest)', async ({ page }) => {
     await page.goto('/dashboard')
     await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByText(/continue your learning and track your progress/i)).toBeVisible()
+    await expect(page.getByText(/continue your course and track your progress/i)).toBeVisible()
     await expect(page.getByTestId('dashboard-your-pathway')).toBeVisible()
   })
 

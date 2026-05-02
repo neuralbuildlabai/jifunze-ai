@@ -15,6 +15,7 @@ test.describe('Learner workspace cleanup (demo / no Supabase env)', () => {
     await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible({ timeout: 20_000 })
     const nav = page.getByTestId('workspace-nav-primary')
     await expect(nav.getByRole('link', { name: /^dashboard$/i })).toBeVisible()
+    await expect(nav.getByRole('link', { name: /^my learning$/i })).toBeVisible()
     await expect(nav.getByRole('link', { name: /^catalog$/i })).toBeVisible()
     await expect(nav.getByRole('link', { name: /^pathways$/i })).toBeVisible()
     await expect(nav.getByRole('link', { name: /^reports$/i })).toBeVisible()

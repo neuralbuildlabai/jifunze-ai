@@ -3,12 +3,13 @@ import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { learnerShellTokens } from './learnerShellTokens'
 
 /**
- * Primary learner navigation — matches workspace routes; calm, no pill chrome.
+ * Learner workspace navigation — focused on structured learning.
+ * Pathways stays available but visually secondary to the primary course journey.
  */
 export function LearnerTopNav({ className = '' }: { className?: string }) {
   return (
     <nav
-      className={`flex flex-wrap items-center gap-1 ${className}`}
+      className={`flex flex-wrap items-center gap-0.5 sm:gap-1 ${className}`}
       aria-label="Learning"
       data-testid="workspace-nav-primary"
     >
@@ -19,6 +20,12 @@ export function LearnerTopNav({ className = '' }: { className?: string }) {
         Dashboard
       </NavLink>
       <NavLink
+        to="/my-learning"
+        className={({ isActive }) => `${learnerShellTokens.navLink} ${isActive ? learnerShellTokens.navLinkActive : ''}`}
+      >
+        My Learning
+      </NavLink>
+      <NavLink
         to={LEGAL_ROUTES.learn}
         className={({ isActive }) => `${learnerShellTokens.navLink} ${isActive ? learnerShellTokens.navLinkActive : ''}`}
       >
@@ -26,7 +33,9 @@ export function LearnerTopNav({ className = '' }: { className?: string }) {
       </NavLink>
       <NavLink
         to={LEGAL_ROUTES.paths}
-        className={({ isActive }) => `${learnerShellTokens.navLink} ${isActive ? learnerShellTokens.navLinkActive : ''}`}
+        className={({ isActive }) =>
+          `${learnerShellTokens.navLinkMuted} ${isActive ? learnerShellTokens.navLinkMutedActive : ''}`
+        }
       >
         Pathways
       </NavLink>
