@@ -7,15 +7,15 @@ test.describe('Learning discovery (public)', () => {
     await applyPublicE2eMaintenanceBypass(page)
   })
 
-  test('/learn hub shows Available courses and allowlisted catalog only', async ({ page }) => {
+  test('/learn hub shows featured marketplace grid and school browse', async ({ page }) => {
     await page.goto('/learn')
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByRole('heading', { name: /^Available courses$/ })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: /learn ai.*practical tech/i })).toBeVisible()
     const catalogSection = page.getByTestId('discovery-section-flagship-catalog')
     await expect(catalogSection).toBeVisible()
     await expect(page.getByTestId('discovery-featured-ai-essentials')).toBeVisible()
-    await expect(catalogSection.locator('[data-testid^="discovery-featured-"]')).toHaveCount(1)
-    await expect(page.getByTestId('discovery-school-chooser')).toHaveCount(0)
+    await expect(catalogSection.locator('[data-testid^="discovery-featured-"]')).toHaveCount(6)
+    await expect(page.getByTestId('discovery-school-card-ai_digital')).toBeVisible()
   })
 
   test('category page renders browse surface without subscription framing', async ({ page }) => {
