@@ -2,10 +2,7 @@ import { useMemo } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { FLAGSHIP_SCHOOLS } from '../../data/learning/flagshipCoursesCatalog'
 import { canLearnerSelectPathwayAsPrimary, getPathwayBySlug } from '../../data/learning/employablePathwaysCatalog'
-import {
-  partitionPortfolioOutputsForPathway,
-  portfolioOutputDisplayStatus,
-} from '../../data/learning/portfolioOutputsCatalog'
+import { partitionPortfolioOutputsForPathway } from '../../data/learning/portfolioOutputsCatalog'
 import { resolveCourseSummaryForSlug } from '../../data/learning/plannedCoursesCatalog'
 import { useAuth } from '../../auth/AuthContext'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
@@ -20,12 +17,6 @@ import { LearnHeroAbstractFigure, LearnSectionSparkIcon, LearnWorkflowStepsFigur
 
 const sectionTitle = 'text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]'
 const prose = 'text-[14px] leading-relaxed text-[color:var(--jf-muted)]'
-
-function statusChip(status: ReturnType<typeof portfolioOutputDisplayStatus>) {
-  if (status === 'linked_to_course') return 'Tied to course activities'
-  if (status === 'future_submission') return 'Submission support later'
-  return 'Plan ahead'
-}
 
 export function PathwayDetailPage() {
   const { pathwaySlug } = useParams<{ pathwaySlug: string }>()
@@ -89,13 +80,13 @@ export function PathwayDetailPage() {
           </div>
         </div>
 
-        <div className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-4 shadow-[var(--jf-shadow-soft)] ring-1 ring-stone-900/[0.03] sm:px-5">
-          <p className={`${sectionTitle} mb-3 flex flex-wrap items-center gap-2`}>
+        <details className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-3 shadow-[var(--jf-shadow-soft)] ring-1 ring-stone-900/[0.03] sm:px-5">
+          <summary className={`${sectionTitle} flex cursor-pointer flex-wrap items-center gap-2`}>
             <LearnSectionSparkIcon className="h-4 w-4 shrink-0" aria-hidden />
-            How this pathway progresses
-          </p>
-          <LearnWorkflowStepsFigure className="mx-auto h-auto w-full max-w-md sm:mx-0" />
-        </div>
+            How this pathway flows
+          </summary>
+          <LearnWorkflowStepsFigure className="mx-auto mt-4 h-auto w-full max-w-md sm:mx-0" />
+        </details>
 
         {hasAnyAvailableCourse ? (
           <section
@@ -106,10 +97,7 @@ export function PathwayDetailPage() {
             <h2 id="pathway-progress-heading" className={sectionTitle}>
               Your progress
             </h2>
-            <p className={`mt-2 text-[13px] ${prose}`}>
-              You&apos;re building proof across the live courses in this pathway. Signed-in learners merge account progress with this device—it&apos;s still not an
-              official transcript.
-            </p>
+            <p className={`mt-2 text-[13px] ${prose}`}>Your progress on live courses below—not an official transcript.</p>
             {signedIn && pathwaySync && !remoteHydrated ? (
               <p className="mt-2 text-[11px] text-[color:var(--jf-subtle)]">Merging saved progress from your account…</p>
             ) : null}
@@ -188,33 +176,32 @@ export function PathwayDetailPage() {
           </div>
         </section>
 
-        <section>
-          <h2 className={sectionTitle}>Skills that prepare you for real work</h2>
-          <ul className="mt-3 list-inside list-disc space-y-2 text-[14px] text-[color:var(--jf-muted)]">
-            {pathway.skillsGained.map((s) => (
-              <li key={s}>{s}</li>
-            ))}
-          </ul>
-        </section>
-
-        <section>
-          <h2 className={sectionTitle}>Prepares you for roles such as</h2>
-          <p className={`mt-2 ${prose}`}>
-            Examples only—titles vary by employer and region. Jifunze helps you build proof for applications; it does not place learners in jobs and does not
-            guarantee income.
-          </p>
-          <ul className="mt-3 list-inside list-disc space-y-2 text-[14px] text-[color:var(--jf-muted)]">
-            {pathway.possibleRoles.map((r) => (
-              <li key={r}>{r}</li>
-            ))}
-          </ul>
-        </section>
+        <details className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-4 sm:px-5">
+          <summary className="cursor-pointer text-[14px] font-semibold text-[color:var(--jf-text)]">Skills &amp; example roles</summary>
+          <div className="mt-4 space-y-5 border-t border-[color:var(--jf-border)] pt-4">
+            <div>
+              <p className={sectionTitle}>Skills</p>
+              <ul className="mt-2 list-inside list-disc space-y-1.5 text-[14px] text-[color:var(--jf-muted)]">
+                {pathway.skillsGained.map((s) => (
+                  <li key={s}>{s}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className={sectionTitle}>Example roles</p>
+              <p className={`mt-2 text-[13px] ${prose}`}>Examples only—not job placement or income guarantees.</p>
+              <ul className="mt-2 list-inside list-disc space-y-1.5 text-[14px] text-[color:var(--jf-muted)]">
+                {pathway.possibleRoles.map((r) => (
+                  <li key={r}>{r}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </details>
 
         <section id="pathway-included-courses">
-          <h2 className={sectionTitle}>Included courses (available today)</h2>
-          <p className={`mt-2 ${prose}`}>
-            Structured flagship courses you can start today—built for skill proof and portfolio conversations.
-          </p>
+          <h2 className={sectionTitle}>Included courses</h2>
+          <p className={`mt-2 max-w-xl text-[13px] ${prose}`}>Live flagship courses in this pathway.</p>
           <ul className="mt-4 space-y-3">
             {pathway.includedCourseSlugs.map((slug) => {
               const meta = resolveCourseSummaryForSlug(slug)
@@ -245,11 +232,11 @@ export function PathwayDetailPage() {
         </section>
 
         {pathway.plannedCourseSlugs.length ? (
-          <section>
-            <h2 className={sectionTitle}>Planned / coming soon courses</h2>
-            <p className={`mt-2 ${prose}`}>
-              On the roadmap—details and pacing land when each course publishes. They don&apos;t affect your progress on live courses above.
-            </p>
+          <details className="rounded-xl border border-dashed border-[color:var(--jf-border)] bg-stone-50/60 px-4 py-4 sm:px-5">
+            <summary className="cursor-pointer text-[14px] font-semibold text-[color:var(--jf-text)]">
+              Planned courses ({pathway.plannedCourseSlugs.length})
+            </summary>
+            <p className={`mt-3 text-[13px] ${prose}`}>Roadmap only—doesn&apos;t affect progress on live courses above.</p>
             <ul className="mt-4 space-y-3">
               {pathway.plannedCourseSlugs.map((slug) => {
                 const meta = resolveCourseSummaryForSlug(slug)
@@ -271,121 +258,103 @@ export function PathwayDetailPage() {
                 )
               })}
             </ul>
-          </section>
+          </details>
         ) : null}
 
-        <section
-          id="pathway-portfolio-guidance"
-          className="rounded-2xl border border-dashed border-orange-200/60 bg-gradient-to-b from-orange-50/50 to-white p-5 shadow-sm sm:p-6"
-        >
-          <h2 className={sectionTitle}>Portfolio outputs (planning)</h2>
-          <p className={`mt-2 ${prose}`}>
-            A practical checklist—not an upload vault yet. Use it to plan artifacts you can later share with mentors or employers.
+        <section id="pathway-portfolio-guidance" className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-4 shadow-sm sm:px-5">
+          <h2 className={sectionTitle}>Portfolio</h2>
+          <p className={`mt-2 max-w-xl text-[14px] ${prose}`}>
+            You&apos;ll build practical proof through course work—plan artifacts here; uploads come later.
           </p>
-
-          {requiredOutputs.length ? (
-            <div className="mt-4">
-              <p className="text-[12px] font-semibold text-[color:var(--jf-text)]">Highlighted for certificate framing</p>
-              <ul className="mt-2 space-y-3">
-                {requiredOutputs.map((o) => (
-                  <li key={o.id} className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-3">
-                    <p className="font-semibold text-[color:var(--jf-text)]">{o.title}</p>
-                    <p className="mt-1 text-[13px] text-[color:var(--jf-muted)]">{o.description}</p>
-                    {o.courseSlug ? (
-                      <p className="mt-2 text-[12px]">
-                        <Link
-                          className="font-semibold text-[color:var(--jf-brand)] underline-offset-2 hover:underline"
-                          to={`/learn/courses/${o.courseSlug}`}
-                        >
-                          Open related course
+          <details className="mt-4 rounded-lg border border-orange-200/50 bg-orange-50/40 px-4 py-3">
+            <summary className="cursor-pointer text-[14px] font-semibold text-[color:var(--jf-text)]">
+              View portfolio items ({requiredOutputs.length + optionalOutputs.length})
+            </summary>
+            <div className="mt-4 space-y-6 border-t border-[color:var(--jf-border)]/60 pt-4">
+              {requiredOutputs.length ? (
+                <div>
+                  <p className="text-[12px] font-semibold text-[color:var(--jf-text)]">Core outputs</p>
+                  <ul className="mt-2 space-y-3">
+                    {requiredOutputs.map((o) => (
+                      <li key={o.id} className="rounded-lg border border-[color:var(--jf-border)] bg-white px-3 py-2.5">
+                        <p className="font-semibold text-[color:var(--jf-text)]">{o.title}</p>
+                        <p className="mt-0.5 text-[13px] text-[color:var(--jf-muted)]">{o.description}</p>
+                        {o.courseSlug ? (
+                          <Link className="mt-2 inline-block text-[12px] font-semibold text-[color:var(--jf-brand)]" to={`/learn/courses/${o.courseSlug}`}>
+                            Related course
+                          </Link>
+                        ) : null}
+                        {o.filenameGuidance ? (
+                          <details className="mt-2 text-[12px] text-[color:var(--jf-muted)]">
+                            <summary className="cursor-pointer font-medium text-[color:var(--jf-text)]">File naming</summary>
+                            <p className="mt-1 leading-relaxed">{o.filenameGuidance}</p>
+                          </details>
+                        ) : null}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+              <div>
+                <p className="text-[12px] font-semibold text-[color:var(--jf-text)]">Additional outputs</p>
+                <ul className="mt-2 space-y-3">
+                  {optionalOutputs.map((o) => (
+                    <li key={o.id} className="rounded-lg border border-[color:var(--jf-border)] bg-white px-3 py-2.5">
+                      <p className="font-semibold text-[color:var(--jf-text)]">{o.title}</p>
+                      <p className="mt-0.5 text-[13px] text-[color:var(--jf-muted)]">{o.description}</p>
+                      {o.courseSlug ? (
+                        <Link className="mt-2 inline-block text-[12px] font-semibold text-[color:var(--jf-brand)]" to={`/learn/courses/${o.courseSlug}`}>
+                          Related course
                         </Link>
-                      </p>
-                    ) : null}
-                    <div className="mt-2 flex flex-wrap items-center gap-2">
-                      <span className="inline-block rounded-full border border-[color:var(--jf-border)] bg-stone-50 px-2 py-0.5 text-[11px] text-[color:var(--jf-muted)]">
-                        {statusChip(portfolioOutputDisplayStatus(o))}
-                      </span>
-                    </div>
-                    {o.filenameGuidance ? (
-                      <details className="mt-2 text-[12px] text-[color:var(--jf-muted)]">
-                        <summary className="cursor-pointer font-semibold text-[color:var(--jf-text)]">File naming</summary>
-                        <p className="mt-2 leading-relaxed">{o.filenameGuidance}</p>
-                      </details>
-                    ) : null}
-                  </li>
+                      ) : null}
+                      {o.filenameGuidance || o.learnerInstructionsPlaceholder ? (
+                        <details className="mt-2 text-[12px] text-[color:var(--jf-muted)]">
+                          <summary className="cursor-pointer font-medium text-[color:var(--jf-text)]">Notes</summary>
+                          <div className="mt-1 space-y-1 leading-relaxed">
+                            {o.filenameGuidance ? <p>{o.filenameGuidance}</p> : null}
+                            {o.learnerInstructionsPlaceholder ? <p className="text-[color:var(--jf-subtle)]">{o.learnerInstructionsPlaceholder}</p> : null}
+                          </div>
+                        </details>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <details className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)]/50 px-4 py-4 sm:px-5">
+          <summary className="cursor-pointer text-[14px] font-semibold text-[color:var(--jf-text)]">Themes, capstone &amp; certificate detail</summary>
+          <div className="mt-4 space-y-6 border-t border-[color:var(--jf-border)] pt-6">
+            <section>
+              <h2 className={sectionTitle}>Portfolio themes</h2>
+              <ul className="mt-3 list-inside list-disc space-y-1.5 text-[14px] text-[color:var(--jf-muted)]">
+                {pathway.portfolioOutputs.map((s) => (
+                  <li key={s}>{s}</li>
                 ))}
               </ul>
-            </div>
-          ) : (
-            <p className="mt-3 text-[12px] text-[color:var(--jf-subtle)]">No outputs marked “required” for this pathway yet.</p>
-          )}
-
-          <div className="mt-5">
-            <p className="text-[12px] font-semibold text-[color:var(--jf-text)]">More outputs you can build</p>
-            <ul className="mt-2 space-y-3">
-              {optionalOutputs.map((o) => (
-                <li key={o.id} className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-3">
-                  <p className="font-semibold text-[color:var(--jf-text)]">{o.title}</p>
-                  <p className="mt-1 text-[13px] text-[color:var(--jf-muted)]">{o.description}</p>
-                  {o.courseSlug ? (
-                    <p className="mt-2 text-[12px]">
-                      <Link
-                        className="font-semibold text-[color:var(--jf-brand)] underline-offset-2 hover:underline"
-                        to={`/learn/courses/${o.courseSlug}`}
-                      >
-                        Open related course
-                      </Link>
-                    </p>
-                  ) : null}
-                  <div className="mt-2 flex flex-wrap items-center gap-2">
-                    <span className="inline-block rounded-full border border-[color:var(--jf-border)] bg-stone-50 px-2 py-0.5 text-[11px] text-[color:var(--jf-muted)]">
-                      {statusChip(portfolioOutputDisplayStatus(o))}
-                    </span>
-                  </div>
-                  {o.filenameGuidance || o.learnerInstructionsPlaceholder ? (
-                    <details className="mt-2 text-[12px] text-[color:var(--jf-muted)]">
-                      <summary className="cursor-pointer font-semibold text-[color:var(--jf-text)]">Notes &amp; file naming</summary>
-                      <div className="mt-2 space-y-2 leading-relaxed">
-                        {o.filenameGuidance ? <p>{o.filenameGuidance}</p> : null}
-                        {o.learnerInstructionsPlaceholder ? <p className="text-[color:var(--jf-subtle)]">{o.learnerInstructionsPlaceholder}</p> : null}
-                      </div>
-                    </details>
-                  ) : null}
-                </li>
-              ))}
-            </ul>
+            </section>
+            <section>
+              <h2 className={sectionTitle}>Final project</h2>
+              <p className={`mt-2 ${prose}`}>{pathway.finalProjectCapstone}</p>
+            </section>
+            <section>
+              <h2 className={sectionTitle}>Certificate readiness</h2>
+              <p className={`mt-2 ${prose}`}>{pathway.certificateReadinessCriteria}</p>
+            </section>
+            <section className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <h2 className={sectionTitle}>Kenya relevance</h2>
+                <p className={`mt-2 ${prose}`}>{pathway.kenyaRelevance}</p>
+              </div>
+              <div>
+                <h2 className={sectionTitle}>Global relevance</h2>
+                <p className={`mt-2 ${prose}`}>{pathway.globalRelevance}</p>
+              </div>
+            </section>
           </div>
-        </section>
-
-        <section>
-          <h2 className={sectionTitle}>Portfolio themes (from pathway)</h2>
-          <ul className="mt-3 list-inside list-disc space-y-2 text-[14px] text-[color:var(--jf-muted)]">
-            {pathway.portfolioOutputs.map((s) => (
-              <li key={s}>{s}</li>
-            ))}
-          </ul>
-        </section>
-
-        <section>
-          <h2 className={sectionTitle}>Final project / capstone direction</h2>
-          <p className={`mt-2 ${prose}`}>{pathway.finalProjectCapstone}</p>
-        </section>
-
-        <section>
-          <h2 className={sectionTitle}>Certificate readiness</h2>
-          <p className={`mt-2 ${prose}`}>{pathway.certificateReadinessCriteria}</p>
-        </section>
-
-        <section className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <h2 className={sectionTitle}>Kenya relevance</h2>
-            <p className={`mt-2 ${prose}`}>{pathway.kenyaRelevance}</p>
-          </div>
-          <div>
-            <h2 className={sectionTitle}>Global relevance</h2>
-            <p className={`mt-2 ${prose}`}>{pathway.globalRelevance}</p>
-          </div>
-        </section>
+        </details>
 
         {next ? (
           <section className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-5 shadow-[var(--jf-shadow-soft)]">

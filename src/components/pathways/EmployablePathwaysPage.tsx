@@ -43,8 +43,8 @@ export function EmployablePathwaysPage() {
               <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-[2.1rem] sm:leading-tight">
                 Choose a learning pathway
               </h1>
-              <p className="mt-4 text-[15px] leading-relaxed text-[color:var(--jf-muted)]">
-                Pick the direction that matches your goal. Pathways sequence flagship courses and portfolio outputs—you can refine your choice later.
+              <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-[color:var(--jf-muted)]">
+                Pick a direction that fits your goal. You can change it anytime.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-3 sm:justify-start">
                 <Link

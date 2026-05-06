@@ -62,9 +62,12 @@ export function FlagshipCourseCurriculumSections(props: {
         <p className="text-[12px] leading-snug text-[color:var(--jf-subtle)] sm:max-w-md sm:text-right">{curriculum.depthLabel}</p>
       </div>
       <p className="mt-3 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{curriculum.estimatedDurationLabel}</p>
-        <p className="mt-2 max-w-xl text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">
-        Self-paced — session effort is qualitative until timing models are anchored to block-level work. Prefer depth over clock-chasing.
-      </p>
+      <details className="mt-2 max-w-xl rounded-lg border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)]/40 px-3 py-2 text-[12px] text-[color:var(--jf-muted)]">
+        <summary className="cursor-pointer font-semibold text-[color:var(--jf-text)]">Pacing notes</summary>
+        <p className="mt-2 leading-relaxed text-[color:var(--jf-subtle)]">
+          Self-paced—focus on depth rather than clock time until timing guidance is anchored to block-level work.
+        </p>
+      </details>
 
       {progress.certificateReady ? (
         <div
@@ -72,32 +75,36 @@ export function FlagshipCourseCurriculumSections(props: {
           role="status"
         >
           <p className="font-semibold text-emerald-950/85">Certificate-ready</p>
-          <p className="mt-1 text-[color:var(--jf-muted)]">
-            You have completed all modules (including quizzes and mastery checkpoints) and capstone preparation. Jifunze does not issue PDF certificates from the product yet — this status means you have met the completion bar for future credentialing.
-          </p>
+          <details className="mt-2 text-[color:var(--jf-muted)]">
+            <summary className="cursor-pointer font-medium text-[color:var(--jf-text)]">What this means</summary>
+            <p className="mt-2 leading-relaxed">
+              Modules, quizzes, checkpoints, and capstone prep are complete. In-product PDF certificates are not issued yet—this tracks readiness for future
+              credentialing.
+            </p>
+          </details>
         </div>
       ) : courseSlug === 'ai-essentials' ? (
-        <div className="mt-6 max-w-2xl rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/80 px-5 py-4 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-          <p>
-            <span className="font-semibold text-[color:var(--jf-text)]">Certificate readiness: </span>
-            Finish sessions, practice checkpoints, module quizzes, capstone prep, and the Module 16 portfolio plus rubric self-check—the full checklist lives in
-            your course overview under “Certificate readiness”.
+        <details className="mt-6 max-w-2xl rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/80 px-5 py-4 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
+          <summary className="cursor-pointer font-semibold text-[color:var(--jf-text)]">Certificate requirements</summary>
+          <p className="mt-3 border-t border-[color:var(--jf-border)]/70 pt-3">
+            Finish sessions, checkpoints, module quizzes, capstone prep, Module 16 portfolio work, and the rubric self-check. Your overview lists readiness under
+            “Certificate readiness”.
           </p>
-        </div>
+        </details>
       ) : null}
 
       {/* Structure overview — stages tied to real module counts */}
-      <section className="mt-14" aria-labelledby="structure-overview-heading" data-testid="flagship-curriculum-structure">
-        <h2
-          id="structure-overview-heading"
-          className="flex flex-wrap items-center gap-2 text-lg font-semibold tracking-tight text-[color:var(--jf-text)]"
-        >
-          <LearnSectionSparkIcon className="h-6 w-6 shrink-0" aria-hidden />
-          Course structure overview
-        </h2>
-        <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-          The Jifunze depth model maps directly onto your module path—each stage has dedicated modules, not a label pasted on thin content.
-        </p>
+      <details className="mt-14 group" data-testid="flagship-curriculum-structure">
+        <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+          <h2 className="flex flex-wrap items-center gap-2 text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
+            <LearnSectionSparkIcon className="h-6 w-6 shrink-0" aria-hidden />
+            How this course is staged
+            <span className="text-[13px] font-normal text-[color:var(--jf-muted)]"> · Show stages</span>
+          </h2>
+          <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+            Four depth bands—each has real modules, not a label on thin content.
+          </p>
+        </summary>
         <ol className="mt-8 grid gap-4 sm:grid-cols-2">
           {STAGE_FLOW.map((stage, i) => (
             <li
@@ -114,21 +121,20 @@ export function FlagshipCourseCurriculumSections(props: {
             </li>
           ))}
         </ol>
-      </section>
+      </details>
 
       {/* Practice & reinforcement */}
-      <section className="mt-14 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-5 py-6 shadow-[var(--jf-shadow-soft)] ring-1 ring-stone-900/[0.03] sm:px-8 sm:py-8" aria-labelledby="reinforcement-heading">
-        <h2
-          id="reinforcement-heading"
-          className="flex flex-wrap items-center gap-2 text-lg font-semibold tracking-tight text-[color:var(--jf-text)]"
-        >
-          <LearnSectionSparkIcon className="h-6 w-6 shrink-0" aria-hidden />
-          Practice, revision, and real-world work
-        </h2>
-        <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-          Depth signals in this path:{' '}
-          <span className="font-medium text-[color:var(--jf-text)]">{practiceAnchors}</span> modules with applied tasks ·{' '}
-          <span className="font-medium text-[color:var(--jf-text)]">{revisionPoints}</span> revision or recap checkpoints.
+      <details className="mt-14 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-5 py-6 shadow-[var(--jf-shadow-soft)] ring-1 ring-stone-900/[0.03] sm:px-8 sm:py-8">
+        <summary className="cursor-pointer list-none text-lg font-semibold tracking-tight text-[color:var(--jf-text)] [&::-webkit-details-marker]:hidden">
+          <span className="inline-flex flex-wrap items-center gap-2">
+            <LearnSectionSparkIcon className="h-6 w-6 shrink-0" aria-hidden />
+            Practice &amp; checkpoints
+            <span className="text-[13px] font-normal text-[color:var(--jf-muted)]"> · Details</span>
+          </span>
+        </summary>
+        <p className="mt-3 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
+          <span className="font-medium text-[color:var(--jf-text)]">{practiceAnchors}</span> modules emphasize applied tasks ·{' '}
+          <span className="font-medium text-[color:var(--jf-text)]">{revisionPoints}</span> recap checkpoints.
         </p>
         <ul className="mt-6 space-y-3">
           {curriculum.reinforcementSignals.map((line) => (
@@ -139,10 +145,10 @@ export function FlagshipCourseCurriculumSections(props: {
           ))}
           <li className="flex gap-3 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
             <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400/55" aria-hidden />
-            Mastery checkpoints on practice sessions plus capstone prep after defensible readiness—consistent across every flagship track.
+            Mastery checkpoints align with capstone prep once practice shows readiness.
           </li>
         </ul>
-      </section>
+      </details>
 
       <FlagshipCourseLearningPath courseSlug={courseSlug} curriculum={curriculum} sessions={sessions} progress={progress} />
 

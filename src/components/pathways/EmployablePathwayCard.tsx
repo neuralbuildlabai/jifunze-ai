@@ -39,11 +39,8 @@ export function EmployablePathwayCard({
 }) {
   const available = getPathwayAvailableCourses(pathway).length
   const planned = pathway.plannedCourseSlugs.length
-  const portfolioCount = pathway.portfolioOutputs.length
   const pill = statusPill(pathway)
   const pad = compact ? 'p-5' : 'p-6 sm:p-7'
-  const skillsPreview = pathway.skillsGained.slice(0, 3).join(' · ')
-  const rolesPreview = pathway.possibleRoles.slice(0, 2).join(' · ')
 
   if (presentation === 'browse') {
     return (
@@ -80,28 +77,12 @@ export function EmployablePathwayCard({
         <span className="font-medium text-[color:var(--jf-muted)]">For: </span>
         <span className="line-clamp-2 text-[color:var(--jf-muted)]">{pathway.targetLearner}</span>
       </p>
-      <p className="mt-2 text-left text-[11px] leading-relaxed text-[color:var(--jf-muted)]">
-        <span className="font-semibold text-[color:var(--jf-subtle)]">Skills: </span>
-        <span className="line-clamp-2">{skillsPreview}</span>
-      </p>
-      <p className="mt-1.5 text-left text-[11px] leading-relaxed text-[color:var(--jf-muted)]">
-        <span className="font-semibold text-[color:var(--jf-subtle)]">Roles: </span>
-        <span className="line-clamp-2">{rolesPreview}</span>
-      </p>
-      <div className="mt-auto flex flex-wrap gap-x-3 gap-y-1 border-t border-[color:var(--jf-border)] pt-4 text-[11px] text-[color:var(--jf-subtle)]">
-        <span>
-          <span className="font-semibold tabular-nums text-[color:var(--jf-muted)]">{available}</span> live courses
-          {planned > 0 ? (
-            <>
-              {' '}
-              ·{' '}
-              <span className="font-semibold tabular-nums text-[color:var(--jf-muted)]">{planned}</span> coming later
-            </>
-          ) : null}
-        </span>
-        {portfolioCount > 0 ? (
-          <span className="text-[color:var(--jf-subtle)]">
-            Portfolio themes: <span className="font-semibold text-[color:var(--jf-muted)]">{portfolioCount}</span>
+      <div className="mt-auto border-t border-[color:var(--jf-border)] pt-4 text-[11px] text-[color:var(--jf-subtle)]">
+        <span className="font-semibold tabular-nums text-[color:var(--jf-muted)]">{available}</span> courses available now
+        {planned > 0 ? (
+          <span className="text-[color:var(--jf-muted)]">
+            {' '}
+            · <span className="font-semibold tabular-nums">{planned}</span> planned
           </span>
         ) : null}
       </div>

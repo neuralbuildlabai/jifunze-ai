@@ -16,8 +16,7 @@ import { LearnHeroAbstractFigure, LearnSectionSparkIcon } from '../visuals/Jifun
 import { FlagshipCourseLearningPath } from './FlagshipCourseLearningPath'
 import { FlagshipSupportMaterials } from './FlagshipSupportMaterials'
 
-const COURSE_PROMISE =
-  'Build practical AI fluency: prompt clearly, verify outputs, use AI responsibly, design safer workflows, and assemble portfolio-ready proof.'
+const COURSE_PROMISE = 'Build practical AI skills through guided lessons, practice, and a final capstone.'
 
 const WHAT_YOU_LEARN = [
   'Use prompts with clear task, context, constraints, format, and audience.',
@@ -111,8 +110,6 @@ export function AiEssentialsCourseOverview(props: Props) {
                 16 modules
               </span>
               <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 px-3 py-1 shadow-sm">About 32–45 hours</span>
-              <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 px-3 py-1 shadow-sm">Guided milestones</span>
-              <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 px-3 py-1 shadow-sm">Beginner to intermediate</span>
               <span className="rounded-full border border-emerald-200/70 bg-emerald-50/95 px-3 py-1 text-emerald-950/90 shadow-sm">Portfolio + capstone</span>
             </div>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -127,7 +124,7 @@ export function AiEssentialsCourseOverview(props: Props) {
                 href="#curriculum"
                 className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] shadow-sm transition hover:bg-stone-50"
               >
-                View curriculum
+                View full course path
               </a>
             </div>
             <TrustBoundaryStrip
@@ -173,10 +170,10 @@ export function AiEssentialsCourseOverview(props: Props) {
         <p className="mt-4 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
           {next && nextOpen ? (
             <>
-              Next: <span className="font-medium text-[color:var(--jf-text)]">{next.title}</span>
+              Your next lesson: <span className="font-medium text-[color:var(--jf-text)]">{next.title}</span>
             </>
           ) : (
-            <>Open Module 1 when you&apos;re ready—complete lesson, practice, quiz, and checkpoints step by step.</>
+            <>Start with the first module and build step by step.</>
           )}
         </p>
         <div className="mt-5">
@@ -189,29 +186,27 @@ export function AiEssentialsCourseOverview(props: Props) {
           </Link>
         </div>
         <details className="mt-6 border-t border-[color:var(--jf-border)] pt-4" data-testid="ae-certificate-readiness">
-          <summary className="cursor-pointer text-[13px] font-medium text-[color:var(--jf-muted)]">
-            Certificate readiness — how completion is checked
-          </summary>
+          <summary className="cursor-pointer text-[13px] font-semibold text-[color:var(--jf-text)]">Completion rules</summary>
           <ul className="mt-3 space-y-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
             <li className="flex gap-2">
               <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400/75" aria-hidden />
               <span>
-                Short module quizzes after each module: {quizPassLine}.
+                Module quizzes: {quizPassLine}.
               </span>
             </li>
             <li className="flex gap-2">
               <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400/75" aria-hidden />
               <span>
-                100%: Module 16 and rubric rows <span className="text-[color:var(--jf-text)]">Ready</span> or{' '}
+                Full completion: Module 16 plus rubric rows <span className="text-[color:var(--jf-text)]">Ready</span> or{' '}
                 <span className="text-[color:var(--jf-text)]">Strong</span>.
               </span>
             </li>
           </ul>
           <p className="mt-3 text-[12px] text-[color:var(--jf-subtle)]">
             {certificateReady ? (
-              <span className="text-emerald-800/90">You meet the in-product readiness bar.</span>
+              <span className="text-emerald-800/90">You meet the in-app readiness bar.</span>
             ) : (
-              <>Not a PDF certificate or external accreditation.</>
+              <>In-app readiness only—not a PDF or external credential.</>
             )}
           </p>
         </details>
@@ -219,16 +214,27 @@ export function AiEssentialsCourseOverview(props: Props) {
 
       <section className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/60 px-5 py-6 sm:px-7" aria-labelledby="ae-learn-main-heading">
         <h2 id="ae-learn-main-heading" className="text-[15px] font-semibold text-[color:var(--jf-text)]">
-          What you will learn
+          What you’ll learn
         </h2>
         <ul className="mt-4 space-y-2">
-          {WHAT_YOU_LEARN.map((line) => (
+          {WHAT_YOU_LEARN.slice(0, 4).map((line) => (
             <li key={line} className="flex gap-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
               <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--jf-text)]/35" aria-hidden />
               <span>{line}</span>
             </li>
           ))}
         </ul>
+        <details className="mt-4 text-[13px] text-[color:var(--jf-muted)]">
+          <summary className="cursor-pointer font-semibold text-[color:var(--jf-text)]">Show full outcomes</summary>
+          <ul className="mt-3 space-y-2">
+            {WHAT_YOU_LEARN.slice(4).map((line) => (
+              <li key={line} className="flex gap-3 leading-relaxed">
+                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--jf-text)]/35" aria-hidden />
+                <span>{line}</span>
+              </li>
+            ))}
+          </ul>
+        </details>
       </section>
 
       <div id="curriculum" className="scroll-mt-24 space-y-4">
@@ -236,9 +242,7 @@ export function AiEssentialsCourseOverview(props: Props) {
           <LearnSectionSparkIcon className="h-6 w-6 shrink-0" aria-hidden />
           Curriculum
         </h2>
-        <p className="max-w-2xl text-[13px] text-[color:var(--jf-muted)]">
-          Complete modules in order. Each includes lesson, practice, checkpoints, a short quiz, and a portfolio-ready output.
-        </p>
+        <p className="max-w-xl text-[13px] text-[color:var(--jf-muted)]">Start with Module 1 and build your skills step by step.</p>
         <FlagshipCourseLearningPath
           courseSlug={slug}
           curriculum={curriculum}
@@ -251,23 +255,18 @@ export function AiEssentialsCourseOverview(props: Props) {
       </div>
 
       <section className="rounded-2xl border border-orange-200/65 bg-orange-50/75 px-5 py-6 sm:px-8" aria-labelledby="ae-capstone-heading" data-testid="ae-capstone-section">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-orange-950/75">Module 16</p>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-orange-950/75">Module 16 · Capstone</p>
         <h2 id="ae-capstone-heading" className="mt-2 text-xl font-semibold tracking-tight text-[color:var(--jf-text)]">
-          Final capstone — End-to-End AI-Supported Workflow
+          End-to-end AI-supported workflow
         </h2>
-        <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-          Use your course artifacts to plan, prompt, verify, revise, protect information, and reflect on your judgment.
+        <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+          Bring your artifacts together—plan, verify, and reflect in one integrated project.
         </p>
-        <p className="mt-3 max-w-2xl text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-          Full completion uses the in-app rubric self-check when you finish Module 16—details below.
-        </p>
-        <p className="mt-3 text-[13px] text-[color:var(--jf-muted)]">{curriculum.capstone.title}</p>
-        <details className="mt-4 group">
-          <summary className="cursor-pointer text-[13px] font-semibold text-[color:var(--jf-text)] underline-offset-2 hover:underline">
-            Full brief, deliverables, and 100% completion detail
-          </summary>
-          <p className="mt-4 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-            100% course completion requires Module 16 plus every capstone rubric row marked Ready or Strong in the app.
+        <details className="mt-4 rounded-lg border border-orange-200/50 bg-white/60 px-4 py-3">
+          <summary className="cursor-pointer text-[13px] font-semibold text-[color:var(--jf-text)]">Brief, deliverables &amp; full completion</summary>
+          <p className="mt-3 text-[13px] font-medium text-[color:var(--jf-text)]">{curriculum.capstone.title}</p>
+          <p className="mt-3 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
+            100% completion includes Module 16 plus every capstone rubric row Ready or Strong in the app.
           </p>
           <p className="mt-4 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">{curriculum.capstone.description}</p>
           <ul className="mt-4 space-y-2">
@@ -292,56 +291,46 @@ export function AiEssentialsCourseOverview(props: Props) {
             </span>
           </div>
         ) : (
-          <p className="mt-4 text-[13px] text-[color:var(--jf-subtle)]">
-            Capstone prep stays closed until earlier modules, quizzes, and practice checkpoints show you&apos;re ready.
-          </p>
+          <p className="mt-4 text-[13px] text-[color:var(--jf-subtle)]">Capstone prep unlocks when earlier modules show you&apos;re ready.</p>
         )}
       </section>
 
-      <FlagshipSupportMaterials courseSlug={slug} curriculum={curriculum} sessions={sessions} progress={progress} collapsedByDefault />
+      <p className="text-center text-[13px] text-[color:var(--jf-muted)]">
+        You&apos;ll build a small portfolio of practical AI work—examples and filenames stay with each module when you open it.
+      </p>
+
+      <FlagshipSupportMaterials courseSlug={slug} curriculum={curriculum} sessions={sessions} progress={progress} collapsedByDefault minimalStrip />
 
       <details className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/40 px-5 py-4 sm:px-6">
-        <summary className="cursor-pointer text-[14px] font-semibold text-[color:var(--jf-text)]">Additional context</summary>
-        <div className="mt-6 space-y-10 border-t border-[color:var(--jf-border)] pt-8">
+        <summary className="cursor-pointer text-[14px] font-semibold text-[color:var(--jf-text)]">Examples, pathways &amp; full create list</summary>
+        <div className="mt-6 space-y-8 border-t border-[color:var(--jf-border)] pt-8">
           <section aria-labelledby="ae-portfolio-showcase-heading">
-            <h2 id="ae-portfolio-showcase-heading" className="text-base font-semibold tracking-tight text-[color:var(--jf-text)]">
-              Portfolio showcase (sample)
+            <h2 id="ae-portfolio-showcase-heading" className="text-[13px] font-semibold tracking-tight text-[color:var(--jf-text)]">
+              Portfolio examples
             </h2>
-            <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-              One artifact per module in the full path; expand modules in the curriculum for the complete list.
-            </p>
-            <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {AI_ESSENTIALS_PORTFOLIO_SHOWCASE.map((item) => (
+            <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+              {AI_ESSENTIALS_PORTFOLIO_SHOWCASE.slice(0, 6).map((item) => (
                 <li
                   key={item.id}
-                  className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/80 px-4 py-3.5 text-[13px] leading-snug text-[color:var(--jf-muted)]"
+                  className="rounded-lg border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/80 px-3 py-2.5 text-[12px] leading-snug text-[color:var(--jf-muted)]"
                 >
                   <p className="font-semibold text-[color:var(--jf-text)]">{item.title}</p>
-                  <p className="mt-1.5 text-[12px] leading-relaxed">{item.detail}</p>
+                  <p className="mt-1 text-[11px] leading-relaxed">{item.detail}</p>
                 </li>
               ))}
             </ul>
           </section>
 
           <section aria-labelledby="ae-pathways-heading">
-            <h2 id="ae-pathways-heading" className="text-base font-semibold tracking-tight text-[color:var(--jf-text)]">
-              Pathway relevance
+            <h2 id="ae-pathways-heading" className="text-[13px] font-semibold tracking-tight text-[color:var(--jf-text)]">
+              Related pathways
             </h2>
-            <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-              AI Essentials supports several pathways; only some list it as core today.
-            </p>
-            <ul className="mt-4 space-y-3">
+            <ul className="mt-3 space-y-2">
               {AI_ESSENTIALS_PATHWAY_BLURBS.map((p) => (
-                <li
-                  key={p.slug}
-                  className="flex flex-col gap-1 rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)]/50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
-                >
-                  <div>
-                    <p className="text-[14px] font-semibold text-[color:var(--jf-text)]">{p.title}</p>
-                    <p className="mt-1 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{p.line}</p>
-                  </div>
-                  <Link to={`/paths/${p.slug}`} className="shrink-0 text-[12px] font-semibold text-[color:var(--jf-text)] underline-offset-2 hover:underline">
-                    View pathway
+                <li key={p.slug} className="flex flex-wrap items-baseline justify-between gap-2 text-[13px] text-[color:var(--jf-muted)]">
+                  <span className="font-medium text-[color:var(--jf-text)]">{p.title}</span>
+                  <Link to={`/paths/${p.slug}`} className="shrink-0 text-[12px] font-semibold text-[color:var(--jf-brand)] underline-offset-2 hover:underline">
+                    View
                   </Link>
                 </li>
               ))}
@@ -349,12 +338,12 @@ export function AiEssentialsCourseOverview(props: Props) {
           </section>
 
           <section aria-labelledby="ae-create-heading">
-            <h2 id="ae-create-heading" className="text-base font-semibold tracking-tight text-[color:var(--jf-text)]">
-              What you will create
+            <h2 id="ae-create-heading" className="text-[13px] font-semibold tracking-tight text-[color:var(--jf-text)]">
+              Full “what you’ll create” list
             </h2>
-            <ul className="mt-4 space-y-2">
+            <ul className="mt-3 space-y-2">
               {WHAT_YOU_CREATE.map((line) => (
-                <li key={line} className="flex gap-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+                <li key={line} className="flex gap-3 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
                   <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400/60" aria-hidden />
                   <span>{line}</span>
                 </li>

@@ -76,44 +76,54 @@ export function FlagshipSupportMaterials(props: {
   progress: FlagshipCourseProgressApi
   /** When true, list stays closed until the learner expands it (Course 1 overview). */
   collapsedByDefault?: boolean
+  /** Minimal surface: single strip + count—full list behind toggle (AI Essentials overview). */
+  minimalStrip?: boolean
 }) {
-  const { courseSlug, curriculum, sessions, progress, collapsedByDefault } = props
+  const { courseSlug, curriculum, sessions, progress, collapsedByDefault, minimalStrip } = props
   const mats = supportMaterialsForCourse(courseSlug, curriculum)
   const [open, setOpen] = useState(!collapsedByDefault)
+  const showToggle = Boolean(collapsedByDefault || minimalStrip)
+
+  const stripClasses = minimalStrip
+    ? 'mt-10 rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-4 shadow-sm sm:px-5'
+    : 'mt-14 rounded-2xl border border-[color:var(--jf-border)] bg-gradient-to-b from-orange-50/40 via-white to-stone-50/30 p-5 shadow-[var(--jf-shadow-soft)] sm:p-7'
 
   return (
-    <section
-      className="mt-14 rounded-2xl border border-[color:var(--jf-border)] bg-gradient-to-b from-orange-50/40 via-white to-stone-50/30 p-5 shadow-[var(--jf-shadow-soft)] sm:p-7"
-      aria-labelledby="support-materials-heading"
-    >
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
+    <section className={stripClasses} aria-labelledby="support-materials-heading">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="min-w-0">
           <h2
             id="support-materials-heading"
-            className="flex flex-wrap items-center gap-2 text-lg font-semibold tracking-tight text-[color:var(--jf-text)]"
+            className={`flex flex-wrap items-center gap-2 font-semibold tracking-tight text-[color:var(--jf-text)] ${minimalStrip ? 'text-[15px]' : 'text-lg'}`}
           >
-            <LearnSectionSparkIcon className="h-6 w-6 shrink-0" />
+            {!minimalStrip ? <LearnSectionSparkIcon className="h-6 w-6 shrink-0" /> : null}
             Support materials
           </h2>
-          <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-            {collapsedByDefault
-              ? 'Support materials unlock as you progress. Printable sheets are for your notes—not a substitute for doing the work on the platform.'
-              : 'Printable summaries for revision—not a substitute for guided work on the platform. Sheets unlock as you earn progress.'}
+          <p className={`mt-1 max-w-xl text-[color:var(--jf-muted)] ${minimalStrip ? 'text-[12px] leading-snug' : 'mt-2 max-w-2xl text-[14px] leading-relaxed'}`}>
+            {minimalStrip ? (
+              <>
+                <span className="font-medium text-[color:var(--jf-text)]">{mats.length}</span> printable sheets · unlock as you progress
+              </>
+            ) : collapsedByDefault ? (
+              'Short printable aids—open the list when you need them.'
+            ) : (
+              'Printable summaries for revision. Sheets unlock as you earn progress.'
+            )}
           </p>
         </div>
-        {collapsedByDefault ? (
+        {showToggle ? (
           <button
             type="button"
             onClick={() => setOpen((o) => !o)}
             className="inline-flex min-h-[2.5rem] shrink-0 items-center rounded-full border border-[color:var(--jf-border)] bg-white px-4 text-[12px] font-semibold text-[color:var(--jf-text)] shadow-sm transition hover:bg-stone-50"
             aria-expanded={open}
           >
-            {open ? 'Hide list' : 'Show list'}
+            {open ? 'Hide' : 'Show materials'}
           </button>
         ) : null}
       </div>
       {open ? (
-        <ul className="mt-6 space-y-3">
+        <ul className={`space-y-3 ${minimalStrip ? 'mt-4' : 'mt-6'}`}>
           {mats.map((m) => (
             <MaterialRow
               key={m.id}

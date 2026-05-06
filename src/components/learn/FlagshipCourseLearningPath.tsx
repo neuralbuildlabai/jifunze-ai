@@ -25,7 +25,6 @@ import {
   priorModulesQuizSatisfied,
 } from '../../lib/flagshipCourseProgressDerived'
 import {
-  AI_ESSENTIALS_MODULE_MILESTONE_LINE,
   AI_ESSENTIALS_MODULE_PORTFOLIO_LABEL,
   AI_ESSENTIALS_MODULE_TIME_HINT,
   AI_ESSENTIALS_STAGE_SECTION_LABEL,
@@ -280,10 +279,10 @@ export function FlagshipCourseLearningPath(props: {
             <LearnSectionSparkIcon className="h-6 w-6 shrink-0" aria-hidden />
             {layout === 'accordion' ? 'Curriculum' : 'Your learning path'}
           </h2>
-          <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+          <p className="mt-2 max-w-xl text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
             {layout === 'accordion'
-              ? 'Expand a module to see its sessions. Complete them in order, then take the short module quiz to unlock the next module. Progress saves on this device.'
-              : 'Each module is a sequence of sessions—complete them in order, then pass the module quiz to unlock the next module. Progress saves on this device.'}
+              ? 'Open a module to see sessions. Continue learning saves on this device.'
+              : 'Work through sessions in order, then pass the module quiz to continue. Progress saves on this device.'}
           </p>
         </>
       ) : null}
@@ -549,7 +548,50 @@ export function FlagshipCourseLearningPath(props: {
                     : 'shadow-[var(--jf-shadow-soft)]'
                 const moduleHover =
                   layout === 'accordion' ? 'transition-[box-shadow,border-color,ring] duration-200 hover:border-stone-400/45' : ''
-                const header = (
+                const aeAccordionCard = layout === 'accordion' && isAe
+                const summaryTeaser =
+                  mod.summary.includes('.') && mod.summary.trim().length > 0
+                    ? `${mod.summary.split('.')[0].trim()}.`
+                    : mod.summary
+                const accordionHeaderMinimal = (
+                  <div className="flex min-w-0 flex-1 flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="inline-flex items-center rounded-full border border-orange-200/80 bg-orange-50/95 px-2.5 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-orange-950/90">
+                          Module {mod.order}
+                        </span>
+                        {fullyComplete ? (
+                          <span className="rounded-full border border-emerald-200/70 bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-900/90">
+                            Complete
+                          </span>
+                        ) : sessionsOnlyDone ? (
+                          <span className="rounded-full border border-amber-200/70 bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-950/90">
+                            Quiz due
+                          </span>
+                        ) : (
+                          <>
+                            <span className="rounded-full border border-[color:var(--jf-border)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[color:var(--jf-muted)]">
+                              {stats.done}/{stats.total} sessions
+                            </span>
+                            {lockedModule ? (
+                              <span className="rounded-full border border-stone-300/80 bg-stone-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-stone-700">
+                                Locked
+                              </span>
+                            ) : null}
+                          </>
+                        )}
+                      </div>
+                      <p className="mt-2 text-[16px] font-semibold text-[color:var(--jf-text)]">{mod.title}</p>
+                      <p className="mt-1 line-clamp-2 text-[13px] leading-snug text-[color:var(--jf-muted)]">
+                        {moduleExpanded ? mod.summary : summaryTeaser}
+                      </p>
+                    </div>
+                    <span className="shrink-0 pt-1 text-[11px] text-[color:var(--jf-subtle)]" aria-hidden>
+                      {moduleExpanded ? '▼' : '▶'}
+                    </span>
+                  </div>
+                )
+                const headerDefault = (
                   <div className="flex min-w-0 flex-1 flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
@@ -578,34 +620,7 @@ export function FlagshipCourseLearningPath(props: {
                         )}
                       </div>
                       <p className="mt-2 text-[16px] font-semibold text-[color:var(--jf-text)]">{mod.title}</p>
-                      {compactRows && isAe ? (
-                        <div className="mt-2 space-y-2">
-                          <p className="text-[12px] leading-snug text-[color:var(--jf-muted)]">
-                            <span className="font-medium text-[color:var(--jf-text)]">You&apos;ll create: </span>
-                            {AI_ESSENTIALS_MODULE_PORTFOLIO_LABEL[mod.id] ?? 'Portfolio-ready artifact'}
-                          </p>
-                          <p className="text-[11px] leading-snug text-[color:var(--jf-subtle)]">
-                            Includes lesson, practice, quiz, and checkpoints.
-                          </p>
-                          <p className="line-clamp-3 text-[12px] leading-snug text-[color:var(--jf-muted)]">{mod.summary}</p>
-                          <details className="rounded-lg border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)]/55 px-3 py-2">
-                            <summary className="cursor-pointer text-[11px] font-semibold text-[color:var(--jf-muted)]">
-                              Estimated time &amp; completion rules
-                            </summary>
-                            <div className="mt-2 space-y-2 text-[11px] leading-relaxed text-[color:var(--jf-subtle)]">
-                              <p>
-                                <span className="font-medium text-[color:var(--jf-text)]">Estimated time: </span>
-                                {AI_ESSENTIALS_MODULE_TIME_HINT[mod.id] ?? 'About 2–3 hours'}
-                              </p>
-                              <p>
-                                Module quiz: {MODULE_QUIZ_DRAW_COUNT} questions — pass with at least {MODULE_QUIZ_MIN_CORRECT} correct. Practice
-                                checkpoints must be complete before the quiz unlocks the next module.
-                              </p>
-                              <p className="text-emerald-900/85">{AI_ESSENTIALS_MODULE_MILESTONE_LINE[mod.id]}</p>
-                            </div>
-                          </details>
-                        </div>
-                      ) : !compactRows ? (
+                      {!compactRows ? (
                         <p className="mt-1 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{mod.summary}</p>
                       ) : moduleExpanded ? (
                         <p className="mt-1 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{mod.summary}</p>
@@ -618,6 +633,34 @@ export function FlagshipCourseLearningPath(props: {
                     ) : null}
                   </div>
                 )
+                const header = aeAccordionCard ? accordionHeaderMinimal : headerDefault
+                const aeModuleDetailPanel = aeAccordionCard ? (
+                  <div className="border-t border-[color:var(--jf-border)]/70 px-4 pb-3 pt-2 sm:px-5">
+                    <details className="rounded-lg border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)]/50 px-3 py-2">
+                      <summary className="cursor-pointer text-[12px] font-semibold text-[color:var(--jf-muted)]">Full module details</summary>
+                      <div className="mt-2 space-y-2 text-[12px] leading-relaxed text-[color:var(--jf-muted)]">
+                        <p>
+                          <span className="font-medium text-[color:var(--jf-text)]">Portfolio output: </span>
+                          {AI_ESSENTIALS_MODULE_PORTFOLIO_LABEL[mod.id] ?? 'Artifact from practice'}
+                        </p>
+                        <p className="text-[13px]">{mod.summary}</p>
+                        <details className="rounded-md border border-[color:var(--jf-border)]/90 bg-white/70 px-2.5 py-2 text-[11px] text-[color:var(--jf-subtle)]">
+                          <summary className="cursor-pointer font-semibold text-[color:var(--jf-text)]">Time &amp; quiz rules</summary>
+                          <div className="mt-2 space-y-1.5 leading-relaxed">
+                            <p>
+                              <span className="font-medium text-[color:var(--jf-text)]">Estimated time: </span>
+                              {AI_ESSENTIALS_MODULE_TIME_HINT[mod.id] ?? 'About 2–3 hours'}
+                            </p>
+                            <p>
+                              Quiz: {MODULE_QUIZ_DRAW_COUNT} questions, at least {MODULE_QUIZ_MIN_CORRECT} correct. Finish practice checkpoints before the quiz
+                              unlocks the next module.
+                            </p>
+                          </div>
+                        </details>
+                      </div>
+                    </details>
+                  </div>
+                ) : null
                 return (
                   <div
                     id={`flagship-module-${mod.id}`}
@@ -637,6 +680,7 @@ export function FlagshipCourseLearningPath(props: {
                     ) : (
                       header
                     )}
+                    {aeModuleDetailPanel}
                     {moduleExpanded ? (
                       <>
                         <ul id={`module-sessions-${mod.id}`} className="mt-5 space-y-2">
@@ -658,13 +702,28 @@ export function FlagshipCourseLearningPath(props: {
                           ))}
                         </ul>
                         {sessionsOnlyDone ? (
-                          <FlagshipModuleQuizPanel
-                            module={mod}
-                            sessions={sessions}
-                            courseSlug={courseSlug}
-                            quizState={state.moduleQuiz?.[mod.id]}
-                            onUpdateQuiz={(partial) => updateModuleQuizRecord(mod.id, partial)}
-                          />
+                          isAeAccordion ? (
+                            <details className="mt-4 rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)]/60 px-4 py-3">
+                              <summary className="cursor-pointer text-[13px] font-semibold text-[color:var(--jf-text)]">Module quiz</summary>
+                              <div className="mt-3">
+                                <FlagshipModuleQuizPanel
+                                  module={mod}
+                                  sessions={sessions}
+                                  courseSlug={courseSlug}
+                                  quizState={state.moduleQuiz?.[mod.id]}
+                                  onUpdateQuiz={(partial) => updateModuleQuizRecord(mod.id, partial)}
+                                />
+                              </div>
+                            </details>
+                          ) : (
+                            <FlagshipModuleQuizPanel
+                              module={mod}
+                              sessions={sessions}
+                              courseSlug={courseSlug}
+                              quizState={state.moduleQuiz?.[mod.id]}
+                              onUpdateQuiz={(partial) => updateModuleQuizRecord(mod.id, partial)}
+                            />
+                          )
                         ) : null}
                       </>
                     ) : null}
@@ -688,27 +747,22 @@ export function FlagshipCourseLearningPath(props: {
           <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:var(--jf-muted)]">Capstone preparation session</p>
           {isAeAccordion ? (
             <>
-              <p className="mt-3 text-[15px] font-semibold text-[color:var(--jf-text)]">Final capstone: End-to-End AI-Supported Workflow</p>
+              <p className="mt-3 text-[15px] font-semibold text-[color:var(--jf-text)]">Capstone &amp; final workflow</p>
               <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-                Capstone prep opens when your lessons, quizzes, and practice checkpoints show you&apos;re ready—not after a raw session count.
+                Prep opens when your course work shows you&apos;re ready.
               </p>
               <details className="mt-3 rounded-lg border border-[color:var(--jf-border)] bg-white/80 px-3 py-2 text-[12px] text-[color:var(--jf-muted)]">
-                <summary className="cursor-pointer font-semibold text-[color:var(--jf-text)]">Full completion rules</summary>
+                <summary className="cursor-pointer font-semibold text-[color:var(--jf-text)]">Completion rules</summary>
                 <p className="mt-2 leading-relaxed">
-                  Full course completion includes Module 16 plus the capstone rubric self-check (every row Ready or Strong). Use prep to align
-                  deliverables with the brief.
+                  Includes Module 16 and the rubric self-check (Ready or Strong on each row). Use prep to align with the brief.
                 </p>
               </details>
               {!capstonePrepAccessible ? (
-                <p className="mt-2 text-[12px] text-[color:var(--jf-subtle)]">
-                  Finish pending practice checkpoints; prep unlocks automatically when you&apos;re consistent with the path.
-                </p>
+                <p className="mt-2 text-[12px] text-[color:var(--jf-subtle)]">Finish practice checkpoints first—prep unlocks automatically.</p>
               ) : capstonePrepComplete ? (
-                <p className="mt-2 text-[12px] text-emerald-800/90">Capstone prep is marked complete—you can still refine deliverables.</p>
+                <p className="mt-2 text-[12px] text-emerald-800/90">Prep complete—you can still refine work.</p>
               ) : (
-                <p className="mt-2 text-[12px] text-[color:var(--jf-subtle)]">
-                  Open prep when you&apos;re ready to align your deliverables with the Module 16 brief.
-                </p>
+                <p className="mt-2 text-[12px] text-[color:var(--jf-subtle)]">Open prep when you&apos;re ready.</p>
               )}
             </>
           ) : (

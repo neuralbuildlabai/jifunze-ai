@@ -59,7 +59,7 @@ function PathwayHomeCard({
         {pathway.shortTitle}
       </Link>
       <p className="mt-2 text-[11px] leading-snug text-[color:var(--jf-muted)] sm:text-xs">
-        About {summary.pathwaySessionProgressPercent}% along · {summary.completedCourseCount}/{summary.availableCourseCount || 0} courses meet readiness
+        About {summary.pathwaySessionProgressPercent}% through · {summary.completedCourseCount}/{summary.availableCourseCount || 0} courses
       </p>
       <p className="mt-1 text-[11px] text-[color:var(--jf-muted)]">
         <span className="text-[color:var(--jf-subtle)]">Next: </span>
@@ -139,10 +139,9 @@ export function LearnerPathwayOverview() {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">Employable pathways</p>
-          <h2 className="mt-1 text-sm font-semibold text-[color:var(--jf-text)]">Build proof along a pathway</h2>
-          <p className="mt-2 max-w-2xl text-[12px] leading-relaxed text-[color:var(--jf-muted)]">
-            Pathways prepare you for roles and portfolios by sequencing flagship courses. When you are signed in, we merge account progress with this device for
-            certificate readiness context—not a transcript or job guarantee.
+          <h2 className="mt-1 text-sm font-semibold text-[color:var(--jf-text)]">Your pathway</h2>
+          <p className="mt-2 max-w-xl text-[12px] leading-relaxed text-[color:var(--jf-muted)]">
+            Signed-in progress syncs with your account when available—not a transcript or job guarantee.
           </p>
           {pathwaySync && !hydrated ? (
             <p className="mt-2 text-[10px] text-[color:var(--jf-subtle)]">Loading account progress…</p>
@@ -157,13 +156,13 @@ export function LearnerPathwayOverview() {
       </div>
       {selectedOk && selected ? (
         <p className="mt-3 text-[11px] text-[color:var(--jf-muted)]">
-          <span className="font-semibold text-[color:var(--jf-brand)]">Your selected pathway: </span>
-          {selected.shortTitle}. Use Continue your pathway for the next session, or change your primary pathway from the hub.
+          <span className="font-semibold text-[color:var(--jf-brand)]">Selected: </span>
+          {selected.shortTitle}. Continue below or change pathway anytime.
         </p>
       ) : top ? (
         <p className="mt-3 text-[11px] text-[color:var(--jf-muted)]">
-          <span className="font-semibold text-[color:var(--jf-text)]">Recommended: </span>
-          {top.pathway.shortTitle} — continue where you have the most momentum, or open details to see portfolio-ready outputs.
+          <span className="font-semibold text-[color:var(--jf-text)]">Suggested: </span>
+          {top.pathway.shortTitle} — strong fit for where you’re learning now.
         </p>
       ) : null}
       <ul className="mt-4 grid gap-3 sm:grid-cols-3">
