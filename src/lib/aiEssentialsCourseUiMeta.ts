@@ -53,24 +53,6 @@ export const AI_ESSENTIALS_MODULE_PORTFOLIO_LABEL: Record<string, string> = {
 }
 
 /** Milestone context — prefer plain language; avoid raw quiz/checkpoint counts here. */
-export const AI_ESSENTIALS_MODULE_MILESTONE_LINE: Record<string, string> = {
-  'ae-m01': 'Milestone 1 of 10 — complete Module 1 end-to-end.',
-  'ae-m02': 'Milestone 2 of 10 — complete Module 2 end-to-end.',
-  'ae-m03': 'Milestone 3 of 10 — complete Modules 3 and 4.',
-  'ae-m04': 'Milestone 3 of 10 — complete Modules 3 and 4.',
-  'ae-m05': 'Milestone 4 of 10 — complete Modules 5 and 6.',
-  'ae-m06': 'Milestone 4 of 10 — complete Modules 5 and 6.',
-  'ae-m07': 'Milestone 5 of 10 — complete Modules 7 and 8.',
-  'ae-m08': 'Milestone 5 of 10 — complete Modules 7 and 8.',
-  'ae-m09': 'Milestone 6 of 10 — complete Modules 9 and 10.',
-  'ae-m10': 'Milestone 6 of 10 — complete Modules 9 and 10.',
-  'ae-m11': 'Milestone 7 of 10 — complete Module 11.',
-  'ae-m12': 'Milestone 8 of 10 — complete Modules 12 and 13.',
-  'ae-m13': 'Milestone 8 of 10 — complete Modules 12 and 13.',
-  'ae-m14': 'Milestone 9 of 10 — complete Modules 14 and 15.',
-  'ae-m15': 'Milestone 9 of 10 — complete Modules 14 and 15.',
-  'ae-m16': 'Milestone 10 of 10 — finish Module 16 and the capstone rubric self-check.',
-}
 
 export type AiEssentialsPathwayBlurb = { slug: string; title: string; line: string }
 
