@@ -77,10 +77,13 @@ export function FlagshipCourseCurriculumSections(props: {
           </p>
         </div>
       ) : courseSlug === 'ai-essentials' ? (
-        <p className="mt-6 max-w-2xl rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/80 px-5 py-4 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-          <span className="font-semibold text-[color:var(--jf-text)]">Certificate readiness: </span>
-          Complete every module session, pass each module checkpoint quiz (6 of 8 correct), finish all mastery evidence checkpoints, complete capstone prep, and assemble the Responsible AI fluency portfolio described in the capstone brief.
-        </p>
+        <div className="mt-6 max-w-2xl rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/80 px-5 py-4 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
+          <p>
+            <span className="font-semibold text-[color:var(--jf-text)]">Certificate readiness: </span>
+            Finish sessions, practice checkpoints, module quizzes, capstone prep, and the Module 16 portfolio plus rubric self-check—the full checklist lives in
+            your course overview under “Certificate readiness”.
+          </p>
+        </div>
       ) : null}
 
       {/* Structure overview — stages tied to real module counts */}

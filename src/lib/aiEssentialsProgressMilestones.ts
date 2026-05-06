@@ -97,7 +97,7 @@ export function getAiEssentialsNextMilestoneHint(
   state: FlagshipCourseProgressState,
 ): string {
   if (!curriculum || sessions.length === 0) {
-    return 'Start with Module 1. Your first milestone unlocks 10% progress.'
+    return 'Start with Module 1—work through it step by step.'
   }
   const completed = completionSet(state)
   for (let i = 0; i < MILESTONE_GROUPS.length - 1; i++) {
@@ -109,35 +109,35 @@ export function getAiEssentialsNextMilestoneHint(
   const last = MILESTONE_GROUPS.length - 1
   const lastGroup = MILESTONE_GROUPS[last]!
   if (!groupComplete(lastGroup, sessions, completed, state)) {
-    return 'Complete Module 16 sessions, mastery checkpoints, and the module quiz. Then finish the capstone rubric self-check (every row Ready or Strong) for 100%.'
+    return 'Finish Module 16 (sessions, practice checkpoints, quiz), then complete the capstone rubric self-check in the app for full completion.'
   }
   if (!milestone10Satisfied(sessions, completed, state)) {
-    return 'Module 16 is done—set every capstone rubric row to Ready or Strong to reach 100%.'
+    return 'Module 16 is done—finish the capstone rubric self-check in the app when every row is Ready or Strong.'
   }
-  return 'All ten milestones are complete.'
+  return 'All milestones are complete.'
 }
 
 function nextIncompleteGroupHint(groupIndex: number): string {
   switch (groupIndex) {
     case 0:
-      return 'Next milestone: finish Module 1 sessions, both mastery checkpoints on the practice session, and the module quiz (8 questions) to reach 10%.'
+      return 'Next: complete Module 1 (lesson, practice, quiz, and checkpoints).'
     case 1:
-      return 'Next milestone: complete Module 2 (sessions, checkpoints, quiz) to reach 20%.'
+      return 'Next: complete Module 2 end-to-end.'
     case 2:
-      return 'Next milestone: complete Modules 3 and 4 end-to-end to reach 30%.'
+      return 'Next: complete Modules 3 and 4 end-to-end.'
     case 3:
-      return 'Next milestone: complete Modules 5 and 6 end-to-end to reach 40%.'
+      return 'Next: complete Modules 5 and 6 end-to-end.'
     case 4:
-      return 'Next milestone: complete Modules 7 and 8 end-to-end to reach 50%.'
+      return 'Next: complete Modules 7 and 8 end-to-end.'
     case 5:
-      return 'Next milestone: complete Modules 9 and 10 end-to-end to reach 60%.'
+      return 'Next: complete Modules 9 and 10 end-to-end.'
     case 6:
-      return 'Next milestone: complete Module 11 to reach 70%.'
+      return 'Next: complete Module 11 end-to-end.'
     case 7:
-      return 'Next milestone: complete Modules 12 and 13 to reach 80%.'
+      return 'Next: complete Modules 12 and 13 end-to-end.'
     case 8:
-      return 'Next milestone: complete Modules 14 and 15 to reach 90%.'
+      return 'Next: complete Modules 14 and 15 end-to-end.'
     default:
-      return 'Continue the next module in order—progress updates when the milestone band is fully complete.'
+      return 'Continue the next module in order.'
   }
 }

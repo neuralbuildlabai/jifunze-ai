@@ -110,8 +110,8 @@ export function AiEssentialsCourseOverview(props: Props) {
               <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-3 py-1 font-medium text-[color:var(--jf-text)] shadow-sm">
                 16 modules
               </span>
-              <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 px-3 py-1 shadow-sm">32–45 hours</span>
-              <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 px-3 py-1 shadow-sm">10 milestones</span>
+              <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 px-3 py-1 shadow-sm">About 32–45 hours</span>
+              <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 px-3 py-1 shadow-sm">Guided milestones</span>
               <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 px-3 py-1 shadow-sm">Beginner to intermediate</span>
               <span className="rounded-full border border-emerald-200/70 bg-emerald-50/95 px-3 py-1 text-emerald-950/90 shadow-sm">Portfolio + capstone</span>
             </div>
@@ -157,7 +157,14 @@ export function AiEssentialsCourseOverview(props: Props) {
         <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
           <span className="font-mono text-3xl font-semibold tabular-nums text-[color:var(--jf-text)]">{progressPercent}%</span>
           <span className="text-[14px] text-[color:var(--jf-muted)]">
-            {milestonesReached} / 10 milestones · {sessionDone} / {sessions.length} sessions complete
+            {milestonesReached === 0 ? (
+              <>You&apos;re just getting started.</>
+            ) : (
+              <>
+                Milestone <span className="font-medium text-[color:var(--jf-text)]">{milestonesReached}</span> of 10 ·{' '}
+                <span className="font-medium text-[color:var(--jf-text)]">{sessionDone}</span> of {sessions.length} sessions done
+              </>
+            )}
           </span>
         </div>
         <div className="mt-3 h-2 max-w-md overflow-hidden rounded-full bg-[color:var(--jf-bg-page)]">
@@ -169,7 +176,7 @@ export function AiEssentialsCourseOverview(props: Props) {
               Next: <span className="font-medium text-[color:var(--jf-text)]">{next.title}</span>
             </>
           ) : (
-            <>Complete Module 1 lesson, practice, and quiz to reach 10%.</>
+            <>Open Module 1 when you&apos;re ready—complete lesson, practice, quiz, and checkpoints step by step.</>
           )}
         </p>
         <div className="mt-5">
@@ -183,13 +190,13 @@ export function AiEssentialsCourseOverview(props: Props) {
         </div>
         <details className="mt-6 border-t border-[color:var(--jf-border)] pt-4" data-testid="ae-certificate-readiness">
           <summary className="cursor-pointer text-[13px] font-medium text-[color:var(--jf-muted)]">
-            Certificate readiness (in-product rules)
+            Certificate readiness — how completion is checked
           </summary>
           <ul className="mt-3 space-y-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
             <li className="flex gap-2">
               <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400/75" aria-hidden />
               <span>
-                Module quizzes: {quizPassLine}.
+                Short module quizzes after each module: {quizPassLine}.
               </span>
             </li>
             <li className="flex gap-2">
@@ -230,7 +237,7 @@ export function AiEssentialsCourseOverview(props: Props) {
           Curriculum
         </h2>
         <p className="max-w-2xl text-[13px] text-[color:var(--jf-muted)]">
-          Complete modules in order. Each module includes lessons, practice, checkpoint questions, and a portfolio output.
+          Complete modules in order. Each includes lesson, practice, checkpoints, a short quiz, and a portfolio-ready output.
         </p>
         <FlagshipCourseLearningPath
           courseSlug={slug}
@@ -251,14 +258,17 @@ export function AiEssentialsCourseOverview(props: Props) {
         <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
           Use your course artifacts to plan, prompt, verify, revise, protect information, and reflect on your judgment.
         </p>
-        <p className="mt-3 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-          100% completion requires Module 16 and rubric rows marked Ready or Strong.
+        <p className="mt-3 max-w-2xl text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
+          Full completion uses the in-app rubric self-check when you finish Module 16—details below.
         </p>
         <p className="mt-3 text-[13px] text-[color:var(--jf-muted)]">{curriculum.capstone.title}</p>
         <details className="mt-4 group">
           <summary className="cursor-pointer text-[13px] font-semibold text-[color:var(--jf-text)] underline-offset-2 hover:underline">
-            Full brief and deliverables
+            Full brief, deliverables, and 100% completion detail
           </summary>
+          <p className="mt-4 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
+            100% course completion requires Module 16 plus every capstone rubric row marked Ready or Strong in the app.
+          </p>
           <p className="mt-4 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">{curriculum.capstone.description}</p>
           <ul className="mt-4 space-y-2">
             {curriculum.capstone.deliverables.map((d) => (
@@ -282,7 +292,9 @@ export function AiEssentialsCourseOverview(props: Props) {
             </span>
           </div>
         ) : (
-          <p className="mt-4 text-[13px] text-[color:var(--jf-subtle)]">Capstone prep stays closed until earlier modules, quizzes, and checkpoints satisfy the gates above.</p>
+          <p className="mt-4 text-[13px] text-[color:var(--jf-subtle)]">
+            Capstone prep stays closed until earlier modules, quizzes, and practice checkpoints show you&apos;re ready.
+          </p>
         )}
       </section>
 

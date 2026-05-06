@@ -59,7 +59,7 @@ function PathwayHomeCard({
         {pathway.shortTitle}
       </Link>
       <p className="mt-2 text-[11px] leading-snug text-[color:var(--jf-muted)] sm:text-xs">
-        ~{summary.pathwaySessionProgressPercent}% sessions · {summary.completedCourseCount}/{summary.availableCourseCount || 0} cert-ready
+        About {summary.pathwaySessionProgressPercent}% along · {summary.completedCourseCount}/{summary.availableCourseCount || 0} courses meet readiness
       </p>
       <p className="mt-1 text-[11px] text-[color:var(--jf-muted)]">
         <span className="text-[color:var(--jf-subtle)]">Next: </span>

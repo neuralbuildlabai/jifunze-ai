@@ -88,22 +88,22 @@ export function EmployablePathwayCard({
         <span className="font-semibold text-[color:var(--jf-subtle)]">Roles: </span>
         <span className="line-clamp-2">{rolesPreview}</span>
       </p>
-      <div className="mt-auto flex flex-wrap gap-x-3 gap-y-1 border-t border-[color:var(--jf-border)] pt-4 text-[11px] tabular-nums text-[color:var(--jf-subtle)]">
+      <div className="mt-auto flex flex-wrap gap-x-3 gap-y-1 border-t border-[color:var(--jf-border)] pt-4 text-[11px] text-[color:var(--jf-subtle)]">
         <span>
-          <span className="font-semibold text-[color:var(--jf-muted)]">{available}</span> courses live
+          <span className="font-semibold tabular-nums text-[color:var(--jf-muted)]">{available}</span> live courses
+          {planned > 0 ? (
+            <>
+              {' '}
+              ·{' '}
+              <span className="font-semibold tabular-nums text-[color:var(--jf-muted)]">{planned}</span> coming later
+            </>
+          ) : null}
         </span>
-        <span aria-hidden className="text-[color:var(--jf-border)]">
-          ·
-        </span>
-        <span>
-          <span className="font-semibold text-[color:var(--jf-muted)]">{planned}</span> planned
-        </span>
-        <span aria-hidden className="text-[color:var(--jf-border)]">
-          ·
-        </span>
-        <span>
-          <span className="font-semibold text-[color:var(--jf-muted)]">{portfolioCount}</span> portfolio themes
-        </span>
+        {portfolioCount > 0 ? (
+          <span className="text-[color:var(--jf-subtle)]">
+            Portfolio themes: <span className="font-semibold text-[color:var(--jf-muted)]">{portfolioCount}</span>
+          </span>
+        ) : null}
       </div>
       <span className="mt-4 text-left text-[12px] font-semibold text-[color:var(--jf-text)] underline-offset-2 group-hover:underline">Open pathway →</span>
     </Link>
