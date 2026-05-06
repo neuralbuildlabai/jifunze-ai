@@ -11,6 +11,7 @@ import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { LearnerHelpAssistant } from '../teaching/LearnerHelpAssistant'
 import { TrustBoundaryStrip } from '../TrustBoundaryStrip'
 import { buildSessionsForCurriculum, firstSessionInCourseOrder } from '../../data/learning/flagshipCourseSessions'
+import { LearnHeroAbstractFigure } from '../visuals/JifunzeLearnVisuals'
 import { AiEssentialsCourseOverview } from './AiEssentialsCourseOverview'
 import { FlagshipCourseCurriculumSections } from './FlagshipCourseCurriculumSections'
 
@@ -102,36 +103,45 @@ export function FlagshipCourseDetailPage() {
           />
         ) : (
           <>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:var(--jf-muted)]">
-          Flagship learning path · {school.label}
-        </p>
-        <h1 className="mt-3 text-[1.85rem] font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-[2.1rem] sm:leading-tight">
-          {course.title}
-        </h1>
-        <p className="mt-4 text-[17px] leading-relaxed text-[color:var(--jf-muted)]">{course.subtitle}</p>
+        <div className="jf-learn-section-blush overflow-hidden rounded-2xl border border-[color:var(--jf-border)] shadow-[var(--jf-shadow-soft)]">
+          <div className="grid gap-8 px-5 py-8 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,230px)] lg:items-start lg:gap-10">
+            <div className="min-w-0">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:var(--jf-muted)]">
+                Flagship learning path · {school.label}
+              </p>
+              <h1 className="mt-3 text-[1.85rem] font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-[2.1rem] sm:leading-tight">
+                {course.title}
+              </h1>
+              <p className="mt-4 text-[17px] leading-relaxed text-[color:var(--jf-muted)]">{course.subtitle}</p>
 
-        <div className="mt-5 flex flex-wrap items-center gap-3 text-[13px] text-[color:var(--jf-muted)]">
-          <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-3 py-1 text-[12px] font-medium text-[color:var(--jf-text)]">
-            {course.levelRange}
-          </span>
-          {curriculum ? (
-            <span data-testid="flagship-module-count">
-              <span className="font-semibold text-[color:var(--jf-text)]">{curriculum.modules.length}</span> modules
-            </span>
-          ) : null}
+              <div className="mt-5 flex flex-wrap items-center gap-3 text-[13px] text-[color:var(--jf-muted)]">
+                <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-3 py-1 text-[12px] font-medium text-[color:var(--jf-text)] shadow-sm">
+                  {course.levelRange}
+                </span>
+                {curriculum ? (
+                  <span data-testid="flagship-module-count">
+                    <span className="font-semibold text-[color:var(--jf-text)]">{curriculum.modules.length}</span> modules
+                  </span>
+                ) : null}
+              </div>
+
+              <p className="mt-6 text-[15px] leading-[1.7] text-[color:var(--jf-text)]">{course.intro}</p>
+
+              <TrustBoundaryStrip
+                variant="inline"
+                compact
+                strip="publicHero"
+                presentation="utility"
+                density="legalLink"
+                className="mt-8 max-w-2xl text-[13px] leading-relaxed text-[color:var(--jf-subtle)]"
+                dataTestId="flagship-course-trust"
+              />
+            </div>
+            <div className="mx-auto w-full max-w-[240px] lg:mx-0 lg:max-w-none lg:pt-1">
+              <LearnHeroAbstractFigure className="h-auto w-full drop-shadow-md" />
+            </div>
+          </div>
         </div>
-
-        <p className="mt-6 text-[15px] leading-[1.7] text-[color:var(--jf-text)]">{course.intro}</p>
-
-        <TrustBoundaryStrip
-          variant="inline"
-          compact
-          strip="publicHero"
-          presentation="utility"
-          density="legalLink"
-          className="mt-8 max-w-2xl text-[13px] leading-relaxed text-[color:var(--jf-subtle)]"
-          dataTestId="flagship-course-trust"
-        />
 
         {LEARNER_MONETIZATION_UI_DISABLED ? null : (
           <section
@@ -173,7 +183,7 @@ export function FlagshipCourseDetailPage() {
               </Link>
             </div>
             {purchaseGateEnabled && hasCourseAccess ? (
-              <p className="mt-4 text-[12px] leading-relaxed text-emerald-200/80">You have access to this course on this browser—your full path stays below with clear locked and open states.</p>
+              <p className="mt-4 text-[12px] leading-relaxed text-emerald-800/90">You have access to this course on this browser—your full path stays below with clear locked and open states.</p>
             ) : purchaseGateEnabled && !hasCourseAccess ? (
               <p className="mt-4 text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">Preview the structure below; checkout unlocks interactive sessions.</p>
             ) : import.meta.env.DEV ? (
@@ -188,7 +198,7 @@ export function FlagshipCourseDetailPage() {
           </section>
         )}
 
-        <section className="mt-14 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 shadow-[var(--jf-shadow-soft)] ring-1 ring-black/[0.03] sm:p-8">
+        <section className="mt-14 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 shadow-[var(--jf-shadow-soft)] ring-1 ring-stone-900/[0.04] sm:p-8">
           <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">Course promise</h2>
           <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--jf-muted)]">{course.promise}</p>
           <p className="mt-4 text-[13px] leading-relaxed text-[color:var(--jf-subtle)]">

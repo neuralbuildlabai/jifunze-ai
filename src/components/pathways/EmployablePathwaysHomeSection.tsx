@@ -12,7 +12,7 @@ export function EmployablePathwaysHomeSection() {
   return (
     <section
       aria-labelledby="employable-pathways-heading"
-      className="relative z-10 mx-auto mt-16 max-w-6xl border-t border-[color:var(--jf-border)] pt-14 sm:mt-[4.5rem] sm:pt-16"
+      className="jf-learn-warm relative z-10 mx-auto mt-16 max-w-6xl rounded-2xl border border-[color:var(--jf-border)] bg-[var(--jf-bg-page)]/80 px-4 pb-10 pt-14 shadow-sm sm:mt-[4.5rem] sm:px-6 sm:pb-12 sm:pt-16"
       data-testid="home-employable-pathways"
     >
       <div className="mx-auto max-w-3xl text-center lg:mx-0 lg:text-left">
@@ -27,14 +27,14 @@ export function EmployablePathwaysHomeSection() {
         <div className="mt-6 flex flex-wrap justify-center gap-3 lg:justify-start">
           <Link
             to={LEGAL_ROUTES.paths}
-            className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-7 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)]"
+            className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-7 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)]"
             data-testid="home-pathways-primary-cta"
           >
             Browse pathways
           </Link>
           <Link
             to={LEGAL_ROUTES.learn}
-            className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-white/[0.1] px-6 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-white/[0.05]"
+            className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-6 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-stone-50"
           >
             Explore courses
           </Link>

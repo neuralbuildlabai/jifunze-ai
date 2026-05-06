@@ -35,6 +35,7 @@ import {
   getAiEssentialsNextMilestoneHint,
 } from '../../lib/aiEssentialsProgressMilestones'
 import { MODULE_QUIZ_DRAW_COUNT, MODULE_QUIZ_MIN_CORRECT } from '../../lib/flagshipModuleQuizPools'
+import { LearnSectionSparkIcon } from '../visuals/JifunzeLearnVisuals'
 import { FlagshipModuleQuizPanel } from './FlagshipModuleQuizPanel'
 
 const STAGE_FLOW = ['foundations', 'applied_practice', 'professional_execution', 'mastery_outputs'] as const
@@ -271,7 +272,11 @@ export function FlagshipCourseLearningPath(props: {
     >
       {showSectionIntro ? (
         <>
-          <h2 id="learning-path-heading" className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
+          <h2
+            id="learning-path-heading"
+            className="flex flex-wrap items-center gap-2 text-lg font-semibold tracking-tight text-[color:var(--jf-text)]"
+          >
+            <LearnSectionSparkIcon className="h-6 w-6 shrink-0" aria-hidden />
             {layout === 'accordion' ? 'Curriculum' : 'Your learning path'}
           </h2>
           <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
@@ -299,7 +304,7 @@ export function FlagshipCourseLearningPath(props: {
               </div>
               <div className="mt-3 h-1.5 w-full max-w-md overflow-hidden rounded-full bg-[color:var(--jf-bg-page)]">
                 <div
-                  className="h-full rounded-full bg-[color:var(--jf-text)]/35 transition-[width]"
+                  className="h-full rounded-full bg-[color:var(--jf-brand)]/75 transition-[width]"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
@@ -474,7 +479,8 @@ export function FlagshipCourseLearningPath(props: {
       <div className="mt-12 space-y-12" data-testid="flagship-modules-with-sessions">
         {modulesByStage.map(({ stage, modules }) => (
           <div key={stage}>
-            <div className="border-b border-[color:var(--jf-border)] pb-3">
+            <div className="flex items-center gap-2 border-b border-[color:var(--jf-border)] pb-3">
+              <LearnSectionSparkIcon className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
               <h3 className="text-[13px] font-semibold uppercase tracking-[0.16em] text-[color:var(--jf-muted)]">
                 {isAe ? AI_ESSENTIALS_STAGE_SECTION_LABEL[stage] : flagshipStageLabel(stage)}
               </h3>
@@ -503,11 +509,19 @@ export function FlagshipCourseLearningPath(props: {
                       : isAe && lockedModule
                         ? 'rounded-2xl border border-dashed border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)]/55 p-4 sm:p-5'
                         : 'rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-4 sm:p-5'
+                const moduleFocus =
+                  layout === 'accordion' && moduleExpanded
+                    ? 'ring-2 ring-orange-400/35 shadow-lg'
+                    : 'shadow-[var(--jf-shadow-soft)]'
+                const moduleHover =
+                  layout === 'accordion' ? 'transition-[box-shadow,border-color,ring] duration-200 hover:border-stone-400/45' : ''
                 const header = (
                   <div className="flex min-w-0 flex-1 flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-mono text-[11px] font-semibold text-[color:var(--jf-muted)]">Module {mod.order}</span>
+                        <span className="inline-flex items-center rounded-full border border-orange-200/80 bg-orange-50/95 px-2.5 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-orange-950/90">
+                          Module {mod.order}
+                        </span>
                         {fullyComplete ? (
                           <span className="rounded-full border border-emerald-200/70 bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-900/90">
                             Module complete
@@ -560,7 +574,11 @@ export function FlagshipCourseLearningPath(props: {
                   </div>
                 )
                 return (
-                  <div id={`flagship-module-${mod.id}`} key={mod.id} className={moduleShellClass}>
+                  <div
+                    id={`flagship-module-${mod.id}`}
+                    key={mod.id}
+                    className={`${moduleShellClass} ${moduleFocus} ${moduleHover}`}
+                  >
                     {layout === 'accordion' ? (
                       <button
                         type="button"

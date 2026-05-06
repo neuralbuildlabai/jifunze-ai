@@ -8,6 +8,7 @@ import {
 } from '../../data/learning/flagshipCourseCurricula'
 import type { FlagshipSession } from '../../data/learning/flagshipCourseSessions'
 import type { FlagshipCourseProgressApi } from '../../hooks/useFlagshipCourseProgress'
+import { LearnSectionSparkIcon } from '../visuals/JifunzeLearnVisuals'
 import { FlagshipCourseLearningPath } from './FlagshipCourseLearningPath'
 import { FlagshipSupportMaterials } from './FlagshipSupportMaterials'
 
@@ -84,7 +85,11 @@ export function FlagshipCourseCurriculumSections(props: {
 
       {/* Structure overview — stages tied to real module counts */}
       <section className="mt-14" aria-labelledby="structure-overview-heading" data-testid="flagship-curriculum-structure">
-        <h2 id="structure-overview-heading" className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
+        <h2
+          id="structure-overview-heading"
+          className="flex flex-wrap items-center gap-2 text-lg font-semibold tracking-tight text-[color:var(--jf-text)]"
+        >
+          <LearnSectionSparkIcon className="h-6 w-6 shrink-0" aria-hidden />
           Course structure overview
         </h2>
         <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
@@ -109,8 +114,12 @@ export function FlagshipCourseCurriculumSections(props: {
       </section>
 
       {/* Practice & reinforcement */}
-      <section className="mt-14 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-5 py-6 sm:px-8 sm:py-8" aria-labelledby="reinforcement-heading">
-        <h2 id="reinforcement-heading" className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
+      <section className="mt-14 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-5 py-6 shadow-[var(--jf-shadow-soft)] ring-1 ring-stone-900/[0.03] sm:px-8 sm:py-8" aria-labelledby="reinforcement-heading">
+        <h2
+          id="reinforcement-heading"
+          className="flex flex-wrap items-center gap-2 text-lg font-semibold tracking-tight text-[color:var(--jf-text)]"
+        >
+          <LearnSectionSparkIcon className="h-6 w-6 shrink-0" aria-hidden />
           Practice, revision, and real-world work
         </h2>
         <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">

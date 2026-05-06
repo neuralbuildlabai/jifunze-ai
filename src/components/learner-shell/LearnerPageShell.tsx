@@ -26,7 +26,9 @@ export function LearnerPageShell({ title, purpose, primaryAction, children, foot
         </header>
       ) : null}
       <div className="space-y-8">{children}</div>
-      {footer ? <footer className="border-t border-white/[0.06] pt-6 text-sm text-zinc-500">{footer}</footer> : null}
+      {footer ? (
+        <footer className="border-t border-[color:var(--jf-border)] pt-6 text-sm text-[color:var(--jf-muted)]">{footer}</footer>
+      ) : null}
     </div>
   )
 }

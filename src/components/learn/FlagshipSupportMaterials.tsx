@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { LearnSectionSparkIcon } from '../visuals/JifunzeLearnVisuals'
 import type { FlagshipCourseCurriculum } from '@/data/learning/flagshipCourseCurricula'
 import type { FlagshipSession } from '@/data/learning/flagshipCourseSessions'
 import {
@@ -16,7 +17,7 @@ function MaterialRow(props: {
   const { material, unlocked, courseSlug } = props
   const printId = `jf-support-${courseSlug}-${material.id}`
   return (
-    <li className="flex flex-col gap-2 rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+    <li className="flex flex-col gap-3 rounded-2xl border border-[color:var(--jf-border)] border-l-[3px] border-l-orange-300/70 bg-[color:var(--jf-surface)] px-4 py-4 shadow-[var(--jf-shadow-soft)] sm:flex-row sm:items-center sm:justify-between sm:px-5 sm:py-4">
       <div className="min-w-0">
         <p className="text-[13px] font-medium text-[color:var(--jf-text)]">{material.title}</p>
         <p className="mt-1 text-[12px] leading-relaxed text-[color:var(--jf-muted)]">{material.description}</p>
@@ -32,7 +33,7 @@ function MaterialRow(props: {
         {unlocked ? (
           <button
             type="button"
-            className="inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-4 py-2 text-[12px] font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.05]"
+            className="inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] bg-white px-4 py-2 text-[12px] font-semibold text-[color:var(--jf-text)] shadow-sm transition hover:bg-stone-50"
             onClick={() => {
               const node = document.getElementById(printId)
               if (!node) return
@@ -81,27 +82,36 @@ export function FlagshipSupportMaterials(props: {
   const [open, setOpen] = useState(!collapsedByDefault)
 
   return (
-    <section className="mt-14" aria-labelledby="support-materials-heading">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 id="support-materials-heading" className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
-          Support materials
-        </h2>
+    <section
+      className="mt-14 rounded-2xl border border-[color:var(--jf-border)] bg-gradient-to-b from-orange-50/40 via-white to-stone-50/30 p-5 shadow-[var(--jf-shadow-soft)] sm:p-7"
+      aria-labelledby="support-materials-heading"
+    >
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2
+            id="support-materials-heading"
+            className="flex flex-wrap items-center gap-2 text-lg font-semibold tracking-tight text-[color:var(--jf-text)]"
+          >
+            <LearnSectionSparkIcon className="h-6 w-6 shrink-0" />
+            Support materials
+          </h2>
+          <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+            {collapsedByDefault
+              ? 'Support materials unlock as you progress. Printable sheets are for your notes—not a substitute for doing the work on the platform.'
+              : 'Printable summaries for revision—not a substitute for guided work on the platform. Sheets unlock as you earn progress.'}
+          </p>
+        </div>
         {collapsedByDefault ? (
           <button
             type="button"
             onClick={() => setOpen((o) => !o)}
-            className="inline-flex min-h-[2.5rem] items-center rounded-full border border-[color:var(--jf-border)] px-4 text-[12px] font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.04]"
+            className="inline-flex min-h-[2.5rem] shrink-0 items-center rounded-full border border-[color:var(--jf-border)] bg-white px-4 text-[12px] font-semibold text-[color:var(--jf-text)] shadow-sm transition hover:bg-stone-50"
             aria-expanded={open}
           >
             {open ? 'Hide list' : 'Show list'}
           </button>
         ) : null}
       </div>
-      <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-        {collapsedByDefault
-          ? 'Support materials unlock as you progress. Printable sheets are for your notes—not a substitute for doing the work on the platform.'
-          : 'Printable summaries for revision—not a substitute for guided work on the platform. Sheets unlock as you earn progress.'}
-      </p>
       {open ? (
         <ul className="mt-6 space-y-3">
           {mats.map((m) => (

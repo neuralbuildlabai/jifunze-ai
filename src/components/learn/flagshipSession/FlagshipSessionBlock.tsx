@@ -1,5 +1,6 @@
 import type { FlagshipSessionContentBlock } from '../../../data/learning/flagshipSessionContentTypes'
 import { blockAllowsLearnerResponse, getLearnerFacingEyebrow } from '../../../lib/flagshipSessionResponseBlocks'
+import { LessonVisualAidRenderer } from '../lessonVisuals/LessonVisualAids'
 import { flagshipBlockAccentClass, flagshipBlockCardClass } from './flagshipSessionBlockUi'
 import { FlagshipLearnerResponsePanel } from './FlagshipLearnerResponsePanel'
 import type { FlagshipSessionResponseContext } from './flagshipSessionResponseTypes'
@@ -78,6 +79,12 @@ function BlockArticle(props: {
           <h2 className="text-[17px] font-semibold tracking-tight text-[color:var(--jf-text)]">{block.title}</h2>
         ) : null}
       </header>
+
+      {block.visualAid ? (
+        <div className="mt-4 max-w-2xl">
+          <LessonVisualAidRenderer aid={block.visualAid} />
+        </div>
+      ) : null}
 
       <div className="mt-5 max-w-2xl space-y-5">
         {block.body ? <ProseParagraphs text={block.body} /> : null}

@@ -10,7 +10,7 @@ const linkClass =
 export function EmployablePathwaysPublicNav() {
   return (
     <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[color:var(--jf-border)] pb-6">
-      <JifunzeBrandLogo to="/" size="sm" variant="compact" surface="dark" />
+      <JifunzeBrandLogo to="/" size="sm" variant="compact" surface="light" />
       <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
         <nav className="flex flex-wrap items-center gap-3" aria-label="Public">
           <Link className={linkClass} to={LEGAL_ROUTES.paths}>

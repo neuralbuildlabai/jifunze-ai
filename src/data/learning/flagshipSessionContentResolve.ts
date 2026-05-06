@@ -55,6 +55,12 @@ function premiumOrientationBridgeBlock(
         '',
         'Before you advance, write three bullets: the reviewer archetype you are optimizing for (role + incentives), the strongest proof artifact you already have, and the single gap that would most embarrass you if a mentor found it first. If you cannot name the gap, your next step is inquiry—not more drafting.',
       ].join('\n\n'),
+      visualAid: {
+        kind: 'process_steps',
+        title: 'Thread your capstone work',
+        orientation: 'vertical',
+        steps: ['Situate the reviewer', 'Evidence you own', 'Sharpest claim', 'Honest gap hunt'],
+      },
     }
   }
 
@@ -75,6 +81,12 @@ function premiumOrientationBridgeBlock(
     type: 'concept_explanation',
     eyebrow: 'Apply before you advance',
     title: `Turn “${module.title}” into a reviewable thread`,
+    visualAid: {
+      kind: 'process_steps',
+      title: 'Make your thinking reviewable',
+      orientation: 'horizontal',
+      steps: ['Name the situation', 'Separate facts vs. guesses', 'State a falsifiable claim', 'Invite substantive critique'],
+    },
     body: [
       `This chapter sits inside “${module.title}.” Treat it as incomplete until you can explain your next move to someone who does not share your context—without borrowed jargon.`,
       '',
@@ -91,18 +103,25 @@ function premiumOrientationBridgeBlock(
   }
 }
 
+const PREMIUM_READINESS_ITEMS = [
+  'Can you state your claim and your evidence in separate sentences (no blended “because I feel”)?',
+  'Can you name what would falsify your next step—and what observation would trigger a pivot?',
+  'Can you point to one artifact (note, metric, screenshot, quote, draft) that grounds this chapter in reality?',
+  'If a busy reviewer skimmed your write-up in two minutes, would they know what decision you need from them?',
+] as const
+
 function premiumReadinessCheckBlock(session: FlagshipSession): FlagshipSessionContentBlock {
   return {
     id: `${session.id}-premium-readiness-check`,
     type: 'key_points',
     eyebrow: 'Quality gate',
     title: 'Before you mark this chapter complete',
-    bullets: [
-      'Can you state your claim and your evidence in separate sentences (no blended “because I feel”)?',
-      'Can you name what would falsify your next step—and what observation would trigger a pivot?',
-      'Can you point to one artifact (note, metric, screenshot, quote, draft) that grounds this chapter in reality?',
-      'If a busy reviewer skimmed your write-up in two minutes, would they know what decision you need from them?',
-    ],
+    bullets: [...PREMIUM_READINESS_ITEMS],
+    visualAid: {
+      kind: 'verification_checklist',
+      title: 'Verification lens',
+      items: PREMIUM_READINESS_ITEMS,
+    },
   }
 }
 

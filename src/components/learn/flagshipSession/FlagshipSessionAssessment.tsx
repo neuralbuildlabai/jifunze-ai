@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { FlagshipCurriculumModule } from '../../../data/learning/flagshipCourseCurricula'
 import { buildAssessmentItemsForModule } from '../../../lib/flagshipAssessmentCatalog'
 import type { FlagshipAssessmentItem } from '../../../lib/flagshipAssessmentTypes'
+import { JudgmentFlowMini } from '../lessonVisuals/LessonVisualAids'
 
 function AssessmentItemBlock(props: {
   item: FlagshipAssessmentItem
@@ -110,6 +111,9 @@ export function FlagshipSessionAssessment(props: {
           Three checkpoints anchor this module: conceptual judgment, scenario decision-making, and a brief applied evidence confirmation. Together with completing
           sessions, they keep capstone prep aligned with real readiness—not navigation alone.
         </p>
+        <div className="mt-4 max-w-xl">
+          <JudgmentFlowMini caption="Checkpoints reward verification discipline—not speed." />
+        </div>
       </div>
       {items.map((item) => (
         <AssessmentItemBlock

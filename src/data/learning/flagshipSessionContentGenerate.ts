@@ -56,6 +56,7 @@ function lessonBlocks(
       eyebrow: 'Lesson',
       title: isCourseOpening ? 'Start of this flagship path' : 'How this session fits',
       body: introBody,
+      visualAid: { kind: 'prompt_review_cycle', caption: 'Use this loop whenever outputs influence decisions.' },
     },
     {
       id: `${session.id}-concept`,
@@ -79,6 +80,15 @@ function lessonBlocks(
       example:
         module.practiceActivities[1] ??
         `Constraint: write your reasoning in short bullets a colleague could challenge in one minute.`,
+      visualAid: {
+        kind: 'comparison',
+        weakLabel: 'Shallow prompt',
+        strongLabel: 'Evidence-seeking prompt',
+        weak: '“Explain this topic in detail.” (No audience, no constraints, no falsifier.)',
+        strong:
+          '“For a skeptical ops manager, give three tradeoffs with sources—then state what would change your recommendation.”',
+        caption: 'Specificity creates signal the model can amplify.',
+      },
     },
     {
       id: `${session.id}-bridge`,
@@ -131,6 +141,12 @@ function practiceBlocks(session: FlagshipSession, module: FlagshipCurriculumModu
         'Fewer iterations with explicit review beat ten rushed passes.',
         'Complete the mastery checkpoints on this page—they record defensible evidence, not button clicks.',
       ].join('\n\n'),
+      visualAid: {
+        kind: 'callout',
+        variant: 'practice_tip',
+        title: 'Slow is smooth',
+        body: 'After each model pass, pause for verification: what did you assume, cite, or still need to observe?',
+      },
     },
     {
       id: `${session.id}-tasks`,
@@ -281,6 +297,12 @@ function capstonePrepBlocks(session: FlagshipSession, curriculum: FlagshipCourse
       eyebrow: 'Audit-minded',
       title: 'What reviewers should see',
       body: 'Each deliverable should carry provenance: sources, assumptions, decisions, and limits. Prefer tight scope with strong proof over encyclopedic breadth.',
+      visualAid: {
+        kind: 'callout',
+        variant: 'verify',
+        title: 'Provenance beats polish',
+        body: 'Ship fewer claims with receipts—sources, assumptions, and explicit limits beat glossy prose.',
+      },
     },
     {
       id: `${session.id}-keys`,

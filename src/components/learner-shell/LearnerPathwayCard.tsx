@@ -6,7 +6,7 @@ export function LearnerPathwayCard({ pathway }: { pathway: EmployablePathway }) 
   return (
     <Link
       to={`/paths/${pathway.slug}`}
-      className="block rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-5 shadow-[var(--jf-shadow-soft)] ring-1 ring-black/[0.03] transition hover:border-white/[0.12] hover:bg-[color:var(--jf-surface-elevated)] sm:p-6"
+      className="block rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-5 shadow-[var(--jf-shadow-soft)] ring-1 ring-stone-900/[0.03] transition hover:-translate-y-0.5 hover:border-stone-300/80 hover:shadow-lg sm:p-6"
     >
       <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">{pathway.shortTitle}</h2>
       <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-[color:var(--jf-muted)]">{pathway.description}</p>

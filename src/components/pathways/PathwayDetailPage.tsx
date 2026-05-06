@@ -16,6 +16,7 @@ import { derivePathwayCourseProgress } from '../../lib/pathwayProgressDerived'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { EmployablePathwaysPublicNav } from './EmployablePathwaysPublicNav'
 import { TrustLegalFooterLinks } from '../TrustLegalFooterLinks'
+import { LearnHeroAbstractFigure, LearnSectionSparkIcon, LearnWorkflowStepsFigure } from '../visuals/JifunzeLearnVisuals'
 
 const sectionTitle = 'text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]'
 const prose = 'text-[14px] leading-relaxed text-[color:var(--jf-muted)]'
@@ -65,25 +66,40 @@ export function PathwayDetailPage() {
   const followBusy = prefSaving || prefLoading
 
   return (
-    <div className="jf-public-surface min-h-screen w-full bg-[var(--jf-bg-page)] px-4 py-10 text-[color:var(--jf-text)] sm:px-6">
+    <div className="jf-learn-warm min-h-screen w-full bg-[var(--jf-bg-page)] px-4 py-10 text-[color:var(--jf-text)] sm:px-6">
       <div className="mx-auto max-w-3xl space-y-10 sm:space-y-12">
         <EmployablePathwaysPublicNav />
 
-        <div>
-          <p className={sectionTitle}>{FLAGSHIP_SCHOOLS[pathway.schoolId].label}</p>
-          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-3xl">{pathway.title}</h1>
-          <p className={`mt-4 ${prose}`}>{pathway.description}</p>
-          {pathway.status === 'coming_soon' ? (
-            <p className="mt-3 rounded-xl border border-amber-400/25 bg-amber-500/[0.08] px-4 py-3 text-[13px] text-amber-100/90">
-              Parts of this pathway are still being prepared: included courses below are the live learning surface; treat add-on builder topics as roadmap until
-              published.
-            </p>
-          ) : null}
+        <div className="relative overflow-hidden rounded-2xl border border-[color:var(--jf-border)] bg-gradient-to-br from-orange-50/90 via-white to-stone-50/80 p-6 shadow-[var(--jf-shadow-soft)] sm:p-8">
+          <div className="grid gap-6 lg:grid-cols-[1fr_minmax(0,220px)] lg:items-start lg:gap-8">
+            <div>
+              <p className={sectionTitle}>{FLAGSHIP_SCHOOLS[pathway.schoolId].label}</p>
+              <h1 className="mt-2 text-2xl font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-3xl">{pathway.title}</h1>
+              <p className={`mt-4 ${prose}`}>{pathway.description}</p>
+              {pathway.status === 'coming_soon' ? (
+                <p className="mt-3 rounded-xl border border-amber-200/70 bg-amber-50/95 px-4 py-3 text-[13px] text-amber-950/95">
+                  Parts of this pathway are still being prepared: included courses below are the live learning surface; treat add-on builder topics as roadmap until
+                  published.
+                </p>
+              ) : null}
+            </div>
+            <div className="mx-auto max-w-[220px] pt-2 lg:mx-0 lg:max-w-none lg:pt-1">
+              <LearnHeroAbstractFigure className="h-auto w-full drop-shadow-sm" />
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-4 shadow-[var(--jf-shadow-soft)] ring-1 ring-stone-900/[0.03] sm:px-5">
+          <p className={`${sectionTitle} mb-3 flex flex-wrap items-center gap-2`}>
+            <LearnSectionSparkIcon className="h-4 w-4 shrink-0" aria-hidden />
+            How this pathway progresses
+          </p>
+          <LearnWorkflowStepsFigure className="mx-auto h-auto w-full max-w-md sm:mx-0" />
         </div>
 
         {hasAnyAvailableCourse ? (
           <section
-            className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 p-5 sm:p-6"
+            className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-5 shadow-[var(--jf-shadow-soft)] sm:p-6"
             aria-labelledby="pathway-progress-heading"
             data-testid="pathway-progress-summary"
           >
@@ -98,32 +114,32 @@ export function PathwayDetailPage() {
               <p className="mt-2 text-[11px] text-[color:var(--jf-subtle)]">Merging saved progress from your account…</p>
             ) : null}
             <dl className="mt-4 grid gap-3 text-[13px] sm:grid-cols-2">
-              <div className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)]/50 px-3 py-2">
+              <div className="rounded-xl border border-[color:var(--jf-border)] bg-orange-50/40 px-3 py-2">
                 <dt className="text-[color:var(--jf-subtle)]">Available courses</dt>
                 <dd className="mt-1 font-semibold tabular-nums text-[color:var(--jf-text)]">{summary.availableCourseCount}</dd>
               </div>
-              <div className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)]/50 px-3 py-2">
+              <div className="rounded-xl border border-[color:var(--jf-border)] bg-orange-50/40 px-3 py-2">
                 <dt className="text-[color:var(--jf-subtle)]">Started</dt>
                 <dd className="mt-1 font-semibold tabular-nums text-[color:var(--jf-text)]">{summary.startedCourseCount}</dd>
               </div>
-              <div className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)]/50 px-3 py-2">
+              <div className="rounded-xl border border-[color:var(--jf-border)] bg-orange-50/40 px-3 py-2">
                 <dt className="text-[color:var(--jf-subtle)]">Certificate-ready courses</dt>
                 <dd className="mt-1 font-semibold tabular-nums text-[color:var(--jf-text)]">{summary.completedCourseCount}</dd>
               </div>
-              <div className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)]/50 px-3 py-2">
+              <div className="rounded-xl border border-[color:var(--jf-border)] bg-orange-50/40 px-3 py-2">
                 <dt className="text-[color:var(--jf-subtle)]">Pathway session progress</dt>
                 <dd className="mt-1 font-semibold tabular-nums text-[color:var(--jf-text)]">{summary.pathwaySessionProgressPercent}%</dd>
               </div>
-              <div className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)]/50 px-3 py-2">
+              <div className="rounded-xl border border-[color:var(--jf-border)] bg-orange-50/40 px-3 py-2">
                 <dt className="text-[color:var(--jf-subtle)]">Planned courses (roadmap)</dt>
                 <dd className="mt-1 font-semibold tabular-nums text-[color:var(--jf-text)]">{summary.plannedCourseCount}</dd>
               </div>
-              <div className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)]/50 px-3 py-2">
+              <div className="rounded-xl border border-[color:var(--jf-border)] bg-orange-50/40 px-3 py-2">
                 <dt className="text-[color:var(--jf-subtle)]">Portfolio outputs (guidance)</dt>
                 <dd className="mt-1 font-semibold text-[color:var(--jf-text)]">{summary.portfolioOutputTotal}</dd>
               </div>
             </dl>
-            <p className="mt-4 rounded-lg border border-white/[0.06] bg-black/[0.12] px-3 py-2 text-[13px] text-[color:var(--jf-muted)]">
+            <p className="mt-4 rounded-lg border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-3 py-2 text-[13px] text-[color:var(--jf-muted)]">
               <span className="font-semibold text-[color:var(--jf-text)]">Recommended next step: </span>
               {summary.recommendedNextActionLabel}
             </p>
@@ -136,16 +152,16 @@ export function PathwayDetailPage() {
           </section>
         ) : (
           <section
-            className="rounded-2xl border border-amber-400/25 bg-amber-500/[0.08] p-5 text-[14px] text-amber-50/95"
+            className="rounded-2xl border border-amber-200/70 bg-amber-50/95 p-5 text-[14px] text-amber-950/95"
             data-testid="pathway-planned-only-banner"
           >
-            <p className="font-semibold text-amber-50">This pathway is being prepared</p>
+            <p className="font-semibold text-amber-950">This pathway is being prepared</p>
             <p className="mt-2 leading-relaxed">
               There are no published flagship courses linked yet, so you cannot start this pathway in the app. When courses ship, they will appear here—meanwhile,
               explore pathways that already include live courses.
             </p>
             <Link
-              className="mt-4 inline-flex min-h-[2.5rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-5 py-2 text-sm font-semibold text-zinc-950"
+              className="mt-4 inline-flex min-h-[2.5rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-5 py-2 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)]"
               to={LEGAL_ROUTES.paths}
             >
               Explore available pathways
@@ -153,7 +169,7 @@ export function PathwayDetailPage() {
           </section>
         )}
 
-        <section className="grid gap-4 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-5 sm:grid-cols-2 sm:p-6">
+        <section className="grid gap-4 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-5 shadow-[var(--jf-shadow-soft)] sm:grid-cols-2 sm:p-6">
           <div>
             <p className={sectionTitle}>Who it is for</p>
             <p className="mt-2 text-[14px] text-[color:var(--jf-text)]">{pathway.targetLearner}</p>
@@ -203,7 +219,10 @@ export function PathwayDetailPage() {
               const row = courseRows.find((r) => r.slug === slug)
               const pct = row ? Math.round(row.sessionFraction * 100) : 0
               return (
-                <li key={slug} className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)]/60 px-4 py-3 sm:px-5">
+                <li
+                  key={slug}
+                  className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-3 shadow-[var(--jf-shadow-soft)] ring-1 ring-stone-900/[0.03] transition hover:border-stone-300/70 sm:px-5"
+                >
                   <Link
                     className="block break-words text-left text-[15px] font-semibold text-[color:var(--jf-text)] hover:underline sm:text-base"
                     to={`/learn/courses/${slug}`}
@@ -239,7 +258,7 @@ export function PathwayDetailPage() {
                   )
                 }
                 return (
-                  <li key={slug} className="rounded-xl border border-dashed border-white/[0.12] bg-black/[0.12] px-4 py-3" data-testid="pathway-planned-course-row">
+                  <li key={slug} className="rounded-xl border border-dashed border-stone-300/80 bg-stone-50/80 px-4 py-3" data-testid="pathway-planned-course-row">
                     <p className="font-semibold text-[color:var(--jf-text)]">{meta.title}</p>
                     <p className="mt-1 text-[12px] uppercase tracking-[0.12em] text-[color:var(--jf-subtle)]">
                       {meta.availability === 'coming_soon' ? 'Coming soon' : 'Planned'}
@@ -254,7 +273,7 @@ export function PathwayDetailPage() {
 
         <section
           id="pathway-portfolio-guidance"
-          className="rounded-2xl border border-dashed border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/60 p-5 sm:p-6"
+          className="rounded-2xl border border-dashed border-orange-200/60 bg-gradient-to-b from-orange-50/50 to-white p-5 shadow-sm sm:p-6"
         >
           <h2 className={sectionTitle}>Portfolio-ready outputs (guidance only)</h2>
           <p className={`mt-2 ${prose}`}>
@@ -284,7 +303,7 @@ export function PathwayDetailPage() {
                       ) : null}
                     </p>
                     <p className="mt-1 text-[13px] text-[color:var(--jf-muted)]">{o.description}</p>
-                    <p className="mt-2 inline-block rounded-full bg-white/[0.06] px-2 py-0.5 text-[11px] text-[color:var(--jf-muted)]">{statusChip(portfolioOutputDisplayStatus(o))}</p>
+                    <p className="mt-2 inline-block rounded-full border border-[color:var(--jf-border)] bg-stone-50 px-2 py-0.5 text-[11px] text-[color:var(--jf-muted)]">{statusChip(portfolioOutputDisplayStatus(o))}</p>
                   </li>
                 ))}
               </ul>
@@ -315,7 +334,7 @@ export function PathwayDetailPage() {
                   </p>
                   <p className="mt-1 text-[13px] text-[color:var(--jf-muted)]">{o.description}</p>
                   <p className="mt-2 line-clamp-2 text-[11px] text-[color:var(--jf-subtle)]">{o.learnerInstructionsPlaceholder}</p>
-                  <p className="mt-2 inline-block rounded-full bg-white/[0.06] px-2 py-0.5 text-[11px] text-[color:var(--jf-muted)]">{statusChip(portfolioOutputDisplayStatus(o))}</p>
+                  <p className="mt-2 inline-block rounded-full border border-[color:var(--jf-border)] bg-stone-50 px-2 py-0.5 text-[11px] text-[color:var(--jf-muted)]">{statusChip(portfolioOutputDisplayStatus(o))}</p>
                 </li>
               ))}
             </ul>
@@ -353,7 +372,7 @@ export function PathwayDetailPage() {
         </section>
 
         {next ? (
-          <section className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/80 p-5">
+          <section className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-5 shadow-[var(--jf-shadow-soft)]">
             <p className={sectionTitle}>Recommended next pathway</p>
             <Link className="mt-2 inline-block text-[15px] font-semibold text-[color:var(--jf-text)] hover:underline" to={`/paths/${next.slug}`}>
               {next.title} →
@@ -367,7 +386,7 @@ export function PathwayDetailPage() {
             <>
               {authConfigured ? (
                 <Link
-                  className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)]"
+                  className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)]"
                   to={`${LEGAL_ROUTES.authSignUp}?returnUrl=${returnUrl}`}
                   data-testid="pathway-cta-signup"
                 >
@@ -375,7 +394,7 @@ export function PathwayDetailPage() {
                 </Link>
               ) : (
                 <Link
-                  className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)]"
+                  className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)]"
                   to={LEGAL_ROUTES.learn}
                 >
                   Explore courses
@@ -383,7 +402,7 @@ export function PathwayDetailPage() {
               )}
               {authConfigured ? (
                 <Link
-                  className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-6 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.05]"
+                  className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-6 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] hover:bg-stone-50"
                   to={`${LEGAL_ROUTES.authSignIn}?returnUrl=${returnUrl}`}
                   data-testid="pathway-cta-signin"
                 >
@@ -402,20 +421,20 @@ export function PathwayDetailPage() {
               {followingThis ? (
                 <>
                   <Link
-                    className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)]"
+                    className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)]"
                     to={nextAction.kind === 'planned_only' ? LEGAL_ROUTES.paths : nextAction.href}
                     data-testid="pathway-cta-primary-signedin"
                   >
                     {nextAction.buttonLabel}
                   </Link>
                   <span
-                    className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10 px-5 py-2.5 text-sm font-semibold text-emerald-100/90"
+                    className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-emerald-200/80 bg-emerald-50 px-5 py-2.5 text-sm font-semibold text-emerald-900"
                     data-testid="pathway-following-badge"
                   >
                     Following this pathway
                   </span>
                   <Link
-                    className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-6 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.05]"
+                    className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-6 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] hover:bg-stone-50"
                     to={LEGAL_ROUTES.paths}
                     data-testid="pathway-change-pathway"
                   >
@@ -426,7 +445,7 @@ export function PathwayDetailPage() {
                 <>
                   <button
                     type="button"
-                    className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)] disabled:opacity-60"
+                    className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)] disabled:opacity-60"
                     data-testid="pathway-cta-follow"
                     disabled={followBusy}
                     onClick={() => {
@@ -437,7 +456,7 @@ export function PathwayDetailPage() {
                   </button>
                   {nextAction.kind !== 'planned_only' ? (
                     <Link
-                      className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-6 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.05]"
+                      className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-6 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] hover:bg-stone-50"
                       to={nextAction.href}
                       data-testid="pathway-cta-secondary-next"
                     >
@@ -462,14 +481,14 @@ export function PathwayDetailPage() {
           ) : hasAnyAvailableCourse && nextAction.kind !== 'planned_only' ? (
             <>
               <Link
-                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)]"
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)]"
                 to={nextAction.href}
                 data-testid="pathway-cta-primary-signedin"
               >
                 {nextAction.buttonLabel}
               </Link>
               <a
-                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-6 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.05]"
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-6 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] hover:bg-stone-50"
                 href="#pathway-included-courses"
               >
                 View included courses
@@ -481,12 +500,12 @@ export function PathwayDetailPage() {
           ) : (
             <>
               <Link
-                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950"
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white"
                 to={nextAction.kind === 'planned_only' ? nextAction.hrefExplore : LEGAL_ROUTES.paths}
               >
                 {nextAction.kind === 'planned_only' ? nextAction.buttonLabel : 'Explore available pathways'}
               </Link>
-              <Link className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-6 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.05]" to={LEGAL_ROUTES.learn}>
+              <Link className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-6 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] hover:bg-stone-50" to={LEGAL_ROUTES.learn}>
                 View courses
               </Link>
             </>
@@ -494,7 +513,7 @@ export function PathwayDetailPage() {
         </div>
 
         {prefError ? (
-          <p className="mt-3 text-[12px] text-rose-300/90" role="alert">
+          <p className="mt-3 text-[12px] text-rose-700" role="alert">
             {prefError}
           </p>
         ) : null}

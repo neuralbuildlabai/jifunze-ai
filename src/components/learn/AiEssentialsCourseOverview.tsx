@@ -12,6 +12,7 @@ import { getAiEssentialsMilestonesReachedCount } from '../../lib/aiEssentialsPro
 import { MODULE_QUIZ_DRAW_COUNT, MODULE_QUIZ_MIN_CORRECT } from '../../lib/flagshipModuleQuizPools'
 import { AI_ESSENTIALS_PATHWAY_BLURBS, AI_ESSENTIALS_PORTFOLIO_SHOWCASE } from '../../lib/aiEssentialsCourseUiMeta'
 import { TrustBoundaryStrip } from '../TrustBoundaryStrip'
+import { LearnHeroAbstractFigure, LearnSectionSparkIcon } from '../visuals/JifunzeLearnVisuals'
 import { FlagshipCourseLearningPath } from './FlagshipCourseLearningPath'
 import { FlagshipSupportMaterials } from './FlagshipSupportMaterials'
 
@@ -92,52 +93,61 @@ export function AiEssentialsCourseOverview(props: Props) {
     <div className="space-y-12">
       <section
         id="ai-essentials-hero"
-        className="scroll-mt-24 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-5 py-8 shadow-[var(--jf-shadow-soft)] sm:px-9 sm:py-11"
+        className="jf-learn-section-blush scroll-mt-24 overflow-hidden rounded-2xl border border-[color:var(--jf-border)] shadow-[var(--jf-shadow-soft)]"
         aria-labelledby="ae-hero-title"
       >
-        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[color:var(--jf-muted)]">AI Essentials</p>
-        <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">
-          {school.label} — AI and Digital Fluency, Course 1
-        </p>
-        <h1 id="ae-hero-title" className="mt-2 text-[2rem] font-semibold leading-tight tracking-tight text-[color:var(--jf-text)] sm:text-[2.35rem]">
-          {course.title}
-        </h1>
-        <p className="mt-4 max-w-2xl text-[16px] font-medium leading-relaxed text-[color:var(--jf-text)]/90">{COURSE_PROMISE}</p>
-        <div className="mt-6 flex flex-wrap gap-2 text-[12px] text-[color:var(--jf-muted)]">
-          <span className="rounded-full border border-[color:var(--jf-border)] px-3 py-1 font-medium text-[color:var(--jf-text)]">16 modules</span>
-          <span className="rounded-full border border-[color:var(--jf-border)] px-3 py-1">32–45 hours</span>
-          <span className="rounded-full border border-[color:var(--jf-border)] px-3 py-1">10 milestones</span>
-          <span className="rounded-full border border-[color:var(--jf-border)] px-3 py-1">Beginner to intermediate</span>
-          <span className="rounded-full border border-emerald-200/70 bg-emerald-50/90 px-3 py-1 text-emerald-950/90">Portfolio + capstone</span>
+        <div className="grid gap-8 px-5 py-8 sm:px-9 sm:py-11 lg:grid-cols-[minmax(0,1fr)_minmax(0,240px)] lg:items-center lg:gap-10">
+          <div className="min-w-0">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[color:var(--jf-muted)]">AI Essentials</p>
+            <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">
+              {school.label} — AI and Digital Fluency, Course 1
+            </p>
+            <h1 id="ae-hero-title" className="mt-2 text-[2rem] font-semibold leading-tight tracking-tight text-[color:var(--jf-text)] sm:text-[2.35rem]">
+              {course.title}
+            </h1>
+            <p className="mt-4 max-w-2xl text-[16px] font-medium leading-relaxed text-[color:var(--jf-text)]/90">{COURSE_PROMISE}</p>
+            <div className="mt-6 flex flex-wrap gap-2 text-[12px] text-[color:var(--jf-muted)]">
+              <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-3 py-1 font-medium text-[color:var(--jf-text)] shadow-sm">
+                16 modules
+              </span>
+              <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 px-3 py-1 shadow-sm">32–45 hours</span>
+              <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 px-3 py-1 shadow-sm">10 milestones</span>
+              <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 px-3 py-1 shadow-sm">Beginner to intermediate</span>
+              <span className="rounded-full border border-emerald-200/70 bg-emerald-50/95 px-3 py-1 text-emerald-950/90 shadow-sm">Portfolio + capstone</span>
+            </div>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Link
+                to={primaryHref}
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)]"
+                data-testid="ae-hero-primary-cta"
+              >
+                {primaryLabel}
+              </Link>
+              <a
+                href="#curriculum"
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] shadow-sm transition hover:bg-stone-50"
+              >
+                View curriculum
+              </a>
+            </div>
+            <TrustBoundaryStrip
+              variant="inline"
+              compact
+              strip="publicHero"
+              presentation="utility"
+              density="legalLink"
+              className="mt-8 max-w-2xl text-[13px] leading-relaxed text-[color:var(--jf-subtle)]"
+              dataTestId="ae-hero-trust"
+            />
+          </div>
+          <div className="mx-auto w-full max-w-[260px] opacity-[0.97] lg:mx-0 lg:max-w-none">
+            <LearnHeroAbstractFigure className="h-auto w-full drop-shadow-md" />
+          </div>
         </div>
-        <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-          <Link
-            to={primaryHref}
-            className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)]"
-            data-testid="ae-hero-primary-cta"
-          >
-            {primaryLabel}
-          </Link>
-          <a
-            href="#curriculum"
-            className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-stone-50"
-          >
-            View curriculum
-          </a>
-        </div>
-        <TrustBoundaryStrip
-          variant="inline"
-          compact
-          strip="publicHero"
-          presentation="utility"
-          density="legalLink"
-          className="mt-8 max-w-2xl text-[13px] leading-relaxed text-[color:var(--jf-subtle)]"
-          dataTestId="ae-hero-trust"
-        />
       </section>
 
       <section
-        className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-5 py-6 sm:px-7"
+        className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-5 py-6 shadow-[var(--jf-shadow-soft)] ring-1 ring-stone-900/[0.04] sm:px-7"
         aria-labelledby="ae-progress-heading"
         data-testid="ae-milestone-progress"
       >
@@ -214,8 +224,11 @@ export function AiEssentialsCourseOverview(props: Props) {
         </ul>
       </section>
 
-      <div id="curriculum" className="scroll-mt-24 space-y-3">
-        <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">Curriculum</h2>
+      <div id="curriculum" className="scroll-mt-24 space-y-4">
+        <h2 className="flex flex-wrap items-center gap-2 text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
+          <LearnSectionSparkIcon className="h-6 w-6 shrink-0" aria-hidden />
+          Curriculum
+        </h2>
         <p className="max-w-2xl text-[13px] text-[color:var(--jf-muted)]">
           Complete modules in order. Each module includes lessons, practice, checkpoint questions, and a portfolio output.
         </p>

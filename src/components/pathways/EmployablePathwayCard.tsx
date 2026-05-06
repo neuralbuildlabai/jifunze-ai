@@ -4,24 +4,24 @@ import { FLAGSHIP_SCHOOLS } from '../../data/learning/flagshipCoursesCatalog'
 import { getPathwayAvailableCourses } from '../../lib/pathwayNextAction'
 
 const shell =
-  'group flex h-full min-h-[16.5rem] flex-col rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] shadow-[var(--jf-shadow-soft)] ring-1 ring-black/[0.04] transition hover:border-white/[0.14] hover:bg-[color:var(--jf-surface-elevated)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)] sm:min-h-[17.5rem]'
+  'group flex h-full min-h-[16.5rem] flex-col rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] shadow-[var(--jf-shadow-soft)] ring-1 ring-stone-900/[0.04] transition hover:-translate-y-0.5 hover:border-stone-300/80 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)] sm:min-h-[17.5rem]'
 
 function statusPill(pathway: EmployablePathway): { label: string; className: string } {
   if (pathway.status === 'coming_soon') {
     return {
       label: 'Coming soon',
-      className: 'border-amber-400/35 bg-amber-500/[0.12] text-amber-100/95',
+      className: 'border-amber-200/70 bg-amber-50 text-amber-950/90',
     }
   }
   if (pathway.status === 'planned') {
     return {
       label: 'Planned',
-      className: 'border-white/[0.12] bg-white/[0.05] text-[color:var(--jf-muted)]',
+      className: 'border-[color:var(--jf-border)] bg-stone-50 text-[color:var(--jf-muted)]',
     }
   }
   return {
     label: 'Live + roadmap',
-    className: 'border-emerald-400/25 bg-emerald-500/[0.1] text-emerald-100/90',
+    className: 'border-emerald-200/70 bg-emerald-50 text-emerald-900/90',
   }
 }
 

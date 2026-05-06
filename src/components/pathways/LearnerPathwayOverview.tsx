@@ -46,33 +46,33 @@ function PathwayHomeCard({
 
   return (
     <li
-      className={`rounded-xl border px-3 py-3 ${
+      className={`rounded-2xl border px-4 py-4 shadow-[var(--jf-shadow-soft)] transition hover:border-stone-300/70 ${
         variant === 'your_pathway' || emphasize
-          ? 'border-violet-500/30 bg-violet-950/20'
-          : 'border-white/[0.06] bg-zinc-950/25'
+          ? 'border-orange-300/70 bg-orange-50/95 ring-2 ring-orange-200/50'
+          : 'border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] ring-1 ring-stone-900/[0.04]'
       }`}
     >
       {variant === 'your_pathway' ? (
-        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-violet-300/90">Your selected pathway</p>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-orange-900/80">Your selected pathway</p>
       ) : null}
-      <Link to={`/paths/${pathway.slug}`} className="text-[13px] font-medium text-zinc-100 hover:text-violet-200">
+      <Link to={`/paths/${pathway.slug}`} className="text-[13px] font-medium text-[color:var(--jf-text)] hover:text-[color:var(--jf-brand)]">
         {pathway.shortTitle}
       </Link>
-      <p className="mt-2 text-[11px] leading-snug text-zinc-500 sm:text-xs">
+      <p className="mt-2 text-[11px] leading-snug text-[color:var(--jf-muted)] sm:text-xs">
         ~{summary.pathwaySessionProgressPercent}% sessions · {summary.completedCourseCount}/{summary.availableCourseCount || 0} cert-ready
       </p>
-      <p className="mt-1 text-[11px] text-zinc-500">
-        <span className="text-zinc-400">Next: </span>
+      <p className="mt-1 text-[11px] text-[color:var(--jf-muted)]">
+        <span className="text-[color:var(--jf-subtle)]">Next: </span>
         {summary.recommendedNextActionLabel}
       </p>
       <div className="mt-2 flex flex-col gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2">
-        <Link to={ctaHref} className="inline-block text-[11px] font-semibold text-violet-200 hover:text-violet-100">
+        <Link to={ctaHref} className="inline-block text-[11px] font-semibold text-[color:var(--jf-brand)] hover:text-[color:var(--jf-brand-hover)]">
           {primaryCtaLabel} →
         </Link>
         {variant === 'your_pathway' ? (
           <Link
             to={LEGAL_ROUTES.paths}
-            className="text-[11px] font-medium text-zinc-500 underline-offset-2 hover:text-zinc-300 hover:underline"
+            className="text-[11px] font-medium text-[color:var(--jf-muted)] underline-offset-2 hover:text-[color:var(--jf-text)] hover:underline"
           >
             Change pathway
           </Link>
@@ -135,34 +135,34 @@ export function LearnerPathwayOverview() {
   }, [picks, bySlug, applyRemote, tick])
 
   return (
-    <section className="mt-8 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5 sm:p-6">
+    <section className="jf-learn-warm mt-8 rounded-2xl border border-[color:var(--jf-border)] bg-[var(--jf-bg-page)] p-5 shadow-[var(--jf-shadow-soft)] sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-500">Employable pathways</p>
-          <h2 className="mt-1 text-sm font-semibold text-white">Build proof along a pathway</h2>
-          <p className="mt-2 max-w-2xl text-[12px] leading-relaxed text-zinc-500">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">Employable pathways</p>
+          <h2 className="mt-1 text-sm font-semibold text-[color:var(--jf-text)]">Build proof along a pathway</h2>
+          <p className="mt-2 max-w-2xl text-[12px] leading-relaxed text-[color:var(--jf-muted)]">
             Pathways prepare you for roles and portfolios by sequencing flagship courses. When you are signed in, we merge account progress with this device for
             certificate readiness context—not a transcript or job guarantee.
           </p>
           {pathwaySync && !hydrated ? (
-            <p className="mt-2 text-[10px] text-zinc-500">Loading account progress…</p>
+            <p className="mt-2 text-[10px] text-[color:var(--jf-subtle)]">Loading account progress…</p>
           ) : null}
         </div>
         <Link
           to={LEGAL_ROUTES.paths}
-          className="rounded-full border border-white/[0.1] px-3 py-1.5 text-[11px] font-semibold text-zinc-200 hover:bg-white/[0.05]"
+          className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-3 py-1.5 text-[11px] font-semibold text-[color:var(--jf-text)] shadow-sm transition hover:bg-stone-50"
         >
           Browse pathways
         </Link>
       </div>
       {selectedOk && selected ? (
-        <p className="mt-3 text-[11px] text-zinc-400">
-          <span className="font-semibold text-violet-200">Your selected pathway: </span>
+        <p className="mt-3 text-[11px] text-[color:var(--jf-muted)]">
+          <span className="font-semibold text-[color:var(--jf-brand)]">Your selected pathway: </span>
           {selected.shortTitle}. Use Continue your pathway for the next session, or change your primary pathway from the hub.
         </p>
       ) : top ? (
-        <p className="mt-3 text-[11px] text-zinc-400">
-          <span className="font-semibold text-zinc-200">Recommended: </span>
+        <p className="mt-3 text-[11px] text-[color:var(--jf-muted)]">
+          <span className="font-semibold text-[color:var(--jf-text)]">Recommended: </span>
           {top.pathway.shortTitle} — continue where you have the most momentum, or open details to see portfolio-ready outputs.
         </p>
       ) : null}

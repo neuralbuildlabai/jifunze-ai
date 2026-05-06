@@ -12,6 +12,7 @@ import {
 } from '../../../lib/flagshipSessionGuidedLayout'
 import { blockStartsCollapsed } from '../../../lib/flagshipSessionLessonFlow'
 import { blockAllowsLearnerResponse } from '../../../lib/flagshipSessionResponseBlocks'
+import { ArtifactExpectationsCard, PracticeSequenceFigure } from '../lessonVisuals/LessonVisualAids'
 import { FlagshipSessionBlock } from './FlagshipSessionBlock'
 import type { FlagshipSessionResponseContext } from './flagshipSessionResponseTypes'
 
@@ -39,14 +40,19 @@ function ObjectivesStrip({ objectives }: { objectives: readonly string[] }) {
       <h2 id="session-objectives-title" className="text-[13px] font-semibold text-[color:var(--jf-text)]">
         Learning objectives
       </h2>
-      <ul className="mt-3 space-y-2">
-        {objectives.map((o) => (
-          <li key={o} className="flex gap-2 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[color:var(--jf-text)]/35" aria-hidden />
-            {o}
+      <ol className="mt-3 list-none space-y-3">
+        {objectives.map((o, i) => (
+          <li key={o} className="flex gap-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+            <span
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-stone-200/90 bg-white text-[12px] font-semibold text-[color:var(--jf-text)] shadow-sm"
+              aria-hidden
+            >
+              {i + 1}
+            </span>
+            <span className="min-w-0 pt-1">{o}</span>
           </li>
         ))}
-      </ul>
+      </ol>
     </div>
   )
 }
@@ -73,9 +79,29 @@ function SectionShell(props: {
 
 function GuidedStepFrame(props: { id: string; title: string; children: ReactNode; className?: string }) {
   const { id, title, children, className = '' } = props
+  const chrome =
+    id === 'flagship-step-learn'
+      ? { pill: 'Frame', pillClass: 'border-sky-200/75 bg-sky-50/80 text-sky-950' }
+      : id === 'flagship-step-example'
+        ? { pill: 'See it', pillClass: 'border-amber-200/80 bg-amber-50/75 text-amber-950' }
+        : id === 'flagship-step-check'
+          ? { pill: 'Apply', pillClass: 'border-orange-200/75 bg-orange-50/70 text-orange-950' }
+          : id === 'flagship-step-more'
+            ? { pill: 'Deep cut', pillClass: 'border-violet-200/75 bg-violet-50/75 text-violet-950' }
+            : null
+
   return (
     <section id={id} className={`scroll-mt-28 ${className}`.trim()}>
-      <h2 className="text-[13px] font-semibold tracking-tight text-[color:var(--jf-text)]">{title}</h2>
+      <div className="flex flex-wrap items-center gap-2">
+        <h2 className="text-[13px] font-semibold tracking-tight text-[color:var(--jf-text)]">{title}</h2>
+        {chrome ? (
+          <span
+            className={`rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] ${chrome.pillClass}`}
+          >
+            {chrome.pill}
+          </span>
+        ) : null}
+      </div>
       <div className="mt-5 space-y-6">{children}</div>
     </section>
   )
@@ -153,12 +179,17 @@ export function FlagshipSessionBlocks(props: {
           ) : (
             <p className="mt-3 text-[14px] text-[color:var(--jf-subtle)]">Work through the tasks below in order.</p>
           )}
+          <div className="mt-6 max-w-2xl">
+            <PracticeSequenceFigure caption="One deliberate pass beats many rushed attempts." />
+          </div>
         </section>
 
         {produce ? (
           <section id="flagship-practice-output" className="mt-10 scroll-mt-28">
             <h2 className="text-[13px] font-semibold text-[color:var(--jf-text)]">What you will produce</h2>
-            <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[color:var(--jf-muted)]">{produce}</p>
+            <div className="mt-3 max-w-2xl">
+              <ArtifactExpectationsCard embedded summary={produce} />
+            </div>
           </section>
         ) : null}
 
