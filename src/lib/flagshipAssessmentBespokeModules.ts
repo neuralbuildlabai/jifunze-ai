@@ -12,22 +12,22 @@ type Scen = Omit<Extract<FlagshipAssessmentItem, { kind: 'scenario_judgment' }>,
 type Refr = Omit<Extract<FlagshipAssessmentItem, { kind: 'reflection_confirm' }>, 'id'>
 type Trio = readonly [Mcq, Scen, Refr]
 
-function mcq(prompt: string, best: string, wedge: string, rationale?: string): Mcq {
+function mcq(prompt: string, best: string, wedge: string, rationale?: string, thirdDecoy?: string): Mcq {
   return {
     kind: 'mcq',
     prompt,
-    choices: [best, wedge, 'Treat finishing quickly as proof of mastery.'],
+    choices: [best, wedge, thirdDecoy ?? 'Treat finishing quickly as proof of mastery.'],
     correctIndex: 0,
     rationale: rationale ?? 'Depth ties claims to evidence and falsifiers—not pace.',
   }
 }
 
-function scen(prompt: string, scenario: string, best: string, wedge: string, rationale?: string): Scen {
+function scen(prompt: string, scenario: string, best: string, wedge: string, rationale?: string, thirdDecoy?: string): Scen {
   return {
     kind: 'scenario_judgment',
     prompt,
     scenario,
-    choices: [best, wedge, 'Wait indefinitely—no decision is permissible until certainty is absolute.'],
+    choices: [best, wedge, thirdDecoy ?? 'Wait indefinitely—no decision is permissible until certainty is absolute.'],
     correctIndex: 0,
     rationale: rationale ?? 'Professionals surface assumptions, downside, and evidence standards before acting.',
   }
@@ -939,36 +939,44 @@ const FLAGSHIP_ASSESSMENT_BESPOKE_MID_TRIPLES: Partial<Record<string, Trio>> = {
   ],
   "ae-m08": [
     mcq(
-      'When is AI-supported study still authentic learning?',
-      'When AI scaffolds retrieval and checks you perform—and forbidden moves (e.g., model-authored submissions) stay forbidden.',
-      'When the model writes the submitted answer you paste verbatim.',
+      'You want AI to genuinely deepen your skill in a graded or certified subject—not just produce nicer-looking work. Which study loop is honest about that intent?',
+      'Use AI to generate retrieval prompts you answer first from memory, to explain mistakes you cannot diagnose alone, and to pressure-test your reasoning—then verify the model against the syllabus and write the submission yourself, with allowed and forbidden moves named in advance.',
+      'Have the model author the answer, then paraphrase it in your own voice; revise until a plagiarism checker is satisfied.',
+      'Authentic learning keeps the cognitive work that exams and credentials actually measure on the human side. Scaffolding raises ceilings; substitution forges them. The fix is not paraphrasing—it is naming forbidden moves before deadline pressure rewrites them.',
+      'Avoid AI entirely while studying; any contact corrupts the learning record.',
     ),
     scen(
-      'Integrity under grading pressure.',
-      'You used AI to draft practice explanations you truly understand—but a peer argues any AI touch is cheating.',
-      'Show verification steps and learning artifacts; invite policy clarity; separate tutoring from substitution.',
-      'Hide AI use entirely—tone matters more than disclosure.',
+      'Choose the most defensible move.',
+      'It is 11 p.m. before a graded case study. You drafted the analysis yourself, but your conclusion contradicts a key reading. The model offers a clean, confident rewrite that resolves the tension. Your institution allows AI as a tutor but forbids submitted text the learner did not author.',
+      'Stop the rewrite; ask the model to surface what each side of the contradiction assumes and which evidence would adjudicate; reread the source passage; write your own revised paragraph naming the unresolved tension; record the AI use accurately if disclosure is required.',
+      'Paste the AI rewrite, change three sentences in your voice, and submit—the substance matches what you would have argued anyway.',
+      'Tired-you needs a forbidden-move list written in advance: "model-authored submitted text" stays forbidden even when the rewrite is good. Tutoring on the contradiction is the allowed move; substituting authorship is not.',
+      'Skip the deadline entirely—any AI-touched submission is a violation.',
     ),
     refl(
-      'Applied evidence · learning integrity',
-      'I separated scaffolding from substituted cognition and stated the verification lane I will use before any graded artifact ships.',
+      'Applied evidence · integrity-forward study loop',
+      'For one real graded or certified context I touch, I wrote a five-step study protocol with explicit allowed and forbidden moves, drafted at least one retrieval and one explanation prompt that scaffold rather than substitute, named the verification step I will run before submission, and stated the escalation move I will use when tempted to cross the line.',
     ),
   ],
   "ae-m06": [
     mcq(
-      'Which habit best protects truth when models sound fluent?',
-      'Claims stay tied to sources; conflicts stay visible; unknowns are labeled—especially under executive pressure for certainty.',
-      'Confidence in tone substitutes for confidence in evidence.',
+      'You are choosing how hard to verify a claim before it influences a real decision. Which lens is most defensible?',
+      'Match verification depth to reversibility and blast radius—score evidence strength explicitly, keep conflicts visible, and label unknowns instead of smoothing them.',
+      'Trust three runs that agree, since repeated fluent answers usually share the same source.',
+      'Verification lanes are sized to stakes, not to how confident the prose sounds. Three identical fluent answers can share one weak source; matched depth catches that.',
+      'Verify everything to the same heavy standard—uniform rigor signals seriousness.',
     ),
     scen(
-      'Thin evidence, loud narrative.',
-      'Marketing wants a confident headline; your notes show mixed evidence and missing data.',
-      'Publish limits, conflicts, and the smallest next experiment—avoid false precision.',
-      'Smooth contradictions into a single upbeat takeaway.',
+      'Pick the most defensible next action.',
+      'You have a six-page AI summary on a vendor decision. The deadline is Friday. Two of the eight load-bearing claims have inline citation-shaped strings; one cites a paper a colleague cannot locate; three are reversible procurement details; the others touch a multi-year contract you cannot unwind cheaply.',
+      'Split the claims into reversible vs irreversible lanes; open the cited paper before any quote travels; downgrade the unfindable citation to "uncited—needs source"; brief the executive with conflicts and the cheapest next information buy before signing.',
+      'Forward the AI summary as-is with a confident cover note—Friday matters more than a missing citation; legal will catch real problems later.',
+      'Senior judgment treats a fabricated-looking citation as a load-bearing failure on irreversible work, not a footnote nuisance. Reversible cells deserve a lighter pass; irreversible ones need provenance before they leave your hands.',
+      'Refuse to use the AI summary at all and rewrite the brief from scratch by hand.',
     ),
     refl(
-      'Applied evidence · verification',
-      'I preserved provenance on at least one non-obvious claim and logged what would change my mind.',
+      'Applied evidence · verification table + conflict-visible brief',
+      'For one real or realistic claim from this module, I built an evidence table that scores claim strength, preserves at least one unresolved conflict in the brief itself, names the cheapest next information buy, and states what observation would flip my recommendation.',
     ),
   ],
   "ae-m07": [
@@ -1007,19 +1015,23 @@ const FLAGSHIP_ASSESSMENT_BESPOKE_MID_TRIPLES: Partial<Record<string, Trio>> = {
   ],
   "ae-m10": [
     mcq(
-      'Customer PII landed in an unapproved assistant. What is the most defensible first response?',
-      'Stop further submissions; escalate per incident policy; preserve logs; scope exposure.',
-      'Ask the chatbot to delete the conversation and proceed as if risk is gone.',
+      'Before pasting into any AI tool, which test best protects you, your colleagues, and the people in the data?',
+      'Apply the minimum-necessary test, classify the input into safe / caution / restricted / never-enter (classify up when tiers blur), redact identifiers or abstract the case, and pause to ask an authorised reviewer when policy is unclear or stakes are high.',
+      'Paste the full source verbatim so the model has maximum context; the longer the input, the better the answer.',
+      'Once content leaves your screen into a third-party tool you cannot fully recall it, so reduce the surface before you press send. The "absence of a clear yes is not a yes"—when tiers blur, the safer default is escalation, not convenience.',
+      'Trust the vendor\'s "enterprise" badge as proof that any input is safe to share.',
     ),
     scen(
-      'Leak triage.',
-      'Support pastes patient IDs into a public tool; screenshots circulate internally “for speed.”',
-      'Contain spread; notify security lead; classify data; start controlled comms—not casual DMs.',
-      'Delete the chat locally—problem solved if nobody screenshots.',
+      'Choose the most defensible operational response.',
+      'A teammate pastes a customer\'s full email thread—names, payment reference, account ID, and a complaint—into a public AI chat to draft a refund reply. Screenshots of the chat appear in an internal channel "to speed approval." Your team has a Tier 3 rule for client identifying data and an unapproved-tool policy.',
+      'Stop further pastes; preserve logs and screenshots; notify the security or compliance lead per the incident playbook; scope which identifiers were exposed; reroute the refund through the approved tool with redacted prompts; capture the lesson in a never-enter checklist before the next shift.',
+      'Have the teammate delete the chat locally and the internal screenshot, then proceed because no external complaint has arrived.',
+      'Containment plus controlled escalation keeps the issue solvable; "delete and hope" destroys the evidence you would need if the customer or a regulator asks. The follow-up is a written rule a tired teammate can still execute next Tuesday.',
+      'Block AI use across the team indefinitely as collective punishment until trust is restored.',
     ),
     refl(
-      'Applied evidence · privacy and safety',
-      'I documented one paste/stay-local rule I will enforce under fatigue.',
+      'Applied evidence · Safe-Use Decision Card + redacted prompt',
+      'For one operational task I actually run, I wrote a Safe-Use Decision Card naming the data tier, the minimum-necessary input, the redaction or abstraction pattern, the never-enter classes, the pause-or-escalate trigger with a named contact, and I produced a redacted version of a real prompt I would otherwise have sent raw.',
     ),
   ],
   "ae-m11": [
@@ -1041,36 +1053,44 @@ const FLAGSHIP_ASSESSMENT_BESPOKE_MID_TRIPLES: Partial<Record<string, Trio>> = {
   ],
   "ae-m12": [
     mcq(
-      'What belongs in a workflow diagram before you attach AI?',
-      'Triggers, owners, human gates, fallbacks, and where prompts attach—not only happy-path steps.',
-      'A linear list of tasks that assumes tools never fail.',
+      'Before any step of a workflow is handed to an agent, which readiness condition is non-negotiable?',
+      'Triggers scored on stakes × reversibility × blast radius, named owners at each stage, explicit human gates where stakes spike, fallbacks a tired teammate could run during a model or vendor outage, and a kill switch that does not depend on the agent itself.',
+      'Approve agent autonomy when the prototype works on a happy-path demo and the team is excited about throughput gains.',
+      'Agent-readiness is conditions, not enthusiasm. If you cannot name inputs, outputs, success checks, kill switches, data tier, and the human owner when the agent stalls, you are not delegating—you are automating hope.',
+      'Wait until vendors offer a "fully autonomous" mode that removes the need for human gates entirely.',
     ),
     scen(
-      'Ops overload.',
-      'Tickets back up; someone proposes skipping the human checkpoint “just this week.”',
-      'Restore the gate; measure misroutes; treat bypass as a defect with an owner.',
-      'Allow bypass until CSAT recovers.',
+      'Pick the most professional workflow move.',
+      'Customer-support tickets are backing up. A teammate proposes letting the AI auto-close low-priority refunds without the human review step "just this week." The misroute rate from last month was 4%, the affected refunds touch real customer money, and the SOP requires a named reviewer before any external send.',
+      'Refuse the bypass; restore the human gate; instrument misroutes as the primary KPI; surface the workload as a staffing problem with an owner and a date; only re-evaluate the gate after a measured pilot with rollback criteria written in advance.',
+      'Allow the bypass for one week, document it in a chat thread, and revisit if customer satisfaction drops noticeably.',
+      'A 4% misroute rate on real money is a defect, not a tolerance. Skipping the gate trades a measurable cost (your sleep) for an externalised one (their refund). The mature move treats the bypass as a regression and the backlog as a separate, named problem.',
+      'Replace the human reviewer permanently because the AI handled the happy path during the demo.',
     ),
     refl(
-      'Applied evidence · workflows',
-      'I drew one workflow with a named human gate and one fallback a tired teammate could still execute.',
+      'Applied evidence · workflow diagram + fallback table',
+      'For one real recurring workflow, I drew a diagram with decision diamonds, named owners at each stage, at least one human gate where stakes spike, prompt attachment points with version notes, and a fallback table that a tired teammate could execute during a model or vendor outage—plus the explicit condition that would revoke any agent autonomy I attach.',
     ),
   ],
   "ae-m13": [
     mcq(
-      'Which decision memo habit is most mature?',
-      'Explicit assumptions, tradeoffs, falsifiers, and next information buys—authorship stays with the human decision owner.',
-      'Let the model pick the recommendation; you polish the wording.',
+      'Which decision-memo habit best preserves human accountability when AI helps with options analysis?',
+      'Separate options analysis (which can be AI-assisted) from the decision record (which is human-owned), label model scenarios as hypotheses, surface assumptions and falsifiers a hostile reviewer could attack, and name the next information buy that would change the recommendation.',
+      'Have the model rank the options and pick the one with the highest score; polish the supporting paragraphs so leadership reads a single confident recommendation.',
+      'AI can widen options and stress-test arguments, but authorship, evidence standards, and accountability stay with the named human owner. A memo a busy reviewer can attack on substance is the goal—not a memo that smooths uncertainty into an executive-friendly verdict.',
+      'Refuse to use AI in any decision context to avoid contaminating the record.',
     ),
     scen(
-      'Executive wants a call today.',
-      'Your memo shows conflicting scenarios; leadership wants one clear answer.',
-      'Name what you know vs infer; propose decisions under uncertainty with logged risks.',
-      'Pick the most optimistic scenario so the meeting ends quickly.',
+      'Pick the most defensible decision-support move.',
+      'A division head wants a clear "go / no-go" on a multi-quarter vendor partnership by the end of the day. Your AI-assisted memo shows two scenarios that disagree because of one missing piece of usage data; one favours the deal, one does not. Polished phrasing could hide the gap; the data could land within ten working days.',
+      'Write a decision-under-uncertainty memo: surface the conflict on page one, label both scenarios as hypotheses with falsifiers, propose either a delay-with-deadline or a staged commitment that can be unwound, and list the cheapest information buy that would adjudicate—signed by you, not by the model.',
+      'Pick the more optimistic scenario so the meeting ends on time and the division head feels supported; you can revisit if the data later contradicts.',
+      'Reviewers want substance they can challenge, not certainty they cannot. Ten days is cheap relative to a multi-quarter mistake; a staged commitment preserves optionality without starving the deadline. Polishing past a missing fact is what late corrections are made of.',
+      'Refuse to recommend anything until every scenario converges on a single answer.',
     ),
     refl(
-      'Applied evidence · decisions',
-      'I stated one assumption that would flip my recommendation if proven false.',
+      'Applied evidence · decision memo + pre-mortem appendix',
+      'For one real decision in my context, I wrote a two-page memo that names the question, criteria before options, explicit assumptions with owners, conflicts kept visible, falsifiers, and the cheapest next information buy—plus a pre-mortem appendix where I let the model attack my preferred option, then reconciled which critiques are real and which I can rule out, with the edit visible in the final memo.',
     ),
   ],
   "ae-m15": [
@@ -1092,19 +1112,23 @@ const FLAGSHIP_ASSESSMENT_BESPOKE_MID_TRIPLES: Partial<Record<string, Trio>> = {
   ],
   "ae-m16": [
     mcq(
-      'Which portfolio stance matches certificate-ready work?',
-      'Artifacts show process, verification, and accountability—not polished outputs with hidden AI dependence.',
-      'If it looks finished, reviewers should not ask how it was made.',
+      'Which capstone stance matches "ready" as Jifunze defines it for AI Essentials?',
+      'A bounded, real task where prompts, outputs, verification, revisions, privacy choices, and disclosure are all reviewer-visible—and the seven-criterion rubric self-score is honest about what is Ready, what is Developing, and what is still Not ready.',
+      'A polished final artifact with every rough edge sanded down so reviewers cannot tell where AI helped, where you struggled, or what you decided not to claim.',
+      'Ready in this course means a reviewer-visible workflow you would defend without me narrating it. Hidden process makes critique impossible; honest gaps invite useful feedback. Self-readiness here is a learning signal—not an external credential.',
+      'A bundle that is much larger than the brief because volume signals seriousness.',
     ),
     scen(
-      'Final review pressure.',
-      'A mentor finds a thin evidence section hours before submission.',
-      'Flag the gap honestly; tighten or scope the claim; document what you would verify next.',
-      'Ask AI to invent supporting citations so the section looks complete.',
+      'Pick the most defensible final-pass move.',
+      'It is the night before you mark capstone prep complete. A peer reviewer flags that your verification section names sources but never quotes the passages that support the load-bearing claims; the model offered to "fill the gaps" with citation-shaped strings that look correct.',
+      'Refuse the invented citations; downgrade affected claims to "uncited—needs source" or scope them out of the bundle; quote the passages you actually verified with section refs; record the gap honestly in the self-critique with a dated plan to close it before any external use.',
+      'Accept the model\'s suggested citations because the reviewer is unlikely to spot them and the deadline is real.',
+      'A capstone that hides invented citations is not Ready; it is a future correction waiting to happen. Honest scope reduction plus a dated plan is stronger evidence of judgment than a "complete-looking" section the model authored.',
+      'Withdraw the entire capstone because one section is thin.',
     ),
     refl(
-      'Applied evidence · portfolio',
-      'I mapped each capstone deliverable to evidence I can show and named the weakest section I still need to strengthen.',
+      'Applied evidence · reviewer-ready capstone bundle',
+      'My Module16_AI_Workflow_Capstone bundle traces every required deliverable to evidence I can point to (or to a labeled gap with a dated next step), includes the prompts, verification notes, revision trail, privacy choices, disclosure, self-critique, and a rubric self-score where every Ready or Strong row matches the artefact a reviewer can open—not how I want to feel about my work.',
     ),
   ],
   "sw-m05": [
