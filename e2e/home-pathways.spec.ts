@@ -4,21 +4,23 @@ import { gotoPublicHomeAnonymous } from './helpers/publicHomeAnonymous'
 test.describe('Homepage learning-first (public)', () => {
   test('hero primary CTA navigates to /learn', async ({ page }) => {
     await gotoPublicHomeAnonymous(page)
-    await expect(page.getByRole('heading', { level: 1, name: /structured learning for practical ai fluency/i })).toBeVisible({
-      timeout: 15_000,
-    })
+    await expect(
+      page.getByRole('heading', { level: 1, name: /learn ai.*practical tech/i }),
+    ).toBeVisible({ timeout: 15_000 })
     const primary = page.getByTestId('landing-hero-primary-cta')
     await expect(primary).toHaveAttribute('href', /\/learn$/)
     await primary.click()
     await expect(page).toHaveURL(/\/learn$/)
   })
 
-  test('home shows Available now course card with Open course link', async ({ page }) => {
+  test('home shows featured AI Essentials card linking to course page', async ({ page }) => {
     await gotoPublicHomeAnonymous(page)
-    const section = page.getByTestId('landing-available-course')
-    await expect(section).toBeVisible()
-    await expect(section.getByRole('link', { name: /open course/i })).toBeVisible()
-    await expect(section.getByRole('link', { name: /open course/i })).toHaveAttribute('href', /\/learn\/courses\/ai-essentials/)
+    const card = page.getByTestId('home-featured-ai-essentials')
+    await expect(card).toBeVisible()
+    await expect(card.getByRole('link', { name: /^AI Essentials$/i })).toHaveAttribute(
+      'href',
+      /\/learn\/courses\/ai-essentials$/,
+    )
   })
 
   test('/paths shows simplified pathway chooser', async ({ page }) => {

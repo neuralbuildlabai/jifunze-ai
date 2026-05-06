@@ -10,9 +10,9 @@ test.describe('Public surfaces', () => {
     page,
   }) => {
     await gotoPublicHomeAnonymous(page)
-    await expect(page.getByRole('heading', { level: 1, name: /structured learning for practical ai fluency/i })).toBeVisible({
-      timeout: 15_000,
-    })
+    await expect(
+      page.getByRole('heading', { level: 1, name: /learn ai.*practical tech/i }),
+    ).toBeVisible({ timeout: 15_000 })
     const heroPrimary = page.getByTestId('landing-hero-primary-cta')
     await expect(heroPrimary).toBeVisible()
     await expect(heroPrimary).toHaveAttribute('href', /\/learn$/)
@@ -22,8 +22,8 @@ test.describe('Public surfaces', () => {
     await expect(page.getByTestId('landing-cta-trust-line')).toContainText('Read disclaimer')
     await expect(page.getByTestId('home-generate-trust-boundary')).toHaveCount(0)
     await expect(page.getByTestId('trust-legal-footer-links')).toBeVisible()
-    await expect(page.getByTestId('landing-marketing-slim')).toBeVisible()
-    await expect(page.getByTestId('landing-browse-courses-cta')).toBeVisible()
+    await expect(page.getByTestId('public-home-marketplace')).toBeVisible()
+    await expect(page.getByTestId('public-home-featured-catalog')).toBeVisible()
   })
 
   test('/generate remains a direct-only public route (unpromoted from homepage)', async ({ page }) => {

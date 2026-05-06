@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react'
-import { Link, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom'
 import { AuthSignInPage } from './components/auth/AuthSignInPage'
 import { AuthSignUpPage } from './components/auth/AuthSignUpPage'
 import { MyLearningPage } from './components/learning/MyLearningPage'
@@ -17,13 +17,10 @@ import { PublicPausedSubscriptionPage } from './components/legal/PublicPausedSub
 import { PublicPricingPage } from './components/legal/PublicPricingPage'
 import { RefundPolicyPage } from './components/legal/RefundPolicyPage'
 import { TermsOfServicePage } from './components/legal/TermsOfServicePage'
-import { TrustBoundaryStrip } from './components/TrustBoundaryStrip'
-import { TrustLegalFooterLinks } from './components/TrustLegalFooterLinks'
 import { ForgotPasswordPage } from './components/auth/ForgotPasswordPage'
 import { RequireDisclaimerAcknowledged } from './components/auth/RequireDisclaimerAcknowledged'
 import { RequireEmailVerified } from './components/auth/RequireEmailVerified'
 import { ResetPasswordPage } from './components/auth/ResetPasswordPage'
-import { JifunzeBrandLogo } from './components/brand/JifunzeBrandLogo'
 import { LearningInsightsPage } from './components/LearningInsightsPage'
 import { WorkspaceIdeasPage } from './components/workspace/WorkspaceIdeasPage'
 import { LearnerAccountPage } from './components/workspace/LearnerAccountPage'
@@ -47,7 +44,7 @@ import { TeamLearningReportsPage } from './components/reports/TeamLearningReport
 import { TrainingPlansPage } from './components/training/TrainingPlansPage'
 import { TrainingQuizPage } from './components/training/TrainingQuizPage'
 import { SignedInHomePage } from './components/SignedInHomePage'
-import { LandingMarketingSections } from './components/landing/LandingMarketingSections'
+import { PublicHomePage } from './components/landing/PublicHomePage'
 import { PublicAiFoundationsLessonPage } from './components/libraries/PublicAiFoundationsLessonPage'
 import { PublicAiFoundationsLibraryPage } from './components/libraries/PublicAiFoundationsLibraryPage'
 import { PublicAiTeachingLabsPage } from './components/libraries/PublicAiTeachingLabsPage'
@@ -86,7 +83,6 @@ import {
 import { PlatformSurfacePage } from './components/PlatformSurfacePage'
 import { PublicGeneratePage } from './components/PublicGeneratePage'
 import { SystemStatusBanner } from './components/SystemStatusBanner'
-import { isSupabaseConfigured } from './config/supabaseEnv'
 import { logEnvValidationFailure, validateStartupEnv } from './lib/envCheck'
 import type { EnvCheckResult } from './lib/envCheck'
 import { PUBLIC_AI_FOUNDATIONS_BASE_PATH } from './data/publicStarterLibraries/aiFoundations'
@@ -134,150 +130,7 @@ function HomeEntryPage() {
     return <Navigate to={legacyAuthRedirect} replace />
   }
 
-  return (
-    <div className="jf-public-surface min-h-screen w-full bg-[var(--jf-bg-page)] text-[var(--jf-text)]">
-      <div className="relative mx-auto max-w-7xl px-5 pb-16 pt-7 sm:px-8 sm:pb-20 sm:pt-9 lg:px-10">
-        <header className="flex flex-wrap items-center justify-between gap-4 pb-10 sm:pb-12">
-          <div className="inline-flex items-center gap-3">
-            <JifunzeBrandLogo to="/" size="xxl" className="origin-left scale-[1.04] sm:scale-100" surface="dark" />
-          </div>
-          <nav className="flex flex-wrap items-center justify-end gap-1 sm:gap-2">
-            <Link
-              to={LEGAL_ROUTES.learn}
-              className="rounded-full px-3 py-2 text-xs font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:bg-white/[0.06] hover:text-[color:var(--jf-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-              data-testid="home-nav-courses"
-            >
-              Courses
-            </Link>
-            <Link
-              to={LEGAL_ROUTES.paths}
-              className="rounded-full px-3 py-2 text-xs font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:bg-white/[0.06] hover:text-[color:var(--jf-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-              data-testid="home-nav-pathways"
-            >
-              Pathways
-            </Link>
-            {LEARNER_MONETIZATION_UI_DISABLED ? null : (
-              <Link
-                to={LEGAL_ROUTES.pricing}
-                className="rounded-full px-3 py-2 text-xs font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:bg-white/[0.06] hover:text-[color:var(--jf-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-                data-testid="home-nav-plans"
-              >
-                View plans
-              </Link>
-            )}
-            {isSupabaseConfigured() ? (
-              <>
-                <Link
-                  to={LEGAL_ROUTES.authSignIn}
-                  className="rounded-full px-3 py-2 text-xs font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:bg-white/[0.06] hover:text-[color:var(--jf-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-                >
-                  Sign in
-                </Link>
-                <Link
-                  to={LEGAL_ROUTES.authSignUp}
-                  className="rounded-full px-3 py-2 text-xs font-semibold text-[color:var(--jf-text)] transition-colors duration-200 hover:bg-white/[0.08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-                >
-                  Sign up
-                </Link>
-              </>
-            ) : null}
-          </nav>
-        </header>
-
-        {/* Hero: learning-platform first — single column, no split-screen tool demo */}
-        <div className="relative">
-          <div
-            className="pointer-events-none absolute inset-x-[-1rem] -top-6 bottom-[-1.5rem] rounded-[2rem] bg-gradient-to-b from-slate-600/[0.12] via-[color-mix(in_oklab,var(--jf-bg-page)_94%,transparent)] to-transparent sm:inset-x-[-1.25rem] sm:-top-8 sm:rounded-[2.25rem]"
-            aria-hidden
-          />
-          <div className="relative z-10 mx-auto max-w-4xl pt-2 text-center lg:max-w-5xl lg:text-left">
-            <div className="mx-auto max-w-3xl space-y-5 lg:mx-0 sm:space-y-6">
-              <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-[color:var(--jf-muted)] sm:text-[14px]">
-                Jifunze · structured learning
-              </p>
-              <h1 className="text-[1.9rem] font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-[2.25rem] sm:leading-[1.15] lg:text-[2.5rem] lg:leading-[1.1]">
-                Structured learning for practical AI fluency.
-              </h1>
-              <p className="text-[15px] leading-[1.65] text-[color:var(--jf-muted)] sm:text-[17px] sm:leading-relaxed">
-                Complete focused courses, build portfolio-ready outputs, and track your progress through guided learning pathways.
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-3 pt-1 lg:justify-start">
-                <Link
-                  to={LEGAL_ROUTES.learn}
-                  data-testid="landing-hero-primary-cta"
-                  className="inline-flex min-h-[3rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-8 py-3 text-[15px] font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition-colors duration-200 hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-                >
-                  Explore courses
-                </Link>
-                {isSupabaseConfigured() ? (
-                  <Link
-                    to={LEGAL_ROUTES.authSignIn}
-                    data-testid="landing-hero-secondary-courses"
-                    className="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-white/[0.1] px-7 py-3 text-[15px] font-semibold text-[color:var(--jf-text)] transition-colors duration-200 hover:border-white/[0.14] hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-                  >
-                    Sign in
-                  </Link>
-                ) : (
-                  <Link
-                    to={LEGAL_ROUTES.paths}
-                    data-testid="landing-hero-secondary-courses"
-                    className="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-white/[0.1] px-7 py-3 text-[15px] font-semibold text-[color:var(--jf-text)] transition-colors duration-200 hover:border-white/[0.14] hover:bg-white/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-                  >
-                    Browse pathways
-                  </Link>
-                )}
-                {LEARNER_MONETIZATION_UI_DISABLED ? null : (
-                  <Link
-                    to={LEGAL_ROUTES.pricing}
-                    className="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-white/[0.08] px-6 py-3 text-[14px] font-medium text-[color:var(--jf-muted)] transition-colors duration-200 hover:border-white/[0.12] hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-                  >
-                    View plans
-                  </Link>
-                )}
-              </div>
-              <TrustBoundaryStrip
-                variant="inline"
-                compact
-                strip="publicHero"
-                presentation="utility"
-                density="legalLink"
-                className="mx-auto max-w-xl pt-2 text-[13px] leading-relaxed text-[color:var(--jf-subtle)] sm:pt-3 lg:mx-0"
-                dataTestId="landing-cta-trust-line"
-              />
-            </div>
-          </div>
-        </div>
-
-        <LandingMarketingSections />
-
-        {isSupabaseConfigured() ? (
-          <div className="relative z-10 mx-auto mt-14 max-w-xl border-t border-[color:var(--jf-border)] pt-8 text-center sm:mt-16 sm:pt-10">
-            <p className="text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-              Returning learner?{' '}
-              <Link
-                to={LEGAL_ROUTES.authSignIn}
-                className="font-medium text-[color:var(--jf-text)] underline-offset-2 hover:underline"
-              >
-                Sign in
-              </Link>{' '}
-              or{' '}
-              <Link
-                to={LEGAL_ROUTES.authSignUp}
-                className="font-medium text-[color:var(--jf-text)] underline-offset-2 hover:underline"
-              >
-                create an account
-              </Link>{' '}
-              to save progress.
-            </p>
-          </div>
-        ) : null}
-
-        <footer className="mt-12 flex flex-col items-center gap-4 pt-2 sm:mt-14">
-          <TrustLegalFooterLinks variant="compact" className="justify-center text-[color:var(--jf-subtle)]" />
-        </footer>
-      </div>
-    </div>
-  )
+  return <PublicHomePage />
 }
 
 export default function App() {
