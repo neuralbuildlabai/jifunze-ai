@@ -108,19 +108,19 @@ export function AiEssentialsCourseOverview(props: Props) {
           <span className="rounded-full border border-[color:var(--jf-border)] px-3 py-1">32–45 hours</span>
           <span className="rounded-full border border-[color:var(--jf-border)] px-3 py-1">10 milestones</span>
           <span className="rounded-full border border-[color:var(--jf-border)] px-3 py-1">Beginner to intermediate</span>
-          <span className="rounded-full border border-emerald-900/30 bg-emerald-950/[0.12] px-3 py-1 text-emerald-100/90">Portfolio + capstone</span>
+          <span className="rounded-full border border-emerald-200/70 bg-emerald-50/90 px-3 py-1 text-emerald-950/90">Portfolio + capstone</span>
         </div>
         <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <Link
             to={primaryHref}
-            className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)]"
+            className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)]"
             data-testid="ae-hero-primary-cta"
           >
             {primaryLabel}
           </Link>
           <a
             href="#curriculum"
-            className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-white/[0.12] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-white/[0.05]"
+            className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-stone-50"
           >
             View curriculum
           </a>
@@ -151,7 +151,7 @@ export function AiEssentialsCourseOverview(props: Props) {
           </span>
         </div>
         <div className="mt-3 h-2 max-w-md overflow-hidden rounded-full bg-[color:var(--jf-bg-page)]">
-          <div className="h-full rounded-full bg-emerald-600/55 transition-[width]" style={{ width: `${progressPercent}%` }} />
+          <div className="h-full rounded-full bg-[color:var(--jf-brand)]/80 transition-[width]" style={{ width: `${progressPercent}%` }} />
         </div>
         <p className="mt-4 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
           {next && nextOpen ? (
@@ -165,7 +165,7 @@ export function AiEssentialsCourseOverview(props: Props) {
         <div className="mt-5">
           <Link
             to={primaryHref}
-            className="inline-flex min-h-[2.5rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-5 py-2 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)]"
+            className="inline-flex min-h-[2.5rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-5 py-2 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)]"
             data-testid="ae-progress-resume"
           >
             {primaryLabel}
@@ -177,13 +177,13 @@ export function AiEssentialsCourseOverview(props: Props) {
           </summary>
           <ul className="mt-3 space-y-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
             <li className="flex gap-2">
-              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500/70" aria-hidden />
+              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400/75" aria-hidden />
               <span>
                 Module quizzes: {quizPassLine}.
               </span>
             </li>
             <li className="flex gap-2">
-              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500/70" aria-hidden />
+              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400/75" aria-hidden />
               <span>
                 100%: Module 16 and rubric rows <span className="text-[color:var(--jf-text)]">Ready</span> or{' '}
                 <span className="text-[color:var(--jf-text)]">Strong</span>.
@@ -192,7 +192,7 @@ export function AiEssentialsCourseOverview(props: Props) {
           </ul>
           <p className="mt-3 text-[12px] text-[color:var(--jf-subtle)]">
             {certificateReady ? (
-              <span className="text-emerald-200/90">You meet the in-product readiness bar.</span>
+              <span className="text-emerald-800/90">You meet the in-product readiness bar.</span>
             ) : (
               <>Not a PDF certificate or external accreditation.</>
             )}
@@ -230,8 +230,8 @@ export function AiEssentialsCourseOverview(props: Props) {
         />
       </div>
 
-      <section className="rounded-2xl border border-violet-900/25 bg-violet-950/[0.1] px-5 py-6 sm:px-8" aria-labelledby="ae-capstone-heading" data-testid="ae-capstone-section">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-violet-200/75">Module 16</p>
+      <section className="rounded-2xl border border-orange-200/65 bg-orange-50/75 px-5 py-6 sm:px-8" aria-labelledby="ae-capstone-heading" data-testid="ae-capstone-section">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-orange-950/75">Module 16</p>
         <h2 id="ae-capstone-heading" className="mt-2 text-xl font-semibold tracking-tight text-[color:var(--jf-text)]">
           Final capstone — End-to-End AI-Supported Workflow
         </h2>
@@ -260,11 +260,11 @@ export function AiEssentialsCourseOverview(props: Props) {
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <Link
               to={`/learn/courses/${slug}/session/${capstonePrepSession.id}`}
-              className="inline-flex min-h-[2.5rem] items-center rounded-full bg-[var(--jf-brand)] px-5 py-2 text-[13px] font-semibold text-zinc-950 hover:bg-[var(--jf-brand-hover)]"
+              className="inline-flex min-h-[2.5rem] items-center rounded-full bg-[var(--jf-brand)] px-5 py-2 text-[13px] font-semibold text-white hover:bg-[var(--jf-brand-hover)]"
             >
               {capstonePrepComplete ? 'Review capstone prep' : 'Open capstone prep'}
             </Link>
-            <span className="text-[12px] text-emerald-200/85">
+            <span className="text-[12px] text-emerald-800/90">
               Capstone prep is open{capstonePrepComplete ? ' (marked complete).' : '.'}
             </span>
           </div>
@@ -330,7 +330,7 @@ export function AiEssentialsCourseOverview(props: Props) {
             <ul className="mt-4 space-y-2">
               {WHAT_YOU_CREATE.map((line) => (
                 <li key={line} className="flex gap-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-600/45" aria-hidden />
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400/60" aria-hidden />
                   <span>{line}</span>
                 </li>
               ))}

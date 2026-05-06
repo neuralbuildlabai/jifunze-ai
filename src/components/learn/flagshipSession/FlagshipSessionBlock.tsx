@@ -41,19 +41,19 @@ function BlockArticle(props: {
     variant === 'plain'
       ? 'rounded-lg border-0 bg-transparent py-4 pl-2 pr-3 sm:pl-3'
       : isPracticeTask
-        ? 'rounded-xl border border-white/[0.06] bg-zinc-950/20 px-4 py-5 sm:px-5 sm:py-5'
+        ? 'rounded-xl border border-[color:var(--jf-border)] bg-orange-50/40 px-4 py-5 sm:px-5 sm:py-5'
         : `rounded-xl border pl-4 pr-5 py-5 sm:pl-5 ${flagshipBlockCardClass(block.type)} ${flagshipBlockAccentClass(block.type)} border-l-[3px]`
 
   const promptBlock = block.prompt
     ? hidePromptInArticle
       ? (
-          <div className="mt-4 rounded-lg border border-white/[0.05] bg-black/25 px-3 py-3 sm:px-4">
+          <div className="mt-4 rounded-lg border border-[color:var(--jf-border)] bg-stone-50/90 px-3 py-3 sm:px-4">
             <p className="text-[12px] font-medium text-[color:var(--jf-muted)]">Instructions</p>
             <pre className="mt-2 whitespace-pre-wrap font-sans text-[14px] leading-relaxed text-[color:var(--jf-text)]">{block.prompt}</pre>
           </div>
         )
       : (
-          <div className="rounded-xl border border-white/[0.06] bg-[color:var(--jf-bg-page)]/90 px-4 py-4">
+          <div className="rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-4 py-4">
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-subtle)]">
               {block.type === 'output_prompt' ? 'Your prompt' : 'Task'}
             </p>
@@ -96,8 +96,8 @@ function BlockArticle(props: {
         {promptBlock}
 
         {block.example ? (
-          <div className="rounded-xl border border-emerald-900/25 bg-emerald-950/[0.08] px-4 py-4">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-200/70">
+          <div className="rounded-xl border border-emerald-200/70 bg-emerald-50/85 px-4 py-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-900/80">
               {block.type === 'worked_example' ? 'Worked example' : 'Example'}
             </p>
             <p className="mt-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">{block.example}</p>
@@ -166,7 +166,7 @@ export function FlagshipSessionBlock(props: {
   return (
     <div id={`lesson-section-${block.id}`} className="scroll-mt-28">
       {defaultCollapsed ? (
-        <details className="group rounded-xl border border-white/[0.06] bg-black/[0.12] open:border-white/[0.1] open:bg-[color:var(--jf-surface)]/25">
+        <details className="group rounded-xl border border-[color:var(--jf-border)] bg-stone-50/70 open:border-stone-300/60 open:bg-[color:var(--jf-surface)]">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3.5 text-left marker:content-none [&::-webkit-details-marker]:hidden">
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[color:var(--jf-subtle)]">{summaryEyebrow}</p>
@@ -176,7 +176,7 @@ export function FlagshipSessionBlock(props: {
             <span className="shrink-0 text-[11px] font-semibold text-[color:var(--jf-muted)] group-open:hidden">Expand</span>
             <span className="hidden shrink-0 text-[11px] font-semibold text-[color:var(--jf-muted)] group-open:inline">Collapse</span>
           </summary>
-          <div className="border-t border-white/[0.06] px-1 pb-2 pt-2">{inner}</div>
+          <div className="border-t border-[color:var(--jf-border)] px-1 pb-2 pt-2">{inner}</div>
         </details>
       ) : (
         inner

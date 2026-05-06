@@ -21,7 +21,7 @@ function SessionOverviewCard({ summary }: { summary: string }) {
   return (
     <div
       id="session-overview"
-      className="relative mt-6 scroll-mt-28 overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-5 sm:px-6 sm:py-5"
+      className="relative mt-6 scroll-mt-28 overflow-hidden rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-5 shadow-[var(--jf-shadow-soft)] sm:px-6 sm:py-5"
     >
       <div
         className="pointer-events-none absolute inset-y-0 left-0 w-[3px] bg-gradient-to-b from-violet-500/35 via-violet-400/15 to-transparent"
@@ -83,13 +83,13 @@ function GuidedStepFrame(props: { id: string; title: string; children: ReactNode
 
 function CollapsibleMore(props: { summary: string; children: ReactNode }) {
   return (
-    <details className="group mt-4 rounded-xl border border-white/[0.06] bg-black/[0.08] open:border-white/[0.09] open:bg-[color:var(--jf-surface)]/20">
+    <details className="group mt-4 rounded-xl border border-[color:var(--jf-border)] bg-stone-50/80 open:border-stone-300/60 open:bg-[color:var(--jf-surface)]">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-left marker:content-none [&::-webkit-details-marker]:hidden">
         <span className="text-[13px] font-medium text-[color:var(--jf-text)]">{props.summary}</span>
         <span className="shrink-0 text-[12px] font-medium text-[color:var(--jf-muted)] group-open:hidden">Show</span>
         <span className="hidden shrink-0 text-[12px] font-medium text-[color:var(--jf-muted)] group-open:inline">Hide</span>
       </summary>
-      <div className="space-y-4 border-t border-white/[0.05] px-3 py-4 sm:px-4">{props.children}</div>
+      <div className="space-y-4 border-t border-[color:var(--jf-border)] px-3 py-4 sm:px-4">{props.children}</div>
     </details>
   )
 }

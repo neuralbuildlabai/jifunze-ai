@@ -139,8 +139,8 @@ export function FlagshipModuleQuizPanel(props: {
 
   if (quizState?.passedAt) {
     return (
-      <div className="mt-6 rounded-xl border border-emerald-900/35 bg-emerald-950/[0.15] px-4 py-4">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-200/85">Module check passed</p>
+      <div className="mt-6 rounded-xl border border-emerald-200/70 bg-emerald-50/90 px-4 py-4">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-900/85">Module check passed</p>
         <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
           You met the score threshold for this module—you can continue to the next module when earlier gates allow.
         </p>
@@ -150,7 +150,7 @@ export function FlagshipModuleQuizPanel(props: {
 
   if (pool.length < MODULE_QUIZ_DRAW_COUNT) {
     return (
-      <div className="mt-6 rounded-xl border border-amber-900/35 bg-amber-950/[0.12] px-4 py-4 text-[13px] text-amber-100/90">
+      <div className="mt-6 rounded-xl border border-amber-200/70 bg-amber-50/90 px-4 py-4 text-[13px] text-amber-950/95">
         Module quiz is still preparing for this path—finish every session in the module, then refresh.
       </div>
     )
@@ -178,9 +178,9 @@ export function FlagshipModuleQuizPanel(props: {
         Questions are drawn from this module&apos;s sessions. Pass unlocks the next module when earlier gates allow. Questions change between attempts.
       </p>
       {locked ? (
-        <p className="mt-3 text-[13px] text-amber-200/90">
+        <p className="mt-3 text-[13px] text-amber-900/90">
           Review cooldown: retry opens after{' '}
-          <span className="font-medium text-amber-50">{new Date(lockUntil).toLocaleTimeString()}</span>. Re-read the module sessions above before trying again.
+          <span className="font-medium text-amber-950">{new Date(lockUntil).toLocaleTimeString()}</span>. Re-read the module sessions above before trying again.
         </p>
       ) : null}
 
@@ -194,7 +194,7 @@ export function FlagshipModuleQuizPanel(props: {
               {q.choices.map((c, ci) => (
                 <label
                   key={`${q.id}-${ci}`}
-                  className="flex cursor-pointer items-start gap-3 rounded-lg border border-[color:var(--jf-border)] px-3 py-2 text-[13px] text-[color:var(--jf-muted)] hover:border-white/[0.12]"
+                  className="flex cursor-pointer items-start gap-3 rounded-lg border border-[color:var(--jf-border)] px-3 py-2 text-[13px] text-[color:var(--jf-muted)] hover:border-stone-400/45"
                 >
                   <input
                     type="radio"
@@ -209,7 +209,7 @@ export function FlagshipModuleQuizPanel(props: {
               ))}
             </div>
             {submitted ? (
-              <p className={`mt-2 text-[12px] ${answers[q.id] === q.correctIndex ? 'text-emerald-200/85' : 'text-amber-200/85'}`}>
+              <p className={`mt-2 text-[12px] ${answers[q.id] === q.correctIndex ? 'text-emerald-800/90' : 'text-amber-800/90'}`}>
                 {answers[q.id] === q.correctIndex ? 'Correct.' : 'Incorrect for this attempt.'}
               </p>
             ) : null}
@@ -225,7 +225,7 @@ export function FlagshipModuleQuizPanel(props: {
               locked || Object.keys(answers).length < questions.length || questions.length < MODULE_QUIZ_DRAW_COUNT
             }
             onClick={submit}
-            className="inline-flex min-h-[2.5rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 text-sm font-semibold text-zinc-950 disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex min-h-[2.5rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
           >
             Submit answers
           </button>

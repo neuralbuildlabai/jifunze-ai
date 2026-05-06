@@ -29,7 +29,7 @@ export function LearnerDeviceLimitModal() {
           </button>
           <button
             type="button"
-            className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)]"
+            className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)]"
             onClick={resolveDeviceLimitKeepThisDevice}
           >
             Continue on this device

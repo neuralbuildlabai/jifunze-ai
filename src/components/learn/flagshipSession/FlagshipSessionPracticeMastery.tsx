@@ -12,7 +12,7 @@ export function FlagshipSessionPracticeMastery(props: {
 
   return (
     <section
-      className="mt-10 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)]/90 px-5 py-6 ring-1 ring-white/[0.03]"
+      className="mt-10 rounded-2xl border border-[color:var(--jf-border)] bg-orange-50/50 px-5 py-6 shadow-[var(--jf-shadow-soft)]"
       aria-labelledby="practice-mastery-heading"
       data-testid="flagship-session-mastery-checkpoint"
     >

@@ -95,7 +95,7 @@ export function FlagshipSessionCompletionFooter(props: {
   return (
     <footer
       id="flagship-session-completion"
-      className="scroll-mt-28 mt-12 border-t border-white/[0.08] pt-10"
+      className="scroll-mt-28 mt-12 border-t border-[color:var(--jf-border)] pt-10"
       data-testid="flagship-session-completion-footer"
     >
       <p className="text-[12px] font-medium text-[color:var(--jf-muted)]">Before you continue</p>
@@ -104,7 +104,7 @@ export function FlagshipSessionCompletionFooter(props: {
       <ul className="mt-4 max-w-2xl space-y-2">
         {checklist.map((line) => (
           <li key={line} className="flex gap-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500/45" aria-hidden />
+            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400/55" aria-hidden />
             <span>{line}</span>
           </li>
         ))}
@@ -112,7 +112,7 @@ export function FlagshipSessionCompletionFooter(props: {
 
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
         {done ? (
-          <p className="text-[13px] font-medium text-emerald-200/90" data-testid="flagship-session-complete-toggle">
+          <p className="text-[13px] font-medium text-emerald-800/90" data-testid="flagship-session-complete-toggle">
             Chapter complete — progression is saved. Use &quot;Flag for later review&quot; if you want a reminder to revisit.
           </p>
         ) : (
@@ -120,7 +120,7 @@ export function FlagshipSessionCompletionFooter(props: {
             type="button"
             disabled={!canMarkThisChapterComplete}
             onClick={onMarkComplete}
-            className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)] disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)] disabled:cursor-not-allowed disabled:opacity-40"
             data-testid="flagship-session-complete-toggle"
             title={
               !canMarkThisChapterComplete
@@ -143,7 +143,7 @@ export function FlagshipSessionCompletionFooter(props: {
       </div>
 
       <nav
-        className="mt-12 grid gap-8 border-t border-white/[0.06] pt-10 sm:grid-cols-3 sm:gap-6"
+        className="mt-12 grid gap-8 border-t border-[color:var(--jf-border)] pt-10 sm:grid-cols-3 sm:gap-6"
         aria-label="Session navigation"
       >
         <div className="space-y-2">
@@ -167,7 +167,7 @@ export function FlagshipSessionCompletionFooter(props: {
           )}
         </div>
 
-        <div className="space-y-3 border-y border-white/[0.05] py-6 sm:border-y-0 sm:py-0 sm:text-center">
+        <div className="space-y-3 border-y border-[color:var(--jf-border)] py-6 sm:border-y-0 sm:py-0 sm:text-center">
           <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-subtle)] sm:sr-only">Course</p>
           <Link
             className="block text-[14px] font-semibold text-[color:var(--jf-text)] underline-offset-2 hover:underline"

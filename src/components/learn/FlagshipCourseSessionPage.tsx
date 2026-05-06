@@ -214,8 +214,8 @@ export function FlagshipCourseSessionPage() {
 
   if (!learnerReachable) {
     return (
-      <div className="jf-public-surface min-h-screen w-full bg-[var(--jf-bg-page)] text-[color:var(--jf-text)]">
-        <header className="border-b border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 backdrop-blur-sm">
+      <div className="jf-learn-warm min-h-screen w-full bg-[var(--jf-bg-page)] text-[color:var(--jf-text)]">
+        <header className="jf-learn-nav-header sticky top-0 z-10 border-b backdrop-blur-md">
           <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-8">
             <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
               <Link
@@ -233,14 +233,14 @@ export function FlagshipCourseSessionPage() {
                   Home
                 </Link>
               ) : null}
-              <JifunzeBrandLogo to={user ? '/dashboard' : '/'} size="sm" surface="dark" />
+              <JifunzeBrandLogo to={user ? '/dashboard' : '/'} size="sm" surface="light" />
             </div>
             {user ? (
               <button
                 type="button"
                 disabled={signOutPending}
                 onClick={() => void signOut()}
-                className="inline-flex min-h-[2.5rem] items-center rounded-full border border-[color:var(--jf-border)] px-3 text-[12px] font-medium text-[color:var(--jf-muted)] transition hover:border-white/20 hover:text-[color:var(--jf-text)] disabled:opacity-50"
+                className="inline-flex min-h-[2.5rem] items-center rounded-full border border-[color:var(--jf-border)] px-3 text-[12px] font-medium text-[color:var(--jf-muted)] transition hover:border-stone-400/45 hover:text-[color:var(--jf-text)] disabled:opacity-50"
                 data-testid="flagship-session-header-sign-out"
               >
                 {signOutPending ? 'Signing out…' : 'Sign out'}
@@ -254,7 +254,7 @@ export function FlagshipCourseSessionPage() {
             Forward movement stays paced with your evidence and checkpoints. Completed sessions stay available for review—pick up where your path suggests next.
           </p>
           <Link
-            className="mt-8 inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)]"
+            className="mt-8 inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)]"
             to={`/learn/courses/${slug}`}
           >
             Back to course overview
@@ -328,8 +328,8 @@ export function FlagshipCourseSessionPage() {
   const sidebarNavTitle = practiceLabLayout ? 'Practice lab' : lessonTeachingFirst ? 'Lesson steps' : 'This session'
 
   return (
-    <div className="jf-public-surface min-h-screen w-full bg-[var(--jf-bg-page)] text-[color:var(--jf-text)]">
-      <header className="border-b border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 backdrop-blur-sm">
+    <div className="jf-learn-warm min-h-screen w-full bg-[var(--jf-bg-page)] text-[color:var(--jf-text)]">
+      <header className="jf-learn-nav-header sticky top-0 z-10 border-b backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-8">
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2 sm:gap-3">
             <Link
@@ -347,7 +347,7 @@ export function FlagshipCourseSessionPage() {
                 Home
               </Link>
             ) : null}
-            <JifunzeBrandLogo to={user ? '/dashboard' : '/'} size="sm" surface="dark" />
+            <JifunzeBrandLogo to={user ? '/dashboard' : '/'} size="sm" surface="light" />
             <div className="w-full min-w-0 sm:ml-2 sm:w-auto">
               {aeSessionBreadcrumb ? (
                 <p className="text-[11px] font-medium leading-snug text-[color:var(--jf-muted)]" data-testid="flagship-session-ae-context">
@@ -369,7 +369,7 @@ export function FlagshipCourseSessionPage() {
               type="button"
               disabled={signOutPending}
               onClick={() => void signOut()}
-              className="inline-flex min-h-[2.5rem] shrink-0 items-center rounded-full border border-[color:var(--jf-border)] px-3 text-[12px] font-medium text-[color:var(--jf-muted)] transition hover:border-white/20 hover:text-[color:var(--jf-text)] disabled:opacity-50"
+              className="inline-flex min-h-[2.5rem] shrink-0 items-center rounded-full border border-[color:var(--jf-border)] px-3 text-[12px] font-medium text-[color:var(--jf-muted)] transition hover:border-stone-400/45 hover:text-[color:var(--jf-text)] disabled:opacity-50"
               data-testid="flagship-session-header-sign-out"
             >
               {signOutPending ? 'Signing out…' : 'Sign out'}

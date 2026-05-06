@@ -45,8 +45,8 @@ export function FlagshipCourseDetailPage() {
   const firstLaunchSession = firstSessionInCourseOrder(sessions)
 
   return (
-    <div className="jf-public-surface min-h-screen w-full bg-[var(--jf-bg-page)] text-[color:var(--jf-text)]">
-      <header className="border-b border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 backdrop-blur-sm">
+    <div className="jf-learn-warm min-h-screen w-full bg-[var(--jf-bg-page)] text-[color:var(--jf-text)]">
+      <header className="jf-learn-nav-header sticky top-0 z-10 border-b backdrop-blur-md">
         <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-8 lg:px-10">
           <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-4">
             <Link
@@ -64,7 +64,7 @@ export function FlagshipCourseDetailPage() {
               </Link>
             ) : null}
             <span className="hidden h-6 w-px bg-[color:var(--jf-border)] sm:block" aria-hidden />
-            <JifunzeBrandLogo to={user ? '/dashboard' : '/'} size="md" surface="dark" />
+            <JifunzeBrandLogo to={user ? '/dashboard' : '/'} size="md" surface="light" />
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Link
@@ -78,7 +78,7 @@ export function FlagshipCourseDetailPage() {
                 type="button"
                 disabled={signOutPending}
                 onClick={() => void signOut()}
-                className="inline-flex min-h-[2.5rem] items-center rounded-full border border-[color:var(--jf-border)] px-3 text-[12px] font-medium text-[color:var(--jf-muted)] transition hover:border-white/20 hover:text-[color:var(--jf-text)] disabled:opacity-50"
+                className="inline-flex min-h-[2.5rem] items-center rounded-full border border-[color:var(--jf-border)] px-3 text-[12px] font-medium text-[color:var(--jf-muted)] transition hover:border-stone-400/45 hover:text-[color:var(--jf-text)] disabled:opacity-50"
                 data-testid="flagship-course-header-sign-out"
               >
                 {signOutPending ? 'Signing out…' : 'Sign out'}
@@ -153,20 +153,20 @@ export function FlagshipCourseDetailPage() {
             </ul>
             <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
               <Link
-                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-5 py-2.5 text-center text-[13px] font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)]"
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-5 py-2.5 text-center text-[13px] font-semibold text-white shadow-[var(--jf-shadow-soft)] hover:bg-[var(--jf-brand-hover)]"
                 to={`/learn/checkout?course=${slug}`}
                 data-testid="flagship-cta-checkout-course"
               >
                 Buy this course
               </Link>
               <Link
-                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.05]"
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--jf-text)] hover:bg-stone-100/90"
                 to={`/learn/readiness/${slug}`}
               >
                 Course Readiness Challenge
               </Link>
               <Link
-                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.05]"
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--jf-text)] hover:bg-stone-100/90"
                 to="/learn/checkout?plan=all"
               >
                 All-access subscription
@@ -306,7 +306,7 @@ export function FlagshipCourseDetailPage() {
                     ? LEGAL_ROUTES.learn
                     : LEGAL_ROUTES.pricing
               }
-              className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+              className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
               data-testid="flagship-cta-start"
             >
               Start course
@@ -314,7 +314,7 @@ export function FlagshipCourseDetailPage() {
             {LEARNER_MONETIZATION_UI_DISABLED ? null : (
               <Link
                 to="/learn/checkout?plan=all"
-                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-white/[0.12] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-stone-100/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
                 data-testid="flagship-cta-plan"
               >
                 All-access checkout

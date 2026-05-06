@@ -53,7 +53,7 @@ function LearnerFeedbackView({ raw, className = '' }: { raw: string; className?:
 
   return (
     <div
-      className={`space-y-2 rounded-lg border border-white/[0.05] bg-white/[0.025] px-3 py-2.5 sm:px-3.5 ${className}`.trim()}
+      className={`space-y-2 rounded-lg border border-[color:var(--jf-border)] bg-stone-50/80 px-3 py-2.5 sm:px-3.5 ${className}`.trim()}
     >
       <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[color:var(--jf-subtle)]">Feedback</p>
       {fb.summary?.trim() ? (
@@ -364,17 +364,17 @@ export function FlagshipLearnerResponsePanel(props: {
   )
 
   const statusBadgeClass = useMemo(() => {
-    if (!row) return 'border-white/[0.08] bg-white/[0.04] text-[color:var(--jf-muted)]'
+    if (!row) return 'border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] text-[color:var(--jf-muted)]'
     if (row.validation_status === 'needs_more_work') {
-      return 'border-amber-800/35 bg-amber-950/30 text-amber-50/95'
+      return 'border-amber-300/70 bg-amber-50 text-amber-950/95'
     }
     if (row.validation_status === 'almost_ready') {
-      return 'border-amber-800/25 bg-amber-950/18 text-amber-100/90'
+      return 'border-amber-200/70 bg-amber-50/85 text-amber-950/92'
     }
     if (row.validation_status === 'accepted' || row.validation_status === 'strong_portfolio_evidence') {
-      return 'border-emerald-900/30 bg-emerald-950/20 text-emerald-100/90'
+      return 'border-emerald-200/70 bg-emerald-50 text-emerald-950/92'
     }
-    return 'border-white/[0.08] bg-white/[0.04] text-[color:var(--jf-muted)]'
+    return 'border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] text-[color:var(--jf-muted)]'
   }, [row])
 
   const showAcceptedReadOnly =
@@ -424,7 +424,7 @@ export function FlagshipLearnerResponsePanel(props: {
   if (!userId) {
     return (
       <div
-        className="mt-5 rounded-lg border border-white/[0.06] bg-[color:var(--jf-bg-page)]/50 px-3 py-3 text-[13px] text-[color:var(--jf-muted)] sm:px-4"
+        className="mt-5 rounded-lg border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-3 py-3 text-[13px] text-[color:var(--jf-muted)] sm:px-4"
         data-testid={`flagship-learner-response-${block.id}`}
       >
         Sign in to save your written work for this block. Lesson progress still saves through the course as usual.
@@ -432,10 +432,10 @@ export function FlagshipLearnerResponsePanel(props: {
     )
   }
 
-  const shellBorder = needsAttention ? 'border-amber-900/20' : 'border-white/[0.06]'
+  const shellBorder = needsAttention ? 'border-amber-300/70' : 'border-[color:var(--jf-border)]'
   const workspaceShell =
     surface === 'workspace'
-      ? `mt-5 rounded-xl border ${shellBorder} bg-zinc-950/30 px-4 py-4 sm:px-5 sm:py-4`
+      ? `mt-5 rounded-xl border ${shellBorder} bg-amber-50/70 px-4 py-4 sm:px-5 sm:py-4`
       : `mt-5 rounded-lg border ${shellBorder} bg-[color:var(--jf-bg-page)]/50 px-3 py-3 sm:px-4 sm:py-3.5`
   const responseLabel = surface === 'workspace' ? 'Your workspace' : 'Your response'
   const responseLabelClass =
@@ -477,7 +477,7 @@ export function FlagshipLearnerResponsePanel(props: {
 
       {showAcceptedReadOnly ? (
         <div className="mt-3 space-y-3">
-          <pre className="whitespace-pre-wrap rounded-lg border border-white/[0.06] bg-zinc-950/35 px-3 py-3 font-sans text-[14px] leading-relaxed text-[color:var(--jf-text)]">
+          <pre className="whitespace-pre-wrap rounded-lg border border-[color:var(--jf-border)] bg-stone-50 px-3 py-3 font-sans text-[14px] leading-relaxed text-[color:var(--jf-text)]">
             {(row!.final_evidence_text || row!.response_text).trim()}
           </pre>
           {row?.validation_feedback ? <LearnerFeedbackView raw={row.validation_feedback} className="mt-1" /> : null}
@@ -485,7 +485,7 @@ export function FlagshipLearnerResponsePanel(props: {
       ) : showArchivedDraft ? (
         <details className="mt-3">
           <summary className="cursor-pointer text-[13px] font-medium text-[color:var(--jf-muted)]">Earlier draft (archived)</summary>
-          <pre className="mt-2 whitespace-pre-wrap rounded-lg border border-white/[0.06] bg-zinc-950/25 px-3 py-3 font-sans text-[13px] text-[color:var(--jf-subtle)]">
+          <pre className="mt-2 whitespace-pre-wrap rounded-lg border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-3 py-3 font-sans text-[13px] text-[color:var(--jf-subtle)]">
             {row!.response_text}
           </pre>
         </details>
@@ -494,7 +494,7 @@ export function FlagshipLearnerResponsePanel(props: {
           {editorHelperLine}
 
           {isAcceptedLike && row ? (
-            <div className="mt-3 flex flex-col gap-2 rounded-lg border border-white/[0.05] bg-white/[0.02] px-3 py-2 text-[11px] text-[color:var(--jf-muted)] sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+            <div className="mt-3 flex flex-col gap-2 rounded-lg border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-3 py-2 text-[11px] text-[color:var(--jf-muted)] sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
               <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
                 <span className="font-medium text-[color:var(--jf-text)]">Evidence saved</span>
                 {lastSaved ? <span className="text-[color:var(--jf-subtle)]">· {lastSaved}</span> : null}
@@ -503,7 +503,7 @@ export function FlagshipLearnerResponsePanel(props: {
               <button
                 type="button"
                 onClick={focusResponseField}
-                className="shrink-0 self-start rounded-md px-2 py-1 text-[11px] font-semibold text-[color:var(--jf-muted)] underline-offset-2 hover:bg-white/[0.04] hover:text-[color:var(--jf-text)] hover:underline sm:self-auto"
+                className="shrink-0 self-start rounded-md px-2 py-1 text-[11px] font-semibold text-[color:var(--jf-muted)] underline-offset-2 hover:bg-stone-100 hover:text-[color:var(--jf-text)] hover:underline sm:self-auto"
               >
                 Edit response
               </button>
@@ -524,7 +524,7 @@ export function FlagshipLearnerResponsePanel(props: {
             }}
             disabled={saving || checking}
             rows={textareaRows}
-            className="mt-2 w-full resize-y rounded-lg border border-white/[0.08] bg-[color:var(--jf-surface)]/90 px-3 py-2.5 text-[15px] leading-relaxed text-[color:var(--jf-text)] placeholder:text-[color:var(--jf-subtle)] focus-visible:border-white/[0.14] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)] disabled:opacity-50 sm:text-[15px]"
+            className="mt-2 w-full resize-y rounded-lg border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-3 py-2.5 text-[15px] leading-relaxed text-[color:var(--jf-text)] placeholder:text-[color:var(--jf-subtle)] focus-visible:border-orange-300/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)] disabled:opacity-50 sm:text-[15px]"
             placeholder="Use your own words. A few concrete details go further than generic statements."
           />
 
@@ -535,8 +535,8 @@ export function FlagshipLearnerResponsePanel(props: {
               onClick={() => void onSaveDraft()}
               className={`inline-flex min-h-[2.5rem] items-center justify-center rounded-full border px-4 text-[13px] font-semibold transition-colors disabled:opacity-50 ${
                 isAcceptedLike
-                  ? 'border-white/[0.1] bg-transparent text-[color:var(--jf-muted)] hover:bg-white/[0.04] hover:text-[color:var(--jf-text)]'
-                  : 'border-[color:var(--jf-border)] text-[color:var(--jf-text)] hover:bg-white/[0.04]'
+                  ? 'border-[color:var(--jf-border)] bg-transparent text-[color:var(--jf-muted)] hover:bg-stone-50 hover:text-[color:var(--jf-text)]'
+                  : 'border-[color:var(--jf-border)] text-[color:var(--jf-text)] hover:bg-stone-50'
               }`}
             >
               {saving ? 'Saving…' : 'Save draft'}
@@ -547,8 +547,8 @@ export function FlagshipLearnerResponsePanel(props: {
               onClick={() => void onSaveAndCheck()}
               className={`inline-flex min-h-[2.5rem] items-center justify-center rounded-full px-4 text-[13px] font-semibold transition-colors disabled:opacity-50 ${
                 isAcceptedLike
-                  ? 'border border-white/[0.1] bg-transparent text-[color:var(--jf-text)] hover:bg-white/[0.05]'
-                  : 'bg-[var(--jf-brand)] text-zinc-950 hover:bg-[var(--jf-brand-hover)]'
+                  ? 'border border-[color:var(--jf-border)] bg-transparent text-[color:var(--jf-text)] hover:bg-stone-50'
+                  : 'bg-[var(--jf-brand)] text-white hover:bg-[var(--jf-brand-hover)]'
               }`}
             >
               {checking ? 'Checking…' : checkButtonLabel}

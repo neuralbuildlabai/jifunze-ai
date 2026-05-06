@@ -48,8 +48,8 @@ function AssessmentItemBlock(props: {
             key={c}
             className={`flex cursor-pointer items-start gap-3 rounded-lg border px-3 py-2.5 text-[13px] leading-relaxed ${
               passed && i === correct
-                ? 'border-emerald-800/40 bg-emerald-950/[0.15] text-emerald-100/90'
-                : 'border-[color:var(--jf-border)] text-[color:var(--jf-muted)] hover:border-white/[0.12]'
+                ? 'border-emerald-200/70 bg-emerald-50 text-emerald-950/92'
+                : 'border-[color:var(--jf-border)] text-[color:var(--jf-muted)] hover:border-stone-400/45'
             }`}
           >
             <input
@@ -65,12 +65,12 @@ function AssessmentItemBlock(props: {
         ))}
       </div>
       {wrong ? (
-        <p className="mt-3 text-[13px] leading-relaxed text-amber-200/85">
+        <p className="mt-3 text-[13px] leading-relaxed text-amber-800/90">
           Not quite — {item.rationale ?? 'Choose the option that foregrounds evidence, clarity, and proportionate judgment.'}
         </p>
       ) : null}
       {passed ? (
-        <p className="mt-3 text-[12px] text-emerald-200/75">Checkpoint recorded.</p>
+        <p className="mt-3 text-[12px] text-emerald-800/85">Checkpoint recorded.</p>
       ) : (
         <button
           type="button"
@@ -79,7 +79,7 @@ function AssessmentItemBlock(props: {
             setAttempted(true)
             if (selected === correct) onPass(item.id)
           }}
-          className="mt-4 inline-flex min-h-[2.5rem] items-center justify-center rounded-full bg-[color:var(--jf-surface)] px-5 text-[13px] font-semibold text-[color:var(--jf-text)] ring-1 ring-white/[0.08] transition hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-40"
+          className="mt-4 inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-5 text-[13px] font-semibold text-[color:var(--jf-text)] shadow-sm transition hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-40"
         >
           Confirm checkpoint
         </button>

@@ -28,25 +28,25 @@ export function flagshipBlockAccentClass(type: FlagshipSessionBlockType): string
   }
 }
 
-/** Background + border tone — restrained hierarchy on dark surfaces */
+/** Background + border tone — warm light surfaces inside `.jf-learn-warm` */
 export function flagshipBlockCardClass(type: FlagshipSessionBlockType): string {
   switch (type) {
     case 'worked_example':
-      return 'bg-emerald-950/[0.06] border-white/[0.07]'
+      return 'bg-emerald-50/90 border-[color:var(--jf-border)]'
     case 'practice_task':
     case 'output_prompt':
-      return 'bg-amber-950/[0.05] border-white/[0.08]'
+      return 'bg-orange-50/70 border-[color:var(--jf-border)]'
     case 'reflection_prompt':
-      return 'bg-fuchsia-950/[0.05] border-white/[0.07]'
+      return 'bg-fuchsia-50/75 border-[color:var(--jf-border)]'
     case 'recap':
-      return 'bg-sky-950/[0.06] border-white/[0.07]'
+      return 'bg-sky-50/80 border-[color:var(--jf-border)]'
     case 'intro':
-      return 'bg-violet-950/[0.08] border-white/[0.08]'
+      return 'bg-violet-50/75 border-[color:var(--jf-border)]'
     case 'takeaway':
     case 'next_step':
-      return 'bg-black/[0.2] border-white/[0.05]'
+      return 'bg-stone-50/90 border-[color:var(--jf-border)]'
     default:
-      return 'bg-[color:var(--jf-surface)]/35 border-white/[0.06]'
+      return 'bg-[color:var(--jf-surface)] border-[color:var(--jf-border)] shadow-[var(--jf-shadow-soft)]'
   }
 }
 

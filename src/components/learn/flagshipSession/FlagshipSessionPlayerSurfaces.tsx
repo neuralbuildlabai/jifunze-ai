@@ -50,7 +50,7 @@ export function FlagshipSessionPlayerHeader(props: {
 
   if (density === 'compact') {
     return (
-      <div className="mt-5 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-3 sm:px-4">
+      <div className="mt-5 rounded-lg border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-3 py-3 shadow-[var(--jf-shadow-soft)] sm:px-4">
         {hideCourseTitle ? null : (
           <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[color:var(--jf-subtle)]">{courseTitle}</p>
         )}
@@ -58,7 +58,7 @@ export function FlagshipSessionPlayerHeader(props: {
           <p className="min-w-0 text-[12px] font-semibold leading-snug text-[color:var(--jf-text)]">
             Module {moduleOrdinal}: <span className="font-medium text-[color:var(--jf-muted)]">{moduleMeta.title}</span>
           </p>
-          <span className="inline-flex shrink-0 rounded-full border border-white/[0.1] bg-white/[0.04] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[color:var(--jf-text)]">
+          <span className="inline-flex shrink-0 rounded-full border border-[color:var(--jf-border)] bg-orange-50/70 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[color:var(--jf-text)]">
             {badgeLabel}
           </span>
         </div>
@@ -74,7 +74,7 @@ export function FlagshipSessionPlayerHeader(props: {
   }
 
   return (
-    <div className="mt-6 rounded-xl border border-white/[0.07] bg-white/[0.025] px-4 py-5 sm:px-5">
+    <div className="mt-6 rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-5 shadow-[var(--jf-shadow-soft)] sm:px-5">
       <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[color:var(--jf-subtle)]">{courseTitle}</p>
       <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
         <div className="min-w-0 space-y-1">
@@ -89,7 +89,7 @@ export function FlagshipSessionPlayerHeader(props: {
             {sessionDone ? ' · This chapter is marked complete' : ''}
           </p>
         </div>
-        <span className="inline-flex w-fit shrink-0 rounded-full border border-white/[0.1] bg-white/[0.04] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-text)]">
+        <span className="inline-flex w-fit shrink-0 rounded-full border border-[color:var(--jf-border)] bg-orange-50/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-text)]">
           {badgeLabel}
         </span>
       </div>
@@ -144,12 +144,12 @@ export function FlagshipSessionModuleStepper(props: {
           )
           const cardClass =
             st === 'current'
-              ? 'border-violet-400/35 bg-violet-950/20'
+              ? 'border-orange-300/60 bg-orange-50/85 shadow-sm'
               : st === 'done'
-                ? 'border-emerald-900/25 bg-emerald-950/10'
+                ? 'border-emerald-200/70 bg-emerald-50/75'
                 : st === 'open'
-                  ? 'border-white/[0.08] bg-white/[0.02] hover:border-white/[0.14]'
-                  : 'border-white/[0.05] bg-black/[0.12] opacity-60'
+                  ? 'border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] hover:border-stone-400/45'
+                  : 'border-[color:var(--jf-border)] bg-stone-100/60 opacity-70'
 
           if (st === 'locked') {
             return (
@@ -176,9 +176,9 @@ export function FlagshipSessionModuleStepper(props: {
             className={`w-[min(100%,11rem)] shrink-0 snap-start rounded-lg border px-3 py-2.5 sm:w-auto sm:min-w-[9.5rem] ${
               allSessionsDone
                 ? quizDone
-                  ? 'border-emerald-900/25 bg-emerald-950/10'
-                  : 'border-amber-800/25 bg-amber-950/15'
-                : 'border-white/[0.05] bg-black/[0.12] opacity-60'
+                  ? 'border-emerald-200/70 bg-emerald-50/75'
+                  : 'border-amber-200/70 bg-amber-50/75'
+                : 'border-[color:var(--jf-border)] bg-stone-100/60 opacity-70'
             }`}
           >
             <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[color:var(--jf-subtle)]">Quiz</p>
@@ -189,7 +189,7 @@ export function FlagshipSessionModuleStepper(props: {
             {allSessionsDone ? (
               <Link
                 to={`/learn/courses/${slug}#flagship-module-${moduleId}`}
-                className="mt-2 inline-block text-[11px] font-semibold text-violet-200/90 underline-offset-2 hover:underline"
+                className="mt-2 inline-block text-[11px] font-semibold text-[color:var(--jf-brand)] underline-offset-2 hover:underline"
               >
                 Go to quiz
               </Link>
@@ -211,8 +211,8 @@ export function FlagshipSessionRevisionLessonLinks(props: {
   const { slug, lesson, practice, lessonOpen, practiceOpen } = props
   if (!lesson && !practice) return null
   return (
-    <div className="mt-8 rounded-xl border border-sky-900/20 bg-sky-950/[0.08] px-4 py-4 sm:px-5">
-      <p className="text-[12px] font-semibold text-sky-100/95">Need the teaching material?</p>
+    <div className="mt-8 rounded-xl border border-sky-200/70 bg-sky-50/85 px-4 py-4 sm:px-5">
+      <p className="text-[12px] font-semibold text-sky-950">Need the teaching material?</p>
       <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
         Review the lesson and practice first, then come back to this revision checkpoint.
       </p>
@@ -221,7 +221,7 @@ export function FlagshipSessionRevisionLessonLinks(props: {
           lessonOpen ? (
             <Link
               to={`/learn/courses/${slug}/session/${lesson.id}`}
-              className="inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-white/[0.12] bg-white/[0.04] px-4 text-[13px] font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.07]"
+              className="inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 text-[13px] font-semibold text-[color:var(--jf-text)] hover:bg-stone-50"
             >
               Open lesson
             </Link>
@@ -233,7 +233,7 @@ export function FlagshipSessionRevisionLessonLinks(props: {
           practiceOpen ? (
             <Link
               to={`/learn/courses/${slug}/session/${practice.id}`}
-              className="inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-white/[0.12] bg-white/[0.04] px-4 text-[13px] font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.07]"
+              className="inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 text-[13px] font-semibold text-[color:var(--jf-text)] hover:bg-stone-50"
             >
               Open practice
             </Link>
@@ -254,7 +254,7 @@ export function FlagshipSessionPracticeLessonReminder(props: {
   const { slug, lesson, lessonOpen } = props
   if (!lesson) return null
   return (
-    <div className="mt-8 rounded-xl border border-white/[0.07] bg-white/[0.02] px-4 py-4 sm:px-5">
+    <div className="mt-8 rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-4 shadow-[var(--jf-shadow-soft)] sm:px-5">
       <p className="text-[12px] font-semibold text-[color:var(--jf-text)]">Quick reminder</p>
       <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
         Reopen the lesson if you want the full explanation and examples before you submit this practice.
@@ -262,7 +262,7 @@ export function FlagshipSessionPracticeLessonReminder(props: {
       {lessonOpen ? (
         <Link
           to={`/learn/courses/${slug}/session/${lesson.id}`}
-          className="mt-3 inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-white/[0.12] px-4 text-[13px] font-semibold text-[color:var(--jf-text)] hover:bg-white/[0.05]"
+          className="mt-3 inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-4 text-[13px] font-semibold text-[color:var(--jf-text)] hover:bg-stone-50"
         >
           Open lesson
         </Link>

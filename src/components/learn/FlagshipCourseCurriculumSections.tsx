@@ -67,7 +67,7 @@ export function FlagshipCourseCurriculumSections(props: {
 
       {progress.certificateReady ? (
         <div
-          className="mt-6 rounded-2xl border border-emerald-500/25 bg-emerald-500/[0.06] px-5 py-4 text-[13px] leading-relaxed text-[color:var(--jf-text)]"
+          className="mt-6 rounded-2xl border border-emerald-200/70 bg-emerald-50/85 px-5 py-4 text-[13px] leading-relaxed text-[color:var(--jf-text)]"
           role="status"
         >
           <p className="font-semibold text-emerald-950/85">Certificate-ready</p>
@@ -94,7 +94,7 @@ export function FlagshipCourseCurriculumSections(props: {
           {STAGE_FLOW.map((stage, i) => (
             <li
               key={stage}
-              className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] p-5 ring-1 ring-black/[0.02]"
+              className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] p-5 ring-1 ring-stone-900/[0.04]"
             >
               <div className="flex items-baseline justify-between gap-2">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">
@@ -121,12 +121,12 @@ export function FlagshipCourseCurriculumSections(props: {
         <ul className="mt-6 space-y-3">
           {curriculum.reinforcementSignals.map((line) => (
             <li key={line} className="flex gap-3 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-700/45" aria-hidden />
+              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400/55" aria-hidden />
               {line}
             </li>
           ))}
           <li className="flex gap-3 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-700/45" aria-hidden />
+            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400/55" aria-hidden />
             Mastery checkpoints on practice sessions plus capstone prep after defensible readiness—consistent across every flagship track.
           </li>
         </ul>
@@ -154,12 +154,12 @@ export function FlagshipCourseCurriculumSections(props: {
             sessions must also be satisfied before prep reflects readiness.
           </p>
         ) : !progress.capstonePrepAccessible ? (
-          <p className="mt-4 rounded-xl border border-amber-900/35 bg-amber-950/[0.12] px-4 py-3 text-[13px] leading-relaxed text-amber-100/90">
+          <p className="mt-4 rounded-xl border border-amber-200/70 bg-amber-50/85 px-4 py-3 text-[13px] leading-relaxed text-amber-950/95">
             Module sessions are complete—finish the mastery checkpoints listed in your learning path before capstone prep is available. This keeps the capstone tied
             to demonstrated judgment, not completion alone.
           </p>
         ) : (
-          <p className="mt-4 rounded-xl border border-emerald-900/25 bg-emerald-950/[0.12] px-4 py-3 text-[13px] leading-relaxed text-emerald-100/85">
+          <p className="mt-4 rounded-xl border border-emerald-200/70 bg-emerald-50/85 px-4 py-3 text-[13px] leading-relaxed text-emerald-950/95">
             {progress.capstonePrepComplete
               ? 'Capstone preparation marked complete—keep refining deliverables until they meet your bar.'
               : 'Capstone preparation is ready. Use the prep session in your learning path to align deliverables before calling the project done.'}

@@ -100,7 +100,7 @@ function SessionRow(props: {
   const rowClass = `flex flex-wrap items-start gap-x-3 gap-y-2 rounded-lg border px-3 py-2.5 text-left transition sm:items-center ${
     isNext && !done && open
       ? 'border-[color:var(--jf-text)]/20 bg-[color:var(--jf-surface)]'
-      : 'border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] hover:border-white/[0.12]'
+      : 'border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] hover:border-stone-400/45'
   }`
 
   if (purchaseGateEnabled && !hasCourseAccess) {
@@ -324,11 +324,11 @@ export function FlagshipCourseLearningPath(props: {
                     session count).
                   </span>
                 ) : !capstonePrepAccessible ? (
-                  <span className="rounded-full border border-amber-900/35 bg-amber-950/[0.12] px-2.5 py-1 text-amber-100/90">
+                  <span className="rounded-full border border-amber-200/70 bg-amber-50/90 px-2.5 py-1 text-amber-950/90">
                     Capstone prep: checkpoints pending
                   </span>
                 ) : (
-                  <span className="rounded-full border border-emerald-900/25 bg-emerald-950/[0.15] px-2.5 py-1 text-emerald-100/90">
+                  <span className="rounded-full border border-emerald-200/70 bg-emerald-50/90 px-2.5 py-1 text-emerald-950/90">
                     Capstone prep ready
                   </span>
                 )
@@ -337,11 +337,11 @@ export function FlagshipCourseLearningPath(props: {
                   Capstone path: <span className="font-medium text-[color:var(--jf-text)]">{remainingBeforeCapstone}</span> sessions left before prep
                 </span>
               ) : !capstonePrepAccessible ? (
-                <span className="rounded-full border border-amber-900/35 bg-amber-950/[0.12] px-2.5 py-1 text-amber-100/90">
+                <span className="rounded-full border border-amber-200/70 bg-amber-50/90 px-2.5 py-1 text-amber-950/90">
                   Capstone prep: checkpoints pending
                 </span>
               ) : (
-                <span className="rounded-full border border-emerald-900/25 bg-emerald-950/[0.15] px-2.5 py-1 text-emerald-100/90">
+                <span className="rounded-full border border-emerald-200/70 bg-emerald-50/90 px-2.5 py-1 text-emerald-950/90">
                   Capstone prep ready
                 </span>
               )}
@@ -375,7 +375,7 @@ export function FlagshipCourseLearningPath(props: {
             {purchaseGateEnabled && !hasCourseAccess ? (
               <Link
                 to={`/learn/checkout?course=${courseSlug}`}
-                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)]"
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)]"
                 data-testid="flagship-resume-primary"
               >
                 Get course access
@@ -383,7 +383,7 @@ export function FlagshipCourseLearningPath(props: {
             ) : nextSession && resumeReachable ? (
               <Link
                 to={sessionHref(nextSession.id)}
-                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)]"
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)]"
                 data-testid="flagship-resume-primary"
               >
                 {completed.size === 0 ? 'Start course' : resumeCtaLabel}
@@ -391,7 +391,7 @@ export function FlagshipCourseLearningPath(props: {
             ) : firstSession && startReachable && completed.size === 0 ? (
               <Link
                 to={sessionHref(firstSession.id)}
-                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)]"
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)]"
                 data-testid="flagship-resume-primary"
               >
                 Start course
@@ -408,14 +408,14 @@ export function FlagshipCourseLearningPath(props: {
             {layout === 'accordion' ? (
               <a
                 href="#ai-essentials-hero"
-                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-white/[0.12] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-white/[0.05]"
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-stone-50"
               >
                 Back to top
               </a>
             ) : (
               <Link
                 to={`/learn/courses/${courseSlug}`}
-                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-white/[0.12] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-white/[0.05]"
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-stone-50"
               >
                 Course overview
               </Link>
@@ -443,8 +443,8 @@ export function FlagshipCourseLearningPath(props: {
         ) : null}
 
         {pendingMasteryModuleTitles.length > 0 ? (
-          <div className="mt-6 rounded-xl border border-violet-900/25 bg-violet-950/[0.12] px-4 py-3" data-testid="flagship-mastery-pending">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-violet-200/75">Continue strengthening this area</p>
+          <div className="mt-6 rounded-xl border border-orange-200/65 bg-orange-50/80 px-4 py-3" data-testid="flagship-mastery-pending">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-950/80">Continue strengthening this area</p>
             <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
               Before moving forward: finish both mastery checkpoints on the practice session for{' '}
               <span className="font-medium text-[color:var(--jf-text)]">{pendingMasteryModuleTitles[0]}</span>
@@ -454,8 +454,8 @@ export function FlagshipCourseLearningPath(props: {
         ) : null}
 
         {needsAttention.length > 0 ? (
-          <div className="mt-6 rounded-xl border border-amber-900/30 bg-amber-950/[0.12] px-4 py-3" data-testid="flagship-needs-attention">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-amber-200/75">Suggested follow-up</p>
+          <div className="mt-6 rounded-xl border border-amber-200/70 bg-amber-50/85 px-4 py-3" data-testid="flagship-needs-attention">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-amber-950/85">Suggested follow-up</p>
             <ul className="mt-2 space-y-2">
               {needsAttention.slice(0, 3).map((s) => (
                 <li key={s.id}>
@@ -497,9 +497,9 @@ export function FlagshipCourseLearningPath(props: {
                 const lockedModule = isAe && !fullyComplete && !sessionsOnlyDone && stats.done === 0 && !canEnterFirst
                 const moduleShellClass =
                   isAe && fullyComplete
-                    ? 'rounded-2xl border border-emerald-900/35 bg-emerald-950/[0.1] p-4 sm:p-5'
+                    ? 'rounded-2xl border border-emerald-200/70 bg-emerald-50/75 p-4 sm:p-5'
                     : isAe && sessionsOnlyDone
-                      ? 'rounded-2xl border border-amber-900/35 bg-amber-950/[0.12] p-4 sm:p-5'
+                      ? 'rounded-2xl border border-amber-200/70 bg-amber-50/80 p-4 sm:p-5'
                       : isAe && lockedModule
                         ? 'rounded-2xl border border-dashed border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)]/55 p-4 sm:p-5'
                         : 'rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-4 sm:p-5'
@@ -509,11 +509,11 @@ export function FlagshipCourseLearningPath(props: {
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="font-mono text-[11px] font-semibold text-[color:var(--jf-muted)]">Module {mod.order}</span>
                         {fullyComplete ? (
-                          <span className="rounded-full border border-emerald-900/35 bg-emerald-950/[0.2] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-100/85">
+                          <span className="rounded-full border border-emerald-200/70 bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-900/90">
                             Module complete
                           </span>
                         ) : sessionsOnlyDone ? (
-                          <span className="rounded-full border border-amber-900/35 bg-amber-950/[0.15] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-100/90">
+                          <span className="rounded-full border border-amber-200/70 bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-950/90">
                             Quiz pending
                           </span>
                         ) : (
@@ -522,7 +522,7 @@ export function FlagshipCourseLearningPath(props: {
                               {stats.done}/{stats.total} sessions
                             </span>
                             {lockedModule ? (
-                              <span className="rounded-full border border-zinc-600/40 bg-zinc-950/30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-200/90">
+                              <span className="rounded-full border border-stone-300/80 bg-stone-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-stone-700">
                                 Locked
                               </span>
                             ) : null}
@@ -543,7 +543,7 @@ export function FlagshipCourseLearningPath(props: {
                             Est. {AI_ESSENTIALS_MODULE_TIME_HINT[mod.id] ?? '~2–3h'} · Checkpoint: 3 mastery items on practice · Module quiz:{' '}
                             {MODULE_QUIZ_DRAW_COUNT} questions (at least {MODULE_QUIZ_MIN_CORRECT} of {MODULE_QUIZ_DRAW_COUNT} correct)
                           </p>
-                          <p className="text-[11px] leading-snug text-emerald-200/75">{AI_ESSENTIALS_MODULE_MILESTONE_LINE[mod.id]}</p>
+                          <p className="text-[11px] leading-snug text-emerald-800/90">{AI_ESSENTIALS_MODULE_MILESTONE_LINE[mod.id]}</p>
                           <p className="text-[12px] leading-snug text-[color:var(--jf-muted)]">{mod.summary}</p>
                         </div>
                       ) : !compactRows ? (
@@ -618,7 +618,7 @@ export function FlagshipCourseLearningPath(props: {
         <div
           className={
             isAeAccordion
-              ? 'mt-12 rounded-2xl border border-violet-900/25 bg-violet-950/[0.1] px-5 py-6 sm:px-7'
+              ? 'mt-12 rounded-2xl border border-orange-200/65 bg-orange-50/75 px-5 py-6 sm:px-7'
               : 'mt-12 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-5 py-6'
           }
         >
@@ -638,7 +638,7 @@ export function FlagshipCourseLearningPath(props: {
                   Finish pending checkpoints on practice sessions where shown; prep unlocks automatically when the path is consistent.
                 </p>
               ) : capstonePrepComplete ? (
-                <p className="mt-2 text-[12px] text-emerald-200/85">Capstone prep is marked complete—you can still refine deliverables.</p>
+                <p className="mt-2 text-[12px] text-emerald-800/90">Capstone prep is marked complete—you can still refine deliverables.</p>
               ) : (
                 <p className="mt-2 text-[12px] text-[color:var(--jf-subtle)]">Open the prep session to align filenames, rubric rows, and disclosure with the Module 16 brief.</p>
               )}
@@ -670,7 +670,7 @@ export function FlagshipCourseLearningPath(props: {
           {capstonePrepAccessible ? (
             <div className="mt-5 flex flex-wrap gap-3">
               <Link
-                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950"
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white"
                 to={sessionHref(sessions.find((s) => s.moduleId === FLAGSHIP_CAPSTONE_MODULE_ID)?.id ?? '')}
                 data-testid="flagship-capstone-prep-link"
               >

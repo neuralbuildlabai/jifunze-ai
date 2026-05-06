@@ -19,20 +19,20 @@ export function LearningCategoryPage() {
   const browseBadges = CATEGORY_BROWSE_BADGES[category.slug]
 
   return (
-    <div className="min-h-screen w-full bg-[var(--jf-bg-page)] px-4 py-10 text-zinc-100">
+    <div className="jf-learn-warm min-h-screen w-full bg-[var(--jf-bg-page)] px-4 py-10 text-[color:var(--jf-text)] sm:px-6">
       <div className="mx-auto w-full max-w-6xl space-y-10">
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
+        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[color:var(--jf-border)] pb-6">
           <JifunzeBrandLogo to="/" size="sm" variant="compact" />
           <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
             <div className="flex flex-wrap items-center gap-3">
-              <Link className="text-xs font-medium text-violet-300/90 hover:text-violet-200" to="/learn">
+              <Link className="text-xs font-medium text-[color:var(--jf-brand)] hover:text-[color:var(--jf-brand-hover)]" to="/learn">
                 Catalog
               </Link>
-              <Link className="text-xs font-medium text-zinc-500 hover:text-zinc-200" to={LEGAL_ROUTES.paths}>
+              <Link className="text-xs font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to={LEGAL_ROUTES.paths}>
                 Pathways
               </Link>
               {LEARNER_MONETIZATION_UI_DISABLED ? null : (
-                <Link className="text-xs font-medium text-zinc-500 hover:text-zinc-200" to={LEGAL_ROUTES.pricing}>
+                <Link className="text-xs font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to={LEGAL_ROUTES.pricing}>
                   Plans
                 </Link>
               )}
@@ -43,39 +43,45 @@ export function LearningCategoryPage() {
 
         <div data-testid={`learning-discovery-category-${category.slug}`}>
           <DiscoveryBadgeChips tokens={browseBadges} max={4} testId={`category-top-badges-${category.slug}`} />
-          <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-500">{category.eyebrow}</p>
-          <h1 className="mt-2 text-3xl font-semibold text-white">{category.title}</h1>
-          <p className="mt-3 max-w-3xl text-sm text-zinc-400">{category.intro}</p>
+          <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">{category.eyebrow}</p>
+          <h1 className="mt-2 text-3xl font-semibold text-[color:var(--jf-text)]">{category.title}</h1>
+          <p className="mt-3 max-w-3xl text-sm text-[color:var(--jf-muted)]">{category.intro}</p>
         </div>
 
         {category.learnMoreAbout ? (
-          <section className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 sm:p-7" data-testid={`category-learn-more-${category.slug}`}>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-zinc-500">Learn more about this topic</p>
-            <p className="mt-3 text-[14px] leading-relaxed text-zinc-300">{category.learnMoreAbout}</p>
+          <section
+            className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-5 shadow-[var(--jf-shadow-soft)] sm:p-7"
+            data-testid={`category-learn-more-${category.slug}`}
+          >
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:var(--jf-muted)]">Learn more about this topic</p>
+            <p className="mt-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">{category.learnMoreAbout}</p>
           </section>
         ) : null}
 
         <TrustBoundaryStrip density="legalLink" variant="inline" compact />
 
-        <section className="rounded-2xl border border-emerald-400/15 bg-emerald-500/[0.06] p-5 sm:p-7" data-testid={`category-access-note-${category.slug}`}>
+        <section
+          className="rounded-2xl border border-emerald-200/70 bg-emerald-50/85 p-5 sm:p-7"
+          data-testid={`category-access-note-${category.slug}`}
+        >
           {LEARNER_MONETIZATION_UI_DISABLED ? (
             <>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-200/75">Learning focus</p>
-              <p className="mt-2 text-[13px] leading-relaxed text-zinc-200">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-900/80">Learning focus</p>
+              <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
                 Use the catalog for complete courses and pathways for direction. Topic pages summarize how this track fits structured learning.
               </p>
             </>
           ) : (
             <>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-200/75">Subscriptions · claim-safe framing</p>
-              <p className="mt-2 text-[13px] leading-relaxed text-zinc-200">{category.subscriptionNote}</p>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-900/80">Subscriptions · claim-safe framing</p>
+              <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{category.subscriptionNote}</p>
             </>
           )}
           {LEARNER_MONETIZATION_UI_DISABLED ? (
             <div className="mt-4 space-y-3">
               <Link
                 to="/learn"
-                className="inline-flex items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2 text-[12px] font-semibold text-zinc-100 transition hover:border-emerald-400/25 hover:bg-white/[0.06]"
+                className="inline-flex items-center justify-center rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-2 text-[12px] font-semibold text-[color:var(--jf-text)] transition hover:bg-stone-50"
               >
                 Back to discovery hub
               </Link>
@@ -84,14 +90,14 @@ export function LearningCategoryPage() {
             <div className="mt-4 flex flex-wrap gap-3">
               <Link
                 to={LEGAL_ROUTES.pricing}
-                className="inline-flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-2 text-[12px] font-semibold text-white shadow-lg shadow-emerald-950/25 transition hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/60"
+                className="inline-flex items-center justify-center rounded-xl bg-[var(--jf-brand)] px-4 py-2 text-[12px] font-semibold text-white shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
                 data-testid={`category-pricing-cta-${category.slug}`}
               >
                 View subscription options
               </Link>
               <Link
                 to="/learn"
-                className="inline-flex items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2 text-[12px] font-semibold text-zinc-100 transition hover:border-emerald-400/25 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400/55"
+                className="inline-flex items-center justify-center rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-4 py-2 text-[12px] font-semibold text-[color:var(--jf-text)] transition hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
               >
                 Back to discovery hub
               </Link>
@@ -99,11 +105,14 @@ export function LearningCategoryPage() {
           )}
         </section>
 
-        <section className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 sm:p-7" data-testid={`category-featured-${category.slug}`}>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-zinc-500">Structured flagship catalog</p>
-          <p className="mt-2 text-[14px] leading-relaxed text-zinc-300">
+        <section
+          className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-5 shadow-[var(--jf-shadow-soft)] sm:p-7"
+          data-testid={`category-featured-${category.slug}`}
+        >
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:var(--jf-muted)]">Structured flagship catalog</p>
+          <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
             Topic pages stay as orientation and FAQ. For session-based flagship courses that are open in this release, use the main{' '}
-            <Link className="font-semibold text-violet-300/90 hover:text-violet-200" to="/learn">
+            <Link className="font-semibold text-[color:var(--jf-brand)] hover:text-[color:var(--jf-brand-hover)]" to="/learn">
               learning catalog
             </Link>{' '}
             and your pathway view for sequencing.
@@ -111,20 +120,23 @@ export function LearningCategoryPage() {
         </section>
 
         {category.faq?.length ? (
-          <section className="rounded-2xl border border-white/[0.06] bg-black/20 p-5 sm:p-7" data-testid={`category-faq-${category.slug}`}>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-zinc-500">FAQ</p>
-            <h2 className="mt-2 text-lg font-semibold text-white">What to expect</h2>
-            <div className="mt-5 divide-y divide-white/[0.06] border-y border-white/[0.06]">
+          <section
+            className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] p-5 sm:p-7"
+            data-testid={`category-faq-${category.slug}`}
+          >
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:var(--jf-muted)]">FAQ</p>
+            <h2 className="mt-2 text-lg font-semibold text-[color:var(--jf-text)]">What to expect</h2>
+            <div className="mt-5 divide-y divide-[color:var(--jf-border)] border-y border-[color:var(--jf-border)]">
               {category.faq.map((item) => (
                 <details key={item.question} className="group py-4">
-                  <summary className="cursor-pointer list-none text-[14px] font-medium text-zinc-200 [&::-webkit-details-marker]:hidden">
+                  <summary className="cursor-pointer list-none text-[14px] font-medium text-[color:var(--jf-text)] [&::-webkit-details-marker]:hidden">
                     <span className="flex items-center justify-between gap-3">
                       {item.question}
                       <svg
                         aria-hidden
                         viewBox="0 0 20 20"
                         fill="currentColor"
-                        className="h-4 w-4 shrink-0 text-zinc-500 transition-transform duration-200 group-open:rotate-180"
+                        className="h-4 w-4 shrink-0 text-[color:var(--jf-muted)] transition-transform duration-200 group-open:rotate-180"
                       >
                         <path
                           fillRule="evenodd"
@@ -134,24 +146,24 @@ export function LearningCategoryPage() {
                       </svg>
                     </span>
                   </summary>
-                  <p className="mt-3 text-[13px] leading-relaxed text-zinc-400">{item.answer}</p>
+                  <p className="mt-3 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{item.answer}</p>
                 </details>
               ))}
             </div>
           </section>
         ) : null}
 
-        <nav className="flex flex-wrap gap-x-4 gap-y-2 border-t border-white/[0.06] pt-6 text-xs text-zinc-500">
-          <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.disclaimer}>
+        <nav className="flex flex-wrap gap-x-4 gap-y-2 border-t border-[color:var(--jf-border)] pt-6 text-xs text-[color:var(--jf-subtle)]">
+          <Link className="hover:text-[color:var(--jf-text)]" to={LEGAL_ROUTES.disclaimer}>
             Disclaimer
           </Link>
-          <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.terms}>
+          <Link className="hover:text-[color:var(--jf-text)]" to={LEGAL_ROUTES.terms}>
             Terms
           </Link>
-          <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.privacy}>
+          <Link className="hover:text-[color:var(--jf-text)]" to={LEGAL_ROUTES.privacy}>
             Privacy
           </Link>
-          <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.refunds}>
+          <Link className="hover:text-[color:var(--jf-text)]" to={LEGAL_ROUTES.refunds}>
             Refunds
           </Link>
         </nav>

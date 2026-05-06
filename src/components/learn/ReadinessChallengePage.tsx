@@ -107,13 +107,13 @@ export function ReadinessChallengePage() {
   const progressPct = st.answered === 0 ? 0 : Math.round((st.answered / READINESS_MAX_QUESTIONS) * 100)
 
   return (
-    <div className="jf-public-surface min-h-screen w-full bg-[var(--jf-bg-page)] text-[color:var(--jf-text)]">
-      <header className="border-b border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 backdrop-blur-sm">
+    <div className="jf-learn-warm min-h-screen w-full bg-[var(--jf-bg-page)] text-[color:var(--jf-text)]">
+      <header className="jf-learn-nav-header sticky top-0 z-10 border-b backdrop-blur-md">
         <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-4 px-5 py-5 sm:px-8">
           <Link to={`/learn/courses/${slug}`} className="text-[12px] font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]">
             ← Course
           </Link>
-          <JifunzeBrandLogo to="/" size="sm" surface="dark" />
+          <JifunzeBrandLogo to="/" size="sm" surface="light" />
         </div>
       </header>
 
@@ -165,7 +165,7 @@ export function ReadinessChallengePage() {
               {LEARNER_MONETIZATION_UI_DISABLED ? (
                 <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                   <Link
-                    className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)]"
+                    className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)]"
                     to={`/learn/courses/${slug}`}
                     data-testid="readiness-back-to-course"
                   >
@@ -180,7 +180,7 @@ export function ReadinessChallengePage() {
                   </p>
                   <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                     <Link
-                      className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)]"
+                      className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)]"
                       to={`/learn/checkout?course=${slug}`}
                       data-testid="readiness-goto-checkout"
                     >
@@ -216,7 +216,7 @@ export function ReadinessChallengePage() {
               ) : null}
               <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                 <Link
-                  className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-zinc-950 shadow-[var(--jf-shadow-soft)]"
+                  className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)]"
                   to="/?auth=signup#auth"
                 >
                   Continue to signup

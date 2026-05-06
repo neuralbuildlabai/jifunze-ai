@@ -33,7 +33,7 @@ export function LearningDiscoveryHubPage() {
         ]}
         rightSlot={
           user ? (
-            <div className="jf-public-surface rounded-2xl">
+            <div className="jf-learn-warm rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-2 py-1.5 shadow-sm">
               <SignedInPublicLearningActions className="!justify-end" />
             </div>
           ) : supabase ? (

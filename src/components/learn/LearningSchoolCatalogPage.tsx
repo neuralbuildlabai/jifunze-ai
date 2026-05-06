@@ -22,7 +22,7 @@ export function LearningSchoolCatalogPage() {
   }
 
   return (
-    <div className="jf-public-surface min-h-screen w-full bg-[var(--jf-bg-page)] px-4 py-10 text-[color:var(--jf-text)] sm:px-6">
+    <div className="jf-learn-warm min-h-screen w-full bg-[var(--jf-bg-page)] px-4 py-10 text-[color:var(--jf-text)] sm:px-6">
       <div className="mx-auto w-full max-w-6xl space-y-10">
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[color:var(--jf-border)] pb-6">
           <JifunzeBrandLogo to="/" size="sm" variant="compact" />
