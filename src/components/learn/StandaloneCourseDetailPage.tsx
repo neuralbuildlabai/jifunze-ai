@@ -1,19 +1,35 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { findStandaloneCourseBySlug } from '../../data/courses'
+import {
+  findStandaloneCourseBySlug,
+  getStandaloneCertificatePath,
+  getStandaloneFirstLessonPath,
+  type PracticalMathematicsCourse,
+} from '../../data/courses'
 import { ORANGE_GRADIENT } from './discoveryHubSections'
+import { formatCourseDurationLabel, formatHoursFromMinutes, truncateWords } from './standaloneCoursePresentation'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
 
-function formatModuleDuration(minutes: number): string {
-  if (minutes < 60) return `${minutes} min`
-  const h = Math.round((minutes / 60) * 10) / 10
-  return `${h} hrs`
-}
+const COURSE_SUCCESS_CHECKLIST = [
+  'Complete all 16 modules in order',
+  'Study every lesson (mark as studied on each lesson page)',
+  'Pass each module quiz at 75% or higher',
+  'Keep your overall quiz score at 75% or higher',
+  'Finish the practice labs',
+  'Review safety and scope notes where they apply',
+  'Complete the Module 16 capstone artifact and mark it complete on the Module 16 page',
+  'Unlock the printable Certificate of Completion (free)',
+  'Reflect where a licensed professional should verify your numbers before you act',
+] as const
+
+const FINAL_COMPLETION_REMINDERS = [
+  'Meet the 75% pass threshold on every module quiz before moving on.',
+  'Finish the Module 16 capstone and use “Mark capstone complete” on that module when your artifact is ready.',
+  'Name assumptions, limits, and what you would still verify with a qualified professional.',
+] as const
 
 /**
  * Public detail page for standalone Jifunze courses (e.g., Practical Mathematics).
- *
- * Unknown slugs redirect to `/learn`. Flagship slugs stay on `/learn/courses/:slug`.
  */
 export function StandaloneCourseDetailPage() {
   const { standaloneCourseSlug } = useParams<{ standaloneCourseSlug: string }>()
@@ -25,61 +41,52 @@ export function StandaloneCourseDetailPage() {
 
   const { source } = entry
   const firstModuleSlug = source.modules[0]?.slug
-  const startHref = firstModuleSlug ? `/learn/${entry.slug}/modules/${firstModuleSlug}` : `/learn/${entry.slug}`
+  const startHref =
+    getStandaloneFirstLessonPath(entry.slug, source as PracticalMathematicsCourse) ??
+    (firstModuleSlug ? `/learn/${entry.slug}/modules/${firstModuleSlug}` : `/learn/${entry.slug}`)
+  const certificateHref = getStandaloneCertificatePath(entry.slug)
 
   return (
     <div
       className="jf-learn-warm min-h-screen w-full bg-[var(--jf-bg-page)] px-4 py-10 text-[color:var(--jf-text)] sm:px-6"
       data-testid={`standalone-course-detail-${entry.slug}`}
     >
-      <div className="mx-auto w-full max-w-5xl space-y-10">
+      <div className="mx-auto w-full max-w-3xl space-y-12">
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[color:var(--jf-border)] pb-6">
           <JifunzeBrandLogo to="/" size="sm" variant="compact" />
           <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
-            <div className="flex flex-wrap items-center gap-3">
-              <Link className="text-xs font-medium text-[color:var(--jf-brand)] hover:text-[color:var(--jf-brand-hover)]" to="/learn">
-                Catalog
-              </Link>
-              <Link className="text-xs font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to="/learn#schools">
-                Schools
-              </Link>
-            </div>
+            <Link className="text-xs font-medium text-[color:var(--jf-brand)] hover:text-[color:var(--jf-brand-hover)]" to="/learn">
+              Catalog
+            </Link>
+            <Link className="text-xs font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to="/learn#schools">
+              Schools
+            </Link>
             <SignedInPublicLearningActions />
           </div>
         </header>
 
-        <section
-          className="jf-learn-section-blush rounded-2xl border border-orange-100/70 p-6 shadow-[var(--jf-shadow-soft)] sm:p-8"
-          data-testid={`standalone-course-hero-${entry.slug}`}
-        >
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-orange-600">
-            {source.school} · {source.modules.length} modules · Included
+        {/* A — Hero */}
+        <section className="jf-learn-section-blush rounded-2xl border border-orange-100/70 p-6 sm:p-8" data-testid={`standalone-course-hero-${entry.slug}`}>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">{source.school}</p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-[2rem]">{source.title}</h1>
+          <p className="mt-4 text-[15px] leading-relaxed text-[color:var(--jf-muted)]">{entry.subtitle}</p>
+          <p className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-[14px] text-[color:var(--jf-text)]">
+            <span className="text-[color:var(--jf-muted)]">{source.level}</span>
+            <span className="text-[color:var(--jf-border)]" aria-hidden>
+              ·
+            </span>
+            <span>{formatCourseDurationLabel(source.estimatedHours)}</span>
+            <span className="text-[color:var(--jf-border)]" aria-hidden>
+              ·
+            </span>
+            <span>{source.modules.length} modules</span>
+            <span className="text-[color:var(--jf-border)]" aria-hidden>
+              ·
+            </span>
+            <span className="font-semibold text-orange-600" data-testid={`standalone-course-access-label-${entry.slug}`}>
+              Free
+            </span>
           </p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-4xl">{source.title}</h1>
-          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-[color:var(--jf-muted)]">{entry.subtitle}</p>
-          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-[color:var(--jf-muted)]">
-            Practical math for life, work, business, finance, data, projects, property, healthcare cost understanding, and trade calculations — structured as a
-            complete self-paced course.
-          </p>
-          <dl className="mt-8 grid gap-6 sm:grid-cols-3">
-            <div>
-              <dt className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[color:var(--jf-muted)]">Level</dt>
-              <dd className="mt-1 text-sm font-medium text-[color:var(--jf-text)]">{source.level}</dd>
-            </div>
-            <div>
-              <dt className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[color:var(--jf-muted)]">Estimated duration</dt>
-              <dd className="mt-1 text-sm font-medium text-[color:var(--jf-text)]">About {source.estimatedHours} hours</dd>
-            </div>
-            <div>
-              <dt className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[color:var(--jf-muted)]">Access</dt>
-              <dd
-                className="mt-1 text-sm font-bold text-orange-600"
-                data-testid={`standalone-course-access-label-${entry.slug}`}
-              >
-                Free Access · {entry.accessLabel}
-              </dd>
-            </div>
-          </dl>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               to={startHref}
@@ -95,79 +102,99 @@ export function StandaloneCourseDetailPage() {
               Open Module 1
             </Link>
           </div>
-          <p className="mt-4 text-[12px] text-[color:var(--jf-muted)]">
-            Starts in module preview — full interactive lesson player may ship in a later release. Your progress model remains sequential with module quizzes.
-          </p>
         </section>
 
-        <section className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 shadow-[var(--jf-shadow-soft)] sm:p-8">
-          <h2 className="text-xl font-semibold text-[color:var(--jf-text)]">Course description</h2>
-          <p className="mt-3 text-sm leading-relaxed text-[color:var(--jf-muted)]">{source.description}</p>
-        </section>
-
-        <section className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 shadow-[var(--jf-shadow-soft)] sm:p-8">
-          <h2 className="text-xl font-semibold text-[color:var(--jf-text)]">Learning outcomes</h2>
-          <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm text-[color:var(--jf-muted)]">
+        {/* B — What you will learn */}
+        <section>
+          <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">What you will learn</h2>
+          <ul className="mt-4 space-y-2.5 text-[14px] leading-snug text-[color:var(--jf-muted)]">
             {source.learningOutcomes.map((line) => (
-              <li key={line}>{line}</li>
+              <li key={line} className="flex gap-2">
+                <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-orange-500" aria-hidden />
+                <span>{line}</span>
+              </li>
             ))}
           </ul>
         </section>
 
-        <section className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 shadow-[var(--jf-shadow-soft)] sm:p-8">
-          <h2 className="text-xl font-semibold text-[color:var(--jf-text)]">Completion requirements</h2>
-          <p className="mt-3 text-sm text-[color:var(--jf-muted)]">{source.completionRequirements.rule}</p>
-          <p className="mt-2 text-sm text-[color:var(--jf-muted)]">
-            <span className="font-semibold text-[color:var(--jf-text)]">Pass threshold:</span> {source.completionRequirements.passThreshold}
+        {/* C — How this course works + success checklist */}
+        <section className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 sm:p-7">
+          <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">How this course works</h2>
+          <p className="mt-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">{source.completionRequirements.rule}</p>
+          <ul className="mt-4 space-y-2 text-[13px] text-[color:var(--jf-muted)]">
+            <li>Sequential modules — each unlocks after the prior quiz pass.</li>
+            <li>Practice labs reinforce scenarios before the quiz.</li>
+            <li>Capstone integrates skills across multiple modules.</li>
+            <li>
+              <span className="font-medium text-stone-700">Certificate of Completion</span> — free to print when all lessons
+              are studied, every module quiz passes at <span className="font-medium text-stone-700">75% or higher</span>, your
+              overall quiz average is <span className="font-medium text-stone-700">75% or higher</span>, and the Module 16
+              capstone is marked complete.
+            </li>
+          </ul>
+          <p className="mt-4 text-[14px] text-[color:var(--jf-text)]">
+            <Link
+              to={certificateHref}
+              className="font-semibold text-orange-700 hover:underline"
+              data-testid={`standalone-course-certificate-link-${entry.slug}`}
+            >
+              Certificate of Completion
+            </Link>
+            <span className="text-[color:var(--jf-muted)]"> — locked until you meet completion requirements.</span>
+          </p>
+          <h3 className="mt-8 text-[13px] font-semibold uppercase tracking-[0.12em] text-stone-500">How to succeed</h3>
+          <ul className="mt-3 space-y-2 text-[14px] text-[color:var(--jf-text)]">
+            {COURSE_SUCCESS_CHECKLIST.map((item) => (
+              <li key={item} className="flex gap-2">
+                <span className="text-orange-600" aria-hidden>
+                  ✓
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-4 text-[12px] leading-relaxed text-[color:var(--jf-muted)]">
+            Quizzes: {source.completionRequirements.passThreshold}
           </p>
         </section>
 
-        <section className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 shadow-[var(--jf-shadow-soft)] sm:p-8">
-          <h2 className="text-xl font-semibold text-[color:var(--jf-text)]">Capstone</h2>
-          <p className="mt-3 text-sm leading-relaxed text-[color:var(--jf-muted)]">{source.capstoneDescription}</p>
-          <p className="mt-3 text-sm font-medium text-[color:var(--jf-text)]">{source.completionRequirements.capstone}</p>
-        </section>
-
-        <section className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 shadow-[var(--jf-shadow-soft)] sm:p-8" data-testid={`standalone-course-curriculum-${entry.slug}`}>
-          <h2 className="text-xl font-semibold text-[color:var(--jf-text)]">16-module outline</h2>
-          <p className="mt-3 text-sm text-[color:var(--jf-muted)]">
-            Each row links to a module preview with lessons, practice lab, quiz count, and completion checklist.{' '}
-            <span className="font-semibold text-[color:var(--jf-text)]">{source.modules.length} modules</span> total.
+        {/* D — Modules */}
+        <section data-testid={`standalone-course-curriculum-${entry.slug}`}>
+          <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">Modules</h2>
+          <p className="mt-2 text-[13px] text-[color:var(--jf-muted)]">
+            {source.modules.length} modules · each module links to full lessons, the practice lab, and quiz self-check.
           </p>
-          <ol className="mt-6 space-y-4">
+          <ol className="mt-6 space-y-3">
             {source.modules.map((m) => (
               <li
                 key={m.slug}
-                className="rounded-xl border border-[color:var(--jf-border)] bg-white p-4 sm:p-5"
+                className="rounded-xl border border-stone-200/90 bg-white px-4 py-4 shadow-sm"
                 data-testid={`standalone-course-module-${entry.slug}-${m.slug}`}
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-orange-600">Module {m.moduleNumber}</p>
-                    <Link
-                      to={`/learn/${entry.slug}/modules/${m.slug}`}
-                      className="mt-1 block text-[17px] font-semibold text-[color:var(--jf-text)] hover:text-orange-700"
-                    >
+                    <p className="text-[11px] font-medium uppercase tracking-wide text-orange-700">Module {m.moduleNumber}</p>
+                    <Link to={`/learn/${entry.slug}/modules/${m.slug}`} className="mt-0.5 block text-[16px] font-semibold text-zinc-900 hover:text-orange-700">
                       {m.title}
                     </Link>
-                    <p className="mt-2 text-[13px] text-[color:var(--jf-muted)]">
-                      {formatModuleDuration(m.durationMinutes)} · {m.lessons.length} lessons · {m.moduleQuiz.length} quiz questions · Practice lab:{' '}
-                      {m.practiceLab.title} (~{m.practiceLab.durationMinutes} min)
+                    <p className="mt-2 text-[13px] leading-snug text-stone-600">{truncateWords(m.moduleSummary, 28)}</p>
+                    <p className="mt-2 text-[12px] text-stone-500">
+                      {formatHoursFromMinutes(m.durationMinutes)} · {m.moduleQuiz.length} quiz questions
                     </p>
                   </div>
                   <Link
                     to={`/learn/${entry.slug}/modules/${m.slug}`}
-                    className={`shrink-0 rounded-full px-4 py-2 text-[12px] font-semibold text-white shadow-md shadow-orange-500/20 transition hover:brightness-105 ${ORANGE_GRADIENT}`}
+                    className={`shrink-0 rounded-full px-4 py-2 text-[12px] font-semibold text-white shadow-sm transition hover:brightness-105 ${ORANGE_GRADIENT}`}
                   >
                     Open module
                   </Link>
                 </div>
                 {m.safetyNote ? (
                   <div
-                    className="mt-4 rounded-lg border border-amber-200/80 bg-amber-50/90 p-3 text-[12px] leading-relaxed text-amber-950"
+                    className="mt-3 border-l-[3px] border-amber-400 bg-amber-50/80 py-2 pl-3 text-[11px] leading-snug text-amber-950"
                     data-testid={`standalone-course-module-safety-${entry.slug}-${m.slug}`}
                   >
-                    <span className="font-semibold">Safety:</span> {m.safetyNote}
+                    {m.safetyNote}
                   </div>
                 ) : null}
               </li>
@@ -175,24 +202,34 @@ export function StandaloneCourseDetailPage() {
           </ol>
         </section>
 
-        <section
-          className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 shadow-[var(--jf-shadow-soft)] sm:p-8"
-          data-testid={`standalone-course-disclaimer-${entry.slug}`}
-        >
-          <h2 className="text-xl font-semibold text-[color:var(--jf-text)]">Course safety &amp; scope</h2>
-          <p className="mt-3 text-sm leading-relaxed text-[color:var(--jf-muted)]">{source.safetyDisclaimer}</p>
-          <p className="mt-4 text-sm text-[color:var(--jf-muted)]">{source.assessmentApproach}</p>
+        {/* E — Safety & scope */}
+        <section className="rounded-2xl border border-stone-200/90 bg-white p-6 sm:p-7" data-testid={`standalone-course-disclaimer-${entry.slug}`}>
+          <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">Safety &amp; scope</h2>
+          <p className="mt-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">{source.safetyDisclaimer}</p>
+          <p className="mt-5 text-[12px] leading-relaxed text-[color:var(--jf-muted)]">{source.assessmentApproach}</p>
         </section>
 
-        <div className="flex flex-wrap justify-center gap-3 pb-8">
-          <Link
-            to={startHref}
-            className={`inline-flex min-h-[2.75rem] items-center justify-center rounded-full px-8 text-[15px] font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:brightness-105 ${ORANGE_GRADIENT}`}
-          >
-            Start free
-          </Link>
-          <Link to="/learn" className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-stone-300 bg-white px-6 text-[15px] font-semibold text-zinc-800">
-            Back to catalog
+        {/* F — Capstone & final completion */}
+        <section className="rounded-2xl border border-orange-100/80 bg-gradient-to-b from-orange-50/50 to-white p-6 sm:p-8" data-testid={`standalone-course-capstone-final-${entry.slug}`}>
+          <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">Capstone &amp; finishing</h2>
+          <p className="mt-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">{source.capstoneDescription}</p>
+          <p className="mt-3 text-[14px] font-medium text-[color:var(--jf-text)]">{source.completionRequirements.capstone}</p>
+          <h3 className="mt-8 text-[13px] font-semibold uppercase tracking-[0.12em] text-stone-500">Before you finish</h3>
+          <ul className="mt-3 space-y-2 text-[14px] text-[color:var(--jf-text)]">
+            {FINAL_COMPLETION_REMINDERS.map((item) => (
+              <li key={item} className="flex gap-2">
+                <span className="text-orange-600" aria-hidden>
+                  →
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <div className="flex flex-wrap justify-center gap-3 pb-10">
+          <Link to="/learn" className="text-sm font-medium text-orange-700 hover:underline">
+            ← Back to catalog
           </Link>
         </div>
       </div>

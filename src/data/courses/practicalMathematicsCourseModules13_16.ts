@@ -92,6 +92,8 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Compare two real mortgage quotes',
             content: 'Use a calculator for 15 vs 30 at current rates.',
+            answerKey:
+              'Lesson anchors: $280k @ 6.5%/30 → ≈$1,769.88/mo, total interest ≈$357k vs principal $280k. $250k @ 6%: 30-yr ≈$1,498.88/mo ($289.6k interest); 15-yr ≈$2,109.64/mo ($129.7k interest) — shorter term saves ≈$160k interest for ≈$611/mo higher payment.',
           },
           {
             type: 'summary',
@@ -156,6 +158,8 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Build your real housing budget',
             content: 'Compute PITI+HOA+maintenance for a target home.',
+            answerKey:
+              'Lesson $400k / 20% down / 6.5%/30: P&I ≈$2,022.50 + tax $400 + ins $150 + HOA $250 + maint ~$333 → ≈$3,156/mo. 28% of $8,333 gross = $2,333 ceiling — compare your PITI+reserve to that line.',
           },
           {
             type: 'summary',
@@ -220,6 +224,8 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Build one rental analysis',
             content: 'Real or realistic rental: cash flow with reserves, cap rate, CoC. Stress-test.',
+            answerKey:
+              'Lesson deal: rent $2,200; cash out P&I $1,247 + tax $250 + ins $125 + HOA $100 + mgmt $220 + maint $110 + vac $110 = $2,162; cash flow $38/mo; CoC ≈0.73% on $62,500 down. Vacancy 10% cuts rent $220 → cash flow negative — stress test shows reserve assumptions dominate.',
           },
           {
             type: 'summary',
@@ -283,6 +289,8 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Build one CMA',
             content: 'Pick a listing and three comps; compute average $/sq ft; apply.',
+            answerKey:
+              'Lesson CMA: 2,000 sq ft subject; comps avg $172/ft → $344k base; +$10k kitchen −$8k roof +$5k lot → ≈$351k. LTV check: loan ÷ appraised; equity = value − loan (e.g. $450k home, $260k loan → $190k equity, LTV ≈57.8%).',
           },
           {
             type: 'summary',
@@ -660,6 +668,8 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Compare two plans',
             content: 'At low/medium/high usage. Which wins at each level?',
+            answerKey:
+              'Lesson surgery year: premiums $4,800 + OOP capped $6,000 → $10,800 total. Low-use year might be premiums + one or two copays only (<ded). High-use year hits OOP max early — compare which plan reaches max faster and whether HSA tax savings ($3,850×22%≈$847) changes the ranking.',
           },
           {
             type: 'summary',
@@ -726,6 +736,8 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Verify one real bill',
             content: 'Verify charges → adjusted → ded → coins → patient.',
+            answerKey:
+              'Lesson ER path: $3,000 × (1−0.40) = $1,800 adjusted. After $500 ded → $1,300 subject to 20% coins → $260. Patient pays $500 + $260 = $760 (plus any copays listed separately).',
           },
           {
             type: 'summary',
@@ -1158,6 +1170,8 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Build one quote',
             content: 'Pick small job; estimate materials with waste, labour, overhead, contingency.',
+            answerKey:
+              'Lesson bathroom tile quote: materials 187 ft² × $5.50 = $1,029 + ancillary $200 + labour 16×$50 = $800 + OH 15%×labour $120 = $2,149; +10% contingency $215 → ≈$2,364 (round $2,400 bid).',
           },
           {
             type: 'summary',
@@ -1393,6 +1407,8 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Frame a decision',
             content: 'Pick a decision; write each step in one sentence.',
+            answerKey:
+              'Lesson expansion pattern: (1) Understand café capacity constraint. (2) Modules: revenue/cost (6), cash timing (11–12), risk (9). (3) Plan scenarios A/B. (4) Execute NPV sketch. (5) Verify against break-even cups/day. (6) Communicate Q/F/R/C in four sentences.',
           },
           {
             type: 'summary',
@@ -1458,6 +1474,8 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Run a sensitivity',
             content: 'Recompute NPV at 10,000 units; state if decision holds.',
+            answerKey:
+              'At 15k units lesson shows strong positive NPV. At 10k units revenue falls to $890k (10k×$89); variable $500k; contribution $390k; fixed $220k → operating cash still positive but materially lower — recompute full 5-yr NPV in a sheet; if NPV still >0 at your hurdle rate, decision can hold; if near zero, reject or defer until demand evidence improves.',
           },
           {
             type: 'summary',
@@ -1524,6 +1542,8 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Build your own integration',
             content: 'State recommendation with caveats.',
+            answerKey:
+              'Lesson honest call: pay card $5k @18% aggressively ($400/mo clears ≈16 mo, ~$675 interest) before maxing housing; PITI on $300k with 20% down ≈$1,942–$2,142 vs 28% of $4k net ($1,120) — wait until debt cleared and emergency fund built; cite rate/tax verification with a lender and tax pro.',
           },
           {
             type: 'summary',
@@ -1548,6 +1568,13 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
               '1) Household budget. 2) Small-business pricing. 3) Project timeline + resources. 4) Property analysis. 5) Healthcare cost comparison. 6) Trade quote.',
           },
           {
+            type: 'worked_example',
+            eyebrow: 'Worked example',
+            title: 'Mini household budget (numbers only)',
+            content:
+              'Given: net $4,000/mo; rent $1,400; utilities $220; groceries $600; transport $280; debt payment $350.\n\nFormula: discretionary = net − fixed sum.\n\nSubstitute: fixed = 1,400 + 220 + 600 + 280 + 350 = 2,850.\n\nCalculate: 4,000 − 2,850 = 1,150.\n\nAnswer: $1,150/mo discretionary before savings goals.\n\nReasonableness: fixed is a bit under 3/4 of net — plausible; if discretionary were negative, the budget would be infeasible.',
+          },
+          {
             type: 'concept_explanation',
             eyebrow: 'What the artifact contains',
             title: 'Six deliverable parts',
@@ -1567,6 +1594,8 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
             title: 'Walk one capstone in 30 minutes',
             content:
               'Question 1 min; inputs 5; calculations 15; assumptions 3; recommendation+caveats 5; share for sanity-check 1.',
+            answerKey:
+              'Example time split for a 30-minute pass: Q 2m; inputs 6m; calcs 14m; assumptions 3m; recommendation 4m; buffer 1m. Adjust to your topic — keep calculations on paper or in a spreadsheet so you can audit steps.',
           },
           {
             type: 'pause_and_check',
@@ -1594,6 +1623,8 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
               'Write the artifact (1–2 pages). Save it. Reread after one week and update.',
             outputExpectation:
               'A 1–2 page reviewable artifact with question, inputs, calculations, assumptions, findings, recommendation, and professional-verification list.',
+            answerKey:
+              'Artifact must name ≥4 modules (e.g. 5 budget, 6 margin, 9 chart read, 11 cash flow), list assumptions (rates, demand), and end with “verify with: tax advisor / lender / licensed trade / clinician” as appropriate. Numeric thread should match your stated assumptions.',
           },
           {
             type: 'summary',
@@ -1614,6 +1645,13 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
             eyebrow: 'What atrophies first',
             title: "Skills you don't reuse fade",
             content: 'Weekly 30 minutes on a real problem beats annual binge.',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example',
+            title: 'Weekly minutes add up',
+            content:
+              'Given: 30 minutes per week for 12 weeks.\n\nFormula: total hours H = (minutes × weeks) ÷ 60.\n\nSubstitute: (30 × 12) ÷ 60.\n\nCalculate: 360 ÷ 60 = 6.\n\nAnswer: 6 hours of deliberate practice in a quarter.\n\nReasonableness: 0.5 h × 12 = 6 h — matches.',
           },
           {
             type: 'concept_explanation',
@@ -1647,6 +1685,8 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
             title: 'Write your 90-day plan',
             content:
               'Three modules; weekly 30-min practice each; monthly artifact review; calendar reminders.',
+            answerKey:
+              'Sample: Modules 5 (budget), 6 (unit economics), 9 (data checks). Calendar: Tue 07:00–07:30 pricing review; Thu personal cash flow; last Friday monthly one-page artifact. 12 weeks × 1.5 h = 18 h logged practice (matches lesson 16.5 hours math).',
           },
           {
             type: 'reflection_or_application',

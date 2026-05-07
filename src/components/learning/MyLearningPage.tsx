@@ -91,7 +91,7 @@ export function MyLearningPage() {
                       className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-stone-200/80 bg-[#fffdfb] px-3 py-3 text-sm text-zinc-900 transition hover:border-orange-200/90"
                     >
                       <span className="font-medium">{c.title}</span>
-                      <span className="text-[11px] font-semibold uppercase tracking-wide text-orange-700/90">Free access</span>
+                      <span className="text-[11px] font-semibold uppercase tracking-wide text-orange-700/90">Free</span>
                     </Link>
                   </li>
                 ))}

@@ -4,7 +4,7 @@
  * Standalone — does NOT use, mutate, or read flagship progression keys.
  * Each lesson must be completed and the module quiz must be passed before the next module unlocks.
  *
- * Pass rule: ≥70% correct, with explicit fallback that an 8-question quiz needs ≥6 correct.
+ * Pass rule (this course only): ≥75% correct on each module quiz, using ceil(0.75 × N) whole-question minimum.
  */
 
 import type {
@@ -13,20 +13,20 @@ import type {
 } from './practicalMathematicsCourseTypes'
 import { PRACTICAL_MATH_INTERNAL_KEY } from './practicalMathematicsCourseConstants'
 
+/** Practical Mathematics module quiz pass rate — isolated from flagship courses. */
+export const PRACTICAL_MATH_QUIZ_PASS_RATE = 0.75 as const
+
 export type PracticalMathQuizScore = {
   correct: number
   total: number
 }
 
 /**
- * Returns true when a quiz score meets the practical-math pass threshold.
- * - 8-question quizzes: 6 correct out of 8 (the explicit Jifunze fallback the spec asks for).
- * - Longer quizzes:     70% rounded up to the next whole correct answer.
+ * Returns true when a quiz score meets the practical-math pass threshold (75%+, whole questions).
  */
 export function practicalMathQuizPassed(score: PracticalMathQuizScore): boolean {
   if (score.total <= 0) return false
-  if (score.total === 8) return score.correct >= 6
-  const required = Math.ceil(score.total * 0.7)
+  const required = Math.ceil(score.total * PRACTICAL_MATH_QUIZ_PASS_RATE)
   return score.correct >= required
 }
 
@@ -35,13 +35,24 @@ export type PracticalMathProgressState = {
   completedLessonKeys: Set<string>
   /** Module slug → most recent passing quiz score (presence implies pass). */
   passedModuleQuizzes: Map<string, PracticalMathQuizScore>
+  /**
+   * Learner-confirmed completion of the Module 16 capstone artifact (standalone local progress only).
+   * Does not replace professional verification before acting on any numbers.
+   */
+  capstoneComplete: boolean
 }
 
 export function emptyPracticalMathProgress(): PracticalMathProgressState {
   return {
     completedLessonKeys: new Set<string>(),
     passedModuleQuizzes: new Map<string, PracticalMathQuizScore>(),
+    capstoneComplete: false,
   }
+}
+
+/** True when the learner has marked the Module 16 capstone complete in local progress. */
+export function practicalMathCapstoneComplete(progress: PracticalMathProgressState): boolean {
+  return progress.capstoneComplete === true
 }
 
 export function lessonKey(module: StandaloneCourseModule, lessonNumber: string): string {
@@ -96,6 +107,41 @@ export function isPracticalMathCourseFullyComplete(
   progress: PracticalMathProgressState,
 ): boolean {
   return course.modules.every((m) => moduleFullyComplete(m, progress))
+}
+
+/**
+ * Aggregate score across all recorded module quiz attempts (all 16 modules must have scores).
+ * Returns null if any module quiz score is missing.
+ */
+export function practicalMathWeightedScorePercent(
+  course: PracticalMathematicsCourse,
+  progress: PracticalMathProgressState,
+): number | null {
+  let correct = 0
+  let total = 0
+  for (const m of course.modules) {
+    const s = progress.passedModuleQuizzes.get(m.slug)
+    if (!s) return null
+    correct += s.correct
+    total += s.total
+  }
+  if (total <= 0) return null
+  return (100 * correct) / total
+}
+
+/**
+ * Certificate eligibility: all modules fully complete and overall quiz aggregate ≥ 75%.
+ * (Per-module pass already enforces a 75% bar; the aggregate check matches the course completion rule.)
+ */
+export function practicalMathCertificateEligible(
+  course: PracticalMathematicsCourse,
+  progress: PracticalMathProgressState,
+): boolean {
+  if (!isPracticalMathCourseFullyComplete(course, progress)) return false
+  const pct = practicalMathWeightedScorePercent(course, progress)
+  if (pct === null) return false
+  if (pct + 1e-9 < 75) return false
+  return practicalMathCapstoneComplete(progress)
 }
 
 /** Internal-key + course-slug echo so consumers that route by key find the right course. */

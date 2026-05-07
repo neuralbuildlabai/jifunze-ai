@@ -90,6 +90,8 @@ export const PRACTICAL_MATH_MODULES_09_12: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Read three real charts',
             content: 'Pull three charts. State purpose and takeaway in plain language.',
+            answerKey:
+              'Lesson anchors: (1) Bar East/West — purpose: compare regions; takeaway: West highest at $620k. (2) Line revenue — purpose: trend; takeaway: +25% over 6 months. (3) Pie with >6 slices — purpose unclear; prefer sorted bar for readability.',
           },
           {
             type: 'summary',
@@ -289,7 +291,7 @@ export const PRACTICAL_MATH_MODULES_09_12: StandaloneCourseModule[] = [
             content:
               '(1) 4% → 6% pp and %. (2) 8 → 10 per 100k = ?%. (3) "70% prefer" from 10 — questions?',
             answerKey:
-              '+2 pp, +50%; 25%; sample size, who, how phrased.',
+              '(1) +2 pp absolute; relative change (6−4)/4 = +50%. (2) Rate rises from 8/100k to 10/100k → +2 events/100k; relative change vs old rate (10−8)/8 = +25%. (3) Ask n, sampling frame, question wording, margin of error; 7/10 is not the same as “70%” without context.',
           },
           {
             type: 'summary',
@@ -349,6 +351,8 @@ export const PRACTICAL_MATH_MODULES_09_12: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'One real recommendation',
             content: 'Pick a real dataset; write a one-page Q/F/R/C.',
+            answerKey:
+              'Mirror lesson worked example: Q: shift budget to West? F: West $620k vs South $550k; West +12% YoY vs company +6%. R: pilot +15% spend next quarter with weekly KPI. C: only 2 quarters of data; check seasonality and definitions.',
           },
           {
             type: 'summary',
@@ -664,6 +668,8 @@ export const PRACTICAL_MATH_MODULES_09_12: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Estimate one real task',
             content: 'Pick one. Compute weighted; add 20% buffer; track actual; refine.',
+            answerKey:
+              'Lesson report task: best 2, likely 3, worst 5 → (2+4×3+5)/6 ≈ 3.17 h expected; +20% buffer ≈ 3.8 h calendar. Compare to actual hours logged; adjust worst-case upward if you always exceed likely.',
           },
           {
             type: 'summary',
@@ -729,6 +735,8 @@ export const PRACTICAL_MATH_MODULES_09_12: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Build next week',
             content: 'Block deep work / meetings / admin / breaks; one task to say no to.',
+            answerKey:
+              'Lesson capacity sketch: 168 − 56 sleep − 40 work − 5 commute − 14 meals − 7 care = 46 h discretionary. Allocate into blocks that sum to ≤46; if plan >46, move or drop one recurring meeting (name it explicitly).',
           },
           {
             type: 'summary',
@@ -791,6 +799,8 @@ export const PRACTICAL_MATH_MODULES_09_12: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Build a 5-task plan',
             content: 'Sketch durations, dependencies, critical path, buffer, parallel tasks.',
+            answerKey:
+              'Lesson chain A(4)→B(6)→D(5) with C(3) parallel to B: critical path 15 h; C finishes before D needs both B and C — slack on C = 15 − (4+3+5) if C on separate path — use your sketch to read slack; add 10–20% buffer on critical path only.',
           },
           {
             type: 'summary',
@@ -857,6 +867,8 @@ export const PRACTICAL_MATH_MODULES_09_12: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'One-week time audit',
             content: 'Log every 30 min for a week in 4–6 categories; compute percentages.',
+            answerKey:
+              'Example: 40 blocks deep work = 20 h → 20/112 ≈17.9% of waking work-week hours (112 ≈ 16×7). Meetings 25%, admin 15% — totals should sum to 100% of tracked time; if not, find missing category.',
           },
           {
             type: 'summary',
@@ -1103,6 +1115,8 @@ export const PRACTICAL_MATH_MODULES_09_12: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Three-method estimate',
             content: 'Estimate one project bottom-up, parametric, three-point.',
+            answerKey:
+              'Lesson website bottom-up = $10,750 labour + $1,000 materials = $11,750. Parametric example: 2,500×$150×1.25 = $468,750. PERT (25,40,70) → (25+160+70)/6 = $42.5k expected with spread (70−25)/6 ≈ $7.5k.',
           },
           {
             type: 'summary',
@@ -1167,6 +1181,8 @@ export const PRACTICAL_MATH_MODULES_09_12: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Build a real budget',
             content: 'Take a real project; build four-family budget; tiered contingency.',
+            answerKey:
+              'Lesson campaign: labour $13,550 + direct $11,500 + media $30,000 = $55,050; overhead 15%×labour = $2,032.50; subtotal $57,082.50; contingency 10% ≈ $5,708 → total ≈ $62,790 (round to $63k as in lesson narrative).',
           },
           {
             type: 'summary',
@@ -1225,6 +1241,8 @@ export const PRACTICAL_MATH_MODULES_09_12: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: "Level one team's week",
             content: 'Allocate planned hours across 4 weeks; if any exceeds capacity, propose levelling.',
+            answerKey:
+              'Lesson levelling: demand 200/150/300/100 vs cap 200 → move 50 from week 3 to weeks 2 and 4 → 200/200/200/150. Show before/after table and note remaining 50 overload in week 4 if you need zero overtime.',
           },
           {
             type: 'summary',
@@ -1290,6 +1308,8 @@ export const PRACTICAL_MATH_MODULES_09_12: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Run a status check',
             content: 'For a real project, compute CV and SV at recent checkpoint; corrective action.',
+            answerKey:
+              'Lesson checkpoint: BCWS $10k, BCWP $9k, ACWP $11.5k → CV = 9−11.5 = −$2.5k (over budget); SV = 9−10 = −$1k (behind schedule). Action: freeze scope or recover schedule on parallel tasks; control spend on remaining work packages.',
           },
           {
             type: 'summary',
@@ -1682,6 +1702,8 @@ export const PRACTICAL_MATH_MODULES_09_12: StandaloneCourseModule[] = [
             title: 'Build a tiny amortisation',
             content:
               '$50k loan at 6% for 5 years; first 6 months. Verify M1 ≈ $966.64.',
+            answerKey:
+              'Monthly rate 0.5%; n=60; payment ≈$966.64. M1 interest $50,000×0.005=$250; principal $716.64; balance $49,283.36. M2 interest $246.42; principal $720.22 — interest share falls each month as scheduled.',
           },
           {
             type: 'summary',

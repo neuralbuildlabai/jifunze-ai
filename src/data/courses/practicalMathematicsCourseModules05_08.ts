@@ -108,6 +108,8 @@ export const PRACTICAL_MATH_MODULES_05_08: StandaloneCourseModule[] = [
             title: 'Build your real budget',
             content:
               "Using your actual last-month statements, classify every transaction and total each category.",
+            answerKey:
+              'Sample (50/30/20 on $3,500 net): needs $1,750; wants $1,050; savings/debt $700. Show your own category sums; check needs + wants + savings = net within rounding; flag any category >40% of net for a second look.',
           },
           {
             type: 'summary',
@@ -166,6 +168,8 @@ export const PRACTICAL_MATH_MODULES_05_08: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Compare two real accounts',
             content: 'Build a one-page comparison: monthly fee, minimum, ATM fees, overdraft, APY.',
+            answerKey:
+              'Use lesson A vs B: A $12 + 5×$3 ATM = $27/mo; B $0 + 0×$2 = $0/mo (4 free). Annual gap ≈ $324 favouring B before APY. On $5,000 savings, 2.0% vs 1.0% APY adds ≈$50/yr — fold into same table.',
           },
           {
             type: 'summary',
@@ -235,6 +239,8 @@ export const PRACTICAL_MATH_MODULES_05_08: StandaloneCourseModule[] = [
             title: 'One debt, one plan',
             content:
               'Pick one debt. Compute minimum payment, one month interest, and timelines at minimum + extra.',
+            answerKey:
+              'Lesson template: $2,000 at 18% APR → daily ≈0.0493%; ~30-day interest ≈$29.58. If minimum $100, principal ≈$70 in month 1. Try +$100 extra: recompute next month interest on lower balance; note payoff months drop sharply vs minimum-only.',
           },
           {
             type: 'summary',
@@ -310,6 +316,8 @@ export const PRACTICAL_MATH_MODULES_05_08: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Two-loan compare',
             content: 'Compare two terms: principal, monthly payment, total interest.',
+            answerKey:
+              'Lesson $20k @ 6%: 5-yr ≈$386.66/mo, total ≈$23,200, interest ≈$3,200; 3-yr ≈$608.44/mo, total ≈$21,904, interest ≈$1,904. Shorter term saves ≈$1,296 interest but raises cash out ≈$222/mo.',
           },
           {
             type: 'summary',
@@ -377,6 +385,8 @@ export const PRACTICAL_MATH_MODULES_05_08: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Compute your effective rate',
             content: 'Total tax ÷ gross income.',
+            answerKey:
+              'Lesson sample: tax ≈$8,508 on $60,000 gross → effective 8,508 ÷ 60,000 ≈ 14.2%. Marginal on the next $5k is still 22% in that bracket, so expect ≈$1,100 more tax, not 14.2% × $5k.',
           },
           {
             type: 'summary',
@@ -1163,6 +1173,8 @@ export const PRACTICAL_MATH_MODULES_05_08: StandaloneCourseModule[] = [
             title: 'Build a unit-conversion mini-sheet',
             content:
               "B1 = 2.54. Column A: five inch values. Column B: =A2 * $B$1 → cm. Change B1 — every conversion updates.",
+            answerKey:
+              'If A2=10, B2 =10*$B$1 → 25.4 cm. A3=12 → 30.48 cm. Copying B2 down keeps $B$1 fixed. Change B1 to 2.540001 — all cm values rescale together.',
           },
           {
             type: 'summary',
@@ -1197,7 +1209,7 @@ export const PRACTICAL_MATH_MODULES_05_08: StandaloneCourseModule[] = [
             eyebrow: 'IF for branching logic',
             title: 'If true, do this; otherwise that',
             content:
-              '=IF(A1>=70, "Pass", "Fail"). Nested IF for grades. For more than 3 levels prefer IFS or a lookup table.',
+              '=IF(A1>=75, "Pass", "Fail"). Nested IF for grades. For more than 3 levels prefer IFS or a lookup table.',
           },
           {
             type: 'worked_example',
@@ -1218,7 +1230,7 @@ export const PRACTICAL_MATH_MODULES_05_08: StandaloneCourseModule[] = [
             eyebrow: 'Pause and check',
             title: 'Pick the right function',
             content:
-              '(a) total expenses; (b) flag scores below 50; (c) find unit price by name. Confirm: SUM; IF; VLOOKUP.',
+              '(a) total expenses; (b) flag scores below 60; (c) find unit price by name. Confirm: SUM; IF; VLOOKUP.',
           },
           {
             type: 'common_mistakes',
@@ -1238,6 +1250,8 @@ export const PRACTICAL_MATH_MODULES_05_08: StandaloneCourseModule[] = [
             title: 'Build a five-row gradebook',
             content:
               'Names, scores, total, average, pass/fail (IF), letter grade.',
+            answerKey:
+              'Row 2: B2 score; C2 =SUM($B$2:$B$6); D2 =AVERAGE($B$2:$B$6); E2 =IF(B2>=75,"Pass","Fail"). Letter grade: nested IF or IFS from thresholds (e.g. ≥90 A, ≥80 B, …).',
           },
           {
             type: 'summary',
@@ -1280,6 +1294,8 @@ export const PRACTICAL_MATH_MODULES_05_08: StandaloneCourseModule[] = [
             title: 'A 3-month cash-flow projection',
             content:
               'Beginning cash, cash-in (sum), cash-out (sum), net, ending. February beginning = January ending.',
+            answerKey:
+              'Sample: Jan start $10k; in $12k; out $9.5k; net +$2.5k; end $12.5k. Feb start $12.5k; in $11k; out $10k; net +$1k; end $13.5k. Mar start $13.5k; in $10k; out $11k; net −$1k; end $12.5k. Each ending becomes next beginning — no circular refs.',
           },
           {
             type: 'pause_and_check',
@@ -1305,6 +1321,8 @@ export const PRACTICAL_MATH_MODULES_05_08: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Build your real budget tracker',
             content: 'Income/expense/net/savings-rate with real numbers, formats, and absolute reference for any rate.',
+            answerKey:
+              'Lesson check: income $4,500; expenses $2,650; net $1,850; savings rate = 1,850 ÷ 4,500 ≈ 41.1% (format cell as %, not ×100 in formula). Tax in $B$1: each line = amount × $B$1.',
           },
           {
             type: 'summary',
@@ -1372,6 +1390,8 @@ export const PRACTICAL_MATH_MODULES_05_08: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Build one pivot',
             content: 'Take any list of transactions. Build a pivot with one row category and one column.',
+            answerKey:
+              'Lesson pattern: rows = product (or payee); columns = month; values = SUM of amount. Grand total should equal SUM(source column); if not, you likely filtered source rows.',
           },
           {
             type: 'summary',
@@ -1439,6 +1459,8 @@ export const PRACTICAL_MATH_MODULES_05_08: StandaloneCourseModule[] = [
             eyebrow: 'Practice task',
             title: 'Make one report-ready chart',
             content: 'Build one chart with title, axis labels, legend, currency formatting.',
+            answerKey:
+              'Checklist: line chart if months on X; currency 0 decimals on $ axis; title states the claim (“Revenue up 25% in 6 months”); legend only if needed; y-axis starts at 0 unless log scale justified.',
           },
           {
             type: 'summary',
@@ -1512,10 +1534,10 @@ export const PRACTICAL_MATH_MODULES_05_08: StandaloneCourseModule[] = [
       },
       {
         id: 'm07-q3',
-        question: "A1 score: 'Pass' if ≥70, else 'Fail'. Formula?",
+        question: "A1 score: 'Pass' if ≥75, else 'Fail'. Formula?",
         type: 'calculation',
-        correctAnswer: '=IF(A1>=70, "Pass", "Fail")',
-        explanation: 'Standard IF.',
+        correctAnswer: '=IF(A1>=75, "Pass", "Fail")',
+        explanation: 'Standard IF; threshold matches this course’s 75% pass bar.',
         relatedLesson: '7.2',
         difficulty: 'easy',
       },
@@ -1792,6 +1814,13 @@ export const PRACTICAL_MATH_MODULES_05_08: StandaloneCourseModule[] = [
             content: '240 units in 8 h = 30/h. Department: 5,000 / 400 = 12.5 units/labour-hour.',
           },
           {
+            type: 'worked_example',
+            eyebrow: 'Worked example',
+            title: 'Units per hour and efficiency',
+            content:
+              'Given: 220 units in 8 h; standard 25 u/h.\n\nFormula: rate R = units ÷ hours; efficiency = R ÷ R_std.\n\nSubstitute: R = 220 ÷ 8 = 27.5 u/h.\n\nCalculate: efficiency = 27.5 ÷ 25 = 1.10.\n\nAnswer: 110% of standard.\n\nReasonableness: 27.5 is a little above 25 — about 10% — matches 110%.',
+          },
+          {
             type: 'concept_explanation',
             eyebrow: 'Efficiency',
             title: 'Actual vs standard',
@@ -1850,6 +1879,13 @@ export const PRACTICAL_MATH_MODULES_05_08: StandaloneCourseModule[] = [
             title: 'Turnover, days, reorder',
             content:
               'Turnover = COGS ÷ avg inventory. Days = 365 ÷ turnover. Reorder = daily usage × lead time + safety.',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example',
+            title: 'Reorder point',
+            content:
+              'Given: daily usage 200 units, lead time 7 days, safety stock 500 units.\n\nFormula: ROP = (daily × lead) + safety.\n\nSubstitute: (200 × 7) + 500.\n\nCalculate: 1,400 + 500 = 1,900.\n\nAnswer: reorder at 1,900 units on hand.\n\nReasonableness: 7 days of demand is 1,400 — safety adds less than half a week at 200/day — plausible buffer.',
           },
           {
             type: 'concept_explanation',

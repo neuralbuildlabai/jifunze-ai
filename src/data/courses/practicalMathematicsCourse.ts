@@ -81,11 +81,12 @@ export const practicalMathematicsCourse: PracticalMathematicsCourse = {
 
   completionRequirements: {
     progression: 'sequential',
-    rule: 'Complete each lesson and pass the module quiz before unlocking the next module.',
+    rule:
+      'Study every lesson (mark as studied), pass each module quiz at 75% or higher, keep your overall quiz average at 75% or higher, complete the Module 16 capstone artifact, then mark the capstone complete in the app to unlock the printable Certificate of Completion.',
     passThreshold:
-      '70% per module quiz (a minimum of 6 of 8 correct on shorter quizzes; ceil(0.70 × N) correct on longer ones).',
+      '75% or higher on each module quiz: ceil(0.75 × N) correct answers, where N is the quiz length. Weighted overall score across all module quizzes must be 75% or higher. There is no 70% bar and no separate “6 of 8” shortcut for this course.',
     capstone:
-      'Submit the Module 16 capstone artifact showing applied judgment across at least four prior modules.',
+      'Module 16: produce your integration artifact (question, numbers, calculations, assumptions, limits, professional verification list), then confirm completion in the course UI. This is a learner self-check until an upload flow exists.',
   },
 
   assessmentApproach:

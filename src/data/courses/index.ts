@@ -53,6 +53,19 @@ export {
 } from './standaloneCoursesCatalog'
 
 export {
+  slugifyForUrlSegment,
+  getStandaloneLessonSlug,
+  getStandaloneCoursePath,
+  getStandaloneModulePath,
+  getStandaloneLessonPath,
+  getStandaloneCertificatePath,
+  getStandaloneFirstLessonPath,
+  findStandaloneLesson,
+  getStandaloneLessonNavTargets,
+  type StandaloneLessonNavTargets,
+} from './standaloneCourseLearnPaths'
+
+export {
   practicalMathFlagshipCurriculum,
   practicalMathFlagshipModuleId,
   PRACTICAL_MATH_MODULE_ID_PREFIX,
@@ -78,7 +91,11 @@ export {
   moduleFullyComplete,
   findNextPracticalMathModule,
   isPracticalMathCourseFullyComplete,
+  practicalMathWeightedScorePercent,
+  practicalMathCertificateEligible,
+  practicalMathCapstoneComplete,
   PRACTICAL_MATH_PROGRESSION_KEY,
+  PRACTICAL_MATH_QUIZ_PASS_RATE,
   type PracticalMathProgressState,
   type PracticalMathQuizScore,
 } from './practicalMathematicsProgression'

@@ -38,77 +38,68 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
         title: 'Building Math Confidence',
         estimatedMinutes: 35,
         learnerGoal:
-          'Reframe math anxiety as a learnable skill problem and choose deliberate confidence-building moves.',
+          'Use a repeatable estimate → calculate → verify habit and a small written toolkit so you can work numbers calmly and accurately.',
         blocks: [
           {
             type: 'concept_explanation',
-            eyebrow: 'Where adult math anxiety comes from',
-            title: 'Anxiety is information, not identity',
+            eyebrow: 'What this means',
+            title: 'Anxiety signals risk — reduce it with process',
             content:
-              'Math anxiety is a feeling of tension, dread, or self-doubt that gets in the way of doing math you are actually capable of. It often shows up as avoiding tasks involving numbers, freezing when a calculator appears, or labelling yourself "not a math person." That label is not a fact about you — it is usually a story built on a few negative classroom experiences. Adults learn math differently from children: with more context, more reasons, more tools, and more patience. The confidence you build in this course will not come from sudden insight; it will come from doing small, real calculations and verifying them until the fear stops being useful.',
+              'When stakes feel high, write one estimate before you touch a calculator. That single line tells you if the final answer is in the right neighbourhood.',
           },
           {
             type: 'concept_explanation',
-            eyebrow: 'Mindset that helps',
-            title: 'Fixed mindset vs growth mindset, in plain language',
+            eyebrow: 'Rule',
+            title: 'Estimate → calculate → verify',
             content:
-              "Fixed mindset says: 'I can't do this.' Growth mindset says: 'I can't do this yet.' Fixed mindset reads a mistake as proof of being bad at math. Growth mindset reads a mistake as data about which step needs more practice. In real life, mistakes are the cheapest teacher you have. You are aiming for a steady habit: notice the discouraged thought, replace it with a question ('what would help me here?'), and try one more concrete step.",
-          },
-          {
-            type: 'concept_explanation',
-            eyebrow: 'Real-world vs school math',
-            title: 'Different rules of the game',
-            content:
-              "School math often rewards speed, memorisation, and one right answer with no tools. Real-world math rewards accuracy, judgment, and using whatever tool is appropriate — calculator, spreadsheet, written workings, or a colleague's review. You are allowed to slow down, write things out, sanity-check with a friend, and pick a different method when the first one is awkward. None of that is cheating; it is professional practice.",
+              'Let E be your estimate and C your calculated value. If |C − E| is huge relative to |E| (when E ≠ 0), assume a wrong unit, misplaced decimal, or wrong operation until proven otherwise.',
           },
           {
             type: 'worked_example',
             eyebrow: 'Worked example',
-            title: 'Calculator vs mental math: pick the right tool',
+            title: 'Subtotal check (two items)',
             content:
-              'At a market and want to know if KES 1,250 is roughly enough for two items priced KES 480 and KES 720? Mental math: 480 ≈ 500, 720 ≈ 700, total ≈ 1,200. KES 1,250 is enough with a small margin. Paying a contractor: $1,247.83 materials, $612.50 labour, $185 delivery, plus 7% tax on materials? Mental math gives you a rough total, but the precise figure must come from a calculator or spreadsheet because the consequences of a small error matter.',
+              'Given: KES 480 and KES 720.\n\nFormula: total T = A + B.\n\nSubstitute: T = 480 + 720.\n\nCalculate: T = 1,200.\n\nAnswer: wallet KES 1,250 is enough.\n\nReasonableness: 500 + 700 = 1,200 (rounded) — matches.',
             examples: [
-              'Mental math wins: tipping, grocery estimates, scaling a recipe, sanity-checking a bill.',
-              'Calculator wins: financial decisions, multi-step calculations, anything you have to defend.',
-              'Best practice: estimate first, calculate precisely, then re-estimate to check the precise answer is reasonable.',
+              'Mental: grocery running totals, tips.',
+              'Written + calculator: invoices with tax lines.',
             ],
           },
           {
             type: 'pause_and_check',
-            eyebrow: 'Pause and check',
-            title: 'Your last math moment',
+            eyebrow: 'Try it',
+            title: 'Estimate then calculate',
             content:
-              'Think of one moment in the last week where numbers came up and you felt unsure. What was the situation, what did you actually need, and which tool would have helped most? Write it in one sentence. The point is to attach this course to real situations from day one.',
+              'Estimate 37 × 22 in one line (hint: 40 × 20). Then compute 37 × 22 = 814. Does your estimate land near 814?',
           },
           {
             type: 'common_mistakes',
-            eyebrow: 'Watch for these',
-            title: 'Confidence traps',
+            eyebrow: 'Common mistakes',
+            title: 'What trips adults up',
             content:
-              "Avoiding calculations entirely because they feel risky; treating a calculator answer as automatically correct without estimating; comparing yourself to people who do math for a living; trying to relearn 'all of math' before doing anything practical; refusing to write your steps down on paper because 'real adults do it in their head.'",
+              'Skipping the estimate line; trusting a display without units; rounding every intermediate step in a chain.',
           },
           {
             type: 'real_world_application',
-            eyebrow: 'Where this shows up',
-            title: 'At work, at home, in business',
-            content:
-              "A junior employee who can sanity-check a quote in their head saves a manager from a bad decision. A parent who can estimate a grocery total avoids overdrafts. A small-business owner who can verify a supplier invoice catches errors that a busy bookkeeper might miss. None of this requires advanced math — only a calm habit of estimating, calculating, and checking.",
+            eyebrow: 'Real-world use',
+            title: 'Where this shows up',
+            content: 'Quotes, payslips, receipts, and schedules all reward the same three-step habit.',
           },
           {
             type: 'practice_task',
             eyebrow: 'Practice task',
-            title: 'Build your personal math toolkit',
+            title: 'Build your toolkit list',
             content:
-              "List the five tools you will actually use in this course: a calculator, a spreadsheet app, a notebook or notes app for workings, a place for reference values (currency conversions, common percentages), and a reminder rule — 'estimate, calculate, verify.' Save the list somewhere you will see it.",
-            learnerTask:
-              "Write a one-line confidence statement you can reread when math anxiety shows up. Example: 'I do not have to be fast — I have to be accurate, and I am allowed to use tools.'",
+              'List: calculator, spreadsheet, notebook for steps, one reference strip (common %, conversions), and the rule “estimate → calculate → verify.”',
+            learnerTask: 'Write one sentence you will reread before important math (your own words).',
+            answerKey:
+              'Example toolkit: phone calculator; spreadsheet; paper; sticky with “10% = ÷10 on base.” Example sentence: I estimate first, calculate on paper, then compare to my estimate before I share the number.',
           },
           {
             type: 'summary',
-            eyebrow: 'Lesson 1.1 summary',
-            title: 'Confidence is a habit',
-            content:
-              'Anxiety about math is information about which habits to build, not a verdict on your ability. Adults learn math by attaching it to real situations, using tools openly, and verifying their work. Your toolkit is set; your mindset is reset; your next job is to develop number sense.',
+            eyebrow: 'Lesson wrap-up',
+            title: 'Lesson 1.1',
+            content: 'You now have a concrete verification habit that supports every later module.',
           },
         ],
       },
@@ -338,6 +329,13 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
               'Decide quickly whether each is reasonable: (a) MPG of 25 for a typical car driving 300 miles on 12 gallons; (b) hourly rate of $500 implied by a $50,000 annual salary; (c) sale price $90 after 25% off an original $120.',
           },
           {
+            type: 'common_mistakes',
+            eyebrow: 'Common mistakes',
+            title: 'Verification skips',
+            content:
+              'Checking only the final total (misses a duplicated line). Using gross pay in a budget line that should use net. Dividing in the wrong direction on unit price (total ÷ units vs units ÷ total).',
+          },
+          {
             type: 'real_world_application',
             eyebrow: 'Where this shows up',
             title: 'Receipts, payslips, quotes',
@@ -350,6 +348,8 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
             title: 'Verify a real document',
             content:
               'Take one real receipt, payslip, or invoice from this week. Re-do the totals using estimation first, then a calculator, then check at least one line with the inverse operation.',
+            answerKey:
+              'Sample: subtotal lines 12.99 + 8.47 + 23.50 = 44.96; inverse 44.96 − 23.50 = 21.46 then 21.46 − 8.47 = 12.99 ✓. If a line were 129.9 instead of 12.99, estimate 10× too high would flag it before you pay.',
           },
           {
             type: 'summary',
@@ -835,6 +835,8 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
             title: 'Three real-precision calls',
             content:
               'Pick three numbers from a recent document. For each, decide what precision is appropriate and why.',
+            answerKey:
+              'Sample: (1) Bank balance 1,247.83 → two decimals (money). (2) Room width 3.482 m from a laser tape → one decimal cm (3.48 m) unless spec demands more. (3) Survey “62% agree” → whole percent for headline, note sample size in footnote.',
           },
           {
             type: 'summary',
@@ -892,6 +894,8 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
             title: 'Five estimates this week',
             content:
               'Pick five real numbers. Estimate each before you calculate. Note where your estimate was off enough to need a second look.',
+            answerKey:
+              'Lesson anchors: 18% of $73.25 ≈ $13.19 (pause check). 30% off $85 → $59.50. 5/8 of 240 = 150. Your five entries should each show estimate → exact → |error| as % of exact.',
           },
           {
             type: 'summary',
@@ -1150,6 +1154,8 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
             title: 'Five real ratios from your context',
             content:
               'Pick five real ratios. Write each in colon form, simplify, and label part-to-part or part-to-whole.',
+            answerKey:
+              'Sample (pause numbers): stocks $30k, bonds $20k, total $50k → part-to-part 30:20 = 3:2; part-to-whole stocks:total 30:50 = 3:5 = 60%. Another: 12 boys / 18 girls → 2:3 part-to-part; boys:total 12:30 = 2:5 = 40%.',
           },
           {
             type: 'summary',
@@ -1602,6 +1608,13 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
               'US customary in domestic US construction, manufacturing, recipes, and road signs. Metric in international business, science, medicine, and most countries.',
           },
           {
+            type: 'worked_example',
+            eyebrow: 'Worked example',
+            title: 'cm → inches',
+            content:
+              'Given: shelf length 96 cm.\n\nFormula: inches = cm ÷ 2.54.\n\nSubstitute: 96 ÷ 2.54.\n\nCalculate: ≈ 37.795…\n\nAnswer: about 37.8 in (round to what your tape shows).\n\nReasonableness: 2.54 × 38 ≈ 96.5 ✓',
+          },
+          {
             type: 'pause_and_check',
             eyebrow: 'Pause and check',
             title: 'Match the prefix',
@@ -1620,6 +1633,8 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
             title: 'Build a one-page reference',
             content:
               'Write a one-page reference with the seven most common conversions you use: in/cm, ft/m, mi/km, oz/g, lb/kg, cup/mL, gal/L.',
+            answerKey:
+              'Include at least these factors: 1 in = 2.54 cm; 1 m = 3.281 ft; 1 mi ≈ 1.609 km; 1 oz ≈ 28.35 g; 1 kg ≈ 2.205 lb; 1 US cup ≈ 237 mL; 1 US gal ≈ 3.785 L. Test: 96 cm ÷ 2.54 ≈ 37.8 in (matches lesson 4.1 worked example).',
           },
           {
             type: 'summary',
@@ -1668,6 +1683,8 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
             title: 'Three conversions, narrated',
             content:
               '(1) 5 ft 8 in = 68 in. (2) 150 cm = 1.5 m. (3) 75 kg ≈ 165 lb.',
+            answerKey:
+              '(1) 5×12+8 = 68 in. (2) 150 ÷ 100 = 1.5 m. (3) 75 × 2.205 ≈ 165.4 lb (or 75 ÷ 0.4536).',
           },
           {
             type: 'pause_and_check',
@@ -1861,6 +1878,13 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
               'A spec of 10.0 cm ± 0.1 cm means acceptable range 9.9 to 10.1 cm. 500 g ± 5 g: range 495–505; 508 g rejected.',
           },
           {
+            type: 'worked_example',
+            eyebrow: 'Worked example',
+            title: 'Tolerance on a nominal weight',
+            content:
+              'Given: nominal 500 g, tolerance ±5 g. Three bags: 497 g, 503 g, 508 g.\n\nFormula: acceptable if 495 ≤ m ≤ 505.\n\nSubstitute: test each m.\n\nCalculate: 497 ✓, 503 ✓, 508 ✗.\n\nAnswer: reject 508 g bag.\n\nReasonableness: 508 is 1.6% above nominal vs ±1% band — outside spec.',
+          },
+          {
             type: 'concept_explanation',
             eyebrow: 'Significant figures',
             title: 'How many digits the measurement actually carries',
@@ -1893,6 +1917,8 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
             title: 'Three precision calls',
             content:
               'Pick three numbers from a recent document. Decide what precision is appropriate.',
+            answerKey:
+              'Use lesson tolerance drill: 500 g ± 5 g → band 495–505 g. Bags 497 ✓, 503 ✓, 508 ✗. For each of your three numbers, state decimal places kept and one sentence why that matches the decision (money vs measure vs headline %).',
           },
           {
             type: 'summary',
