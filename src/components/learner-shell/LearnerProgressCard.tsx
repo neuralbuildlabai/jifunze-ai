@@ -21,9 +21,9 @@ export function LearnerProgressCard({
 }: Props) {
   return (
     <section className={learnerShellTokens.card} data-testid={testId}>
-      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">{title}</p>
-      <p className="mt-2 font-mono text-2xl font-semibold tabular-nums text-white">{percent}%</p>
-      <ul className="mt-3 space-y-1.5 text-sm text-zinc-400">
+      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-stone-500">{title}</p>
+      <p className="mt-2 font-mono text-2xl font-semibold tabular-nums text-zinc-900">{percent}%</p>
+      <ul className="mt-3 space-y-1.5 text-sm text-stone-600">
         {lines.map((line, i) => (
           <li key={i}>{line}</li>
         ))}

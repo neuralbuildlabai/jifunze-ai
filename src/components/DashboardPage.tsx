@@ -1,10 +1,10 @@
+import { Navigate } from 'react-router-dom'
 import { useAppAccess } from '../access/useAppAccess'
 import { humanAccessTierLabel } from '../access/appAccess'
 import { useAuth } from '../auth/AuthContext'
 import { isSupabaseConfigured } from '../config/supabaseEnv'
 import { LEARNER_MONETIZATION_UI_DISABLED } from '../learner/learnerCommerceConstants'
 import { DashboardTeamAssignmentsWidget } from './team/DashboardTeamAssignmentsWidget'
-import { DashboardLearnerHub } from './DashboardLearnerHub'
 import { DashboardAdminToolsSection } from './DashboardAdminToolsSection'
 import { DashboardSuperAdminHub } from './DashboardSuperAdminHub'
 
@@ -12,7 +12,7 @@ const cardClass =
   'rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 shadow-[0_12px_40px_rgba(0,0,0,0.2)] ring-1 ring-white/[0.04]'
 
 /**
- * Role-specific dashboard: super-admin operations hub, learner learning-first hub, or admin workspace view without learner pathway mixing.
+ * Role-specific dashboard for operators (super-admin, institution, platform). Learners are redirected to `/my-learning`.
  */
 export function DashboardPage() {
   const {
@@ -67,6 +67,10 @@ export function DashboardPage() {
     )
   }
 
+  if (navVariant === 'learner') {
+    return <Navigate to="/my-learning" replace />
+  }
+
   const email = user?.email ?? '—'
   const tierLabel = humanAccessTierLabel(tier)
   const maxWidth = navVariant === 'super_admin' ? 'max-w-5xl' : 'max-w-3xl'
@@ -80,17 +84,12 @@ export function DashboardPage() {
           Manage platform operations, learning content, and internal review.
         </p>
       </header>
-    ) : navVariant === 'learner' ? (
-      <header className="pb-8">
-        <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-[1.65rem]">Welcome back.</h1>
-        <p className="mt-2 max-w-md text-sm leading-relaxed text-zinc-400">Continue your course and track your progress.</p>
-      </header>
     ) : (
       <header className="border-b border-white/[0.06] pb-6">
         <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">Workspace</p>
         <h1 className="mt-1 text-xl font-semibold text-white">Operations dashboard</h1>
         <p className="mt-2 max-w-2xl text-sm text-zinc-400">
-          Assign training, review learner progress, and run workspace tools—learner-first views stay in Catalog and Pathways.
+          Assign training, review learner progress, and run workspace tools—learner views stay in the public catalog and My Learning.
         </p>
       </header>
     )
@@ -101,8 +100,6 @@ export function DashboardPage() {
 
       {navVariant === 'super_admin' ? <DashboardSuperAdminHub /> : null}
 
-      {navVariant === 'learner' ? <DashboardLearnerHub /> : null}
-
       {navVariant === 'institution_admin' || navVariant === 'platform_admin' ? (
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
@@ -111,27 +108,23 @@ export function DashboardPage() {
         </div>
       ) : null}
 
-      {navVariant === 'learner' ? null : (
-        <div className="grid gap-4 sm:grid-cols-2">
-          <section className={cardClass}>
-            <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Account</h2>
-            <p className="mt-2 text-sm text-zinc-200">{email}</p>
-          </section>
-          <section className={cardClass}>
-            <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Role</h2>
-            <p className="mt-2 text-sm font-medium text-zinc-100">{tierLoading ? 'Loading…' : tierLabel}</p>
-            {LEARNER_MONETIZATION_UI_DISABLED ? (
-              <p className="mt-1 text-[11px] leading-relaxed text-zinc-500">
-                Administrative actions are enforced on the server.
-              </p>
-            ) : (
-              <p className="mt-1 text-[11px] leading-relaxed text-zinc-500">
-                Course access follows your subscription or purchases. Administrative actions are enforced on the server too.
-              </p>
-            )}
-          </section>
-        </div>
-      )}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <section className={cardClass}>
+          <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Account</h2>
+          <p className="mt-2 text-sm text-zinc-200">{email}</p>
+        </section>
+        <section className={cardClass}>
+          <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Role</h2>
+          <p className="mt-2 text-sm font-medium text-zinc-100">{tierLoading ? 'Loading…' : tierLabel}</p>
+          {LEARNER_MONETIZATION_UI_DISABLED ? (
+            <p className="mt-1 text-[11px] leading-relaxed text-zinc-500">Administrative actions are enforced on the server.</p>
+          ) : (
+            <p className="mt-1 text-[11px] leading-relaxed text-zinc-500">
+              Course access follows your subscription or purchases. Administrative actions are enforced on the server too.
+            </p>
+          )}
+        </section>
+      </div>
 
       {navVariant === 'super_admin' ? null : (
         <DashboardAdminToolsSection
@@ -141,20 +134,18 @@ export function DashboardPage() {
         />
       )}
 
-      {navVariant === 'learner' ? null : (
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06] pt-6">
-          <p className="text-[11px] text-zinc-600">Need help? Open Settings or sign out and back in after confirming email.</p>
-          <button
-            type="button"
-            disabled={signOutPending}
-            onClick={() => void signOut()}
-            className="rounded-lg border border-zinc-600 bg-zinc-800/80 px-3 py-1.5 text-xs text-zinc-200 hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
-            data-testid="dashboard-sign-out"
-          >
-            Sign out
-          </button>
-        </div>
-      )}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06] pt-6">
+        <p className="text-[11px] text-zinc-600">Need help? Open Settings or sign out and back in after confirming email.</p>
+        <button
+          type="button"
+          disabled={signOutPending}
+          onClick={() => void signOut()}
+          className="rounded-lg border border-zinc-600 bg-zinc-800/80 px-3 py-1.5 text-xs text-zinc-200 hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
+          data-testid="dashboard-sign-out"
+        >
+          Sign out
+        </button>
+      </div>
     </div>
   )
 }

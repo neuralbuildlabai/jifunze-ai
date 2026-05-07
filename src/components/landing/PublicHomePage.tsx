@@ -60,8 +60,8 @@ export function PublicHomePage() {
           headingId="public-home-hero-heading"
           primaryCtaTestId="landing-hero-primary-cta"
           primaryCtaTo={LEGAL_ROUTES.learn}
-          secondaryCtaLabel={supabase && !user ? 'Start Free' : 'View Learning Paths'}
-          secondaryCtaTo={supabase && !user ? LEGAL_ROUTES.authSignUp : LEGAL_ROUTES.paths}
+          secondaryCtaLabel={supabase && !user ? 'Start Free' : 'Browse schools'}
+          secondaryCtaTo={supabase && !user ? LEGAL_ROUTES.authSignUp : '/learn#schools'}
           belowCtaSlot={
             <TrustBoundaryStrip
               variant="inline"

@@ -61,6 +61,8 @@ import { LearningDiscoveryHubPage } from './components/learn/LearningDiscoveryHu
 import { LearningSchoolCatalogPage } from './components/learn/LearningSchoolCatalogPage'
 import { FlagshipCourseDetailPage } from './components/learn/FlagshipCourseDetailPage'
 import { FlagshipCourseSessionPage } from './components/learn/FlagshipCourseSessionPage'
+import { StandaloneCourseDetailPage } from './components/learn/StandaloneCourseDetailPage'
+import { StandaloneModuleDetailPage } from './components/learn/StandaloneModuleDetailPage'
 import { EXTENDED_PUBLIC_LIBRARY_CONFIGS } from './data/learning/extendedPublicLibraryConfigs'
 import {
   AGENTIC_AI_REAL_WORK_LANDING_PATH,
@@ -88,8 +90,6 @@ import type { EnvCheckResult } from './lib/envCheck'
 import { PUBLIC_AI_FOUNDATIONS_BASE_PATH } from './data/publicStarterLibraries/aiFoundations'
 import { LEGAL_ROUTES } from './training/trustCopy'
 import { MaintenancePublicGate } from './components/maintenance/MaintenancePublicGate'
-import { EmployablePathwaysPage } from './components/pathways/EmployablePathwaysPage'
-import { PathwayDetailPage } from './components/pathways/PathwayDetailPage'
 import { NotFoundPage } from './components/NotFoundPage'
 
 function RedirectLegacyLibrariesAiFoundationsToCanonical() {
@@ -164,8 +164,8 @@ export default function App() {
         {LEARNER_MONETIZATION_UI_DISABLED ? (
           <Route path="/settings/subscription" element={<PublicPausedSubscriptionPage />} />
         ) : null}
-        <Route path="/paths" element={<EmployablePathwaysPage />} />
-        <Route path="/paths/:pathwaySlug" element={<PathwayDetailPage />} />
+        <Route path="/paths" element={<Navigate to={{ pathname: '/learn', hash: 'schools' }} replace />} />
+        <Route path="/paths/:pathwaySlug" element={<Navigate to={{ pathname: '/learn', hash: 'schools' }} replace />} />
         <Route path="/learn" element={<LearningDiscoveryHubPage />} />
         <Route path="/learn/school/:schoolId" element={<LearningSchoolCatalogPage />} />
         <Route path="/learn/category/:slug" element={<LearningCategoryPage />} />
@@ -178,6 +178,11 @@ export default function App() {
         <Route path="/learn/courses/:slug" element={<FlagshipCourseDetailPage />} />
         <Route path="/learn/checkout" element={<LearnerCheckoutPage />} />
         <Route path="/learn/readiness/:slug" element={<ReadinessChallengePage />} />
+        <Route
+          path="/learn/:standaloneCourseSlug/modules/:moduleSlug"
+          element={<StandaloneModuleDetailPage />}
+        />
+        <Route path="/learn/:standaloneCourseSlug" element={<StandaloneCourseDetailPage />} />
         <Route path="/library/ai-foundations" element={<PublicAiFoundationsLibraryPage />} />
         <Route path="/library/ai-foundations/:lessonSlug" element={<PublicAiFoundationsLessonPage />} />
         <Route path="/library/ai-labs" element={<PublicAiTeachingLabsPage />} />

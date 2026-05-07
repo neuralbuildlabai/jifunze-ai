@@ -1,33 +1,36 @@
-/** Shared layout tokens for learner-facing surfaces — calm, premium, education-first. */
+/**
+ * Learner workspace shell — warm / light chrome aligned with `/learn` and the public homepage.
+ * Used only when `navVariant === 'learner'` inside {@link WorkspaceShell}.
+ */
 export const learnerShellTokens = {
   workspaceBg:
-    'min-h-screen w-full bg-[#09090b] bg-[radial-gradient(ellipse_100%_60%_at_50%_-8%,rgba(124,58,237,0.08),transparent_52%),linear-gradient(180deg,rgb(16,16,20)_0%,rgb(10,10,12)_48%,rgb(8,8,10)_100%)] text-zinc-100 antialiased',
+    'min-h-screen w-full bg-[#faf8f5] bg-[radial-gradient(ellipse_100%_50%_at_50%_-10%,rgba(255,237,213,0.55),transparent_50%)] text-zinc-900 antialiased [color-scheme:light]',
   workspaceInner: 'relative mx-auto max-w-3xl px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-10',
-  workspaceHeaderBorder: 'border-b border-white/[0.07]',
-  mutedEyebrow: 'text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500',
-  pageTitle: 'text-xl font-semibold tracking-tight text-white sm:text-2xl',
-  pagePurpose: 'mt-2 max-w-2xl text-sm leading-relaxed text-zinc-400',
+  workspaceHeaderBorder: 'border-b border-stone-200/90',
+  mutedEyebrow: 'text-[11px] font-medium uppercase tracking-[0.14em] text-stone-500',
+  pageTitle: 'text-xl font-semibold tracking-tight text-zinc-900 sm:text-2xl',
+  pagePurpose: 'mt-2 max-w-2xl text-sm leading-relaxed text-stone-600',
   navLink:
-    'rounded-md px-2.5 py-1.5 text-[13px] font-medium text-zinc-400 transition-colors hover:bg-white/[0.04] hover:text-zinc-100',
-  navLinkActive: 'bg-white/[0.07] text-zinc-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]',
-  /** Secondary top-level item (e.g. Pathways) — still reachable, visually quieter. */
+    'rounded-lg px-2.5 py-1.5 text-[13px] font-medium text-stone-600 transition-colors hover:bg-orange-500/10 hover:text-zinc-900',
+  navLinkActive: 'bg-orange-500/12 text-zinc-900 shadow-[inset_0_1px_0_rgba(234,88,12,0.15)]',
+  /** Reserved for secondary nav items if needed */
   navLinkMuted:
-    'rounded-md px-2 py-1.5 text-[12px] font-medium text-zinc-500 transition-colors hover:bg-white/[0.03] hover:text-zinc-300',
-  navLinkMutedActive: 'bg-white/[0.05] text-zinc-300',
-  card: 'rounded-2xl border border-white/[0.07] bg-white/[0.025] px-5 py-5 shadow-[0_20px_50px_rgba(0,0,0,0.35)] backdrop-blur-[2px] sm:px-6',
+    'rounded-md px-2 py-1.5 text-[12px] font-medium text-stone-500 transition-colors hover:bg-stone-100 hover:text-stone-700',
+  navLinkMutedActive: 'bg-stone-100 text-stone-800',
+  card: 'rounded-2xl border border-stone-200/90 bg-white px-5 py-5 shadow-[0_20px_50px_-24px_rgba(120,53,15,0.15)] sm:px-6',
   cardEmphasis:
-    'rounded-2xl border border-violet-500/20 bg-[linear-gradient(145deg,rgba(124,58,237,0.09)_0%,rgba(255,255,255,0.03)_45%,rgba(9,9,11,0.4)_100%)] px-5 py-6 shadow-[0_24px_60px_rgba(0,0,0,0.4)] sm:px-7',
+    'rounded-2xl border border-orange-200/80 bg-gradient-to-br from-orange-50 via-white to-rose-50/80 px-5 py-6 shadow-[0_24px_50px_-20px_rgba(234,88,12,0.18)] sm:px-7',
   cardCompact:
-    'rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-4 shadow-[0_12px_36px_rgba(0,0,0,0.28)] sm:px-5 sm:py-5',
-  cardTitle: 'text-[15px] font-semibold tracking-tight text-white',
-  cardTitleSm: 'text-sm font-semibold tracking-tight text-white',
-  cardMuted: 'mt-2 text-sm leading-relaxed text-zinc-400',
-  cardMutedSm: 'mt-1.5 text-[13px] leading-relaxed text-zinc-500',
-  specRow: 'mt-3 flex flex-wrap gap-x-5 gap-y-1.5 text-[13px] text-zinc-400',
+    'rounded-2xl border border-stone-200/80 bg-white px-4 py-4 shadow-[0_12px_36px_-20px_rgba(120,53,15,0.12)] sm:px-5 sm:py-5',
+  cardTitle: 'text-[15px] font-semibold tracking-tight text-zinc-900',
+  cardTitleSm: 'text-sm font-semibold tracking-tight text-zinc-900',
+  cardMuted: 'mt-2 text-sm leading-relaxed text-stone-600',
+  cardMutedSm: 'mt-1.5 text-[13px] leading-relaxed text-stone-600',
+  specRow: 'mt-3 flex flex-wrap gap-x-5 gap-y-1.5 text-[13px] text-stone-600',
   primaryButton:
-    'inline-flex min-h-[2.5rem] items-center justify-center rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-violet-950/30 transition hover:bg-violet-500',
+    'inline-flex min-h-[2.5rem] items-center justify-center rounded-full bg-gradient-to-r from-orange-500 via-orange-500 to-rose-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-orange-500/25 transition hover:brightness-105',
   ghostButton:
-    'inline-flex min-h-[2.5rem] items-center justify-center rounded-lg border border-white/[0.1] px-4 py-2 text-sm font-medium text-zinc-200 transition hover:bg-white/[0.05]',
+    'inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-stone-300/90 bg-white px-4 py-2 text-sm font-medium text-zinc-800 transition hover:border-stone-400 hover:bg-stone-50',
   textButton:
-    'inline-flex min-h-[2.25rem] items-center justify-center rounded-lg px-2 text-sm font-medium text-violet-300/95 transition hover:text-violet-200',
+    'inline-flex min-h-[2.25rem] items-center justify-center rounded-lg px-2 text-sm font-medium text-orange-700 transition hover:text-orange-800',
 } as const

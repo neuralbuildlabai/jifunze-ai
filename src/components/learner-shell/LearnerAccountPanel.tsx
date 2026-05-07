@@ -10,8 +10,8 @@ type Props = {
 export function LearnerAccountPanel({ email, signOut, children }: Props) {
   return (
     <section className={learnerShellTokens.card} data-testid="learner-account-panel">
-      <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Account</h2>
-      <p className="mt-2 text-sm text-zinc-200">{email}</p>
+      <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-stone-500">Account</h2>
+      <p className="mt-2 text-sm text-zinc-900">{email}</p>
       {children ? <div className="mt-4 space-y-3">{children}</div> : null}
       <div className="mt-5">{signOut}</div>
     </section>

@@ -20,6 +20,8 @@
     "verify:flagship-merge": "tsx scripts/verify-flagship-merge.ts",
     "verify:pathway-remote-merge": "tsx scripts/verify-pathway-remote-merge.ts",
     "verify:course1-ai-essentials": "tsx scripts/verify-course1-ai-essentials-continuity.ts",
+    "verify:practical-math": "tsx scripts/verify-practical-mathematics-continuity.ts",
+    "test:practical-math-progression": "tsx scripts/test-practical-mathematics-progression.ts",
     "verify:readiness-adaptive": "tsx scripts/verify-readiness-adaptive.ts",
     "validate:training": "tsx scripts/validate-training-artifacts.ts",
     "audit:flagship-depth": "tsx scripts/audit-flagship-override-depth.ts",

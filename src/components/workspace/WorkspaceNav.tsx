@@ -20,8 +20,8 @@ function OperationalAdminNav() {
       <NavLink to={LEGAL_ROUTES.learn} className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
         Catalog
       </NavLink>
-      <NavLink to={LEGAL_ROUTES.paths} className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
-        Pathways
+      <NavLink to="/learn#schools" className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
+        Schools
       </NavLink>
       <NavLink to="/team/assignments" className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
         Assignments
@@ -56,8 +56,8 @@ function SuperAdminNav() {
       <NavLink to={LEGAL_ROUTES.learn} className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
         Catalog
       </NavLink>
-      <NavLink to={LEGAL_ROUTES.paths} className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
-        Pathways
+      <NavLink to="/learn#schools" className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
+        Schools
       </NavLink>
       <NavLink to="/team/learning-reports" className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ''}`}>
         Learner reports

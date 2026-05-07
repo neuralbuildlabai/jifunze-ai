@@ -64,8 +64,6 @@ function normalizePathname(pathname: string): string {
 export function isMaintenanceExemptAnonymousPath(pathname: string): boolean {
   const p = normalizePathname(pathname)
   if (
-    p === '/paths' ||
-    p.startsWith('/paths/') ||
     p === '/auth/sign-in' ||
     p === '/auth/sign-up' ||
     p === '/forgot-password' ||

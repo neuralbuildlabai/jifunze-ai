@@ -172,21 +172,21 @@ export function LearnerReportsPage() {
       >
         {!loading && selectedPathwayHint ? (
           <div
-            className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-4 text-[13px] text-zinc-300"
+            className="rounded-xl border border-stone-200/90 bg-white px-4 py-4 text-[13px] text-stone-700 shadow-sm"
             data-testid="reports-selected-pathway-summary"
           >
-            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-zinc-500">Pathway</p>
-            <p className="mt-1 font-medium text-zinc-100">{selectedPathwayHint.title}</p>
-            <p className="mt-1 text-[12px] text-zinc-400">
-              Included courses (session view): <span className="tabular-nums text-zinc-200">{selectedPathwayHint.progressPct}%</span>
-              <span className="mx-1.5 text-zinc-600">·</span>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-500">Learning focus</p>
+            <p className="mt-1 font-medium text-zinc-900">{selectedPathwayHint.title}</p>
+            <p className="mt-1 text-[12px] text-stone-600">
+              Included courses (session view): <span className="tabular-nums text-zinc-900">{selectedPathwayHint.progressPct}%</span>
+              <span className="mx-1.5 text-stone-400">·</span>
               Next: {selectedPathwayHint.nextSummary}
             </p>
-            <Link className="mt-2 inline-block text-[12px] font-semibold text-violet-300 hover:underline" to={`/paths/${selectedPathwayHint.slug}`}>
-              Open pathway
+            <Link className="mt-2 inline-block text-[12px] font-semibold text-orange-700 hover:underline" to="/learn#schools">
+              Browse schools in catalog
             </Link>
             {selectedPathwayHint.nextHref ? (
-              <Link className="ml-3 inline-block text-[12px] font-medium text-zinc-500 hover:text-zinc-300 hover:underline" to={selectedPathwayHint.nextHref}>
+              <Link className="ml-3 inline-block text-[12px] font-medium text-stone-500 hover:text-stone-800 hover:underline" to={selectedPathwayHint.nextHref}>
                 Continue
               </Link>
             ) : null}
@@ -194,20 +194,20 @@ export function LearnerReportsPage() {
         ) : null}
 
         {loading ? (
-          <p className="text-sm text-zinc-400">Loading your progress…</p>
+          <p className="text-sm text-stone-600">Loading your progress…</p>
         ) : rows.length === 0 ? (
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-stone-600">
             No courses in your catalog yet. Open the{' '}
-            <Link className="text-violet-300 hover:underline" to={LEGAL_ROUTES.learn}>
+            <Link className="font-medium text-orange-700 hover:underline" to={LEGAL_ROUTES.learn}>
               catalog
             </Link>
             .
           </p>
         ) : (
-          <div className="overflow-x-auto rounded-xl border border-white/[0.06] bg-white/[0.02]">
-            <table className="min-w-[560px] w-full text-left text-[13px] text-zinc-300">
+          <div className="overflow-x-auto rounded-xl border border-stone-200/90 bg-white shadow-sm">
+            <table className="min-w-[560px] w-full text-left text-[13px] text-stone-700">
               <thead>
-                <tr className="border-b border-white/[0.06] text-[11px] uppercase tracking-wide text-zinc-500">
+                <tr className="border-b border-stone-200/90 text-[11px] uppercase tracking-wide text-stone-500">
                   <th className="px-4 py-3 font-medium">Course</th>
                   <th className="px-4 py-3 font-medium">Sessions</th>
                   <th className="px-4 py-3 font-medium">Modules</th>
@@ -217,12 +217,12 @@ export function LearnerReportsPage() {
               </thead>
               <tbody>
                 {rows.map((r) => (
-                  <tr key={r.slug} className="border-b border-white/[0.04] last:border-0">
+                  <tr key={r.slug} className="border-b border-stone-100 last:border-0">
                     <td className="px-4 py-3">
-                      <Link className="font-medium text-zinc-100 hover:underline" to={`/learn/courses/${r.slug}`}>
+                      <Link className="font-medium text-zinc-900 hover:underline" to={`/learn/courses/${r.slug}`}>
                         {r.title}
                       </Link>
-                      <p className="text-[11px] text-zinc-500">{r.schoolLabel}</p>
+                      <p className="text-[11px] text-stone-500">{r.schoolLabel}</p>
                     </td>
                     <td className="px-4 py-3 tabular-nums">
                       {r.sessionDone}/{r.sessionTotal} ({r.progressPct}%)
@@ -230,18 +230,18 @@ export function LearnerReportsPage() {
                     <td className="px-4 py-3 tabular-nums">
                       {r.modulesDone}/{r.modulesTotal}
                     </td>
-                    <td className="px-4 py-3 tabular-nums text-zinc-400">
+                    <td className="px-4 py-3 tabular-nums text-stone-600">
                       {r.quizModulesTotal ? `${r.quizModulesPassed}/${r.quizModulesTotal} passed` : '—'}
                     </td>
                     <td className="px-4 py-3">
                       {r.nextHref && r.nextLabel ? (
-                        <Link className="text-violet-300 hover:underline" to={r.nextHref}>
+                        <Link className="font-medium text-orange-700 hover:underline" to={r.nextHref}>
                           {r.nextLabel}
                         </Link>
                       ) : r.progressPct >= 100 ? (
-                        <span className="text-emerald-400/90">Complete</span>
+                        <span className="font-medium text-emerald-700">Complete</span>
                       ) : (
-                        <span className="text-zinc-500">—</span>
+                        <span className="text-stone-500">—</span>
                       )}
                     </td>
                   </tr>

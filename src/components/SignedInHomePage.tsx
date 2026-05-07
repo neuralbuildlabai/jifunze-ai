@@ -11,7 +11,6 @@ import { EmptyWorkspaceCreateBrand } from './EmptyWorkspaceCreateBrand'
 import { JifunzeBrandLogo } from './brand/JifunzeBrandLogo'
 import { SignedInEngagementStrip } from './SignedInEngagementStrip'
 import { SignedInContinueLearning } from './SignedInContinueLearning'
-import { LearnerPathwayOverview } from './pathways/LearnerPathwayOverview'
 import { SignedInWelcomeBlock } from './SignedInWelcomeBlock'
 import { SignedInQuickCreatePanel } from './SignedInQuickCreatePanel'
 import { WorkspaceIdentityStrip } from './WorkspaceIdentityStrip'
@@ -149,7 +148,7 @@ export function SignedInHomePage() {
   }
 
   if (isLearnerNav) {
-    return <Navigate to="/dashboard" replace />
+    return <Navigate to="/my-learning" replace />
   }
 
   return (
@@ -180,8 +179,6 @@ export function SignedInHomePage() {
         <SignedInWelcomeBlock user={user!} brand={brand} identity={workspaceIdentity} />
 
         {isLearnerNav ? null : <SignedInContinueLearning supabase={supabase} userId={user!.id} />}
-
-        {isLearnerNav ? <LearnerPathwayOverview /> : null}
 
         {learnerCommerce?.purchaseGateEnabled ? (
           <section className="mt-8 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 text-[13px] leading-relaxed text-zinc-400/95 sm:p-6">
@@ -221,22 +218,7 @@ export function SignedInHomePage() {
           </>
         )}
 
-        {isLearnerNav ? (
-          <section className="mt-10 rounded-2xl border border-white/[0.07] bg-white/[0.03] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.12)] ring-1 ring-white/[0.03] sm:p-6">
-            <h2 className="text-sm font-semibold text-white">Learning workspace</h2>
-            <p className="mt-1 max-w-2xl text-[12px] leading-relaxed text-zinc-500/90">
-              Your dashboard is the home for continue learning, pathway progress, portfolio outputs, and reports—use the top navigation for a single path into each
-              area.
-            </p>
-            <p className="mt-4 text-[13px] text-zinc-300">
-              <Link to="/dashboard" className="font-semibold text-violet-300/90 hover:text-violet-200">
-                Open dashboard
-              </Link>
-            </p>
-          </section>
-        ) : (
-          <>
-            <section className="mt-10 rounded-2xl border border-white/[0.07] bg-white/[0.03] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.12)] ring-1 ring-white/[0.03] sm:p-6">
+        <section className="mt-10 rounded-2xl border border-white/[0.07] bg-white/[0.03] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.12)] ring-1 ring-white/[0.03] sm:p-6">
               <h2 className="text-sm font-semibold text-white">What you can do next</h2>
               <p className="mt-1 max-w-2xl text-[12px] leading-relaxed text-zinc-500/90">
                 Operator tools — use when your role needs them.
@@ -277,9 +259,7 @@ export function SignedInHomePage() {
                   </p>
                 </li>
               </ul>
-            </section>
-          </>
-        )}
+        </section>
       </div>
     </div>
   )

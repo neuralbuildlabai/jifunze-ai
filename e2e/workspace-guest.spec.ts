@@ -10,16 +10,16 @@ test.describe('Workspace routes (demo / no Supabase env)', () => {
     await applyPublicE2eMaintenanceBypass(page)
   })
 
-  test('member guest hitting Ideas is redirected to dashboard (operator-only)', async ({ page }) => {
+  test('member guest hitting Ideas is redirected to My Learning (operator-only)', async ({ page }) => {
     await page.goto('/ideas')
-    await expect(page).toHaveURL(/\/dashboard$/, { timeout: 15_000 })
-    await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible()
+    await expect(page).toHaveURL(/\/my-learning$/, { timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: /^my learning$/i })).toBeVisible()
   })
 
-  test('member guest hitting Studio is redirected to dashboard (operator-only)', async ({ page }) => {
+  test('member guest hitting Studio is redirected to My Learning (operator-only)', async ({ page }) => {
     await page.goto('/studio')
-    await expect(page).toHaveURL(/\/dashboard$/, { timeout: 15_000 })
-    await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible()
+    await expect(page).toHaveURL(/\/my-learning$/, { timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: /^my learning$/i })).toBeVisible()
   })
 
   test('settings route loads learner Account surface (demo guest)', async ({ page }) => {
@@ -34,11 +34,11 @@ test.describe('Workspace routes (demo / no Supabase env)', () => {
     await expect(page.getByText(/plans are not available yet/i)).toBeVisible()
   })
 
-  test('dashboard route loads (demo guest)', async ({ page }) => {
+  test('dashboard route redirects learner guests to My Learning', async ({ page }) => {
     await page.goto('/dashboard')
-    await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByText(/continue your course and track your progress/i)).toBeVisible()
-    await expect(page.getByTestId('dashboard-your-pathway')).toBeVisible()
+    await expect(page).toHaveURL(/\/my-learning$/, { timeout: 15_000 })
+    await expect(page.getByTestId('learner-my-learning-home')).toBeVisible()
+    await expect(page.getByRole('heading', { name: /^my learning$/i })).toBeVisible()
   })
 
   test('member guest hitting training admin is redirected to My Learning', async ({ page }) => {
@@ -47,10 +47,10 @@ test.describe('Workspace routes (demo / no Supabase env)', () => {
     await expect(page.getByRole('heading', { name: /my learning/i })).toBeVisible()
   })
 
-  test('member guest hitting team members is redirected to dashboard', async ({ page }) => {
+  test('member guest hitting team members is redirected to My Learning', async ({ page }) => {
     await page.goto('/team/members')
-    await expect(page).toHaveURL(/\/dashboard$/, { timeout: 15_000 })
-    await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible()
+    await expect(page).toHaveURL(/\/my-learning$/, { timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: /^my learning$/i })).toBeVisible()
   })
 
   test('team assignments route loads (demo guest)', async ({ page }) => {
@@ -60,10 +60,10 @@ test.describe('Workspace routes (demo / no Supabase env)', () => {
     })
   })
 
-  test('member guest hitting trends is redirected to dashboard (operator-only)', async ({ page }) => {
+  test('member guest hitting trends is redirected to My Learning (operator-only)', async ({ page }) => {
     await page.goto('/trends')
-    await expect(page).toHaveURL(/\/dashboard$/, { timeout: 15_000 })
-    await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible()
+    await expect(page).toHaveURL(/\/my-learning$/, { timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: /^my learning$/i })).toBeVisible()
   })
 
   test('legacy teaching labs URL redirects to public learn catalog', async ({ page }) => {
@@ -90,9 +90,9 @@ test.describe('Navigation smoke (guest)', () => {
     await applyPublicE2eMaintenanceBypass(page)
   })
 
-  test('member guest hitting insights is redirected to dashboard (platform-only)', async ({ page }) => {
+  test('member guest hitting insights is redirected to My Learning (platform-only)', async ({ page }) => {
     await page.goto('/insights')
-    await expect(page).toHaveURL(/\/dashboard$/, { timeout: 20_000 })
-    await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible()
+    await expect(page).toHaveURL(/\/my-learning$/, { timeout: 20_000 })
+    await expect(page.getByRole('heading', { name: /^my learning$/i })).toBeVisible()
   })
 })

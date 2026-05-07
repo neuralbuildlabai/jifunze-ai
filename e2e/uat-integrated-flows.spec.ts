@@ -10,7 +10,6 @@ test.describe('UAT integrated flows (demo)', () => {
     page,
   }) => {
     test.setTimeout(90_000)
-    await page.goto('/dashboard', { waitUntil: 'domcontentloaded' })
     await page.goto('/training/new', { waitUntil: 'domcontentloaded' })
     await expect(page.getByRole('heading', { name: /take the first step toward a smarter learning path/i })).toBeVisible({ timeout: 25_000 })
 

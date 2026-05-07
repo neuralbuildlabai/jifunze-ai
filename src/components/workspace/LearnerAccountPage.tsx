@@ -34,23 +34,23 @@ export function LearnerAccountPage() {
           }
         >
           {isSupabaseConfigured() ? (
-            <div className="space-y-2 border-t border-white/[0.06] pt-4">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Password &amp; sign-in</h3>
-              <p className="text-[12px] leading-relaxed text-zinc-500">{passwordPolicyHint()}</p>
-              <Link to="/forgot-password" className="inline-flex text-sm font-medium text-violet-300 hover:text-violet-200 hover:underline">
+            <div className="space-y-2 border-t border-stone-200/90 pt-4">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.12em] text-stone-500">Password &amp; sign-in</h3>
+              <p className="text-[12px] leading-relaxed text-stone-600">{passwordPolicyHint()}</p>
+              <Link to="/forgot-password" className="inline-flex text-sm font-medium text-orange-700 hover:text-orange-800 hover:underline">
                 Reset password via email
               </Link>
             </div>
           ) : null}
 
           {LEARNER_MONETIZATION_UI_DISABLED ? null : (
-            <div className="space-y-2 border-t border-white/[0.06] pt-4">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Plan &amp; billing</h3>
+            <div className="space-y-2 border-t border-stone-200/90 pt-4">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.12em] text-stone-500">Plan &amp; billing</h3>
               <div className="flex flex-wrap gap-3">
-                <Link to={LEGAL_ROUTES.pricing} className="text-sm font-medium text-violet-300 hover:underline">
+                <Link to={LEGAL_ROUTES.pricing} className="text-sm font-medium text-orange-700 hover:underline">
                   Pricing
                 </Link>
-                <Link to={LEGAL_ROUTES.workspaceSubscription} className="text-sm font-medium text-violet-300 hover:underline">
+                <Link to={LEGAL_ROUTES.workspaceSubscription} className="text-sm font-medium text-orange-700 hover:underline">
                   Billing / Plan
                 </Link>
               </div>

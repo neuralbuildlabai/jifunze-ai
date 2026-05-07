@@ -13,6 +13,7 @@ import {
   WhyLearnSection,
 } from './discoveryHubSections'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
+import { StandaloneCoursesSection } from './StandaloneCoursesSection'
 
 /**
  * `/learn` — public course marketplace. The bright, premium layout is composed
@@ -26,6 +27,7 @@ export function LearningDiscoveryHubPage() {
     <div className="min-h-screen bg-white text-zinc-900 antialiased [color-scheme:light]">
       <DiscoveryTopNav
         links={[
+          { label: 'Free course', href: '#new-free-courses', testId: 'learn-nav-free-course' },
           { label: 'Courses', href: '#featured-courses' },
           { label: 'Schools', href: '#schools' },
           { label: 'About', href: '#about-public' },
@@ -43,6 +45,7 @@ export function LearningDiscoveryHubPage() {
       />
       <main data-testid="learning-discovery-hub">
         <DiscoveryHero headingId="learn-hero-heading" />
+        <StandaloneCoursesSection sectionTestId="discovery-section-standalone-catalog" />
         <FeaturedCoursesSection sectionTestId="discovery-section-flagship-catalog" />
         <SchoolsSection />
         <PopularCategoriesSection />
@@ -53,6 +56,7 @@ export function LearningDiscoveryHubPage() {
       <DiscoveryFooter
         showSignupCard={supabase}
         quickLinks={[
+          { label: 'New free course', href: '#new-free-courses' },
           { label: 'All Courses', href: '#featured-courses' },
           { label: 'Schools', href: '#schools' },
           { label: 'About', href: '#about-public' },

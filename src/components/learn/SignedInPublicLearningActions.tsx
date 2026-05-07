@@ -14,10 +14,11 @@ export function SignedInPublicLearningActions({ className = '' }: { className?: 
   return (
     <div className={`flex flex-wrap items-center justify-end gap-2 ${className}`}>
       <Link
-        to="/dashboard"
+        to="/my-learning"
         className="inline-flex min-h-[2.25rem] items-center rounded-lg border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-3 text-[11px] font-semibold text-[color:var(--jf-text)] transition hover:border-stone-400/45 hover:bg-[color:var(--jf-surface-elevated)]"
+        data-testid="public-learning-my-learning"
       >
-        Dashboard
+        My Learning
       </Link>
       <button
         type="button"

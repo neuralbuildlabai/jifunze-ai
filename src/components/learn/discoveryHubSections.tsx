@@ -358,7 +358,7 @@ export type DiscoveryHeroProps = {
    * `/learn` so the CTA navigates to the catalog.
    */
   primaryCtaTo?: string
-  /** Secondary CTA label and target. Defaults to "View Learning Paths" → `/paths`. */
+  /** Secondary CTA label and target. Defaults to schools anchor on the catalog. */
   secondaryCtaLabel?: string
   secondaryCtaTo?: string
   /** Optional id to attach to the H1 (used for aria-labelledby). */
@@ -370,8 +370,8 @@ export type DiscoveryHeroProps = {
 export function DiscoveryHero({
   primaryCtaTestId,
   primaryCtaTo = '#featured-courses',
-  secondaryCtaLabel = 'View Learning Paths',
-  secondaryCtaTo = LEGAL_ROUTES.paths,
+  secondaryCtaLabel = 'Browse schools',
+  secondaryCtaTo = '/learn#schools',
   headingId = 'discovery-hero-heading',
   belowCtaSlot,
 }: DiscoveryHeroProps) {

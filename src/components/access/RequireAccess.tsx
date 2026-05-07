@@ -1,7 +1,12 @@
 import type { ReactNode } from 'react'
 import { Navigate } from 'react-router-dom'
 import { canAccessPlatformSurface, canAccessProLab, isAtLeastTier } from '../../access/appAccess'
+import type { WorkspaceNavVariant } from '../../access/navRole'
 import { useAppAccess } from '../../access/useAppAccess'
+
+function workspaceFallbackPath(navVariant: WorkspaceNavVariant): string {
+  return navVariant === 'learner' ? '/my-learning' : '/dashboard'
+}
 
 export function RequireProLab({ children }: { children: ReactNode }) {
   const { tier } = useAppAccess()
@@ -21,27 +26,27 @@ export function RequirePlatformSurface({ children }: { children: ReactNode }) {
 
 /** Studio / Ideas / Trends — institution operators and platform admins only (not learner-facing). */
 export function RequireInstitutionOperatorSurface({ children }: { children: ReactNode }) {
-  const { tier } = useAppAccess()
+  const { tier, navVariant } = useAppAccess()
   if (!isAtLeastTier(tier, 'workspace_admin')) {
-    return <Navigate to="/dashboard" replace />
+    return <Navigate to={workspaceFallbackPath(navVariant)} replace />
   }
   return <>{children}</>
 }
 
 /** Learning Insights — platform operators only. */
 export function RequirePlatformInsights({ children }: { children: ReactNode }) {
-  const { tier } = useAppAccess()
+  const { tier, navVariant } = useAppAccess()
   if (!isAtLeastTier(tier, 'platform_admin')) {
-    return <Navigate to="/dashboard" replace />
+    return <Navigate to={workspaceFallbackPath(navVariant)} replace />
   }
   return <>{children}</>
 }
 
 /** Platform runtime / diagnostics — super-admin email only (see `CANONICAL_SUPER_ADMIN_EMAIL`). */
 export function RequireSuperAdminSurface({ children }: { children: ReactNode }) {
-  const { tier } = useAppAccess()
+  const { tier, navVariant } = useAppAccess()
   if (tier !== 'super_admin') {
-    return <Navigate to="/dashboard" replace />
+    return <Navigate to={workspaceFallbackPath(navVariant)} replace />
   }
   return <>{children}</>
 }

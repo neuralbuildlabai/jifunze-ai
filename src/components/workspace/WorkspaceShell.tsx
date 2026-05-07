@@ -21,7 +21,7 @@ export function WorkspaceShell() {
       <div
         className={
           isLearner
-            ? learnerShellTokens.workspaceBg
+            ? `jf-learn-warm ${learnerShellTokens.workspaceBg}`
             : 'min-h-screen w-full bg-[radial-gradient(ellipse_120%_80%_at_50%_-15%,rgba(255,255,255,0.06),transparent_55%),linear-gradient(180deg,_#0c0c0f_0%,_#09090b_52%,_#070709_100%)] text-zinc-100'
         }
       >
@@ -29,7 +29,7 @@ export function WorkspaceShell() {
           {isLearner ? (
             <header className={`mb-10 flex flex-col gap-5 pb-6 sm:flex-row sm:items-center sm:justify-between ${learnerShellTokens.workspaceHeaderBorder}`}>
               <div className="min-w-0 shrink-0">
-                <JifunzeBrandLogo to="/dashboard" size="lg" variant="full" surface="dark" />
+                <JifunzeBrandLogo to="/" size="lg" variant="full" surface="light" />
               </div>
               <div className="flex min-w-0 flex-col items-stretch gap-3 sm:items-end">
                 <div className="flex flex-wrap items-center justify-end gap-2">
@@ -38,7 +38,7 @@ export function WorkspaceShell() {
                       type="button"
                       disabled={signOutPending}
                       onClick={() => void signOut()}
-                      className="inline-flex min-h-[2.25rem] shrink-0 items-center justify-center rounded-lg border border-white/[0.1] bg-white/[0.04] px-3 text-xs font-semibold text-zinc-100 transition hover:border-white/[0.14] hover:bg-white/[0.07] disabled:cursor-not-allowed disabled:opacity-50"
+                      className="inline-flex min-h-[2.25rem] shrink-0 items-center justify-center rounded-full border border-stone-300/90 bg-white px-3 text-xs font-semibold text-zinc-800 transition hover:border-stone-400 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-50"
                       data-testid="workspace-shell-sign-out"
                     >
                       {signOutPending ? 'Signing out…' : 'Sign out'}

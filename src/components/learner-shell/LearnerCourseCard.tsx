@@ -30,12 +30,12 @@ export function LearnerCourseCard({
   const subtitle = subtitleOverride ?? course.subtitle
   const shell =
     surface === 'workspace'
-      ? `${learnerShellTokens.card} ring-1 ring-white/[0.02]`
+      ? `${learnerShellTokens.card} ring-1 ring-stone-200/60`
       : 'rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-5 py-5 shadow-[var(--jf-shadow-soft)] ring-1 ring-black/[0.03] sm:px-6'
-  const eyebrow = surface === 'workspace' ? 'text-zinc-500' : 'text-[color:var(--jf-muted)]'
-  const title = surface === 'workspace' ? 'text-white' : 'text-[color:var(--jf-text)]'
-  const body = surface === 'workspace' ? 'text-zinc-400' : 'text-[color:var(--jf-muted)]'
-  const meta = surface === 'workspace' ? 'text-zinc-500' : 'text-[color:var(--jf-subtle)]'
+  const eyebrow = surface === 'workspace' ? 'text-stone-500' : 'text-[color:var(--jf-muted)]'
+  const title = surface === 'workspace' ? 'text-zinc-900' : 'text-[color:var(--jf-text)]'
+  const body = surface === 'workspace' ? 'text-stone-600' : 'text-[color:var(--jf-muted)]'
+  const meta = surface === 'workspace' ? 'text-stone-500' : 'text-[color:var(--jf-subtle)]'
   const btn =
     surface === 'workspace'
       ? learnerShellTokens.primaryButton

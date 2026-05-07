@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
+import { STANDALONE_LEARNER_CATALOG } from '../../data/courses'
 import { learnerPublicCatalogFlagshipCourses } from '../../data/learning/flagshipLearnerCatalogPolicy'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { useAppAccess } from '../../access/useAppAccess'
@@ -9,8 +10,10 @@ import { SignedInContinueLearning } from '../SignedInContinueLearning'
 import { LearnerPageShell } from '../learner-shell/LearnerPageShell'
 import { learnerShellTokens } from '../learner-shell/learnerShellTokens'
 
-const card =
+const operatorCard =
   'rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 ring-1 ring-white/[0.04] transition hover:border-violet-400/15'
+
+const warmCard = 'rounded-2xl border border-stone-200/90 bg-white p-5 shadow-[0_20px_50px_-24px_rgba(120,53,15,0.15)] sm:p-6'
 
 export function MyLearningPage() {
   const { supabase, user, workspaceShellReady } = useAuth()
@@ -18,46 +21,114 @@ export function MyLearningPage() {
   const { rows: myAssignments, loading: assignLoading, error: assignError } = useTeamAssignmentsBoard('self')
   const isLearner = navVariant === 'learner'
   const catalogCourses = useMemo(() => learnerPublicCatalogFlagshipCourses(), [])
+  const recommended = catalogCourses[1] ?? catalogCourses[0] ?? null
 
   if (isLearner) {
     return (
-      <LearnerPageShell
-        title="My Learning"
-        purpose="Continue your course and open the catalog when you want to browse what is available to you."
-      >
-        <div className="flex flex-wrap gap-2">
-          <Link className={learnerShellTokens.primaryButton} to="/dashboard">
-            Dashboard
-          </Link>
-          <Link className={learnerShellTokens.ghostButton} to={LEGAL_ROUTES.learn}>
-            Catalog
-          </Link>
-          <Link className={learnerShellTokens.ghostButton} to={LEGAL_ROUTES.paths}>
-            Pathways
-          </Link>
-        </div>
+      <div data-testid="learner-my-learning-home">
+        <LearnerPageShell
+          title="My Learning"
+          purpose="Self-paced courses, practical skills, and clear next steps—everything here is free to access for now."
+        >
+          <div className="flex flex-wrap gap-2">
+            <Link className={learnerShellTokens.primaryButton} to={LEGAL_ROUTES.learn} data-testid="my-learning-open-catalog">
+              Open catalog
+            </Link>
+            <Link className={learnerShellTokens.ghostButton} to="/reports">
+              View reports
+            </Link>
+            <Link className={learnerShellTokens.ghostButton} to="/account">
+              Account
+            </Link>
+          </div>
 
-        <SignedInContinueLearning supabase={supabase} userId={user?.id} />
+          <SignedInContinueLearning supabase={supabase} userId={user?.id} surface="warm" />
 
-        {catalogCourses.length ? (
-          <section className={card} data-testid="my-learning-catalog-courses">
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Your catalog</p>
-            <ul className="mt-4 space-y-2">
-              {catalogCourses.map((c) => (
-                <li key={c.slug}>
-                  <Link
-                    to={`/learn/courses/${c.slug}`}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-white/[0.06] bg-zinc-950/40 px-3 py-2 text-sm text-zinc-100 transition hover:border-violet-400/25"
-                  >
-                    <span>{c.title}</span>
-                    <span className="text-[11px] text-violet-300/90">View course</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {STANDALONE_LEARNER_CATALOG.length ? (
+            <section className={warmCard} data-testid="my-learning-available-standalone">
+              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-stone-500">Available free courses</p>
+              <p className="mt-1 text-sm text-stone-600">Standalone paths — open anytime, no enrollment step.</p>
+              <ul className="mt-4 space-y-2">
+                {STANDALONE_LEARNER_CATALOG.map((e) => (
+                  <li key={e.slug}>
+                    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-stone-200/80 bg-[#fffdfb] px-3 py-3">
+                      <div className="min-w-0">
+                        <Link to={e.publicRoute} className="font-medium text-zinc-900 hover:text-orange-700">
+                          {e.title}
+                        </Link>
+                        <p className="mt-1 text-[12px] text-stone-600">{e.source.modules.length} modules · ~{e.estimatedHours} hours</p>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <Link className={learnerShellTokens.ghostButton} to={e.publicRoute}>
+                          Open course
+                        </Link>
+                        {e.source.modules[0]?.slug ? (
+                          <Link className={learnerShellTokens.primaryButton} to={`${e.publicRoute}/modules/${e.source.modules[0].slug}`}>
+                            Start course
+                          </Link>
+                        ) : null}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+
+          {catalogCourses.length ? (
+            <section className={warmCard} data-testid="my-learning-catalog-courses">
+              <div className="flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-stone-500">Your courses</p>
+                  <p className="mt-1 text-sm text-stone-600">Flagship paths included in your workspace — free access.</p>
+                </div>
+              </div>
+              <ul className="mt-4 space-y-2">
+                {catalogCourses.map((c) => (
+                  <li key={c.slug}>
+                    <Link
+                      to={`/learn/courses/${c.slug}`}
+                      className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-stone-200/80 bg-[#fffdfb] px-3 py-3 text-sm text-zinc-900 transition hover:border-orange-200/90"
+                    >
+                      <span className="font-medium">{c.title}</span>
+                      <span className="text-[11px] font-semibold uppercase tracking-wide text-orange-700/90">Free access</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+
+          {recommended ? (
+            <section className={warmCard} data-testid="my-learning-recommended">
+              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-stone-500">Recommended next</p>
+              <p className="mt-2 text-sm font-medium text-zinc-900">{recommended.title}</p>
+              <p className="mt-1 text-sm text-stone-600">Start or continue when you are ready — progress saves to your account.</p>
+              <div className="mt-4">
+                <Link className={learnerShellTokens.primaryButton} to={`/learn/courses/${recommended.slug}`}>
+                  Start free
+                </Link>
+              </div>
+            </section>
+          ) : null}
+
+          <section className={warmCard} data-testid="my-learning-progress-summary">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-stone-500">Progress summary</p>
+            <p className="mt-2 text-sm leading-relaxed text-stone-600">
+              Session completion, checkpoints, and module quizzes are summarized in Reports so you can see where you are strong and what to
+              revisit next.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Link className={learnerShellTokens.primaryButton} to="/reports">
+                Open reports
+              </Link>
+              <Link className={learnerShellTokens.ghostButton} to="/account">
+                Account &amp; sign-in
+              </Link>
+            </div>
           </section>
-        ) : null}
-      </LearnerPageShell>
+        </LearnerPageShell>
+      </div>
     )
   }
 
@@ -88,7 +159,7 @@ export function MyLearningPage() {
 
       <SignedInContinueLearning supabase={supabase} userId={user?.id} />
 
-      <section className={card}>
+      <section className={operatorCard}>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Assigned courses &amp; plans</p>
@@ -128,7 +199,7 @@ export function MyLearningPage() {
       </section>
 
       {catalogCourses.length ? (
-        <section className={card} data-testid="my-learning-catalog-courses">
+        <section className={operatorCard} data-testid="my-learning-catalog-courses">
           <p className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">Recommended next</p>
           <p className="mt-1 text-sm text-zinc-400">Popular flagship paths from the catalog.</p>
           <ul className="mt-4 space-y-2">

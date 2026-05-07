@@ -15,10 +15,10 @@ type Props = {
 export function LearnerActionCard({ eyebrow, title, description, footer, action, secondaryAction, 'data-testid': testId }: Props) {
   return (
     <section className={learnerShellTokens.card} data-testid={testId}>
-      {eyebrow ? <p className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">{eyebrow}</p> : null}
+      {eyebrow ? <p className="text-xs font-semibold uppercase tracking-[0.12em] text-stone-500">{eyebrow}</p> : null}
       <h2 className={`${learnerShellTokens.cardTitle} ${eyebrow ? 'mt-2' : ''}`}>{title}</h2>
       {description ? <div className={learnerShellTokens.cardMuted}>{description}</div> : null}
-      {footer ? <div className="mt-3 text-sm text-zinc-500">{footer}</div> : null}
+      {footer ? <div className="mt-3 text-sm text-stone-500">{footer}</div> : null}
       <div className="mt-5 flex flex-wrap gap-2">
         {action}
         {secondaryAction}

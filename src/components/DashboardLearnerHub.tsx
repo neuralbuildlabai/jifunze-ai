@@ -12,7 +12,6 @@ import { getAiEssentialsMilestonesReachedCount } from '../lib/aiEssentialsProgre
 import { nextAiEssentialsPortfolioOutput } from '../lib/learnerDashboardPortfolioHint'
 import { FLAGSHIP_PROGRESS_EVENT } from '../lib/flagshipCourseLocalProgress'
 import { sessionOpenForLearner } from '../learner/flagshipSessionPrereq'
-import { LEGAL_ROUTES } from '../training/trustCopy'
 import { learnerShellTokens } from './learner-shell/learnerShellTokens'
 
 const AI_SLUG = 'ai-essentials' as const
@@ -214,12 +213,12 @@ export function DashboardLearnerHub() {
         <p className="mt-2 text-sm text-zinc-400">{pathwayBody}</p>
         <div className="mt-5">
           {pathwayPrimary ? (
-            <Link className={learnerShellTokens.primaryButton} to={`/paths/${selectedPathway.slug}`} data-testid="dashboard-your-pathway-view">
-              View pathway
+            <Link className={learnerShellTokens.primaryButton} to="/learn#schools" data-testid="dashboard-your-pathway-view">
+              Browse schools in catalog
             </Link>
           ) : (
-            <Link className={learnerShellTokens.primaryButton} to={LEGAL_ROUTES.paths} data-testid="dashboard-choose-pathway">
-              Choose pathway
+            <Link className={learnerShellTokens.primaryButton} to="/learn#schools" data-testid="dashboard-choose-pathway">
+              Browse schools in catalog
             </Link>
           )}
         </div>
@@ -230,8 +229,8 @@ export function DashboardLearnerHub() {
         <p className={learnerShellTokens.mutedEyebrow}>Account</p>
         <p className="mt-2 text-sm text-zinc-200">{user?.email ?? '—'}</p>
         <div className="mt-5 flex flex-wrap gap-3">
-          <Link className={learnerShellTokens.ghostButton} to="/settings">
-            Settings
+          <Link className={learnerShellTokens.ghostButton} to="/account">
+            Account
           </Link>
           <button
             type="button"

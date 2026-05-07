@@ -7,6 +7,12 @@ test.describe('Learning discovery (public)', () => {
     await applyPublicE2eMaintenanceBypass(page)
   })
 
+  test('/paths redirects to /learn with schools anchor', async ({ page }) => {
+    await page.goto('/paths')
+    await expect(page).toHaveURL(/\/learn#schools$/)
+    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
+  })
+
   test('/learn hub shows featured marketplace grid and school browse', async ({ page }) => {
     await page.goto('/learn')
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })

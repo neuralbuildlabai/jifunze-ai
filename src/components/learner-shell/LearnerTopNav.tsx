@@ -3,8 +3,7 @@ import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { learnerShellTokens } from './learnerShellTokens'
 
 /**
- * Learner workspace navigation — focused on structured learning.
- * Pathways stays available but visually secondary to the primary course journey.
+ * Signed-in learner navigation — catalog-first, no duplicate dashboard, no standalone pathways page.
  */
 export function LearnerTopNav({ className = '' }: { className?: string }) {
   return (
@@ -14,36 +13,33 @@ export function LearnerTopNav({ className = '' }: { className?: string }) {
       data-testid="workspace-nav-primary"
     >
       <NavLink
-        to="/dashboard"
-        className={({ isActive }) => `${learnerShellTokens.navLink} ${isActive ? learnerShellTokens.navLinkActive : ''}`}
-      >
-        Dashboard
-      </NavLink>
-      <NavLink
         to="/my-learning"
         className={({ isActive }) => `${learnerShellTokens.navLink} ${isActive ? learnerShellTokens.navLinkActive : ''}`}
+        data-testid="learner-nav-my-learning"
       >
         My Learning
       </NavLink>
       <NavLink
         to={LEGAL_ROUTES.learn}
         className={({ isActive }) => `${learnerShellTokens.navLink} ${isActive ? learnerShellTokens.navLinkActive : ''}`}
+        data-testid="learner-nav-catalog"
       >
         Catalog
       </NavLink>
       <NavLink
-        to={LEGAL_ROUTES.paths}
-        className={({ isActive }) =>
-          `${learnerShellTokens.navLinkMuted} ${isActive ? learnerShellTokens.navLinkMutedActive : ''}`
-        }
+        to="/reports"
+        className={({ isActive }) => `${learnerShellTokens.navLink} ${isActive ? learnerShellTokens.navLinkActive : ''}`}
+        data-testid="learner-nav-reports"
       >
-        Pathways
-      </NavLink>
-      <NavLink to="/reports" className={({ isActive }) => `${learnerShellTokens.navLink} ${isActive ? learnerShellTokens.navLinkActive : ''}`}>
         Reports
       </NavLink>
-      <NavLink end to="/settings" className={({ isActive }) => `${learnerShellTokens.navLink} ${isActive ? learnerShellTokens.navLinkActive : ''}`}>
-        Settings
+      <NavLink
+        end
+        to="/account"
+        className={({ isActive }) => `${learnerShellTokens.navLink} ${isActive ? learnerShellTokens.navLinkActive : ''}`}
+        data-testid="learner-nav-account"
+      >
+        Account
       </NavLink>
     </nav>
   )
