@@ -1,18 +1,24 @@
 /**
  * Continuity checks for the Business Process Automation for Work standalone course.
  * Asserts: slug, internalKey, 5 modules, 12 quiz questions, dataset values, learner practice,
- * certificate config, catalog presence, no slug collisions with flagship courses.
+ * certificate config, catalog presence, no slug collisions with flagship courses,
+ * slide PNG assets, slide manifest, and slide player wiring.
  *
  * Run: `npm run verify:business-process-automation`
  * No Supabase or network access required.
  */
 
 import assert from 'node:assert/strict'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import {
+  BPA_MODULE_SLUGS,
   businessProcessAutomationCourse,
   BUSINESS_PROCESS_AUTOMATION_SLUG,
   BUSINESS_PROCESS_AUTOMATION_INTERNAL_KEY,
+  businessProcessAutomationSlideManifest,
   STANDALONE_LEARNER_CATALOG,
   getStandaloneLessonSlug,
 } from '../src/data/courses'
@@ -52,6 +58,7 @@ function testModuleOrderAndSlugs() {
 
 function testModuleStructure() {
   for (const m of businessProcessAutomationCourse.modules) {
+    assert.ok(m.durationMinutes > 0, `${m.slug}: durationMinutes must be > 0 (got ${m.durationMinutes})`)
     assert.ok(m.lessons.length >= 4, `${m.slug}: at least 4 lessons (got ${m.lessons.length})`)
     assert.ok(m.overview.length > 20, `${m.slug}: overview is non-empty`)
     assert.ok(m.whyThisMatters.length >= 1, `${m.slug}: whyThisMatters present`)
@@ -64,8 +71,58 @@ function testModuleStructure() {
     for (const l of m.lessons) {
       assert.ok(l.lessonNumber.startsWith(`${m.moduleNumber}.`), `${m.slug} lesson ${l.lessonNumber}: numbered with correct module prefix`)
       assert.ok(l.learnerGoal.length > 10, `${m.slug} lesson ${l.lessonNumber}: learnerGoal present`)
-      assert.ok(l.blocks.length > 0, `${m.slug} lesson ${l.lessonNumber}: at least one block`)
+      assert.ok(l.blocks.length >= 2, `${m.slug} lesson ${l.lessonNumber}: at least 2 blocks (got ${l.blocks.length})`)
     }
+  }
+}
+
+function testVisualBlocksPresent() {
+  const allContent = JSON.stringify(businessProcessAutomationCourse)
+  const requiredVisualTypes = ['dataset_table', 'bar_chart', 'heatmap', 'calculation_card', 'stat_grid', 'roadmap_timeline', 'priority_matrix', 'process_flow']
+  for (const vt of requiredVisualTypes) {
+    assert.ok(allContent.includes(`"${vt}"`), `visual block type '${vt}' must appear at least once in course content`)
+  }
+
+  const m2 = businessProcessAutomationCourse.modules.find((m) => m.slug === 'understanding-current-workflow')!
+  const m2Content = JSON.stringify(m2)
+  assert.ok(m2Content.includes('dataset_table'), 'Module 2 must contain a dataset_table block')
+  assert.ok(m2Content.includes('bar_chart'), 'Module 2 must contain a bar_chart block')
+  assert.ok(m2Content.includes('heatmap'), 'Module 2 must contain a heatmap block')
+
+  const m3 = businessProcessAutomationCourse.modules.find((m) => m.slug === 'finding-automation-opportunities')!
+  const m3Content = JSON.stringify(m3)
+  assert.ok(m3Content.includes('priority_matrix'), 'Module 3 must contain a priority_matrix block')
+
+  const m5 = businessProcessAutomationCourse.modules.find((m) => m.slug === 'business-value-risk-implementation')!
+  const m5Content = JSON.stringify(m5)
+  assert.ok(m5Content.includes('roadmap_timeline'), 'Module 5 must contain a roadmap_timeline block')
+  assert.ok(m5Content.includes('calculation_card'), 'Module 5 must contain a calculation_card block')
+}
+
+function testDeckResourceAndSlidePreview() {
+  const resources = businessProcessAutomationCourse.downloadableResources ?? []
+  assert.ok(resources.length >= 1, 'course must have at least one downloadable resource')
+  const deck = resources[0]!
+  assert.ok(deck.href.startsWith('/course-assets/'), `deck href must start with /course-assets/ (got '${deck.href}')`)
+  assert.ok(deck.href.includes('/deck/'), 'deck href must live under /deck/ in public course assets')
+  assert.ok(deck.href.endsWith('.pptx'), 'deck href must point to a .pptx file')
+  assert.ok(!deck.href.startsWith('/training/'), 'deck href must NOT point to internal /training/ path')
+
+  const slideCards = businessProcessAutomationCourse.microWorkshopDetail?.slidePreviewCards ?? []
+  assert.equal(slideCards.length, 5, 'microWorkshopDetail must have exactly 5 slidePreviewCards (one per module)')
+  for (const card of slideCards) {
+    assert.ok(card.title.length > 0, `slide preview card module ${card.moduleNumber}: title present`)
+    assert.ok(card.subtitle.length > 0, `slide preview card module ${card.moduleNumber}: subtitle present`)
+    assert.ok(card.visualCue.length > 0, `slide preview card module ${card.moduleNumber}: visualCue present`)
+    assert.ok(card.learnerOutput.length > 0, `slide preview card module ${card.moduleNumber}: learnerOutput present`)
+  }
+}
+
+function testNoPlaceholders() {
+  const content = JSON.stringify(businessProcessAutomationCourse)
+  const forbidden = ['TODO', 'placeholder', 'lorem ipsum', 'PLACEHOLDER', 'TBD']
+  for (const term of forbidden) {
+    assert.ok(!content.includes(term), `course content must not contain placeholder text: '${term}'`)
   }
 }
 
@@ -240,10 +297,70 @@ function testModuleMapMatchesModules() {
   }
 }
 
+const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
+
+function testSlideAssetsAndManifest() {
+  const deckFsPath = join(
+    REPO_ROOT,
+    'public/course-assets/business-process-automation-for-work/deck/Business_Process_Automation_for_Work_Jifunze.pptx',
+  )
+  assert.ok(existsSync(deckFsPath), 'public BPA deck file exists under course-assets/.../deck/')
+
+  const slideDir = join(REPO_ROOT, 'public/course-assets/business-process-automation-for-work/slides')
+  assert.ok(existsSync(slideDir), 'slide images directory exists')
+
+  const pngs = readdirSync(slideDir).filter((f) => f.endsWith('.png'))
+  assert.equal(pngs.length, 40, 'exactly 40 slide image files exist')
+  for (let i = 1; i <= 40; i++) {
+    const name = `slide-${String(i).padStart(2, '0')}.png`
+    assert.ok(pngs.includes(name), `expected slide file ${name}`)
+  }
+
+  const manifestPath = join(REPO_ROOT, 'src/data/courses/businessProcessAutomationSlides.ts')
+  assert.ok(existsSync(manifestPath), 'businessProcessAutomationSlides.ts exists')
+
+  const m = businessProcessAutomationSlideManifest
+  assert.equal(m.courseSlug, BUSINESS_PROCESS_AUTOMATION_SLUG, 'manifest courseSlug matches')
+  assert.equal(m.slides.length, 40, 'slide manifest has 40 slides')
+  assert.equal(m.totalSlides, 40, 'manifest totalSlides is 40')
+
+  for (const s of m.slides) {
+    assert.ok(s.id.length > 0, `slide ${s.slideNumber}: id present`)
+    assert.ok(s.title.length > 0, `slide ${s.slideNumber}: title present`)
+    assert.ok(s.imageSrc.startsWith('/course-assets/'), `slide ${s.slideNumber}: imageSrc is public path`)
+    assert.ok(s.altText.length > 0, `slide ${s.slideNumber}: altText present`)
+    assert.ok(s.moduleId.length > 0, `slide ${s.slideNumber}: moduleId present`)
+  }
+
+  for (const slug of BPA_MODULE_SLUGS) {
+    const r = m.moduleSlideRanges[slug]
+    assert.ok(r, `moduleSlideRanges missing for ${slug}`)
+    assert.ok(r!.start >= 1 && r!.end <= 40 && r!.start <= r!.end, `invalid range for ${slug}`)
+  }
+
+  const playerPath = join(REPO_ROOT, 'src/components/learn/JifunzeSlidePlayer.tsx')
+  assert.ok(existsSync(playerPath), 'JifunzeSlidePlayer component file exists')
+
+  const overview = readFileSync(join(REPO_ROOT, 'src/components/learn/standaloneMicroCourseDetail.tsx'), 'utf8')
+  assert.ok(overview.includes('JifunzeSlidePlayer'), 'overview integration references JifunzeSlidePlayer')
+  assert.ok(overview.includes('businessProcessAutomationSlideManifest'), 'overview integration references slide manifest')
+
+  const modPage = readFileSync(join(REPO_ROOT, 'src/components/learn/StandaloneModuleDetailPage.tsx'), 'utf8')
+  assert.ok(modPage.includes('JifunzeSlidePlayer'), 'module page references JifunzeSlidePlayer')
+  assert.ok(modPage.includes('getBpaSlidesForModule'), 'module page references slide helper')
+
+  const lessonPage = readFileSync(join(REPO_ROOT, 'src/components/learn/StandaloneLessonDetailPage.tsx'), 'utf8')
+  assert.ok(lessonPage.includes('JifunzeSlidePlayer'), 'lesson page references JifunzeSlidePlayer')
+  assert.ok(lessonPage.includes('getBpaSlidesForLesson'), 'lesson page references slide helper')
+}
+
 function main() {
   testCourseShellAndIdentity()
   testModuleOrderAndSlugs()
   testModuleStructure()
+  testVisualBlocksPresent()
+  testDeckResourceAndSlidePreview()
+  testNoPlaceholders()
   testQuizStructure()
   testNonQuizModulesHaveEmptyQuiz()
   testDatasetValuesPresent()
@@ -259,6 +376,7 @@ function main() {
   testInternalKeyIsUniqueAcrossCatalog()
   testLessonUrlSlugsUniqueWithinEachModule()
   testModuleMapMatchesModules()
+  testSlideAssetsAndManifest()
   console.log('verify-business-process-automation-course: OK — all checks passed')
 }
 

@@ -33,6 +33,18 @@ export {
 } from './businessProcessAutomationCourse'
 
 export {
+  BPA_MODULE_SLUGS,
+  BUSINESS_PROCESS_AUTOMATION_DECK_DOWNLOAD_URL,
+  businessProcessAutomationSlideManifest,
+  getBpaLessonSlideRange,
+  getBpaSlidesForLesson,
+  getBpaSlidesForModule,
+  type BpaModuleSlug,
+  type BusinessProcessAutomationSlideEntry,
+  type BusinessProcessAutomationSlideManifest,
+} from './businessProcessAutomationSlides'
+
+export {
   PRACTICAL_MATH_MODULES_REQUIRING_SAFETY_NOTE,
   type PracticalMathModuleSlug,
 } from './practicalMathematicsCourseConstants'

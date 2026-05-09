@@ -37,8 +37,8 @@ export const businessProcessAutomationCourse: PracticalMathematicsCourse = {
   },
   downloadableResources: [
     {
-      label: 'Download slide deck (PowerPoint)',
-      href: '/training/business-process-automation-for-work/Business_Process_Automation_for_Work_Jifunze.pptx',
+      label: 'Download course deck (PowerPoint)',
+      href: '/course-assets/business-process-automation-for-work/deck/Business_Process_Automation_for_Work_Jifunze.pptx',
     },
   ],
   description:
@@ -159,6 +159,43 @@ export const businessProcessAutomationCourse: PracticalMathematicsCourse = {
     },
     quizSummary:
       'Twelve application-focused scenario questions in Module 5. Passing threshold: 75% (9 or more correct of 12). Each question includes an explanation after submission.',
+    slidePreviewCards: [
+      {
+        moduleNumber: 1,
+        title: 'Automation Foundations',
+        subtitle: 'Understand automation, digitization, and AI without confusing them.',
+        visualCue: 'Rule → trigger → action',
+        learnerOutput: 'Identify automation-ready tasks using the five-criteria test.',
+      },
+      {
+        moduleNumber: 2,
+        title: 'Current Workflow Analysis',
+        subtitle: "Map BrightPath's manual workflow and find where time and errors accumulate.",
+        visualCue: 'Workload data table · bar chart · error rate heatmap',
+        learnerOutput: 'Calculate monthly workload hours and identify the two blocking bottlenecks.',
+      },
+      {
+        moduleNumber: 3,
+        title: 'Automation Opportunity Scoring',
+        subtitle: 'Compare automation candidates using impact, effort, and risk dimensions.',
+        visualCue: 'Suitability scoring table · impact vs effort matrix',
+        learnerOutput: 'Choose the first three automations and defend the sequencing.',
+      },
+      {
+        moduleNumber: 4,
+        title: 'Future Workflow Design',
+        subtitle: 'Redesign the workflow with structured intake, reminders, and exception handling.',
+        visualCue: 'Automated intake → human review checkpoints → exceptions',
+        learnerOutput: 'Map the trigger-action-exception structure for each first-phase automation.',
+      },
+      {
+        moduleNumber: 5,
+        title: 'Business Value and Roadmap',
+        subtitle: 'Quantify time recovered, manage risk, and write a 30-60-90 day plan.',
+        visualCue: 'Time savings chart · 30 → 60 → 90 day roadmap',
+        learnerOutput: 'Write an executive-style automation recommendation brief.',
+      },
+    ],
     suggestedNextCourses: [
       {
         title: 'Business Analytics for Decision-Making',

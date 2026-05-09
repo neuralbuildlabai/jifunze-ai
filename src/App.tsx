@@ -178,6 +178,10 @@ export default function App() {
         <Route path="/auth/sign-up" element={<AuthSignUpPage />} />
         <Route path="/" element={<HomeEntryPage />} />
         <Route path="/learn/courses/:slug/session/:sessionId" element={<FlagshipCourseSessionPage />} />
+        <Route
+          path="/learn/courses/business-process-automation-for-work"
+          element={<Navigate to="/learn/business-process-automation-for-work" replace />}
+        />
         <Route path="/learn/courses/:slug" element={<FlagshipCourseDetailPage />} />
         <Route path="/learn/checkout" element={<LearnerCheckoutPage />} />
         <Route path="/learn/readiness/:slug" element={<ReadinessChallengePage />} />

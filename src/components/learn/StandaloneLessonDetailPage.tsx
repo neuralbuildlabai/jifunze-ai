@@ -1,11 +1,22 @@
 import { useMemo } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { findStandaloneCourseBySlug, findStandaloneLesson, getStandaloneLessonNavTargets, getStandaloneLessonSlug } from '../../data/courses'
+import {
+  BUSINESS_PROCESS_AUTOMATION_SLUG,
+  findStandaloneCourseBySlug,
+  findStandaloneLesson,
+  getStandaloneLessonNavTargets,
+  getStandaloneLessonSlug,
+} from '../../data/courses'
+import {
+  businessProcessAutomationSlideManifest,
+  getBpaSlidesForLesson,
+} from '../../data/courses/businessProcessAutomationSlides'
 import { lessonKey } from '../../data/courses/practicalMathematicsProgression'
 import type { StandaloneCatalogEntry } from '../../data/courses/standaloneCoursesCatalog'
 import type { StandaloneCourseLesson, StandaloneCourseModule } from '../../data/courses/practicalMathematicsCourseTypes'
 import { useStandaloneCourseProgress } from '../../hooks/usePracticalMathProgress'
 import { ORANGE_GRADIENT } from './discoveryHubSections'
+import { JifunzeSlidePlayer } from './JifunzeSlidePlayer'
 import { StandaloneLessonBlocks } from './StandaloneLessonBlocks'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
@@ -23,6 +34,8 @@ function StandaloneLessonDetailLoaded({ entry, module, lesson, nav }: Standalone
   const { source } = entry
   const done = progress.completedLessonKeys.has(lessonKey(module, lesson.lessonNumber))
   const slug = getStandaloneLessonSlug(lesson)
+  const bpaLessonSlides =
+    entry.slug === BUSINESS_PROCESS_AUTOMATION_SLUG ? getBpaSlidesForLesson(module.slug, lesson.lessonNumber) : []
 
   return (
     <div
@@ -67,6 +80,19 @@ function StandaloneLessonDetailLoaded({ entry, module, lesson, nav }: Standalone
             <p className="text-[11px] font-semibold uppercase tracking-wide text-orange-800">Learner goal</p>
             <p className="mt-2 text-[15px] leading-relaxed text-stone-800">{lesson.learnerGoal}</p>
           </div>
+
+          {entry.slug === BUSINESS_PROCESS_AUTOMATION_SLUG && bpaLessonSlides.length > 0 ? (
+            <div className="mt-10" data-testid={`standalone-bpa-slide-player-lesson-${slug}`}>
+              <JifunzeSlidePlayer
+                title="Slides for this lesson"
+                subtitle="This slide range aligns with the lesson you are reading. Use the deck for the full visual narrative, then continue with the guided blocks below."
+                slides={bpaLessonSlides}
+                slideCounterTotal={businessProcessAutomationSlideManifest.totalSlides}
+                deckDownloadUrl={businessProcessAutomationSlideManifest.deckDownloadUrl}
+                showDownload
+              />
+            </div>
+          ) : null}
 
           <div className="mt-10">
             <StandaloneLessonBlocks blocks={lesson.blocks} lessonSlug={slug} />

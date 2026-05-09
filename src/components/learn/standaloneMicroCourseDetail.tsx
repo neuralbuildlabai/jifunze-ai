@@ -1,10 +1,17 @@
 import { Link } from 'react-router-dom'
-import { getStandaloneCertificatePath, getStandaloneFirstLessonPath } from '../../data/courses'
+import {
+  BUSINESS_PROCESS_AUTOMATION_SLUG,
+  getStandaloneCertificatePath,
+  getStandaloneFirstLessonPath,
+} from '../../data/courses'
+import { businessProcessAutomationSlideManifest } from '../../data/courses/businessProcessAutomationSlides'
 import type { PracticalMathematicsCourse } from '../../data/courses/practicalMathematicsCourseTypes'
 import type { StandaloneCatalogEntry } from '../../data/courses/standaloneCoursesCatalog'
 import { ORANGE_GRADIENT } from './discoveryHubSections'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
+import { JifunzeSlidePlayer } from './JifunzeSlidePlayer'
+import { SlidePreviewGrid } from './StandaloneVisualBlocks'
 
 /**
  * Course overview layout for `productTier: professional_micro` standalone courses.
@@ -92,6 +99,20 @@ export function StandaloneMicroCourseDetailView({ entry }: { entry: StandaloneCa
           </div>
         </section>
 
+        {entry.slug === BUSINESS_PROCESS_AUTOMATION_SLUG ? (
+          <section data-testid="standalone-bpa-slide-player-overview" className="space-y-4">
+            <JifunzeSlidePlayer
+              title="Play the course slides"
+              subtitle="Use the arrows to move through the professional training deck. The modules below break the same material into guided lessons, practice, quiz, and certificate steps."
+              slides={businessProcessAutomationSlideManifest.slides}
+              slideCounterTotal={businessProcessAutomationSlideManifest.totalSlides}
+              deckDownloadUrl={businessProcessAutomationSlideManifest.deckDownloadUrl}
+              showDownload
+              showThumbnails
+            />
+          </section>
+        ) : null}
+
         <section>
           <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">What you will learn</h2>
           <ul className="mt-4 space-y-2.5 text-[14px] leading-snug text-[color:var(--jf-muted)]">
@@ -143,11 +164,25 @@ export function StandaloneMicroCourseDetailView({ entry }: { entry: StandaloneCa
           </div>
         </section>
 
+        {micro.slidePreviewCards?.length ? (
+          <section>
+            <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
+              Course deck — module by module
+            </h2>
+            <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+              Each module maps to a section of the professional slide deck. The deck includes workflow maps, data tables,
+              charts, and decision frameworks.
+            </p>
+            <div className="mt-5">
+              <SlidePreviewGrid cards={micro.slidePreviewCards} />
+            </div>
+          </section>
+        ) : null}
+
         <section>
           <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">What the course covers</h2>
           <p className="mt-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-            Six modules aligned to the 40-slide professional deck—foundations through executive recommendation, with GlowCare as the
-            through-line.
+            {source.modules.length} modules aligned to the professional slide deck — from foundations through {micro.caseStudy.headline} case analysis and an executive-style recommendation.
           </p>
           <ol className="mt-6 space-y-3">
             {source.modules.map((m) => (
