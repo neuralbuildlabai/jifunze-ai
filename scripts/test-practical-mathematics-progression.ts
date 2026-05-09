@@ -22,40 +22,39 @@ import {
   PRACTICAL_MATH_INTERNAL_KEY,
   PRACTICAL_MATH_SLUG,
   practicalMathematicsCourse,
+  practicalMathCertificateEligible,
   practicalMathQuizPassed,
+  practicalMathWeightedScorePercent,
   STANDALONE_LEARNER_CATALOG,
 } from '../src/data/courses'
 import { practicalMathFlagshipCurriculum } from '../src/data/courses/practicalMathematicsFlagshipAdapter'
 
 function testQuizPassThreshold() {
-  // 8-question fallback: ≥6 of 8
-  assert.equal(practicalMathQuizPassed({ correct: 6, total: 8 }), true, '6/8 passes')
+  // 8-question quiz: ceil(0.75 × 8) = 6
+  assert.equal(practicalMathQuizPassed({ correct: 6, total: 8 }), true, '6/8 passes at 75%')
   assert.equal(practicalMathQuizPassed({ correct: 5, total: 8 }), false, '5/8 fails')
 
-  // 10-question quiz: ceil(0.7 × 10) = 7 required
-  assert.equal(practicalMathQuizPassed({ correct: 7, total: 10 }), true, '7/10 passes')
-  assert.equal(practicalMathQuizPassed({ correct: 6, total: 10 }), false, '6/10 fails')
+  // 10-question quiz: ceil(7.5) = 8 required
+  assert.equal(practicalMathQuizPassed({ correct: 8, total: 10 }), true, '8/10 passes')
+  assert.equal(practicalMathQuizPassed({ correct: 7, total: 10 }), false, '7/10 fails')
 
-  // 11-question quiz: ceil(0.7 × 11) = 8 required
-  assert.equal(practicalMathQuizPassed({ correct: 8, total: 11 }), true, '8/11 passes')
-  assert.equal(practicalMathQuizPassed({ correct: 7, total: 11 }), false, '7/11 fails')
+  // 11-question quiz: ceil(8.25) = 9 required
+  assert.equal(practicalMathQuizPassed({ correct: 9, total: 11 }), true, '9/11 passes')
+  assert.equal(practicalMathQuizPassed({ correct: 8, total: 11 }), false, '8/11 fails')
 
-  // 12-question quiz: ceil(0.7 × 12) = 9 required
+  // 12-question quiz: ceil(9) = 9 required
   assert.equal(practicalMathQuizPassed({ correct: 9, total: 12 }), true, '9/12 passes')
   assert.equal(practicalMathQuizPassed({ correct: 8, total: 12 }), false, '8/12 fails')
 
-  // total 0 should fail safely (no division by zero)
   assert.equal(practicalMathQuizPassed({ correct: 0, total: 0 }), false, 'empty quiz fails safely')
 }
 
 function testSequentialProgression() {
   const progress = emptyPracticalMathProgress()
-  // initial: nothing complete; first module is M1
   const first = findNextPracticalMathModule(practicalMathematicsCourse, progress)
   assert.ok(first, 'a next module exists for empty progress')
   assert.equal(first!.moduleNumber, 1, 'first module is M1')
 
-  // mark M1 lessons complete and quiz passed
   const m1 = practicalMathematicsCourse.modules[0]!
   for (const l of m1.lessons) progress.completedLessonKeys.add(lessonKey(m1, l.lessonNumber))
   progress.passedModuleQuizzes.set(m1.slug, { correct: 8, total: m1.moduleQuiz.length })
@@ -67,7 +66,6 @@ function testSequentialProgression() {
   const second = findNextPracticalMathModule(practicalMathematicsCourse, progress)
   assert.equal(second!.moduleNumber, 2, 'second module unlocks once M1 fully complete')
 
-  // missing quiz: even if all lessons of M2 are done, quiz must pass
   const m2 = practicalMathematicsCourse.modules[1]!
   for (const l of m2.lessons) progress.completedLessonKeys.add(lessonKey(m2, l.lessonNumber))
   assert.equal(moduleQuizPassed(m2, progress), false, 'M2 quiz still unpassed without record')
@@ -77,13 +75,11 @@ function testSequentialProgression() {
     'next remains M2 until quiz passes',
   )
 
-  // failing quiz score does not pass
   progress.passedModuleQuizzes.set(m2.slug, { correct: 5, total: m2.moduleQuiz.length })
-  assert.equal(moduleQuizPassed(m2, progress), false, '5 correct on a 10-question quiz fails')
+  assert.equal(moduleQuizPassed(m2, progress), false, '5 correct on a 10-question quiz fails at 75%')
 
-  // passing score lets progression advance
-  progress.passedModuleQuizzes.set(m2.slug, { correct: 7, total: m2.moduleQuiz.length })
-  assert.equal(moduleQuizPassed(m2, progress), true, '7 correct on a 10-question quiz passes')
+  progress.passedModuleQuizzes.set(m2.slug, { correct: 8, total: m2.moduleQuiz.length })
+  assert.equal(moduleQuizPassed(m2, progress), true, '8 correct on a 10-question quiz passes')
   assert.equal(
     findNextPracticalMathModule(practicalMathematicsCourse, progress)!.moduleNumber,
     3,
@@ -113,6 +109,37 @@ function testFullCourseComplete() {
     undefined,
     'no next module when fully complete',
   )
+  assert.equal(practicalMathCertificateEligible(practicalMathematicsCourse, progress), false, 'certificate blocked without capstone')
+  progress.capstoneComplete = true
+  assert.equal(practicalMathCertificateEligible(practicalMathematicsCourse, progress), true, 'certificate eligible with capstone')
+  const pct = practicalMathWeightedScorePercent(practicalMathematicsCourse, progress)
+  assert.ok(pct !== null && pct >= 75, 'overall weighted score meets 75%')
+}
+
+function testCertificateNeedsOverall75() {
+  const progress = emptyPracticalMathProgress()
+  for (const m of practicalMathematicsCourse.modules) {
+    for (const l of m.lessons) progress.completedLessonKeys.add(lessonKey(m, l.lessonNumber))
+    const t = m.moduleQuiz.length
+    const need = Math.ceil(t * 0.75)
+    progress.passedModuleQuizzes.set(m.slug, { correct: need, total: t })
+  }
+  progress.capstoneComplete = true
+  assert.equal(practicalMathCertificateEligible(practicalMathematicsCourse, progress), true, 'min passing scores + capstone unlock')
+  const pct = practicalMathWeightedScorePercent(practicalMathematicsCourse, progress)
+  assert.ok(pct !== null && pct + 1e-9 >= 75, 'aggregate at least 75% when each module meets bar')
+}
+
+function testCertificateRequiresCapstone() {
+  const progress = emptyPracticalMathProgress()
+  for (const m of practicalMathematicsCourse.modules) {
+    for (const l of m.lessons) progress.completedLessonKeys.add(lessonKey(m, l.lessonNumber))
+    progress.passedModuleQuizzes.set(m.slug, { correct: m.moduleQuiz.length, total: m.moduleQuiz.length })
+  }
+  assert.equal(progress.capstoneComplete, false, 'empty progress capstone flag')
+  assert.equal(practicalMathCertificateEligible(practicalMathematicsCourse, progress), false, 'no certificate without capstone')
+  progress.capstoneComplete = true
+  assert.equal(practicalMathCertificateEligible(practicalMathematicsCourse, progress), true, 'certificate with capstone')
 }
 
 function testCatalogAdapter() {
@@ -144,6 +171,8 @@ function main() {
   testQuizPassThreshold()
   testSequentialProgression()
   testFullCourseComplete()
+  testCertificateNeedsOverall75()
+  testCertificateRequiresCapstone()
   testCatalogAdapter()
   testFlagshipAdapter()
   console.log('test-practical-mathematics-progression: OK')

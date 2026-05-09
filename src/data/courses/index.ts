@@ -59,6 +59,7 @@ export {
   getStandaloneModulePath,
   getStandaloneLessonPath,
   getStandaloneCertificatePath,
+  getStandaloneQuizPath,
   getStandaloneFirstLessonPath,
   findStandaloneLesson,
   getStandaloneLessonNavTargets,

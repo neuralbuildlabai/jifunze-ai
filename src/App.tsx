@@ -61,8 +61,11 @@ import { LearningDiscoveryHubPage } from './components/learn/LearningDiscoveryHu
 import { LearningSchoolCatalogPage } from './components/learn/LearningSchoolCatalogPage'
 import { FlagshipCourseDetailPage } from './components/learn/FlagshipCourseDetailPage'
 import { FlagshipCourseSessionPage } from './components/learn/FlagshipCourseSessionPage'
+import { StandaloneCertificatePage } from './components/learn/StandaloneCertificatePage'
 import { StandaloneCourseDetailPage } from './components/learn/StandaloneCourseDetailPage'
+import { StandaloneLessonDetailPage } from './components/learn/StandaloneLessonDetailPage'
 import { StandaloneModuleDetailPage } from './components/learn/StandaloneModuleDetailPage'
+import { StandaloneQuizPage } from './components/learn/StandaloneQuizPage'
 import { EXTENDED_PUBLIC_LIBRARY_CONFIGS } from './data/learning/extendedPublicLibraryConfigs'
 import {
   AGENTIC_AI_REAL_WORK_LANDING_PATH,
@@ -178,6 +181,15 @@ export default function App() {
         <Route path="/learn/courses/:slug" element={<FlagshipCourseDetailPage />} />
         <Route path="/learn/checkout" element={<LearnerCheckoutPage />} />
         <Route path="/learn/readiness/:slug" element={<ReadinessChallengePage />} />
+        <Route path="/learn/:standaloneCourseSlug/certificate" element={<StandaloneCertificatePage />} />
+        <Route
+          path="/learn/:standaloneCourseSlug/modules/:moduleSlug/lessons/:lessonSlug"
+          element={<StandaloneLessonDetailPage />}
+        />
+        <Route
+          path="/learn/:standaloneCourseSlug/modules/:moduleSlug/quiz"
+          element={<StandaloneQuizPage />}
+        />
         <Route
           path="/learn/:standaloneCourseSlug/modules/:moduleSlug"
           element={<StandaloneModuleDetailPage />}

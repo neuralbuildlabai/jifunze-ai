@@ -90,7 +90,7 @@ export const practicalMathematicsCourse: PracticalMathematicsCourse = {
   },
 
   assessmentApproach:
-    'Each module has 8–12 quiz questions mixing multiple choice, short answer, calculation, and applied scenario items. Most quizzes include at least two medium/hard items that require interpretation or multi-step reasoning. Every question has a written explanation linked back to the lesson where the skill was taught.',
+    'Each module has 8–12 quiz questions mixing multiple choice, short answer, calculation, and applied scenario items. Quizzes are interactive and graded automatically against the answer keys — there is no manual self-reporting. Most quizzes include at least two medium/hard items that require interpretation or multi-step reasoning. Every question has a written explanation linked back to the lesson where the skill was taught and shown after submission.',
 
   capstoneDescription:
     'The Module 16 capstone asks you to choose one real or realistic decision (a household budget, small-business pricing plan, project timeline with resources, property or rental analysis, healthcare cost comparison, or trade quote) and produce a short, reviewable artifact: the question, the numbers, the calculations, the assumptions, the limits of your analysis, and what you would still verify with a qualified professional before acting.',

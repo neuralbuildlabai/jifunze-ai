@@ -11,6 +11,7 @@
 import assert from 'node:assert/strict'
 
 import {
+  getStandaloneLessonSlug,
   practicalMathematicsCourse,
   PRACTICAL_MATH_MODULE_SLUGS,
   PRACTICAL_MATH_MODULES_REQUIRING_SAFETY_NOTE,
@@ -135,6 +136,17 @@ function testCapstoneRubricIsolation() {
   }
 }
 
+function testLessonUrlSlugsUniqueWithinEachModule() {
+  for (const m of practicalMathematicsCourse.modules) {
+    const seen = new Set<string>()
+    for (const l of m.lessons) {
+      const s = getStandaloneLessonSlug(l)
+      assert.ok(!seen.has(s), `${m.slug}: duplicate lesson URL slug ${s}`)
+      seen.add(s)
+    }
+  }
+}
+
 function testFlagshipAdapterMapping() {
   assert.equal(
     practicalMathFlagshipCurriculum.slug,
@@ -163,6 +175,7 @@ function main() {
   testNoFlagshipSlugCollisions()
   testCapstoneRubricIsolation()
   testFlagshipAdapterMapping()
+  testLessonUrlSlugsUniqueWithinEachModule()
   console.log('verify-practical-mathematics-continuity: OK')
 }
 

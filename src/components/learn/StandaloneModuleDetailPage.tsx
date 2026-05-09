@@ -6,6 +6,7 @@ import {
   getStandaloneCertificatePath,
   getStandaloneLessonPath,
   getStandaloneLessonSlug,
+  getStandaloneQuizPath,
   PRACTICAL_MATH_INTERNAL_KEY,
   practicalMathQuizPassed,
 } from '../../data/courses'
@@ -17,7 +18,35 @@ import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
 import type { StandaloneCourseModule } from '../../data/courses/practicalMathematicsCourseTypes'
 
-function ModuleQuizSelfCheck({ module }: { module: StandaloneCourseModule }) {
+/**
+ * Dev-only flag that controls whether the legacy manual-score helper is
+ * rendered on the module page. The interactive quiz at
+ * `/learn/.../modules/:moduleSlug/quiz` is the production flow; this helper
+ * is hidden from learners by default and is enabled only when explicitly
+ * opted-in via VITE_PRACTICAL_MATH_DEV_MANUAL_SCORE=true (build-time env)
+ * or `?devManualScore=1` in the URL.
+ */
+function isDevManualScoreEnabled(): boolean {
+  if (typeof window === 'undefined') return false
+  try {
+    const url = new URL(window.location.href)
+    if (url.searchParams.get('devManualScore') === '1') return true
+  } catch {
+    /* swallow */
+  }
+  const env =
+    typeof import.meta !== 'undefined' && (import.meta as { env?: Record<string, unknown> }).env
+      ? ((import.meta as { env?: Record<string, unknown> }).env as Record<string, unknown>)
+      : undefined
+  if (env && env.VITE_PRACTICAL_MATH_DEV_MANUAL_SCORE === 'true') return true
+  return false
+}
+
+/**
+ * Hidden-by-default manual score input used only for development testing.
+ * Real learners take the quiz at `/learn/.../modules/:moduleSlug/quiz`.
+ */
+function ModuleQuizDevManualScore({ module }: { module: StandaloneCourseModule }) {
   const { progress, setModuleQuizScore } = usePracticalMathProgress()
   const [correctInput, setCorrectInput] = useState('')
   const [totalInput, setTotalInput] = useState(String(module.moduleQuiz.length))
@@ -39,11 +68,13 @@ function ModuleQuizSelfCheck({ module }: { module: StandaloneCourseModule }) {
   }
 
   return (
-    <div className="mt-5 rounded-xl border border-stone-200 bg-stone-50/60 p-4 sm:p-5" data-testid={`standalone-module-quiz-selfcheck-${module.slug}`}>
-      <p className="text-[13px] font-medium text-stone-800">Record your score (self-check)</p>
-      <p className="mt-2 text-[12px] leading-relaxed text-stone-600">
-        After you complete the quiz in your notes or on paper, enter how many you got correct. This keeps your place in the free
-        course and counts toward your certificate eligibility.
+    <div
+      className="mt-5 rounded-xl border border-amber-300 bg-amber-50/80 p-4 sm:p-5"
+      data-testid={`standalone-module-quiz-devmanual-${module.slug}`}
+    >
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-800">Dev only — manual score override</p>
+      <p className="mt-2 text-[12px] leading-relaxed text-stone-700">
+        Hidden from learners. Enabled by VITE_PRACTICAL_MATH_DEV_MANUAL_SCORE or ?devManualScore=1.
       </p>
       <div className="mt-4 flex flex-wrap items-end gap-3">
         <label className="flex flex-col gap-1 text-[12px] font-medium text-stone-700">
@@ -71,7 +102,7 @@ function ModuleQuizSelfCheck({ module }: { module: StandaloneCourseModule }) {
           className={`inline-flex min-h-[2.5rem] items-center justify-center rounded-full px-5 text-sm font-semibold text-white shadow-sm transition hover:brightness-105 ${ORANGE_GRADIENT}`}
           onClick={onSaveQuiz}
         >
-          Save score
+          Save dev score
         </button>
       </div>
       {savedQuiz ? (
@@ -93,6 +124,7 @@ export function StandaloneModuleDetailPage() {
     standaloneCourseSlug: string
     moduleSlug: string
   }>()
+  const { progress } = usePracticalMathProgress()
 
   const entry = useMemo(
     () => (standaloneCourseSlug ? findStandaloneCourseBySlug(standaloneCourseSlug) : undefined),
@@ -119,8 +151,17 @@ export function StandaloneModuleDetailPage() {
   const next = idx >= 0 && idx < source.modules.length - 1 ? source.modules[idx + 1] : null
   const base = `/learn/${entry.slug}`
   const modulePath = (slug: string) => `${base}/modules/${slug}`
+  const quizPath = getStandaloneQuizPath(entry.slug, module.slug)
   const certificateHref = getStandaloneCertificatePath(entry.slug)
   const showCapstonePanel = entry.internalKey === PRACTICAL_MATH_INTERNAL_KEY && module.slug === 'final-integration-mastery'
+  const devManualScoreEnabled = isDevManualScoreEnabled()
+
+  const savedQuizScore = progress.passedModuleQuizzes.get(module.slug) ?? null
+  const savedQuizPassed = savedQuizScore ? practicalMathQuizPassed(savedQuizScore) : false
+  let quizStatusLabel: 'Passed' | 'Needs retry' | 'Not started'
+  if (savedQuizPassed) quizStatusLabel = 'Passed'
+  else if (savedQuizScore) quizStatusLabel = 'Needs retry'
+  else quizStatusLabel = 'Not started'
 
   const statsLine = `${formatHoursFromMinutes(module.durationMinutes)} · ${module.lessons.length} lessons · ${module.moduleQuiz.length} quiz questions · Lab: ${module.practiceLab.title}`
 
@@ -131,7 +172,7 @@ export function StandaloneModuleDetailPage() {
     >
       <div className="mx-auto w-full max-w-3xl space-y-10">
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[color:var(--jf-border)] pb-6">
-          <JifunzeBrandLogo to="/" size="sm" variant="compact" />
+          <JifunzeBrandLogo to="/" size="md" variant="compact" surface="light" />
           <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
             <Link className="text-xs font-medium text-[color:var(--jf-brand)] hover:text-[color:var(--jf-brand-hover)]" to="/learn">
               Catalog
@@ -224,7 +265,7 @@ export function StandaloneModuleDetailPage() {
                       <span className="font-semibold text-stone-600">What you&apos;ll practice:</span> {preview.practiceLine}
                     </p>
                   ) : null}
-                  <p className="mt-3 text-[11px] text-stone-400">~{lesson.estimatedMinutes} min</p>
+                  <p className="mt-3 text-[11px] text-stone-400">{lesson.estimatedMinutes} min</p>
                   <div className="mt-4">
                     <Link
                       to={lessonHref}
@@ -252,13 +293,50 @@ export function StandaloneModuleDetailPage() {
           </p>
         </section>
 
-        <section>
+        <section data-testid={`standalone-module-quiz-section-${module.slug}`}>
           <h2 className="text-lg font-semibold text-[color:var(--jf-text)]">Module quiz</h2>
           <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
             {module.moduleQuiz.length} questions · pass at 75% or higher ({Math.ceil(module.moduleQuiz.length * 0.75)} or more
             correct for this length).
           </p>
-          <ModuleQuizSelfCheck key={module.slug} module={module} />
+          <div className="mt-5 rounded-xl border border-orange-100/90 bg-white p-5 shadow-sm sm:p-6">
+            <div className="flex flex-wrap items-baseline justify-between gap-3">
+              <p className="text-[13px] font-semibold text-stone-800">
+                Quiz status:{' '}
+                <span
+                  className={
+                    quizStatusLabel === 'Passed'
+                      ? 'text-emerald-700'
+                      : quizStatusLabel === 'Needs retry'
+                        ? 'text-rose-700'
+                        : 'text-stone-600'
+                  }
+                  data-testid={`standalone-module-quiz-status-${module.slug}`}
+                >
+                  {quizStatusLabel}
+                </span>
+              </p>
+              {savedQuizScore ? (
+                <p className="text-[12px] text-stone-500" data-testid={`standalone-module-quiz-latest-score-${module.slug}`}>
+                  Latest score: {savedQuizScore.correct}/{savedQuizScore.total}
+                </p>
+              ) : null}
+            </div>
+            <p className="mt-3 text-[13px] leading-relaxed text-stone-600">
+              Take the interactive quiz. Your answers are graded against the answer keys; you must score 75% or higher to pass
+              and progress toward your certificate.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link
+                to={quizPath}
+                className={`inline-flex min-h-[2.5rem] items-center justify-center rounded-full px-6 text-sm font-semibold text-white shadow-md shadow-orange-500/25 transition hover:brightness-105 ${ORANGE_GRADIENT}`}
+                data-testid={`standalone-module-take-quiz-${module.slug}`}
+              >
+                {savedQuizPassed ? 'Retake module quiz' : savedQuizScore ? 'Retry module quiz' : 'Take module quiz'}
+              </Link>
+            </div>
+          </div>
+          {devManualScoreEnabled ? <ModuleQuizDevManualScore key={module.slug} module={module} /> : null}
         </section>
 
         {module.safetyNote ? (

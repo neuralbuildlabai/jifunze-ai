@@ -66,7 +66,7 @@ export function StandaloneLessonDetailPage() {
     >
       <div className="mx-auto w-full max-w-3xl space-y-10">
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[color:var(--jf-border)] pb-6">
-          <JifunzeBrandLogo to="/" size="sm" variant="compact" />
+          <JifunzeBrandLogo to="/" size="md" variant="compact" surface="light" />
           <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
             <Link className="text-xs font-medium text-[color:var(--jf-brand)] hover:text-[color:var(--jf-brand-hover)]" to="/learn">
               Catalog
@@ -97,7 +97,7 @@ export function StandaloneLessonDetailPage() {
         <article data-testid="standalone-lesson-content">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-orange-700">Lesson {lesson.lessonNumber}</p>
           <h1 className="mt-1 text-3xl font-semibold tracking-tight text-[color:var(--jf-text)]">{lesson.title}</h1>
-          <p className="mt-3 text-[13px] text-stone-500">Estimated duration: ~{lesson.estimatedMinutes} minutes</p>
+          <p className="mt-3 text-[13px] text-stone-500">{lesson.estimatedMinutes} minutes</p>
           <div className="mt-6 rounded-xl border border-orange-100/90 bg-white p-4 shadow-sm">
             <p className="text-[11px] font-semibold uppercase tracking-wide text-orange-800">Learner goal</p>
             <p className="mt-2 text-[15px] leading-relaxed text-stone-800">{lesson.learnerGoal}</p>

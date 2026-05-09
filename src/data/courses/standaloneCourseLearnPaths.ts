@@ -40,6 +40,14 @@ export function getStandaloneCertificatePath(courseSlug: string): string {
   return `/learn/${courseSlug}/certificate`
 }
 
+/**
+ * Interactive quiz page for a standalone course module.
+ * Standalone — does NOT collide with flagship lesson-quiz player routes.
+ */
+export function getStandaloneQuizPath(courseSlug: string, moduleSlug: string): string {
+  return `/learn/${courseSlug}/modules/${moduleSlug}/quiz`
+}
+
 export function getStandaloneFirstLessonPath(courseSlug: string, course: PracticalMathematicsCourse): string | null {
   const m0 = course.modules[0]
   const l0 = m0?.lessons[0]

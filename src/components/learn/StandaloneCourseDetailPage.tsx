@@ -53,7 +53,7 @@ export function StandaloneCourseDetailPage() {
     >
       <div className="mx-auto w-full max-w-3xl space-y-12">
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[color:var(--jf-border)] pb-6">
-          <JifunzeBrandLogo to="/" size="sm" variant="compact" />
+          <JifunzeBrandLogo to="/" size="md" variant="compact" surface="light" />
           <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
             <Link className="text-xs font-medium text-[color:var(--jf-brand)] hover:text-[color:var(--jf-brand-hover)]" to="/learn">
               Catalog
@@ -162,7 +162,8 @@ export function StandaloneCourseDetailPage() {
         <section data-testid={`standalone-course-curriculum-${entry.slug}`}>
           <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">Modules</h2>
           <p className="mt-2 text-[13px] text-[color:var(--jf-muted)]">
-            {source.modules.length} modules · each module links to full lessons, the practice lab, and quiz self-check.
+            {source.modules.length} modules · each module links to full lessons, the practice lab, and an interactive quiz that
+            grades your answers automatically.
           </p>
           <ol className="mt-6 space-y-3">
             {source.modules.map((m) => (
