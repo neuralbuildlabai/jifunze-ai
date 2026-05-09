@@ -1,0 +1,45 @@
+# Chart data for Scrum Made Simple deck
+# Three datasets, separated by blank lines and a header row each.
+# Imported into the deck as three separate charts (slides 8, 33, and a backup pie on slide 31).
+
+# Dataset 1: Agile vs traditional feedback timing (slide 8)
+# Bar chart. X-axis = week of project, Y-axis = number of customer feedback moments collected.
+# Traditional model has one feedback moment at the end of a 12-week project.
+# Agile model has six feedback moments, one every two weeks.
+
+dataset,week,traditional_feedback_moments,agile_feedback_moments
+agile_vs_traditional_feedback,2,0,1
+agile_vs_traditional_feedback,4,0,1
+agile_vs_traditional_feedback,6,0,1
+agile_vs_traditional_feedback,8,0,1
+agile_vs_traditional_feedback,10,0,1
+agile_vs_traditional_feedback,12,1,1
+
+# Dataset 2: Sprint progress by day (slide 33)
+# Line chart. X-axis = working day of sprint (0-10). Y-axis = remaining work units.
+# Demonstrates a healthy burndown for a 2-week sprint with 25 units of work.
+# Day 0 = sprint planning day; day 10 = end of sprint.
+# Notice the small bump at day 4 (real teams discover scope, not just remove it).
+
+dataset,working_day,remaining_work_units,ideal_remaining
+sprint_progress_by_day,0,25,25
+sprint_progress_by_day,1,24,22.5
+sprint_progress_by_day,2,22,20
+sprint_progress_by_day,3,20,17.5
+sprint_progress_by_day,4,21,15
+sprint_progress_by_day,5,18,12.5
+sprint_progress_by_day,6,15,10
+sprint_progress_by_day,7,11,7.5
+sprint_progress_by_day,8,7,5
+sprint_progress_by_day,9,3,2.5
+sprint_progress_by_day,10,0,0
+
+# Dataset 3: Task status distribution (optional pie / bar accompanying slide 31)
+# Snapshot of the same example sprint at the end of working day 5.
+# Sums to 25 (matches dataset 2 total work units).
+
+dataset,status,count
+task_status_distribution,To Do,7
+task_status_distribution,In Progress,6
+task_status_distribution,Blocked,1
+task_status_distribution,Done,11
