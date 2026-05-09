@@ -23,6 +23,7 @@ import {
   STANDALONE_LEARNER_CATALOG,
   getStandaloneLessonSlug,
 } from '../src/data/courses'
+import { businessProcessAutomationNarrationManifest } from '../src/data/courses/businessProcessAutomationNarration'
 import { FLAGSHIP_CURRICULUM_SLUGS } from '../src/data/learning/flagshipCourseCurricula'
 
 function testCourseShellAndIdentity() {
@@ -342,9 +343,12 @@ function testSlideAssetsAndManifest() {
   const playerPath = join(REPO_ROOT, 'src/components/learn/JifunzeSlidePlayer.tsx')
   assert.ok(existsSync(playerPath), 'JifunzeSlidePlayer component file exists')
 
-  const overview = readFileSync(join(REPO_ROOT, 'src/components/learn/standaloneMicroCourseDetail.tsx'), 'utf8')
-  assert.ok(overview.includes('JifunzeSlidePlayer'), 'overview integration references JifunzeSlidePlayer')
-  assert.ok(overview.includes('businessProcessAutomationSlideManifest'), 'overview integration references slide manifest')
+  const microDetail = readFileSync(join(REPO_ROOT, 'src/components/learn/standaloneMicroCourseDetail.tsx'), 'utf8')
+  assert.ok(microDetail.includes('BpaNarratedCourseOverview'), 'micro course delegates BPA narrated overview')
+
+  const bpaOverview = readFileSync(join(REPO_ROOT, 'src/components/learn/BpaNarratedCourseOverview.tsx'), 'utf8')
+  assert.ok(bpaOverview.includes('JifunzeSlidePlayer'), 'BPA narrated overview references JifunzeSlidePlayer')
+  assert.ok(bpaOverview.includes('businessProcessAutomationSlideManifest'), 'BPA narrated overview references slide manifest')
 
   const modRouter = readFileSync(join(REPO_ROOT, 'src/components/learn/StandaloneModuleDetailPage.tsx'), 'utf8')
   assert.ok(modRouter.includes('BpaStandaloneModulePage'), 'module router delegates BPA layout')
@@ -352,6 +356,7 @@ function testSlideAssetsAndManifest() {
 
   const bpaModLayout = readFileSync(join(REPO_ROOT, 'src/components/learn/BpaStandaloneModulePage.tsx'), 'utf8')
   assert.ok(bpaModLayout.includes('JifunzeSlidePlayer'), 'BPA module layout includes slide player')
+  assert.ok(bpaModLayout.includes('getBpaSlideTranscriptsForSlides'), 'BPA module wires slide transcripts for narration')
   const modPlayerIdx = bpaModLayout.indexOf('<JifunzeSlidePlayer')
   const modLessonsIdx = bpaModLayout.indexOf('standalone-module-lessons')
   assert.ok(
@@ -363,10 +368,10 @@ function testSlideAssetsAndManifest() {
   assert.ok(lessonPage.includes('JifunzeSlidePlayer'), 'lesson page references JifunzeSlidePlayer')
   assert.ok(lessonPage.includes('getBpaSlidesForLesson'), 'lesson page references slide helper')
   const lsIdx = lessonPage.indexOf('title="Lesson slides"')
-  const lkIdx = lessonPage.indexOf('label="Key idea"')
+  const ktIdx = lessonPage.indexOf('Key takeaway')
   assert.ok(
-    lsIdx !== -1 && lkIdx !== -1 && lsIdx < lkIdx,
-    'BPA lesson layout: slide player section appears before key notes in source order',
+    lsIdx !== -1 && ktIdx !== -1 && lsIdx < ktIdx,
+    'BPA lesson layout: slide player section appears before key takeaway in source order',
   )
 }
 
@@ -379,6 +384,38 @@ function testBpaDurationFormattingAndSum() {
     sum += m.durationMinutes
   }
   assert.equal(sum, 57, 'BPA module durations should sum to 57 minutes')
+}
+
+function testNarrationManifestAndVoiceoverDocs() {
+  const scriptPath = join(REPO_ROOT, 'training/business-process-automation-for-work/voiceover-script.md')
+  const guidePath = join(REPO_ROOT, 'training/business-process-automation-for-work/voiceover-production-guide.md')
+  assert.ok(existsSync(scriptPath), 'voiceover-script.md exists')
+  assert.ok(existsSync(guidePath), 'voiceover-production-guide.md exists')
+
+  const narrationTs = join(REPO_ROOT, 'src/data/courses/businessProcessAutomationNarration.ts')
+  const typesTs = join(REPO_ROOT, 'src/data/courses/courseNarrationTypes.ts')
+  assert.ok(existsSync(narrationTs), 'businessProcessAutomationNarration.ts exists')
+  assert.ok(existsSync(typesTs), 'courseNarrationTypes.ts exists')
+
+  const m = businessProcessAutomationNarrationManifest
+  assert.equal(m.courseSlug, BUSINESS_PROCESS_AUTOMATION_SLUG, 'narration manifest courseSlug matches')
+  assert.ok(['planned', 'ready', 'missing'].includes(m.status), 'narration status is planned, ready, or missing')
+
+  if (m.status === 'ready') {
+    const checkUrl = (label: string, url: string | undefined) => {
+      assert.ok(url?.startsWith('/course-assets/'), `${label}: audio URL must be public path`)
+      const fsPath = join(REPO_ROOT, 'public', url!.slice(1))
+      assert.ok(existsSync(fsPath), `${label}: audio file must exist on disk when status is ready (${fsPath})`)
+    }
+    if (m.fullCourseAudioSrc) checkUrl('fullCourseAudioSrc', m.fullCourseAudioSrc)
+    for (const slug of BPA_MODULE_SLUGS) {
+      const u = m.moduleAudio?.[slug]
+      if (u) checkUrl(`moduleAudio[${slug}]`, u)
+    }
+  }
+
+  const audioReadme = join(REPO_ROOT, 'public/course-assets/business-process-automation-for-work/audio/README.md')
+  assert.ok(existsSync(audioReadme), 'public audio README exists')
 }
 
 function main() {
@@ -405,9 +442,10 @@ function main() {
   testModuleMapMatchesModules()
   testSlideAssetsAndManifest()
   testBpaDurationFormattingAndSum()
+  testNarrationManifestAndVoiceoverDocs()
   console.log('verify-business-process-automation-course: OK — all checks passed')
   console.log(
-    'Manual UX check (browser): /learn/business-process-automation-for-work/modules/automation-foundations — slide player near top, compact lesson rows, no 0 hours, certificate link only in completion panel.',
+    'Manual UX check (browser): /learn/business-process-automation-for-work — narrated-course overview with slide player first; modules show player + compact lessons; narration is planned until MP3s exist under public/course-assets/.../audio/.',
   )
 }
 

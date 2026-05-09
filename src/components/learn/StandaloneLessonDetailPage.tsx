@@ -8,20 +8,20 @@ import {
   getStandaloneLessonSlug,
 } from '../../data/courses'
 import { businessProcessAutomationSlideManifest, getBpaSlidesForLesson } from '../../data/courses/businessProcessAutomationSlides'
+import {
+  businessProcessAutomationNarrationManifest,
+  getBpaAudioSrcWhenReady,
+  getBpaModuleNarrationAudioSrc,
+  getBpaSlideTranscriptsForSlides,
+} from '../../data/courses/businessProcessAutomationNarration'
 import { lessonKey } from '../../data/courses/practicalMathematicsProgression'
 import type { StandaloneCatalogEntry } from '../../data/courses/standaloneCoursesCatalog'
-import type { StandaloneCourseLesson, StandaloneCourseLessonBlock, StandaloneCourseModule } from '../../data/courses/practicalMathematicsCourseTypes'
-import {
-  pickBpaBrightPathBlock,
-  pickBpaCheckpointBlock,
-  pickBpaKeyIdeaBlock,
-  pickBpaOptionalVisualBlock,
-} from '../../lib/bpaLessonNarrative'
+import type { StandaloneCourseLesson, StandaloneCourseModule } from '../../data/courses/practicalMathematicsCourseTypes'
+import { pickBpaCheckpointBlock, pickBpaKeyIdeaBlock } from '../../lib/bpaLessonNarrative'
 import { useStandaloneCourseProgress } from '../../hooks/usePracticalMathProgress'
 import { ORANGE_GRADIENT } from './discoveryHubSections'
 import { JifunzeSlidePlayer } from './JifunzeSlidePlayer'
 import { StandaloneLessonBlocks } from './StandaloneLessonBlocks'
-import { StandaloneVisualBlock } from './StandaloneVisualBlocks'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
 import type { StandaloneLessonNavTargets } from '../../data/courses/standaloneCourseLearnPaths'
@@ -45,55 +45,31 @@ function BpaLessonParagraphs({ text }: { text: string | undefined }) {
   )
 }
 
-function BpaNarrativeCard({
-  label,
-  block,
-}: {
-  label: string
-  block: StandaloneCourseLessonBlock | undefined
-}) {
-  if (!block) return null
-  const title =
-    block.type === 'concept_explanation' || block.type === 'worked_example' || block.type === 'real_world_application' || block.type === 'scenario'
-      ? block.title
-      : block.type === 'pause_and_check'
-        ? block.title
-        : undefined
-  const content =
-    'content' in block && typeof block.content === 'string' ? block.content : undefined
-  const bullets = 'bullets' in block && Array.isArray(block.bullets) ? block.bullets : undefined
-  if (!title && !content && !bullets?.length) return null
-  return (
-    <div className="rounded-xl border border-stone-200/90 bg-white p-5 shadow-sm">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-stone-500">{label}</p>
-      {title ? <h2 className="mt-2 text-[17px] font-semibold text-stone-900">{title}</h2> : null}
-      {content ? (
-        <div className="mt-3">
-          <BpaLessonParagraphs text={content} />
-        </div>
-      ) : null}
-      {bullets?.length ? (
-        <ul className="mt-3 list-disc space-y-1.5 pl-5 text-[14px] text-stone-800">
-          {bullets.map((b) => (
-            <li key={b}>{b}</li>
-          ))}
-        </ul>
-      ) : null}
-    </div>
-  )
-}
-
 function StandaloneLessonDetailLoaded({ entry, module, lesson, nav }: StandaloneLessonLoadedProps) {
   const { progress, markLessonComplete } = useStandaloneCourseProgress(entry.internalKey)
   const { source } = entry
   const done = progress.completedLessonKeys.has(lessonKey(module, lesson.lessonNumber))
   const slug = getStandaloneLessonSlug(lesson)
+  const isBpa = entry.slug === BUSINESS_PROCESS_AUTOMATION_SLUG
 
-  if (entry.slug === BUSINESS_PROCESS_AUTOMATION_SLUG) {
-    const bpaLessonSlides = getBpaSlidesForLesson(module.slug, lesson.lessonNumber)
-    const bpaVisual = pickBpaOptionalVisualBlock(module.slug, lesson.blocks)
+  const bpaLessonSlides = useMemo(
+    () => (isBpa ? getBpaSlidesForLesson(module.slug, lesson.lessonNumber) : []),
+    [isBpa, module.slug, lesson.lessonNumber],
+  )
+  const bpaLessonSlideTranscripts = useMemo(() => getBpaSlideTranscriptsForSlides(bpaLessonSlides), [bpaLessonSlides])
+  const bpaLessonAudioSrc = useMemo(
+    () =>
+      isBpa
+        ? getBpaAudioSrcWhenReady(
+            businessProcessAutomationNarrationManifest.status,
+            getBpaModuleNarrationAudioSrc(module.slug),
+          )
+        : undefined,
+    [isBpa, module.slug],
+  )
+
+  if (isBpa) {
     const bpaKey = pickBpaKeyIdeaBlock(lesson.blocks)
-    const bpaBright = pickBpaBrightPathBlock(lesson.blocks)
     const bpaCheck = pickBpaCheckpointBlock(lesson.blocks)
 
     return (
@@ -142,25 +118,49 @@ function StandaloneLessonDetailLoaded({ entry, module, lesson, nav }: Standalone
               <div data-testid={`standalone-bpa-slide-player-lesson-${slug}`}>
                 <JifunzeSlidePlayer
                   title="Lesson slides"
-                  subtitle="Follow the deck here, then use the notes below."
+                  subtitle="Slides first. Use the key takeaway and checkpoint below when you pause."
                   slides={bpaLessonSlides}
                   slideCounterTotal={businessProcessAutomationSlideManifest.totalSlides}
-                  showDownload={false}
+                  deckDownloadUrl={businessProcessAutomationSlideManifest.deckDownloadUrl}
+                  showDownload
+                  audioSrc={bpaLessonAudioSrc}
+                  narrationStatus={businessProcessAutomationNarrationManifest.status}
+                  slideTranscripts={bpaLessonSlideTranscripts}
+                  showTranscript
                 />
               </div>
             ) : null}
 
-            <div className="space-y-4">
-              <BpaNarrativeCard label="Key idea" block={bpaKey} />
-              <BpaNarrativeCard label="BrightPath example" block={bpaBright} />
-              <BpaNarrativeCard label="Check yourself" block={bpaCheck} />
-            </div>
+            {bpaKey ? (
+              <div className="rounded-xl border border-stone-200/90 bg-white p-5 shadow-sm">
+                <h2 className="text-[15px] font-semibold text-stone-900">Key takeaway</h2>
+                <div className="mt-2">
+                  <BpaLessonParagraphs
+                    text={
+                      'content' in bpaKey && typeof bpaKey.content === 'string'
+                        ? bpaKey.content
+                        : 'bullets' in bpaKey && Array.isArray(bpaKey.bullets)
+                          ? bpaKey.bullets.join('\n\n')
+                          : undefined
+                    }
+                  />
+                </div>
+              </div>
+            ) : null}
 
-            {bpaVisual ? (
-              <div className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-sm">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-stone-500">Figure</p>
-                <div className="mt-3">
-                  <StandaloneVisualBlock block={bpaVisual} lessonSlug={slug} />
+            {bpaCheck ? (
+              <div className="rounded-xl border border-orange-100/90 bg-orange-50/50 p-5 shadow-sm">
+                <h2 className="text-[15px] font-semibold text-stone-900">Checkpoint</h2>
+                <div className="mt-2">
+                  <BpaLessonParagraphs
+                    text={
+                      'content' in bpaCheck && typeof bpaCheck.content === 'string'
+                        ? bpaCheck.content
+                        : 'bullets' in bpaCheck && Array.isArray(bpaCheck.bullets)
+                          ? bpaCheck.bullets.join('\n\n')
+                          : undefined
+                    }
+                  />
                 </div>
               </div>
             ) : null}

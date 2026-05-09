@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
+export type NarrationStatus = 'ready' | 'planned' | 'missing'
+
 export type JifunzeSlidePlayerSlide = {
   id: string
   slideNumber: number
@@ -22,6 +24,12 @@ export type JifunzeSlidePlayerProps = {
   showThumbnails?: boolean
   showSpeakerNotes?: boolean
   emptyStateMessage?: string
+  /** Optional narration / voiceover track (single file for module or full course). */
+  audioSrc?: string
+  narrationStatus?: NarrationStatus
+  /** Transcript text keyed by slide number (current slide shows in transcript panel). */
+  slideTranscripts?: Readonly<Partial<Record<number, string>>>
+  showTranscript?: boolean
 }
 
 const MISSING_SLIDE_MESSAGE =
@@ -38,6 +46,10 @@ export function JifunzeSlidePlayer({
   showThumbnails = false,
   showSpeakerNotes = false,
   emptyStateMessage,
+  audioSrc,
+  narrationStatus = 'missing',
+  slideTranscripts,
+  showTranscript = false,
 }: JifunzeSlidePlayerProps) {
   const safeInitial = Math.max(0, Math.min(initialSlideIndex, Math.max(0, slides.length - 1)))
   const [index, setIndex] = useState(safeInitial)
@@ -50,6 +62,11 @@ export function JifunzeSlidePlayer({
   const totalForLabel = slideCounterTotal ?? Math.max(1, slides.length)
   const current = slides[index]
   const progressPct = slides.length > 0 ? ((index + 1) / slides.length) * 100 : 0
+
+  const currentTranscript = useMemo(() => {
+    if (!current || !slideTranscripts) return undefined
+    return slideTranscripts[current.slideNumber]
+  }, [current, slideTranscripts])
 
   const goPrev = useCallback(() => {
     setIndex((i) => Math.max(0, i - 1))
@@ -100,13 +117,34 @@ export function JifunzeSlidePlayer({
 
   const showMissing = current && brokenSrc[current.imageSrc]
   const takeaway = showSpeakerNotes && current?.keyTakeaway
+  const showPlannedBadge = !audioSrc && narrationStatus === 'planned'
+  const showAudio = Boolean(audioSrc)
 
   return (
     <section className="rounded-2xl border border-stone-200/90 bg-white p-5 shadow-sm sm:p-7" aria-label={title}>
-      <div className="flex flex-col gap-1 border-b border-stone-100 pb-4">
-        <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">{title}</h2>
-        {subtitle ? <p className="text-[14px] leading-relaxed text-[color:var(--jf-muted)]">{subtitle}</p> : null}
+      <div className="flex flex-col gap-2 border-b border-stone-100 pb-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">{title}</h2>
+          {subtitle ? <p className="mt-1 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">{subtitle}</p> : null}
+        </div>
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
+          {showAudio ? (
+            <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-medium text-emerald-900">Narrated lesson</span>
+          ) : null}
+          {showPlannedBadge ? (
+            <span className="rounded-full bg-stone-100 px-2.5 py-0.5 text-[11px] font-medium text-stone-600">Voiceover coming soon</span>
+          ) : null}
+        </div>
       </div>
+
+      {showAudio ? (
+        <div className="mt-4">
+          <audio className="h-9 w-full max-w-xl" controls src={audioSrc} preload="metadata">
+            <track kind="captions" />
+          </audio>
+          <p className="mt-1 text-[11px] text-stone-500">Audio plays alongside the slides. Advance slides manually to match your pace.</p>
+        </div>
+      ) : null}
 
       <div className="mt-5">
         <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-stone-200 bg-stone-950/5">
@@ -140,6 +178,13 @@ export function JifunzeSlidePlayer({
           <span className="font-semibold text-orange-900">Key takeaway: </span>
           {takeaway}
         </aside>
+      ) : null}
+
+      {showTranscript && currentTranscript?.trim() ? (
+        <details className="mt-4 rounded-lg border border-stone-200/90 bg-stone-50/60 px-4 py-2">
+          <summary className="cursor-pointer text-[13px] font-semibold text-stone-800">Read transcript</summary>
+          <p className="mt-2 text-[13px] leading-relaxed text-stone-700">{currentTranscript}</p>
+        </details>
       ) : null}
 
       <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

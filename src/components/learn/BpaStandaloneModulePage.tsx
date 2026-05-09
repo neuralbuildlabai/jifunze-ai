@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react'
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import {
   getStandaloneCertificatePath,
@@ -18,20 +19,15 @@ import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
 import type { BusinessProcessAutomationSlideEntry } from '../../data/courses/businessProcessAutomationSlides'
 import { businessProcessAutomationSlideManifest } from '../../data/courses/businessProcessAutomationSlides'
+import {
+  businessProcessAutomationNarrationManifest,
+  getBpaAudioSrcWhenReady,
+  getBpaModuleNarrationAudioSrc,
+  getBpaSlideTranscriptsForSlides,
+} from '../../data/courses/businessProcessAutomationNarration'
 
 function moduleDisplayTitle(module: StandaloneCourseModule): string {
   return module.title.replace(/^Module \d+:\s*/i, '').trim() || module.title
-}
-
-function bpaModuleMetaLine(module: StandaloneCourseModule): string {
-  const parts = [
-    `${module.durationMinutes} min`,
-    `${module.lessons.length} lesson${module.lessons.length === 1 ? '' : 's'}`,
-    'Practice lab',
-    module.moduleQuiz.length > 0 ? `Final quiz (${module.moduleQuiz.length} questions)` : null,
-    'Certificate course',
-  ].filter(Boolean) as string[]
-  return parts.join(' · ')
 }
 
 type BpaStandaloneModulePageProps = {
@@ -72,6 +68,16 @@ export function BpaStandaloneModulePage({
 
   const purposeLine = module.learningObjectives[0] ?? module.moduleSummary
 
+  const moduleAudioSrc = useMemo(
+    () =>
+      getBpaAudioSrcWhenReady(
+        businessProcessAutomationNarrationManifest.status,
+        getBpaModuleNarrationAudioSrc(module.slug),
+      ),
+    [module.slug],
+  )
+  const slideTranscripts = useMemo(() => getBpaSlideTranscriptsForSlides(slides), [slides])
+
   const firstIncomplete = module.lessons.find((l) => !progress.completedLessonKeys.has(lessonKey(module, l.lessonNumber)))
   const anyLessonStarted = module.lessons.some((l) => progress.completedLessonKeys.has(lessonKey(module, l.lessonNumber)))
   const primaryLesson = firstIncomplete ?? module.lessons[0]
@@ -80,9 +86,9 @@ export function BpaStandaloneModulePage({
       ? getStandaloneLessonPath(entry.slug, module.slug, getStandaloneLessonSlug(primaryLesson))
       : base
 
-  let primaryLabel = 'Start module'
-  if (firstIncomplete) primaryLabel = anyLessonStarted ? 'Continue lesson' : 'Start module'
-  else if (module.lessons.length > 0) primaryLabel = 'Review lessons'
+  let primaryLabel = 'Start narrated module'
+  if (firstIncomplete) primaryLabel = anyLessonStarted ? 'Continue narrated training' : 'Start narrated module'
+  else if (module.lessons.length > 0) primaryLabel = 'Review lesson checkpoints'
 
   return (
     <div
@@ -124,17 +130,24 @@ export function BpaStandaloneModulePage({
           <h1 className="text-2xl font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-3xl" data-testid={`standalone-module-title-${module.slug}`}>
             {moduleDisplayTitle(module)}
           </h1>
-          <p className="text-[13px] text-stone-600">{bpaModuleMetaLine(module)}</p>
+          <p className="text-[13px] text-stone-600">
+            {module.durationMinutes} min · narrated module · slides first
+          </p>
           <p className="max-w-2xl text-[15px] leading-relaxed text-stone-700">{purposeLine}</p>
         </section>
 
         <section data-testid={`standalone-bpa-slide-player-module-${module.slug}`}>
           <JifunzeSlidePlayer
-            title="Play this module"
-            subtitle="Use the slides as the main guided lesson, then open lessons for notes and practice."
+            title="Narrated module slides"
+            subtitle="Work through this chapter in order. Open a lesson only when you want a short checkpoint or to mark progress."
             slides={slides}
             slideCounterTotal={businessProcessAutomationSlideManifest.totalSlides}
-            showDownload={false}
+            deckDownloadUrl={businessProcessAutomationSlideManifest.deckDownloadUrl}
+            showDownload
+            audioSrc={moduleAudioSrc}
+            narrationStatus={businessProcessAutomationNarrationManifest.status}
+            slideTranscripts={slideTranscripts}
+            showTranscript
           />
         </section>
 
@@ -155,16 +168,15 @@ export function BpaStandaloneModulePage({
               const lslug = getStandaloneLessonSlug(lesson)
               const lessonHref = getStandaloneLessonPath(entry.slug, module.slug, lslug)
               const done = progress.completedLessonKeys.has(lessonKey(module, lesson.lessonNumber))
-              const purpose = lesson.learnerGoal.length > 110 ? `${lesson.learnerGoal.slice(0, 107)}…` : lesson.learnerGoal
               return (
-                <li key={lesson.lessonNumber} className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 sm:px-4 sm:py-2.5" data-testid={`standalone-module-lesson-card-${module.slug}-${lslug}`}>
+                <li key={lesson.lessonNumber} className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2.5 sm:py-2" data-testid={`standalone-module-lesson-card-${module.slug}-${lslug}`}>
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                       <span className="text-[12px] font-semibold tabular-nums text-stone-500">{lesson.lessonNumber}</span>
                       <span className="text-[14px] font-semibold text-stone-900">{lesson.title}</span>
+                      <span className="text-[12px] text-stone-500">· {lesson.estimatedMinutes} min</span>
+                      <span className="text-[12px] text-stone-500">· {done ? 'Studied' : 'Not started'}</span>
                     </div>
-                    <p className="mt-0.5 text-[13px] leading-snug text-stone-600">{purpose}</p>
-                    <p className="mt-1 text-[11px] text-stone-400">{lesson.estimatedMinutes} min · {done ? 'Studied' : 'Not started'}</p>
                   </div>
                   <Link
                     to={lessonHref}
@@ -182,8 +194,8 @@ export function BpaStandaloneModulePage({
         <section id="bpa-module-completion" className="rounded-xl border border-stone-200/90 bg-white p-5 sm:p-6">
           <h2 className="text-[15px] font-semibold text-stone-900">Complete this module</h2>
           <ul className="mt-3 space-y-2 text-[13px] leading-relaxed text-stone-700">
-            <li>· Study the module slides above.</li>
-            <li>· Open each lesson for notes and checkpoints.</li>
+            <li>· Finish the slides above.</li>
+            <li>· Use lessons only for short checkpoints and to mark progress.</li>
             <li>· Finish the practice lab prompts below.</li>
             {module.moduleQuiz.length === 0 ? (
               <li>· The graded quiz (12 questions) is in Module 5 after you work through all modules.</li>

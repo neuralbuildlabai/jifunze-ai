@@ -4,15 +4,13 @@ import {
   getStandaloneCertificatePath,
   getStandaloneFirstLessonPath,
 } from '../../data/courses'
-import { businessProcessAutomationSlideManifest } from '../../data/courses/businessProcessAutomationSlides'
 import type { PracticalMathematicsCourse } from '../../data/courses/practicalMathematicsCourseTypes'
 import type { StandaloneCatalogEntry } from '../../data/courses/standaloneCoursesCatalog'
-import { truncateWords } from './standaloneCoursePresentation'
 import { ORANGE_GRADIENT } from './discoveryHubSections'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
-import { JifunzeSlidePlayer } from './JifunzeSlidePlayer'
 import { SlidePreviewGrid } from './StandaloneVisualBlocks'
+import { BpaNarratedCourseOverview } from './BpaNarratedCourseOverview'
 
 /**
  * Course overview layout for `productTier: professional_micro` standalone courses.
@@ -21,6 +19,10 @@ export function StandaloneMicroCourseDetailView({ entry }: { entry: StandaloneCa
   const { source } = entry
   const micro = source.microWorkshopDetail
   if (!micro) return null
+
+  if (entry.slug === BUSINESS_PROCESS_AUTOMATION_SLUG) {
+    return <BpaNarratedCourseOverview entry={entry} />
+  }
 
   const startHref =
     getStandaloneFirstLessonPath(entry.slug, source as PracticalMathematicsCourse) ?? `/learn/${entry.slug}`
@@ -100,19 +102,6 @@ export function StandaloneMicroCourseDetailView({ entry }: { entry: StandaloneCa
           </div>
         </section>
 
-        {entry.slug === BUSINESS_PROCESS_AUTOMATION_SLUG ? (
-          <section data-testid="standalone-bpa-slide-player-overview" className="space-y-4">
-            <JifunzeSlidePlayer
-              title="Play the course slides"
-              subtitle="Use the arrows to move through the deck, then open modules for notes and practice."
-              slides={businessProcessAutomationSlideManifest.slides}
-              slideCounterTotal={businessProcessAutomationSlideManifest.totalSlides}
-              showDownload={false}
-              showThumbnails
-            />
-          </section>
-        ) : null}
-
         <section>
           <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">What you will learn</h2>
           <ul className="mt-4 space-y-2.5 text-[14px] leading-snug text-[color:var(--jf-muted)]">
@@ -164,7 +153,7 @@ export function StandaloneMicroCourseDetailView({ entry }: { entry: StandaloneCa
           </div>
         </section>
 
-        {micro.slidePreviewCards?.length && entry.slug !== BUSINESS_PROCESS_AUTOMATION_SLUG ? (
+        {micro.slidePreviewCards?.length ? (
           <section>
             <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
               Course deck — module by module
@@ -195,9 +184,7 @@ export function StandaloneMicroCourseDetailView({ entry }: { entry: StandaloneCa
                 <Link to={`/learn/${entry.slug}/modules/${m.slug}`} className="mt-0.5 block text-[16px] font-semibold text-zinc-900 hover:text-orange-700">
                   {m.title}
                 </Link>
-                <p className="mt-2 text-[13px] leading-snug text-stone-600">
-                  {entry.slug === BUSINESS_PROCESS_AUTOMATION_SLUG ? truncateWords(m.overview, 22) : m.overview}
-                </p>
+                <p className="mt-2 text-[13px] leading-snug text-stone-600">{m.overview}</p>
               </li>
             ))}
           </ol>
