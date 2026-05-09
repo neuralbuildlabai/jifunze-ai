@@ -12,10 +12,10 @@ import { PublicMaintenancePage } from './PublicMaintenancePage'
 
 function AuthResolvingPlaceholder() {
   return (
-    <div className="jf-public-surface flex min-h-screen w-full items-center justify-center bg-[var(--jf-bg-page)] text-[color:var(--jf-muted)]">
+    <div className="jf-learn-warm flex min-h-screen w-full items-center justify-center bg-[var(--jf-bg-page)] text-[color:var(--jf-muted)]">
       <div className="flex flex-col items-center gap-3">
         <div
-          className="h-9 w-9 rounded-full border-2 border-white/[0.08] border-t-[color:var(--jf-brand)] animate-spin"
+          className="h-9 w-9 rounded-full border-2 border-orange-200/70 border-t-orange-500 animate-spin"
           aria-hidden
         />
         <p className="text-[13px] font-medium tracking-tight">Loading…</p>

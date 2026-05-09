@@ -13,26 +13,28 @@ type Props = {
   surface?: 'dark' | 'light'
 }
 
+// Sizing rules — bumped overall so the logo reads as a real brand mark, not a favicon.
+// `sm` is now the minimum for top nav, `xxl` is the hero size used on auth and maintenance.
 const sizeClasses = {
   sm: {
-    full: 'h-8',
-    compact: 'h-8 w-8',
-  },
-  md: {
     full: 'h-9 sm:h-10',
     compact: 'h-9 w-9 sm:h-10 sm:w-10',
   },
-  lg: {
-    full: 'h-10 sm:h-11',
-    compact: 'h-11 w-11 sm:h-12 sm:w-12',
+  md: {
+    full: 'h-10 sm:h-12',
+    compact: 'h-10 w-10 sm:h-12 sm:w-12',
   },
-  xl: {
+  lg: {
     full: 'h-12 sm:h-14',
     compact: 'h-12 w-12 sm:h-14 sm:w-14',
   },
-  xxl: {
+  xl: {
     full: 'h-14 sm:h-16',
     compact: 'h-14 w-14 sm:h-16 sm:w-16',
+  },
+  xxl: {
+    full: 'h-16 sm:h-20',
+    compact: 'h-16 w-16 sm:h-20 sm:w-20',
   },
 } as const
 
