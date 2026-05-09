@@ -10,6 +10,7 @@
  */
 
 import { businessAnalyticsDecisionMakingCourse } from './businessAnalyticsDecisionMakingCourse'
+import { businessProcessAutomationCourse } from './businessProcessAutomationCourse'
 import { practicalMathematicsCourse } from './practicalMathematicsCourse'
 import type {
   PracticalMathematicsCourse,
@@ -67,8 +68,23 @@ const BUSINESS_ANALYTICS_CATALOG_ENTRY: StandaloneCatalogEntry = {
   source: businessAnalyticsDecisionMakingCourse,
 }
 
+const BUSINESS_PROCESS_AUTOMATION_CATALOG_ENTRY: StandaloneCatalogEntry = {
+  slug: businessProcessAutomationCourse.slug,
+  internalKey: businessProcessAutomationCourse.internalKey,
+  title: 'Business Process Automation for Work',
+  subtitle: businessProcessAutomationCourse.microWorkshopDetail?.cardSubtitle ?? businessProcessAutomationCourse.description,
+  level: businessProcessAutomationCourse.level,
+  estimatedHours: businessProcessAutomationCourse.estimatedHours,
+  accessLabel: businessProcessAutomationCourse.accessLabel,
+  school: businessProcessAutomationCourse.school,
+  publicRoute: `/learn/${businessProcessAutomationCourse.slug}`,
+  durationLabel: '45–60 minutes',
+  source: businessProcessAutomationCourse,
+}
+
 export const STANDALONE_LEARNER_CATALOG: readonly StandaloneCatalogEntry[] = [
   BUSINESS_ANALYTICS_CATALOG_ENTRY,
+  BUSINESS_PROCESS_AUTOMATION_CATALOG_ENTRY,
   PRACTICAL_MATH_CATALOG_ENTRY,
 ]
 

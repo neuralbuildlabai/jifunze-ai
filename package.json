@@ -21,6 +21,7 @@
     "verify:pathway-remote-merge": "tsx scripts/verify-pathway-remote-merge.ts",
     "verify:course1-ai-essentials": "tsx scripts/verify-course1-ai-essentials-continuity.ts",
     "verify:practical-math": "tsx scripts/verify-practical-mathematics-continuity.ts",
+    "verify:business-process-automation": "tsx scripts/verify-business-process-automation-course.ts",
     "verify:practical-math-lessons": "tsx scripts/audit-practical-math-lesson-quality.ts",
     "test:practical-math-progression": "tsx scripts/test-practical-mathematics-progression.ts",
     "verify:readiness-adaptive": "tsx scripts/verify-readiness-adaptive.ts",

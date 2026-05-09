@@ -27,6 +27,12 @@ export {
 } from './businessAnalyticsDecisionMakingCourse'
 
 export {
+  businessProcessAutomationCourse,
+  BUSINESS_PROCESS_AUTOMATION_SLUG,
+  BUSINESS_PROCESS_AUTOMATION_INTERNAL_KEY,
+} from './businessProcessAutomationCourse'
+
+export {
   PRACTICAL_MATH_MODULES_REQUIRING_SAFETY_NOTE,
   type PracticalMathModuleSlug,
 } from './practicalMathematicsCourseConstants'

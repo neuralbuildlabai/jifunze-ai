@@ -1,0 +1,883 @@
+import type { StandaloneCourseModule, StandaloneCourseQuizQuestion } from './practicalMathematicsCourseTypes'
+
+const QUIZ_MODULE5: StandaloneCourseQuizQuestion[] = [
+  {
+    id: 'bpa-q1',
+    question: 'BrightPath replaces paper enquiry forms with Google Forms. Learner responses must still be manually copied into a spreadsheet. What accurately describes this change?',
+    type: 'scenario',
+    options: ['Full process automation — Google Forms eliminates all manual steps', 'Digitization — intake is digital but manual copying and follow-up remain', 'AI-powered workflow — Google Forms routes enquiries using machine learning', 'Process elimination — the enquiry step has been fully removed'],
+    correctAnswer: 'Digitization — intake is digital but manual copying and follow-up remain',
+    explanation: 'Digitization converts a paper step to digital without removing manual labor downstream. Automation would trigger follow-up actions automatically upon form submission. The distinction determines which tool you actually need.',
+    relatedLesson: '1.2',
+    difficulty: 'easy',
+  },
+  {
+    id: 'bpa-q2',
+    question: 'BrightPath sends class reminders to 64 learners per month. Each takes 5 minutes to send manually. Using the course formula, what is the correct monthly workload in hours?',
+    type: 'scenario',
+    options: ['2.7 hours', '5.3 hours', '8.0 hours', '10.7 hours'],
+    correctAnswer: '5.3 hours',
+    explanation: 'Monthly hours = volume × minutes ÷ 60 = 64 × 5 ÷ 60 = 5.33, rounded to 5.3. Over 5 staff hours per month on one simple, repetitive step — which 80% automation reduces to 1.1 hours.',
+    relatedLesson: '2.3',
+    difficulty: 'easy',
+  },
+  {
+    id: 'bpa-q3',
+    question: 'Based on BrightPath\'s workload data, which task is the best first-phase automation candidate considering volume, error rate, and execution risk together?',
+    type: 'scenario',
+    options: ['Prepare certificate — 58/mo, 18% error rate, high learner visibility', 'Confirm payment manually — 68/mo, 15% error rate, financial stakes', 'Send course info — 120/mo, 10% error rate, no financial or physical dependency', 'Track attendance — 64/mo, 7% error rate, requires physical presence'],
+    correctAnswer: 'Send course info — 120/mo, 10% error rate, no financial or physical dependency',
+    explanation: 'Send course info has the highest volume and lowest execution risk. Certificate and payment automation require cleaner records that first-phase work creates. Volume times simplicity makes this the safest high-impact starting point.',
+    relatedLesson: '3.4',
+    difficulty: 'medium',
+  },
+  {
+    id: 'bpa-q4',
+    question: 'BrightPath automates payment confirmation messages. Which risk must the system explicitly control?',
+    type: 'scenario',
+    options: ['Sending confirmation in a font that differs from the brand guide', 'Triggering a confirmation before finance has verified the payment', 'Sending confirmation emails during non-business hours', 'Using an email tool that also supports newsletter campaigns'],
+    correctAnswer: 'Triggering a confirmation before finance has verified the payment',
+    explanation: 'If automation fires on an unverified record, learners believe their payment is confirmed when it has not cleared — creating financial and trust risk. The control: the human verification step must happen before the automation trigger fires.',
+    relatedLesson: '3.5',
+    difficulty: 'medium',
+  },
+  {
+    id: 'bpa-q5',
+    question: "BrightPath saves 44.6 staff hours per month through automation. A manager calculates 44.6 × $18 = $802.80 and presents this as monthly cash savings. What is the most accurate response?",
+    type: 'scenario',
+    options: ['Correct — every recovered hour automatically reduces the payroll expense', 'Incorrect — time saved is recovered capacity, not a payroll reduction unless headcount changes', 'Incorrect — the $18/hour rate is too low, so real savings are understated', 'Correct — the savings are real as long as automation tools are free'],
+    correctAnswer: 'Incorrect — time saved is recovered capacity, not a payroll reduction unless headcount changes',
+    explanation: "Staff are still employed. The $802.80 represents recovered capacity for higher-value work — faster follow-up, fewer errors, more learners served. Presenting this as payroll savings overstates ROI and damages credibility when the accounts don't change.",
+    relatedLesson: '5.1',
+    difficulty: 'hard',
+  },
+  {
+    id: 'bpa-q6',
+    question: 'BrightPath must choose between certificate template automation and course info email automation for phase one. What is the strongest reason to prioritize course info emails?',
+    type: 'scenario',
+    options: ['Course info emails save more hours per month than certificate preparation', 'Course info emails are high-volume, low-risk, and independent of the clean attendance records certificate automation requires', 'Certificate template automation is significantly more expensive to build', 'BrightPath learners complain more about missing course info than late certificates'],
+    correctAnswer: 'Course info emails are high-volume, low-risk, and independent of the clean attendance records certificate automation requires',
+    explanation: 'Certificate automation reads from records that are currently inconsistent. Automating it before cleaning those records produces inconsistent certificates at scale. Course info emails need only a form trigger — no downstream data dependency. Sequencing on dependencies protects quality.',
+    relatedLesson: '3.4',
+    difficulty: 'hard',
+  },
+  {
+    id: 'bpa-q7',
+    question: 'A BrightPath learner claims they were marked absent despite attending class and are being denied their certificate. Should this response be automated?',
+    type: 'scenario',
+    options: ['Yes — automate all learner communications to minimize response time', 'Yes — a standard template handles most attendance disputes adequately', 'No — resolving this requires verifying the attendance record, potentially correcting it, and managing a frustrated learner', 'No — complaints must be escalated to management before any response'],
+    correctAnswer: 'No — resolving this requires verifying the attendance record, potentially correcting it, and managing a frustrated learner',
+    explanation: 'This involves verifying a factual claim, potentially correcting a record, and managing a relationship under strain — three things automation cannot safely handle alone. An automated reply to a learner wrongly denied a certificate escalates rather than resolves.',
+    relatedLesson: '3.2',
+    difficulty: 'medium',
+  },
+  {
+    id: 'bpa-q8',
+    question: "BrightPath's certificate preparation has an 18% error rate and consumes 11.6 staff hours per month — the highest error rate in the workflow. What does this most strongly indicate?",
+    type: 'scenario',
+    options: ['Certificates are low priority because they come at the end of the learner journey', 'A high error rate signals upstream data problems — automation here will produce automated errors until the data is cleaned', 'BrightPath should eliminate the certificate step entirely to save time', 'An 18% error rate is acceptable for a small manual operation'],
+    correctAnswer: 'A high error rate signals upstream data problems — automation here will produce automated errors until the data is cleaned',
+    explanation: 'High error rates on manual steps usually mean inconsistent input data — names formatted differently, unclear completion criteria, missing records. Automating a broken process scales the errors. Clean the data pipeline first.',
+    relatedLesson: '2.5',
+    difficulty: 'medium',
+  },
+  {
+    id: 'bpa-q9',
+    question: 'BrightPath automates class reminders. Three weeks later, a learner disputes they received a reminder before a cancelled class. What must the system have recorded?',
+    type: 'scenario',
+    options: ['Nothing — reminders are informal and need no audit trail', 'A delivery log: when each reminder was sent, to which contact, and whether delivery succeeded', 'Only failed deliveries — successful sends need no retention', 'The subject line and send date only, with no contact-level detail'],
+    correctAnswer: 'A delivery log: when each reminder was sent, to which contact, and whether delivery succeeded',
+    explanation: 'Automation must not remove accountability — it must make the workflow more auditable. A delivery log lets staff resolve disputes fairly. Without it, automation creates a black box that is worse than a manual system with paper records.',
+    relatedLesson: '3.5',
+    difficulty: 'medium',
+  },
+  {
+    id: 'bpa-q10',
+    question: 'BrightPath wants to automate certificate generation using learner names. Which data quality problem would most directly break this automation?',
+    type: 'scenario',
+    options: ['Certificates designed with a decorative border and BrightPath logo', "Names stored inconsistently — 'Joseph Mwangi' in the form, 'Joe mwangi' in the spreadsheet, 'J. Mwangi' in the attendance record", 'Using Google Docs instead of a dedicated certificate platform', 'Two staff members sharing responsibility for certificate preparation'],
+    correctAnswer: "Names stored inconsistently — 'Joseph Mwangi' in the form, 'Joe mwangi' in the spreadsheet, 'J. Mwangi' in the attendance record",
+    explanation: 'Certificate automation reads a data field and inserts it directly. Three name formats for the same person produce inconsistent certificates at scale. Standardizing name capture in the structured intake form is the prerequisite.',
+    relatedLesson: '4.1',
+    difficulty: 'medium',
+  },
+  {
+    id: 'bpa-q11',
+    question: "BrightPath is building its 30-60-90 day roadmap. Which activities correctly belong in the first 30 days?",
+    type: 'scenario',
+    options: ['Implement certificate template automation and launch automated feedback collection', 'Launch attendance QR check-in and build the automation performance dashboard', 'Clean registration data fields, launch the structured enquiry form, and set up the automated course info email', 'Review time saved and error reduction across all automated workflows and plan the next phase'],
+    correctAnswer: 'Clean registration data fields, launch the structured enquiry form, and set up the automated course info email',
+    explanation: 'The first 30 days build the clean data foundation. Certificate automation, QR check-in, and dashboard reviews all depend on reliable data created in phase one. Launching complex automations before the foundation is set produces fragile workflows.',
+    relatedLesson: '5.4',
+    difficulty: 'medium',
+  },
+  {
+    id: 'bpa-q12',
+    question: "BrightPath's recommendation prioritizes course info emails, structured intake, and reminders in phase one — even though certificate automation saves more hours (8.1 vs 4.2 for reminders). What is the core sequencing logic?",
+    type: 'scenario',
+    options: ['These three tasks save the most total hours across the workflow', 'These are the only tasks BrightPath can automate without buying software', 'These are high-volume, low-risk workflows that create the clean data that certificate and payment automations depend on', 'Learner surveys identified these three tasks as the most painful'],
+    correctAnswer: 'These are high-volume, low-risk workflows that create the clean data that certificate and payment automations depend on',
+    explanation: 'Certificate automation saves more hours but requires clean name, attendance, and completion records. Phase one creates that foundation. A roadmap built on dependency logic — not just savings totals — delivers a working system rather than an ambitious plan that breaks on first contact with real data.',
+    relatedLesson: '5.5',
+    difficulty: 'hard',
+  },
+]
+
+export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
+  {
+    moduleNumber: 1,
+    slug: 'automation-foundations',
+    title: 'Module 1: Automation Foundations',
+    durationMinutes: 10,
+    level: 'Foundational',
+    prerequisites: [],
+    overview: 'Establish what business process automation means, distinguish it from digitization and AI, apply the automation thinking cycle, and frame the BrightPath Training Center case study.',
+    whyThisMatters: [
+      'Most organizations that call something "automation" have only digitized it — they replaced paper with a spreadsheet but the manual steps remain.',
+      'Knowing the distinction prevents wasting money on tools that solve the wrong problem or in the wrong sequence.',
+    ],
+    learningObjectives: [
+      'Distinguish automation from digitization and AI-assisted tools using a BrightPath example.',
+      'Apply the five-step automation thinking cycle to a candidate workflow.',
+      'Name BrightPath\'s core business questions before examining the workload data.',
+    ],
+    lessons: [
+      {
+        lessonNumber: '1.1',
+        title: 'What business process automation means',
+        estimatedMinutes: 2,
+        learnerGoal: 'Distinguish a system performing a task automatically from a human performing it faster with a better tool.',
+        blocks: [
+          {
+            type: 'concept_explanation',
+            title: 'The working definition',
+            content: 'Automation means a system performs a task or triggers a next step based on a rule — without a human initiating it each time. When a form is submitted, an email sends. When a date arrives, a reminder fires. When payment is verified, a confirmation delivers. The human designed the rule; the system executes it on every matching event.',
+          },
+          {
+            type: 'common_mistakes',
+            title: 'What automation is not',
+            bullets: [
+              'Using a faster tool to do the same manual task is efficiency, not automation.',
+              'Moving from paper to spreadsheet is digitization, not automation.',
+              'An AI assistant that drafts text you still review and send is AI-assisted work, not full automation.',
+            ],
+          },
+        ],
+      },
+      {
+        lessonNumber: '1.2',
+        title: 'Automation, digitization, and AI — the critical distinctions',
+        estimatedMinutes: 2,
+        learnerGoal: 'Categorize a workflow change as automation, digitization, or AI-assisted and explain why the distinction matters for tool selection.',
+        blocks: [
+          {
+            type: 'concept_explanation',
+            title: 'Three different interventions',
+            bullets: [
+              'Digitization: convert paper or verbal steps to digital format. Manual labor still required. Example: paper register → Google Sheet.',
+              'Automation: rules trigger actions without human initiation on each item. Example: form submission → course info email sends instantly.',
+              'AI-assisted: a tool suggests or drafts — a human reviews and decides. Example: AI drafts enquiry reply; admin edits and sends.',
+            ],
+          },
+          {
+            type: 'worked_example',
+            title: 'BrightPath: same enquiry problem, three different tools',
+            content: 'Digitization path: BrightPath moves enquiry tracking from a notebook to a spreadsheet — staff still read it and type replies. Automation path: form submission triggers course info email automatically — zero staff action per enquiry. AI-assisted path: AI drafts a reply to an unusual enquiry; admin reviews and edits before sending. Each has a different cost, setup requirement, and risk profile.',
+          },
+        ],
+      },
+      {
+        lessonNumber: '1.3',
+        title: 'The automation thinking cycle',
+        estimatedMinutes: 2,
+        learnerGoal: 'Apply the five-step cycle to evaluate a BrightPath workflow candidate.',
+        blocks: [
+          {
+            type: 'worked_example',
+            title: 'The cycle — applied to BrightPath class reminders',
+            bullets: [
+              'Step 1 — Map the manual process: coordinator checks dates, finds contact list, writes and sends individual reminders.',
+              'Step 2 — Identify the rule: send reminder to every payment-confirmed learner 48 hours before their class.',
+              'Step 3 — Choose the tool: email automation connected to the registration record.',
+              'Step 4 — Test with exceptions: cancelled class, learner who re-registers last minute, bounced email address.',
+              'Step 5 — Monitor and adjust: check delivery rates weekly for the first month.',
+            ],
+          },
+        ],
+      },
+      {
+        lessonNumber: '1.4',
+        title: 'What should and should not be automated',
+        estimatedMinutes: 2,
+        learnerGoal: 'Explain why automating some tasks makes a workflow worse, not better.',
+        blocks: [
+          {
+            type: 'concept_explanation',
+            title: 'The automation suitability test',
+            bullets: [
+              'Good automation candidates: high volume, identical action every time, rule-based decision, standard inputs, low consequence if the automation makes an error.',
+              'Keep human-led: context varies per case, error consequence is serious, relationship or empathy is part of the task, input data is too inconsistent for a rule.',
+            ],
+          },
+        ],
+      },
+      {
+        lessonNumber: '1.5',
+        title: 'Meet BrightPath Training Center',
+        estimatedMinutes: 2,
+        learnerGoal: 'Name BrightPath\'s core workflow questions before examining the workload data.',
+        blocks: [
+          {
+            type: 'real_world_application',
+            title: 'BrightPath — context and problem',
+            bullets: [
+              'Business: small training and certification provider. 3 admin staff. 6 courses/month.',
+              'Monthly volumes: 120 enquiries, 72 registrations, 68 payment confirmations, 64 class attendees, 58 certificates, 31 feedback responses.',
+              'Current tools: emails, spreadsheets, WhatsApp messages, payment screenshots, handwritten notes.',
+              'Problem: as demand grows, staff lose time to repetitive tasks, make follow-up errors, delay certificates, and frustrate learners — not from lack of effort, but from a workflow never designed for this volume.',
+              'Business questions to answer: Where is staff time being wasted? Where are errors accumulating? Which tasks should be automated first? What stays human-led? How much time and cost could change? What does the first 30-day plan look like?',
+            ],
+          },
+          {
+            type: 'practice_task',
+            learnerTask: 'Before looking at the workload data in Module 2, list the three BrightPath tasks you expect to consume the most monthly staff hours. Write one sentence each explaining your reasoning.',
+            outputExpectation: 'Three task names with one sentence each. This is a prediction — you will check it against the real data in Module 2.',
+          },
+        ],
+      },
+    ],
+    practiceLab: {
+      title: 'Lab: Apply the automation thinking cycle to a BrightPath task',
+      durationMinutes: 8,
+      learnerGoal: 'Apply all five steps of the automation thinking cycle to BrightPath\'s course info email and identify the most important exception to design around.',
+      scenarios: [
+        {
+          id: 'bpa-lab1-a',
+          prompt: 'BrightPath currently sends a course info document to every new enquiry manually. Apply the five-step automation thinking cycle to this task. At which step do you find the most important risk to design around, and what is that risk?',
+          answerKey: 'Strong answers identify Step 4 (test with exceptions) as critical: what happens when course details change after a form submission? When a learner enquires about a full course? When the enquiry arrives through WhatsApp rather than the form? Answers that focus only on Step 3 (tool selection) miss the point — tool selection is secondary to exception design.',
+        },
+      ],
+    },
+    moduleQuiz: [],
+    moduleSummary: 'You can now distinguish automation from digitization and AI-assisted work, apply the automation thinking cycle, and name the BrightPath business questions the next four modules will answer.',
+    completionChecklist: [
+      'Completed all 5 lessons in Module 1',
+      'Completed the automation thinking cycle lab',
+      'Named BrightPath\'s core workflow questions',
+    ],
+  },
+  {
+    moduleNumber: 2,
+    slug: 'understanding-current-workflow',
+    title: 'Module 2: Understanding the Current Workflow',
+    durationMinutes: 10,
+    level: 'Beginner to early-intermediate',
+    prerequisites: ['automation-foundations'],
+    overview: 'Build a rigorous picture of BrightPath\'s manual baseline — how work moves from enquiry to certificate, how long each step takes, where errors accumulate, and where the workflow breaks under volume. The workload data is fully visible here so you can verify the calculations yourself.',
+    whyThisMatters: [
+      'Gut instinct about which tasks take the most time is often wrong. You cannot prioritize automation without measured workload data.',
+      'Error rates tell a different story than hours alone. A high-error task may need process redesign before automation.',
+    ],
+    learningObjectives: [
+      'Describe BrightPath\'s manual workflow from enquiry to certificate, naming its two weakest handoffs.',
+      'Apply the formula (volume × minutes ÷ 60) to verify any task\'s monthly workload.',
+      'Identify the two highest-impact bottlenecks using both hours and error rate as evidence.',
+    ],
+    lessons: [
+      {
+        lessonNumber: '2.1',
+        title: 'The before workflow — how work moves manually at BrightPath',
+        estimatedMinutes: 2,
+        learnerGoal: 'Describe the end-to-end manual path from enquiry to certificate and name its two weakest handoff points.',
+        blocks: [
+          {
+            type: 'scenario',
+            title: 'A typical BrightPath enquiry-to-certificate path',
+            content: 'An enquiry arrives via WhatsApp. The admin assistant notes it in a notebook. Later that day — or next day if busy — they email a course info document. If the learner registers, they send a payment screenshot. The coordinator checks the screenshot against bank records, enters the name and date into a spreadsheet. Closer to class day, the coordinator writes and sends individual reminders. After class, the instructor marks attendance in a paper register. The coordinator transfers it to the spreadsheet, then prepares each certificate manually in Word. If a name is spelled differently across registration and payment records, the coordinator decides which to use — with no standard rule.',
+          },
+        ],
+      },
+      {
+        lessonNumber: '2.2',
+        title: 'Reading the BrightPath workload data table',
+        estimatedMinutes: 2,
+        learnerGoal: 'Read the workload table and identify which tasks consume the most staff time and which carry the highest error risk.',
+        blocks: [
+          {
+            type: 'worked_example',
+            title: 'BrightPath manual task workload — monthly baseline',
+            bullets: [
+              'Respond to enquiry: 120 items/mo · 8 min/item · Admin assistant · 12% error/delay · 16.0 hrs/mo',
+              'Send course info: 120 items/mo · 6 min/item · Admin assistant · 10% error/delay · 12.0 hrs/mo',
+              'Enter registration in spreadsheet: 72 items/mo · 7 min/item · Program coordinator · 8% error/delay · 8.4 hrs/mo',
+              'Confirm payment manually: 68 items/mo · 10 min/item · Finance/admin · 15% error/delay · 11.3 hrs/mo',
+              'Send class reminder: 64 items/mo · 5 min/item · Program coordinator · 9% error/delay · 5.3 hrs/mo',
+              'Track attendance: 64 items/mo · 6 min/item · Instructor/admin · 7% error/delay · 6.4 hrs/mo',
+              'Prepare certificate: 58 items/mo · 12 min/item · Program coordinator · 18% error/delay · 11.6 hrs/mo',
+              'Send feedback form: 64 items/mo · 4 min/item · Admin assistant · 20% error/delay · 4.3 hrs/mo',
+              'TOTAL: 75.3 staff hours per month · Blended labor value at $18/hr = $1,355.40/mo',
+            ],
+          },
+        ],
+      },
+      {
+        lessonNumber: '2.3',
+        title: 'Calculating monthly workload hours — formula and verification',
+        estimatedMinutes: 2,
+        learnerGoal: 'Apply the workload formula to verify any BrightPath task independently.',
+        blocks: [
+          {
+            type: 'concept_explanation',
+            title: 'The formula',
+            content: 'Monthly hours = monthly volume × average minutes per item ÷ 60. Three worked verifications: (1) Respond to enquiry: 120 × 8 ÷ 60 = 16.0 hrs. (2) Confirm payment: 68 × 10 ÷ 60 = 11.33, rounded to 11.3 hrs. (3) Prepare certificate: 58 × 12 ÷ 60 = 11.6 hrs.',
+          },
+          {
+            type: 'guided_practice',
+            learnerTask: 'Verify "Send feedback form" (64 items, 4 min each) and "Track attendance" (64 items, 6 min each) using the formula. Then sum all 8 tasks and confirm the total equals 75.3 hours.',
+            outputExpectation: 'Feedback form: 4.3 hrs. Attendance: 6.4 hrs. Total of all 8 pre-rounded figures: 75.3 hrs. If your total differs, check that you divided by 60 (not multiplied) and used the pre-rounded figures from the table.',
+          },
+        ],
+      },
+      {
+        lessonNumber: '2.4',
+        title: 'Error and delay rate analysis',
+        estimatedMinutes: 2,
+        learnerGoal: 'Explain what a high error rate on a specific BrightPath task means for the learner experience downstream.',
+        blocks: [
+          {
+            type: 'worked_example',
+            title: 'The three highest-error tasks and their downstream consequences',
+            bullets: [
+              'Send feedback form: 20% error/delay — highest in dataset. Roughly 1 in 5 feedback collections fails. Compounds into unreliable data over time.',
+              'Prepare certificate: 18% — second highest, highest stakes. Certificate errors are visible to learners who may use them professionally.',
+              'Confirm payment: 15% — roughly 10 learners per month receive delayed or missing confirmation. Erodes trust at the moment of commitment.',
+            ],
+          },
+        ],
+      },
+      {
+        lessonNumber: '2.5',
+        title: 'Bottlenecks and handoff failures',
+        estimatedMinutes: 2,
+        learnerGoal: 'Identify BrightPath\'s two blocking bottlenecks and explain why they are blocking rather than merely slow.',
+        blocks: [
+          {
+            type: 'worked_example',
+            title: 'Blocking bottlenecks vs slow tasks',
+            bullets: [
+              'Payment confirmation (11.3 hrs, 15% error): blocks registration confirmation, class list accuracy, and downstream reminder and certificate steps. Errors cascade through the entire workflow.',
+              'Certificate preparation (11.6 hrs, 18% error): blocks the learner from receiving proof of completion. For learners needing certificates for employment or professional development, this is the most damaging failure BrightPath creates.',
+              'By contrast, a slow task like "Track attendance" (6.4 hrs) does not block a learner-facing step immediately — it degrades downstream accuracy but does not prevent the next step from starting.',
+            ],
+          },
+        ],
+      },
+    ],
+    practiceLab: {
+      title: 'Lab: Verify the BrightPath total workload calculation',
+      durationMinutes: 8,
+      learnerGoal: 'Independently verify two workload figures from the dataset and confirm the 75.3-hour baseline total.',
+      scenarios: [
+        {
+          id: 'bpa-lab2-a',
+          prompt: 'Using the formula (volume × minutes ÷ 60), verify "Enter registration in spreadsheet" (72 items, 7 min each) and "Send class reminder" (64 items, 5 min each). Then sum all 8 tasks and confirm the total is 75.3 hours.',
+          answerKey: 'Registration: 72 × 7 ÷ 60 = 8.4 hrs. Reminder: 64 × 5 ÷ 60 = 5.33, rounded to 5.3 hrs. Sum of all 8 pre-rounded figures: 16.0 + 12.0 + 8.4 + 11.3 + 5.3 + 6.4 + 11.6 + 4.3 = 75.3 hrs. If your total differs, check whether you are using the pre-rounded table values.',
+        },
+      ],
+    },
+    moduleQuiz: [],
+    moduleSummary: 'You can now read BrightPath\'s workload data, verify the monthly hours formula for any task, and identify the two blocking bottlenecks — certificate preparation and payment confirmation — using both hours and error rate as evidence.',
+    completionChecklist: [
+      'Completed all 5 lessons in Module 2',
+      'Verified two workload calculations and confirmed the 75.3-hour total',
+      'Identified and described the two blocking bottlenecks',
+    ],
+  },
+  {
+    moduleNumber: 3,
+    slug: 'finding-automation-opportunities',
+    title: 'Module 3: Finding Automation Opportunities',
+    durationMinutes: 10,
+    level: 'Beginner to early-intermediate',
+    prerequisites: ['automation-foundations', 'understanding-current-workflow'],
+    overview: 'Apply a structured framework to decide which BrightPath tasks are automation-ready, score them on suitability dimensions, map them on an impact vs effort matrix, and identify the correct first phase — including what not to automate yet and why.',
+    whyThisMatters: [
+      'Not every high-volume task is ready for automation. Automating before the process is clean produces automated errors at scale.',
+      'Sequencing on dependencies — not just hours saved — determines whether the second phase works.',
+    ],
+    learningObjectives: [
+      'Score any BrightPath task against the five automation-readiness criteria.',
+      'Categorize tasks into three human-automation balance categories.',
+      'Use an impact vs effort matrix to justify a specific first-phase automation sequence.',
+    ],
+    lessons: [
+      {
+        lessonNumber: '3.1',
+        title: 'Automation-ready task criteria',
+        estimatedMinutes: 2,
+        learnerGoal: 'Score a BrightPath task against the five automation-readiness criteria and reach a defensible conclusion.',
+        blocks: [
+          {
+            type: 'concept_explanation',
+            title: 'Five criteria for automation readiness',
+            bullets: [
+              '1. High volume: frequent enough that automation saves meaningful staff time.',
+              '2. Rule-based decision: can be stated as "if X, then do Y." Context-dependent tasks fail this.',
+              '3. Standard inputs: information arrives in a consistent format. Inconsistent input breaks automation rules.',
+              '4. Same action every time: the output is identical (or drawn from a small standard set) regardless of who does it.',
+              '5. Low consequence of automated error: if the automation makes a mistake, it is recoverable without major damage.',
+            ],
+          },
+          {
+            type: 'worked_example',
+            title: '"Send course info" vs "Respond to complaint" — scored',
+            content: 'Send course info: 5/5 — high volume (120/mo), rule-based (standard doc to any enquiry), standard input (form submission), same action every time, low consequence if delayed. Respond to complaint: 1/5 — low volume, context varies per case, unstandardized input, different action each time, high consequence if handled badly.',
+          },
+        ],
+      },
+      {
+        lessonNumber: '3.2',
+        title: 'Human judgment vs automation — three categories',
+        estimatedMinutes: 2,
+        learnerGoal: 'Categorize each BrightPath task into one of three human-automation balance categories and defend two placements.',
+        blocks: [
+          {
+            type: 'concept_explanation',
+            title: 'Three categories of human-automation balance',
+            bullets: [
+              'Fully automate: rule is complete, inputs are standard, errors are recoverable. No human initiates each instance. Example: Send class reminder.',
+              'Human trigger + automated delivery: human makes or verifies a decision; system handles communication. Example: finance verifies payment → system sends confirmation.',
+              'Fully human-led: context, judgment, or error consequence is too high for automation. Example: attendance dispute, complaint handling, course cancellation with personal context.',
+            ],
+          },
+          {
+            type: 'worked_example',
+            title: 'BrightPath task categorization',
+            bullets: [
+              'Fully automate: Send course info, Send class reminder, Send feedback form.',
+              'Human trigger + automated delivery: Confirm payment (human verifies first), Prepare certificate (coordinator approves before system sends).',
+              'Fully human-led: Complaint responses, attendance dispute resolution, course cancellation communications.',
+            ],
+          },
+        ],
+      },
+      {
+        lessonNumber: '3.3',
+        title: 'Automation suitability scoring — BrightPath candidates ranked',
+        estimatedMinutes: 2,
+        learnerGoal: 'Read the suitability scoring table and explain why the top three candidates outrank the others.',
+        blocks: [
+          {
+            type: 'worked_example',
+            title: 'Scoring framework: time saved + error reduction + learner impact − implementation effort − risk complexity (each 1–5)',
+            bullets: [
+              'Automated course info email: 5+4+4−1−1 = 11 · Highest score. High volume, standard trigger, zero financial risk.',
+              'Structured enquiry/registration form: 4+4+5−2−1 = 10 · Creates clean data enabling all downstream automation.',
+              'Class reminder automation: 4+3+5−1−1 = 10 · High volume, learner-facing, simple timing rule.',
+              'Certificate template automation: 3+5+5−3−3 = 7 · High value but depends on clean upstream name and attendance data.',
+              'Automated feedback workflow: 2+4+3−1−1 = 7 · Easy to build; lower urgency than intake and reminders.',
+              'Attendance QR/form check-in: 3+3+4−3−2 = 5 · Useful but requires physical coordination and testing.',
+              'Payment follow-up tracker: 3+4+4−3−4 = 4 · Important but requires financial controls and careful exception design.',
+              'AI-assisted FAQ support: 3+3+3−4−3 = 2 · Highest complexity and risk for BrightPath\'s current data maturity.',
+            ],
+          },
+        ],
+      },
+      {
+        lessonNumber: '3.4',
+        title: 'Impact vs effort matrix — prioritizing the first phase',
+        estimatedMinutes: 2,
+        learnerGoal: 'Place three BrightPath tasks on the matrix and justify why the first phase is not simply "automate what saves most hours."',
+        blocks: [
+          {
+            type: 'concept_explanation',
+            title: 'Four quadrants of the impact vs effort matrix for BrightPath',
+            bullets: [
+              'High impact, low effort — START HERE: course info email, class reminder, structured intake form.',
+              'High impact, high effort — PLAN CAREFULLY: certificate automation, payment follow-up tracker.',
+              'Low impact, low effort — DO IF SPARE CAPACITY: feedback form automation.',
+              'Low impact, high effort — AVOID FOR NOW: AI FAQ chatbot at current data maturity.',
+            ],
+          },
+          {
+            type: 'worked_example',
+            title: 'Why certificate automation is not in phase one despite saving the most hours',
+            content: 'Certificate preparation saves 8.1 hours per month — more than any other single task. But it sits in "high impact, high effort" because it requires consistent name records, reliable attendance data, and verified completion status. If those records are inconsistent (and at BrightPath, they currently are), automated certificates will have wrong names or incorrect completion details at scale. Course info email saves 10.8 hours and sits in "high impact, low effort" — needs only a form trigger and an email template. Phase one builds the data foundation that makes phase two safe.',
+          },
+        ],
+      },
+      {
+        lessonNumber: '3.5',
+        title: 'Data quality, exception handling, and audit trails',
+        estimatedMinutes: 2,
+        learnerGoal: 'Identify two data quality prerequisites and two exception-handling requirements for BrightPath\'s first-phase automations.',
+        blocks: [
+          {
+            type: 'concept_explanation',
+            title: 'Data quality as the rate-limiting factor',
+            content: 'Automation reads data fields and applies rules. If key fields are inconsistent — names formatted differently across systems, dates in mixed formats, courses coded differently — the automation produces wrong outputs or fails to match records. The structured intake form fixes this at the source.',
+          },
+          {
+            type: 'common_mistakes',
+            title: 'Three automation failure modes that break BrightPath workflows',
+            bullets: [
+              'Launching automation before standardizing key input fields (names, course codes, dates) in the registration record.',
+              'Going live without a defined fallback: what happens when a message fails to deliver? Who checks? What is the manual backup process?',
+              'Skipping exception testing: cancelled class after reminders sent, payment reversal, learner who re-registers at the last minute.',
+            ],
+          },
+        ],
+      },
+    ],
+    practiceLab: {
+      title: 'Lab: Score and sequence BrightPath candidates',
+      durationMinutes: 8,
+      learnerGoal: 'Apply the suitability scoring framework to three tasks and produce a two-sentence first-phase recommendation.',
+      scenarios: [
+        {
+          id: 'bpa-lab3-a',
+          prompt: 'Score "Send feedback form", "Prepare certificate", and "Send class reminder" on all five suitability dimensions. Then write two sentences recommending which belongs in phase one and why the other two should wait.',
+          answerKey: 'Strong answers show dimension-by-dimension scoring and a recommendation for certificate waiting that references data quality dependency — not cost or difficulty alone. Reminder and feedback form both score well; reminder wins on learner experience urgency. Weak answers give a conclusion without scoring each dimension.',
+        },
+      ],
+    },
+    moduleQuiz: [],
+    moduleSummary: 'You can apply the five automation-readiness criteria, use the suitability scoring framework to rank candidates, and explain why the first phase is sequenced on dependencies rather than hours saved alone.',
+    completionChecklist: [
+      'Completed all 5 lessons in Module 3',
+      'Scored three BrightPath tasks on all five suitability dimensions',
+      'Produced a two-sentence first-phase recommendation with dependency logic',
+    ],
+  },
+  {
+    moduleNumber: 4,
+    slug: 'designing-future-workflow',
+    title: 'Module 4: Designing the Future Workflow',
+    durationMinutes: 10,
+    level: 'Beginner to early-intermediate',
+    prerequisites: ['automation-foundations', 'understanding-current-workflow', 'finding-automation-opportunities'],
+    overview: 'Translate the automation opportunity analysis into a concrete before-to-after workflow redesign: structured intake that creates clean data, automated course info and reminders, a human-triggered payment workflow, certificate design with a human review checkpoint, and feedback automation.',
+    whyThisMatters: [
+      'The structured intake form is the highest-leverage single change in BrightPath\'s workflow because it creates clean data that makes every subsequent automation reliable.',
+      'Choosing what to automate is the analysis. Designing the trigger, action, exception path, and human checkpoint is the execution.',
+    ],
+    learningObjectives: [
+      'Explain why structured intake is the most upstream leverage point in BrightPath\'s redesign.',
+      'Map the trigger-action-exception structure for each first-phase automation.',
+      'Identify the human review checkpoint that must stay in the certificate workflow and explain why removing it increases risk.',
+    ],
+    lessons: [
+      {
+        lessonNumber: '4.1',
+        title: 'Structured enquiry and registration intake',
+        estimatedMinutes: 2,
+        learnerGoal: 'Explain why structured intake is the most upstream leverage point in BrightPath\'s automation redesign.',
+        blocks: [
+          {
+            type: 'worked_example',
+            title: 'Before and after: enquiry intake',
+            bullets: [
+              'Before: Enquiry via WhatsApp in any format. Admin reads and interprets it, composes a response from scratch. No standard record created.',
+              'After: Structured web form captures full name (as it should appear on certificate), course interest, preferred intake, phone, and referral source. Submission triggers automated course info email. A standardized learner record is created at the first touch — making registration, attendance matching, and certificate generation accurate by default.',
+              'Why this is the highest-leverage change: every downstream automation reads from this record. Fix name formatting once, at intake, rather than cleaning inconsistencies at every later step.',
+            ],
+          },
+        ],
+      },
+      {
+        lessonNumber: '4.2',
+        title: 'Automated course info and class reminder workflows',
+        estimatedMinutes: 2,
+        learnerGoal: 'Map the trigger, automated action, and exception path for course info emails and class reminders.',
+        blocks: [
+          {
+            type: 'worked_example',
+            title: 'Trigger-action-exception: course info email',
+            bullets: [
+              'Trigger: learner submits structured enquiry form.',
+              'Action: system sends pre-written course info email with schedule, fees, registration link, and contact details.',
+              'Exception: email bounces → system flags record for admin follow-up. Course is full → automated message includes waitlist option.',
+            ],
+          },
+          {
+            type: 'worked_example',
+            title: 'Trigger-action-exception: class reminder',
+            bullets: [
+              'Trigger: 48 hours before scheduled class for each payment-confirmed registrant.',
+              'Action: system sends reminder with date, time, location/link, and what to bring.',
+              'Exception: class cancelled or rescheduled → update message fires to the same learner list. Staff must update the class record promptly to trigger the exception correctly.',
+            ],
+          },
+        ],
+      },
+      {
+        lessonNumber: '4.3',
+        title: 'Payment follow-up tracker',
+        estimatedMinutes: 2,
+        learnerGoal: 'Identify the human checkpoint the payment tracker must preserve to control financial risk.',
+        blocks: [
+          {
+            type: 'worked_example',
+            title: 'Before and after: payment confirmation',
+            content: 'Before: learner sends WhatsApp payment screenshot. Coordinator checks against bank records and types a confirmation. 15% error/delay rate from unclear screenshots, name mismatches, and deprioritization during busy periods. After: a shared tracker shows payment status per learner — "awaiting," "screenshot received," "verified," "confirmed." The human checkpoint: only finance/admin can move a record from "screenshot received" to "verified." Once that step is completed, the system automatically sends the confirmation and updates the registration record. Automation speeds communication after the human decision — it does not replace the decision.',
+          },
+        ],
+      },
+      {
+        lessonNumber: '4.4',
+        title: 'Attendance and certificate workflow',
+        estimatedMinutes: 2,
+        learnerGoal: 'Describe the human review checkpoint in the automated certificate workflow and explain why removing it increases error risk.',
+        blocks: [
+          {
+            type: 'worked_example',
+            title: 'After workflow: attendance capture to certificate despatch',
+            bullets: [
+              'Attendance: at class start, a form link is shared with learners. Submission records name, class date, course. Instructor reviews the submission list and confirms or corrects before the record is locked.',
+              'Certificate: once a learner is marked "attended + assessment passed," a certificate template pre-fills their full name, course, completion date, and certificate ID from the registration record.',
+              'Human checkpoint: the coordinator reviews the draft and clicks "approve and send." The system then sends the certificate to the learner\'s registered email and logs the issue date and certificate ID.',
+              'Why the review step stays: the coordinator catches edge cases — name changes, partial attendance, date corrections — in 2–3 minutes. The 70% time reduction comes from eliminating manual template-filling, not from removing oversight.',
+            ],
+          },
+        ],
+      },
+      {
+        lessonNumber: '4.5',
+        title: 'The after workflow map — visualizing the improvement',
+        estimatedMinutes: 2,
+        learnerGoal: 'Describe two concrete changes in the after workflow that reduce delay and error simultaneously.',
+        blocks: [
+          {
+            type: 'summary',
+            title: 'Before vs after — key workflow changes',
+            bullets: [
+              'Enquiry intake: WhatsApp (unstructured) → web form (standardized). Result: consistent records from first contact.',
+              'Course info: manual email same day or next (10% error) → automated on form submission, within minutes (near-zero error).',
+              'Registration: manual spreadsheet entry (inconsistent formats) → auto-populated from form (consistent fields).',
+              'Reminder: coordinator writes and sends individually (5.3 hrs/mo, 9% error) → triggered 48 hrs before class (1.1 hrs/mo, near-zero error).',
+              'Payment: manual screenshot check and typed confirmation (11.3 hrs, 15% error) → tracker with human verify + automated send (speed improved, human checkpoint preserved).',
+              'Certificate: manual Word template (11.6 hrs, 18% error) → pre-filled template, coordinator approves (3.5 hrs, dramatically reduced errors).',
+            ],
+          },
+        ],
+      },
+    ],
+    practiceLab: {
+      title: 'Lab: Design the after workflow for one BrightPath process',
+      durationMinutes: 8,
+      learnerGoal: 'Describe the trigger, automated action, human checkpoint, and exception path for one BrightPath process.',
+      scenarios: [
+        {
+          id: 'bpa-lab4-a',
+          prompt: 'Choose the feedback workflow or the attendance workflow. Describe: (1) what triggers the automation, (2) what the system does automatically, (3) where a human must stay in the loop and why, (4) what happens when the automation encounters a realistic exception.',
+          answerKey: 'Strong answers define a clear trigger (specific event or date), a specific automated action, a named human checkpoint with a reason it stays human, and a realistic exception with a specific response path. Weak answers describe automation in general terms without specifying who handles what when something goes wrong.',
+        },
+      ],
+    },
+    moduleQuiz: [],
+    moduleSummary: 'You can now describe the trigger-action-exception structure for BrightPath\'s first-phase automations, explain why structured intake is the upstream leverage point, and identify the human checkpoints that stay in the workflow after automation.',
+    completionChecklist: [
+      'Completed all 5 lessons in Module 4',
+      'Designed the after workflow for one BrightPath process including its exception path',
+      'Identified the human checkpoint in the certificate workflow and explained why it stays',
+    ],
+  },
+  {
+    moduleNumber: 5,
+    slug: 'business-value-risk-implementation',
+    title: 'Module 5: Business Value, Risk, and Implementation',
+    durationMinutes: 15,
+    level: 'Intermediate',
+    prerequisites: ['automation-foundations', 'understanding-current-workflow', 'finding-automation-opportunities', 'designing-future-workflow'],
+    overview: 'Quantify BrightPath\'s time and cost impact honestly, audit for implementation risks, apply change management, build the 30-60-90 day roadmap, produce the executive recommendation, complete the learner practice exercise, and pass the 12-question application quiz.',
+    whyThisMatters: [
+      'An automation plan without a risk checklist and an honest business case is a wish list. Leaders who approve budgets want numbers, risks, and realistic sequencing.',
+      'Staff who are not prepared for automation changes resist or work around them — which breaks the new workflow.',
+    ],
+    learningObjectives: [
+      'Calculate and accurately explain BrightPath\'s projected time savings and the recovered-capacity vs cash-saved distinction.',
+      'Identify two risks in BrightPath\'s automation plan and name the control for each.',
+      'Produce a written automation recommendation using data, risk controls, and a sequenced first-phase argument.',
+    ],
+    lessons: [
+      {
+        lessonNumber: '5.1',
+        title: 'Time saved and cost impact analysis',
+        estimatedMinutes: 3,
+        learnerGoal: 'Explain to a skeptical manager why 44.6 hours saved does not automatically equal $802.80 in monthly cash savings.',
+        blocks: [
+          {
+            type: 'worked_example',
+            title: 'Projected automation savings — BrightPath task by task',
+            bullets: [
+              'Respond to enquiry: 16.0 hrs current · 35% reduction → 5.6 hrs saved',
+              'Send course info: 12.0 hrs current · 90% reduction → 10.8 hrs saved',
+              'Enter registration: 8.4 hrs current · 60% reduction → 5.0 hrs saved',
+              'Confirm payment: 11.3 hrs current · 40% reduction → 4.5 hrs saved',
+              'Send class reminder: 5.3 hrs current · 80% reduction → 4.2 hrs saved',
+              'Track attendance: 6.4 hrs current · 50% reduction → 3.2 hrs saved',
+              'Prepare certificate: 11.6 hrs current · 70% reduction → 8.1 hrs saved',
+              'Send feedback form: 4.3 hrs current · 75% reduction → 3.2 hrs saved',
+              'TOTAL: 44.6 hrs saved per month · Remaining manual hours: 30.7 · Labor value recovered: 44.6 × $18 = $802.80/mo',
+            ],
+          },
+          {
+            type: 'concept_explanation',
+            title: 'Recovered capacity vs cash saved — the honest distinction',
+            content: 'When automation frees 44.6 hours, BrightPath\'s three admin staff are still employed. The $802.80 represents recovered capacity for higher-value work — faster follow-up, fewer errors, handling more learners without hiring, better learner experience. Direct cost savings require actual staffing reductions. Claiming $802.80 in monthly savings when payroll is unchanged overstates ROI and damages credibility when the accounts do not show a lower salary bill. The accurate claim: 44.6 hours of capacity recovered, valued at $18/hour, now available for growth and quality improvement.',
+          },
+        ],
+      },
+      {
+        lessonNumber: '5.2',
+        title: 'Risk and control checklist',
+        estimatedMinutes: 2,
+        learnerGoal: 'Identify two risks in BrightPath\'s automation plan and name the specific control for each.',
+        blocks: [
+          {
+            type: 'real_world_application',
+            title: 'BrightPath automation risk and control checklist',
+            bullets: [
+              'Privacy and learner data: define who accesses learner names, contacts, and payment records in each tool. Apply applicable data protection rules.',
+              'Payment confirmation risk: human verification must happen before any confirmation fires. Automate after the decision, never instead of it.',
+              'Incorrect automated messages: apply stricter human review to high-stakes outputs (certificates) than to low-stakes ones (course info).',
+              'Exceptions needing human review: define upfront what events pause the automation — cancelled classes, payment reversals, name changes, special accommodation requests.',
+              'Access permissions: only staff responsible for a step should be able to trigger, pause, or override it.',
+              'Audit trail: every automated action logged with timestamp, recipient, content, and delivery status — the evidence base for dispute resolution.',
+              'Approval checkpoints: payment, certificates, and cancellation communications all require a human decision before the automation sends.',
+              'Backup and manual fallback: if the tool is unavailable, staff must know and be able to execute the manual process without it.',
+              'Testing before launch: run each automation on test records with realistic exceptions before going live with real learners.',
+            ],
+          },
+        ],
+      },
+      {
+        lessonNumber: '5.3',
+        title: 'Change management — preparing people for automation',
+        estimatedMinutes: 2,
+        learnerGoal: 'Write a one-sentence explanation for a specific BrightPath staff role about why an automation change is happening and what they will handle differently.',
+        blocks: [
+          {
+            type: 'concept_explanation',
+            title: 'Seven change management principles for BrightPath\'s rollout',
+            bullets: [
+              'Do not surprise staff. Explain what is changing and why before launch.',
+              'Name the problem being solved in hours and errors, not just in tools.',
+              'Show staff what they will stop doing, start doing, and handle manually as exceptions.',
+              'Train staff on exception handling first — automation covers the normal case.',
+              'Keep humans in control of sensitive decisions: payments, complaints, certificates.',
+              'Start with one workflow. Measure before expanding.',
+              'Collect staff feedback after 30 days — what is breaking? What generates more learner questions?',
+            ],
+          },
+          {
+            type: 'worked_example',
+            title: 'How to communicate the course info email change to the admin assistant',
+            content: 'Do not say: "We are automating your job." Say: "You currently spend 12 hours per month on course info emails — one and a half working days of repetition. Starting next week, form submissions trigger that email automatically. You will spend those hours on enquiries that need a real conversation: specific questions, payment arrangements, course selection guidance. You will still handle manually: enquiries arriving through WhatsApp, and any case where the automated reply generates a follow-up the system cannot answer."',
+          },
+        ],
+      },
+      {
+        lessonNumber: '5.4',
+        title: '30-60-90 day implementation roadmap',
+        estimatedMinutes: 2,
+        learnerGoal: 'Explain why certificate automation appears in days 61–90 rather than the first 30 days, using a dependency argument.',
+        blocks: [
+          {
+            type: 'real_world_application',
+            title: 'BrightPath 30-60-90 day automation roadmap',
+            bullets: [
+              'FIRST 30 DAYS — Foundation and first automations:',
+              '· Map the current process fully, including exceptions staff handle informally',
+              '· Standardize name, course, and contact fields across all existing registration records',
+              '· Launch structured enquiry and registration intake form',
+              '· Set up automated course info email triggered by form submission',
+              '· Build class reminder email templates and configure 48-hour trigger',
+              '· Establish baseline metrics: enquiry response time, error rates, staff hours per task',
+              'DAYS 31–60 — Build on clean data:',
+              '· Launch class reminder automation (now reliable because clean registration records exist)',
+              '· Build payment follow-up tracker with human verification checkpoint',
+              '· Pilot attendance form or QR check-in for one course',
+              '· Start automation performance dashboard (delivery rates, time saved, errors flagged)',
+              '· Train staff on exception handling for each live automation',
+              'DAYS 61–90 — Higher-dependency automations:',
+              '· Implement certificate template automation (reliable now because names are standardized and attendance is tracked consistently)',
+              '· Add automated feedback form sending after certificate issue',
+              '· Review time saved and error reduction against baseline metrics',
+              '· Improve exception handling based on 60 days of real operational data',
+              '· Prepare next automation phase proposal for leadership',
+            ],
+          },
+        ],
+      },
+      {
+        lessonNumber: '5.5',
+        title: 'Executive recommendation',
+        estimatedMinutes: 2,
+        learnerGoal: 'Understand the logic and structure of an executive-style automation recommendation.',
+        blocks: [
+          {
+            type: 'worked_example',
+            title: 'BrightPath executive recommendation',
+            content: 'BrightPath should begin with three first-phase workflows: structured enquiry and registration intake, automated course information emails, and class reminder automation. These workflows are the right starting point because they are high-volume, low-risk, and independent of the cleaner attendance and completion records that later automations require. Together they recover an estimated 20.6 staff hours per month and address the two most visible learner follow-up gaps — delayed course information and missing class reminders. Certificate automation should be implemented in the second phase because certificate delays are BrightPath\'s most serious learner experience failure, but certificate accuracy depends on consistent name records from structured intake and reliable attendance data from the attendance form — both created in phase one. Launching certificate automation before this foundation exists produces automated errors at scale, not improvement.',
+          },
+        ],
+      },
+      {
+        lessonNumber: '5.6',
+        title: 'Learner practice: redesign a manual workflow for automation',
+        estimatedMinutes: 3,
+        learnerGoal: 'Produce a written automation recommendation for a training center using dataset analysis, risk controls, and a sequenced first-phase plan.',
+        blocks: [
+          {
+            type: 'practice_task',
+            title: 'Redesign a Manual Workflow for Automation',
+            content: 'Scenario: a small training center handles enquiries, registration, payment confirmation, reminders, attendance, certificates, and feedback manually — identical to BrightPath\'s starting position.',
+            learnerTask: 'Use the BrightPath dataset to answer all eight analysis questions: (1) Which task has the highest monthly workload in hours? (2) Which task has the highest error/delay rate? (3) Which task is high-volume and low-risk enough to automate early? (4) Which task affects learner experience most directly when it fails? (5) Which process should stay partly human-led and why? (6) What data must be standardized before automation can work reliably? (7) What should be included in the first 30 days of the implementation plan? (8) What is your final first-phase recommendation in two sentences?',
+            outputExpectation: 'Strong answers: Q1 — Respond to enquiry (16.0 hrs). Q2 — Send feedback form (20%). Q3 — Send course info (120/mo, 10% error, no financial dependency). Q4 — Prepare certificate (learners need it professionally). Q5 — Payment confirmation and complaint responses (financial stakes and judgment required). Q6 — Name fields, course codes, date formats — standardized in the structured intake form. Q7 — Map process, clean registration data, launch intake form, set up course info email, build reminder templates. Q8 — First phase should prioritize automated course info emails, structured intake, and class reminder automation: high-volume, low-risk, and independent of downstream data that is not yet clean. Certificate automation follows in phase two because it depends on the clean records phase one creates.',
+          },
+          {
+            type: 'quiz_intro',
+            content: 'Take the 12-question Module 5 application quiz. Questions test your ability to apply concepts from all five modules — not recall definitions. Passing threshold: 75% (9 correct of 12). Explanations appear after you submit.',
+          },
+        ],
+      },
+    ],
+    practiceLab: {
+      title: 'Lab: Redesign a Manual Workflow for Automation',
+      durationMinutes: 20,
+      learnerGoal: 'Produce a complete written automation recommendation using the BrightPath dataset, covering task analysis, risk controls, first-phase sequencing, and a 30-day plan.',
+      scenarios: [
+        {
+          id: 'bpa-lab5-a',
+          prompt: 'Q1: Which BrightPath task has the highest monthly workload in hours? Q2: Which has the highest error/delay rate?',
+          answerKey: 'Q1: Respond to enquiry at 16.0 hrs/mo. Q2: Send feedback form at 20% error/delay rate.',
+        },
+        {
+          id: 'bpa-lab5-b',
+          prompt: 'Q3: Which task is high-volume and low-risk enough to automate in the first phase? Q4: Which task affects learner experience most directly when it fails or is delayed?',
+          answerKey: 'Q3: Send course info (120/mo, 10% error, no financial or physical dependency). Q4: Prepare certificate — learners need it for professional use; delays and errors are visible and damaging.',
+        },
+        {
+          id: 'bpa-lab5-c',
+          prompt: 'Q5: Which process should stay partly human-led? Q6: What data must be standardized before certificate automation can work reliably?',
+          answerKey: 'Q5: Payment confirmation (financial stakes, error consequence) and complaint responses (judgment, context, relationship). Q6: Learner full name (as it should appear on certificate), consistent course codes, and confirmed completion status — all standardized in the structured intake form.',
+        },
+        {
+          id: 'bpa-lab5-d',
+          prompt: 'Q7: What should be included in the first 30 days of BrightPath\'s implementation plan? Q8: State your final first-phase recommendation in two sentences.',
+          answerKey: 'Q7: Map the current process, clean registration data fields, launch the structured enquiry/registration form, set up the automated course info email, build reminder templates, establish baseline metrics. Q8: Strong answers: first phase should prioritize automated course info emails, structured intake/registration, and class reminder automation because they are high-volume, low-risk, and independent of the clean completion and attendance data that later automations require. Certificate automation follows in phase two because it depends on the clean records that phase one creates — launching it earlier produces automated errors, not improvement.',
+        },
+      ],
+    },
+    moduleQuiz: QUIZ_MODULE5,
+    moduleSummary: 'You can calculate and honestly explain BrightPath\'s projected savings, apply the risk and control checklist, sequence the implementation roadmap on dependency logic, and produce an executive-style automation recommendation.',
+    completionChecklist: [
+      'Completed all 6 lessons in Module 5 including the learner practice exercise',
+      'Answered all 8 analysis questions using the BrightPath dataset',
+      'Passed the Module 5 application quiz at 75% or higher',
+      'Marked the portfolio acknowledgment complete to unlock the certificate',
+    ],
+    safetyNote: 'BrightPath is a teaching case — not confidential data about any real organization. Do not upload real employer or learner data into unsecured tools. In real work, follow your organization\'s data governance, privacy, and financial sign-off rules before acting on any automation recommendation.',
+  },
+]
