@@ -19,7 +19,7 @@ export const businessProcessAutomationCourse: PracticalMathematicsCourse = {
   },
   title: 'Business Process Automation for Work: Streamlining Tasks, Reducing Waste, and Improving Productivity',
   accessLabel: 'Free',
-  estimatedHours: 1,
+  estimatedHours: 57 / 60,
   certificateIdPrefix: 'BPA',
   level: 'Beginner to early-intermediate',
   school: 'Business, Operations & Workplace Skills',
@@ -89,7 +89,7 @@ export const businessProcessAutomationCourse: PracticalMathematicsCourse = {
   microWorkshopDetail: {
     cardSubtitle:
       'Analyze a manual workflow, score automation opportunities, calculate time and cost impact, manage implementation risk, and recommend a practical 30-day automation plan.',
-    cardMeta: '45–60 min · Beginner–Intermediate · Professional micro-course · Certificate',
+    cardMeta: '57 min · Beginner–Intermediate · Professional micro-course · Certificate',
     cardTags: ['Business process automation', 'workflow analysis', 'operations', 'productivity'],
     whoThisIsFor: [
       'Managers who need to build the business case for automating a manual team workflow',

@@ -10,14 +10,11 @@ import {
   getStandaloneQuizPath,
   practicalMathQuizPassed,
 } from '../../data/courses'
-import {
-  businessProcessAutomationSlideManifest,
-  getBpaSlidesForModule,
-} from '../../data/courses/businessProcessAutomationSlides'
+import { getBpaSlidesForModule } from '../../data/courses/businessProcessAutomationSlides'
 import { useStandaloneCourseProgress } from '../../hooks/usePracticalMathProgress'
+import { BpaStandaloneModulePage } from './BpaStandaloneModulePage'
 import { ORANGE_GRADIENT } from './discoveryHubSections'
 import { buildLessonPreview, formatHoursFromMinutes } from './standaloneCoursePresentation'
-import { JifunzeSlidePlayer } from './JifunzeSlidePlayer'
 import { StandaloneCapstonePanel } from './StandaloneCapstonePanel'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
@@ -145,8 +142,6 @@ function StandaloneModuleDetailLoaded({ entry, module }: StandaloneModuleLoadedP
   const certificateHref = getStandaloneCertificatePath(entry.slug)
   const showCapstonePanel = module.slug === source.capstoneModuleSlug
   const devManualScoreEnabled = isDevManualScoreEnabled()
-  const bpaModuleSlides =
-    entry.slug === BUSINESS_PROCESS_AUTOMATION_SLUG ? getBpaSlidesForModule(module.slug) : []
 
   const savedQuizScore = progress.passedModuleQuizzes.get(module.slug) ?? null
   const savedQuizPassed =
@@ -157,7 +152,31 @@ function StandaloneModuleDetailLoaded({ entry, module }: StandaloneModuleLoadedP
   else if (savedQuizScore) quizStatusLabel = 'Needs retry'
   else quizStatusLabel = 'Not started'
 
-  const statsLine = `${formatHoursFromMinutes(module.durationMinutes)} · ${module.lessons.length} lessons · ${module.moduleQuiz.length} quiz questions · Lab: ${module.practiceLab.title}`
+  const durationPart = formatHoursFromMinutes(module.durationMinutes)
+  const statsParts = [
+    durationPart,
+    `${module.lessons.length} lessons`,
+    `${module.moduleQuiz.length} quiz questions`,
+    `Lab: ${module.practiceLab.title}`,
+  ].filter((p) => p.length > 0)
+  const statsLine = statsParts.join(' · ')
+
+  if (entry.slug === BUSINESS_PROCESS_AUTOMATION_SLUG) {
+    const slides = getBpaSlidesForModule(module.slug)
+    return (
+      <BpaStandaloneModulePage
+        entry={entry}
+        module={module}
+        source={source}
+        slides={slides}
+        progress={progress}
+        prev={prev}
+        next={next}
+        devManualScoreEnabled={devManualScoreEnabled}
+        ModuleQuizDevManualScore={ModuleQuizDevManualScore}
+      />
+    )
+  }
 
   return (
     <div
@@ -221,19 +240,6 @@ function StandaloneModuleDetailLoaded({ entry, module }: StandaloneModuleLoadedP
           <h2 className="text-lg font-semibold text-[color:var(--jf-text)]">Overview</h2>
           <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--jf-muted)]">{module.overview}</p>
         </section>
-
-        {entry.slug === BUSINESS_PROCESS_AUTOMATION_SLUG && bpaModuleSlides.length > 0 ? (
-          <section data-testid={`standalone-bpa-slide-player-module-${module.slug}`}>
-            <JifunzeSlidePlayer
-              title="Play this module's slides"
-              subtitle="These slides match the same module in the full course deck. Use Next and Previous to move through the range for this module."
-              slides={bpaModuleSlides}
-              slideCounterTotal={businessProcessAutomationSlideManifest.totalSlides}
-              deckDownloadUrl={businessProcessAutomationSlideManifest.deckDownloadUrl}
-              showDownload
-            />
-          </section>
-        ) : null}
 
         <section>
           <h2 className="text-lg font-semibold text-[color:var(--jf-text)]">What you will learn</h2>

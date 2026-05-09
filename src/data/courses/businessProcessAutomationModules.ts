@@ -128,7 +128,7 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
     moduleNumber: 1,
     slug: 'automation-foundations',
     title: 'Module 1: Automation Foundations',
-    durationMinutes: 10,
+    durationMinutes: 9,
     level: 'Foundational',
     prerequisites: [],
     overview: 'Establish what business process automation means, distinguish it from digitization and AI, apply the automation thinking cycle, and frame the BrightPath Training Center case study.',
@@ -145,7 +145,7 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
       {
         lessonNumber: '1.1',
         title: 'What business process automation means',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Distinguish a system performing a task automatically from a human performing it faster with a better tool.',
         blocks: [
           {
@@ -162,12 +162,17 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
               'An AI assistant that drafts text you still review and send is AI-assisted work, not full automation.',
             ],
           },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'Write the rule behind an automated class reminder in one "if/then" sentence before continuing: "If [trigger], then [action]." This structure is the foundation of every automation in this course.',
+          },
         ],
       },
       {
         lessonNumber: '1.2',
         title: 'Automation, digitization, and AI — the critical distinctions',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Categorize a workflow change as automation, digitization, or AI-assisted and explain why the distinction matters for tool selection.',
         blocks: [
           {
@@ -184,14 +189,41 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
             title: 'BrightPath: same enquiry problem, three different tools',
             content: 'Digitization path: BrightPath moves enquiry tracking from a notebook to a spreadsheet — staff still read it and type replies. Automation path: form submission triggers course info email automatically — zero staff action per enquiry. AI-assisted path: AI drafts a reply to an unusual enquiry; admin reviews and edits before sending. Each has a different cost, setup requirement, and risk profile.',
           },
+          {
+            type: 'dataset_table',
+            eyebrow: 'Three approaches — compared',
+            title: 'Digitization vs automation vs AI-assisted work',
+            tableColumns: ['Approach', 'What changes', 'Who acts on each item', 'BrightPath example'],
+            tableRows: [
+              { cells: ['Digitization', 'Paper → digital format', 'Human still reads + acts', 'Notebook → spreadsheet. Staff still type each reply.'] },
+              { cells: ['Automation', 'Rule triggers system action', 'System acts; human set the rule once', 'Form submission → course info email. Zero staff per enquiry.'] },
+              { cells: ['AI-assisted', 'Tool drafts; human decides', 'Human reviews + approves each time', 'AI drafts unusual reply; admin edits and sends.'] },
+            ],
+          },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'Classify this: BrightPath moves enquiry tracking from WhatsApp to Google Forms, but staff still read each form and type a reply manually. Digitization, automation, or AI-assisted? Decide before continuing.',
+          },
         ],
       },
       {
         lessonNumber: '1.3',
         title: 'The automation thinking cycle',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Apply the five-step cycle to evaluate a BrightPath workflow candidate.',
         blocks: [
+          {
+            type: 'process_flow',
+            title: 'The automation thinking cycle — 5 steps',
+            processSteps: [
+              { step: 'Map the process', detail: 'Document each manual step, who does it, how long it takes, and what triggers it.' },
+              { step: 'Measure workload', detail: 'Calculate monthly hours per task: volume × minutes per item ÷ 60.' },
+              { step: 'Identify rules and exceptions', detail: 'Find tasks with rule-based decisions and standard inputs. Note exceptions the rule must handle.' },
+              { step: 'Choose automation candidates', detail: 'Score on suitability: volume, rule clarity, input consistency, output consistency, error tolerance.' },
+              { step: 'Test, control, and improve', detail: 'Run with real exceptions before full launch. Set review intervals and fallback processes.' },
+            ],
+          },
           {
             type: 'worked_example',
             title: 'The cycle — applied to BrightPath class reminders',
@@ -203,12 +235,17 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
               'Step 5 — Monitor and adjust: check delivery rates weekly for the first month.',
             ],
           },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'Apply Step 4 of the cycle to BrightPath\'s class reminder: name one realistic exception you would need to test before going live. State the event and what the automation should do in response.',
+          },
         ],
       },
       {
         lessonNumber: '1.4',
         title: 'What should and should not be automated',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Explain why automating some tasks makes a workflow worse, not better.',
         blocks: [
           {
@@ -219,12 +256,17 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
               'Keep human-led: context varies per case, error consequence is serious, relationship or empathy is part of the task, input data is too inconsistent for a rule.',
             ],
           },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'Apply the suitability test to "Respond to an attendance dispute." State whether it passes the automation criteria — and which specific criteria it fails — before moving on.',
+          },
         ],
       },
       {
         lessonNumber: '1.5',
         title: 'Meet BrightPath Training Center',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Name BrightPath\'s core workflow questions before examining the workload data.',
         blocks: [
           {
@@ -242,6 +284,11 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
             type: 'practice_task',
             learnerTask: 'Before looking at the workload data in Module 2, list the three BrightPath tasks you expect to consume the most monthly staff hours. Write one sentence each explaining your reasoning.',
             outputExpectation: 'Three task names with one sentence each. This is a prediction — you will check it against the real data in Module 2.',
+          },
+          {
+            type: 'pause_and_check',
+            title: 'Pre-Module 2 prediction',
+            content: 'You just listed your top-3 predictions. Hold on to them — Module 2 opens with the real workload data and you can check how close your estimate was. Being wrong is instructive: it shows which tasks have hidden time costs.',
           },
         ],
       },
@@ -270,7 +317,7 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
     moduleNumber: 2,
     slug: 'understanding-current-workflow',
     title: 'Module 2: Understanding the Current Workflow',
-    durationMinutes: 10,
+    durationMinutes: 12,
     level: 'Beginner to early-intermediate',
     prerequisites: ['automation-foundations'],
     overview: 'Build a rigorous picture of BrightPath\'s manual baseline — how work moves from enquiry to certificate, how long each step takes, where errors accumulate, and where the workflow breaks under volume. The workload data is fully visible here so you can verify the calculations yourself.',
@@ -287,7 +334,7 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
       {
         lessonNumber: '2.1',
         title: 'The before workflow — how work moves manually at BrightPath',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Describe the end-to-end manual path from enquiry to certificate and name its two weakest handoff points.',
         blocks: [
           {
@@ -295,12 +342,17 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
             title: 'A typical BrightPath enquiry-to-certificate path',
             content: 'An enquiry arrives via WhatsApp. The admin assistant notes it in a notebook. Later that day — or next day if busy — they email a course info document. If the learner registers, they send a payment screenshot. The coordinator checks the screenshot against bank records, enters the name and date into a spreadsheet. Closer to class day, the coordinator writes and sends individual reminders. After class, the instructor marks attendance in a paper register. The coordinator transfers it to the spreadsheet, then prepares each certificate manually in Word. If a name is spelled differently across registration and payment records, the coordinator decides which to use — with no standard rule.',
           },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'Name the single weakest handoff in BrightPath\'s workflow — the point where work is most likely to stall or produce an inconsistent record. Write one sentence specific to BrightPath before continuing.',
+          },
         ],
       },
       {
         lessonNumber: '2.2',
         title: 'Reading the BrightPath workload data table',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Read the workload table and identify which tasks consume the most staff time and which carry the highest error risk.',
         blocks: [
           {
@@ -318,12 +370,49 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
               'TOTAL: 75.3 staff hours per month · Blended labor value at $18/hr = $1,355.40/mo',
             ],
           },
+          {
+            type: 'dataset_table',
+            eyebrow: 'Monthly baseline — manual workload',
+            title: 'BrightPath 8-task workload dataset',
+            tableColumns: ['Task', 'Vol/mo', 'Min/item', 'Staff', 'Error rate', 'Hrs/mo'],
+            tableRows: [
+              { cells: ['Respond to enquiry', '120', '8', 'Admin assistant', '12%', '16.0'] },
+              { cells: ['Send course info', '120', '6', 'Admin assistant', '10%', '12.0'] },
+              { cells: ['Enter registration', '72', '7', 'Program coordinator', '8%', '8.4'] },
+              { cells: ['Confirm payment manually', '68', '10', 'Finance/admin', '15%', '11.3'] },
+              { cells: ['Send class reminder', '64', '5', 'Program coordinator', '9%', '5.3'] },
+              { cells: ['Track attendance', '64', '6', 'Instructor/admin', '7%', '6.4'] },
+              { cells: ['Prepare certificate', '58', '12', 'Program coordinator', '18%', '11.6'] },
+              { cells: ['Send feedback form', '64', '4', 'Admin assistant', '20%', '4.3'] },
+              { cells: ['TOTAL', '', '', '', '', '75.3'] },
+            ],
+          },
+          {
+            type: 'bar_chart',
+            eyebrow: 'Monthly staff hours by task',
+            title: 'Where staff time goes — monthly hours',
+            chartItems: [
+              { label: 'Respond to enquiry', value: 16.0 },
+              { label: 'Send course info', value: 12.0 },
+              { label: 'Prepare certificate', value: 11.6 },
+              { label: 'Confirm payment', value: 11.3 },
+              { label: 'Enter registration', value: 8.4 },
+              { label: 'Track attendance', value: 6.4 },
+              { label: 'Send class reminder', value: 5.3 },
+              { label: 'Send feedback form', value: 4.3 },
+            ],
+          },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'Before reading the formula: which consumes more monthly hours — "Respond to enquiry" (120 items, 8 min each) or "Prepare certificate" (58 items, 12 min each)? Mental estimate before you verify.',
+          },
         ],
       },
       {
         lessonNumber: '2.3',
         title: 'Calculating monthly workload hours — formula and verification',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Apply the workload formula to verify any BrightPath task independently.',
         blocks: [
           {
@@ -336,12 +425,17 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
             learnerTask: 'Verify "Send feedback form" (64 items, 4 min each) and "Track attendance" (64 items, 6 min each) using the formula. Then sum all 8 tasks and confirm the total equals 75.3 hours.',
             outputExpectation: 'Feedback form: 4.3 hrs. Attendance: 6.4 hrs. Total of all 8 pre-rounded figures: 75.3 hrs. If your total differs, check that you divided by 60 (not multiplied) and used the pre-rounded figures from the table.',
           },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'Work the formula for one more task: 68 items × 10 min ÷ 60. Write the calculation and result. If your answer differs from 11.3, re-check the order of operations.',
+          },
         ],
       },
       {
         lessonNumber: '2.4',
         title: 'Error and delay rate analysis',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Explain what a high error rate on a specific BrightPath task means for the learner experience downstream.',
         blocks: [
           {
@@ -353,12 +447,32 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
               'Confirm payment: 15% — roughly 10 learners per month receive delayed or missing confirmation. Erodes trust at the moment of commitment.',
             ],
           },
+          {
+            type: 'heatmap',
+            title: 'Error and delay rates — ranked highest to lowest',
+            heatmapRows: [
+              { label: 'Send feedback form', displayValue: '20%', level: 'critical' },
+              { label: 'Prepare certificate', displayValue: '18%', level: 'critical' },
+              { label: 'Confirm payment manually', displayValue: '15%', level: 'high' },
+              { label: 'Respond to enquiry', displayValue: '12%', level: 'high' },
+              { label: 'Send course info', displayValue: '10%', level: 'medium' },
+              { label: 'Send class reminder', displayValue: '9%', level: 'medium' },
+              { label: 'Enter registration', displayValue: '8%', level: 'medium' },
+              { label: 'Track attendance', displayValue: '7%', level: 'low' },
+            ],
+            content: 'Critical = visible to learners or producing incorrect records. High = creates delays. Medium = manageable. Low = within acceptable range.',
+          },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'Which error rate concerns you most as BrightPath\'s manager — 20% feedback, 18% certificate, or 15% payment? Write one sentence: which would you address first, and why.',
+          },
         ],
       },
       {
         lessonNumber: '2.5',
         title: 'Bottlenecks and handoff failures',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Identify BrightPath\'s two blocking bottlenecks and explain why they are blocking rather than merely slow.',
         blocks: [
           {
@@ -369,6 +483,21 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
               'Certificate preparation (11.6 hrs, 18% error): blocks the learner from receiving proof of completion. For learners needing certificates for employment or professional development, this is the most damaging failure BrightPath creates.',
               'By contrast, a slow task like "Track attendance" (6.4 hrs) does not block a learner-facing step immediately — it degrades downstream accuracy but does not prevent the next step from starting.',
             ],
+          },
+          {
+            type: 'stat_grid',
+            title: 'The two blocking bottlenecks',
+            statItems: [
+              { label: 'Payment confirmation', value: '11.3 hrs/mo', sub: '15% error rate · blocks registration flow' },
+              { label: 'Certificate preparation', value: '11.6 hrs/mo', sub: '18% error rate · blocks learner credential' },
+              { label: 'Combined bottleneck load', value: '22.9 hrs/mo', sub: '30% of all 75.3 manual hours in two tasks' },
+              { label: 'Downstream steps blocked', value: '4 steps', sub: 'Class list, reminders, attendance, and certificates all affected' },
+            ],
+          },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'In one sentence: why is "Track attendance" (6.4 hrs, 7% error) NOT a blocking bottleneck, even though errors there affect certificate accuracy downstream?',
           },
         ],
       },
@@ -397,7 +526,7 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
     moduleNumber: 3,
     slug: 'finding-automation-opportunities',
     title: 'Module 3: Finding Automation Opportunities',
-    durationMinutes: 10,
+    durationMinutes: 12,
     level: 'Beginner to early-intermediate',
     prerequisites: ['automation-foundations', 'understanding-current-workflow'],
     overview: 'Apply a structured framework to decide which BrightPath tasks are automation-ready, score them on suitability dimensions, map them on an impact vs effort matrix, and identify the correct first phase — including what not to automate yet and why.',
@@ -414,7 +543,7 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
       {
         lessonNumber: '3.1',
         title: 'Automation-ready task criteria',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Score a BrightPath task against the five automation-readiness criteria and reach a defensible conclusion.',
         blocks: [
           {
@@ -433,12 +562,17 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
             title: '"Send course info" vs "Respond to complaint" — scored',
             content: 'Send course info: 5/5 — high volume (120/mo), rule-based (standard doc to any enquiry), standard input (form submission), same action every time, low consequence if delayed. Respond to complaint: 1/5 — low volume, context varies per case, unstandardized input, different action each time, high consequence if handled badly.',
           },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'Apply criterion 5 (low consequence of automated error) to "Confirm payment manually." Does this task pass or fail criterion 5? Write your verdict before continuing.',
+          },
         ],
       },
       {
         lessonNumber: '3.2',
         title: 'Human judgment vs automation — three categories',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Categorize each BrightPath task into one of three human-automation balance categories and defend two placements.',
         blocks: [
           {
@@ -459,12 +593,17 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
               'Fully human-led: Complaint responses, attendance dispute resolution, course cancellation communications.',
             ],
           },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'Classify this: BrightPath sends a class cancellation notice to 64 enrolled learners. Fully automate, human trigger + automated delivery, or fully human-led? Name the criterion that determines your classification.',
+          },
         ],
       },
       {
         lessonNumber: '3.3',
         title: 'Automation suitability scoring — BrightPath candidates ranked',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Read the suitability scoring table and explain why the top three candidates outrank the others.',
         blocks: [
           {
@@ -481,12 +620,34 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
               'AI-assisted FAQ support: 3+3+3−4−3 = 2 · Highest complexity and risk for BrightPath\'s current data maturity.',
             ],
           },
+          {
+            type: 'dataset_table',
+            eyebrow: 'Suitability scoring',
+            title: 'Automation candidates — priority scores',
+            tableColumns: ['Candidate', 'Time saved', 'Error reduction', 'Learner impact', 'Effort', 'Risk', 'Score'],
+            tableRows: [
+              { cells: ['Course info email', '5', '4', '4', '1', '1', '11'] },
+              { cells: ['Structured intake form', '4', '4', '5', '2', '1', '10'] },
+              { cells: ['Class reminder', '4', '3', '5', '1', '1', '10'] },
+              { cells: ['Certificate template', '3', '5', '5', '3', '3', '7'] },
+              { cells: ['Feedback workflow', '2', '4', '3', '1', '1', '7'] },
+              { cells: ['Attendance check-in', '3', '3', '4', '3', '2', '5'] },
+              { cells: ['Payment tracker', '3', '4', '4', '3', '4', '4'] },
+              { cells: ['AI FAQ support', '3', '3', '3', '4', '3', '2'] },
+            ],
+            content: 'Formula: time saved + error reduction + learner impact − effort − risk (each rated 1–5). Higher = better first-phase candidate.',
+          },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'From the scoring table: why does AI-assisted FAQ support score lowest overall, even though BrightPath handles 120 enquiries per month? Identify the two dimensions where it scores worst.',
+          },
         ],
       },
       {
         lessonNumber: '3.4',
         title: 'Impact vs effort matrix — prioritizing the first phase',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Place three BrightPath tasks on the matrix and justify why the first phase is not simply "automate what saves most hours."',
         blocks: [
           {
@@ -500,16 +661,45 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
             ],
           },
           {
+            type: 'priority_matrix',
+            title: 'Impact vs effort matrix — BrightPath automation candidates',
+            matrixQuadrants: {
+              topLeft: {
+                label: 'Start here',
+                items: ['Course info email', 'Structured intake form', 'Class reminder'],
+              },
+              topRight: {
+                label: 'Plan carefully',
+                items: ['Certificate automation', 'Payment tracker'],
+              },
+              bottomLeft: {
+                label: 'If spare capacity',
+                items: ['Feedback form automation'],
+              },
+              bottomRight: {
+                label: 'Avoid for now',
+                items: ['AI FAQ chatbot'],
+              },
+              xLabel: 'Effort required',
+              yLabel: 'Impact on learner + staff',
+            },
+          },
+          {
             type: 'worked_example',
             title: 'Why certificate automation is not in phase one despite saving the most hours',
             content: 'Certificate preparation saves 8.1 hours per month — more than any other single task. But it sits in "high impact, high effort" because it requires consistent name records, reliable attendance data, and verified completion status. If those records are inconsistent (and at BrightPath, they currently are), automated certificates will have wrong names or incorrect completion details at scale. Course info email saves 10.8 hours and sits in "high impact, low effort" — needs only a form trigger and an email template. Phase one builds the data foundation that makes phase two safe.',
+          },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'Name the upstream data dependency that keeps certificate automation in "high impact, high effort." What specific records must exist and be reliable before certificate automation can produce correct output?',
           },
         ],
       },
       {
         lessonNumber: '3.5',
         title: 'Data quality, exception handling, and audit trails',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Identify two data quality prerequisites and two exception-handling requirements for BrightPath\'s first-phase automations.',
         blocks: [
           {
@@ -525,6 +715,11 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
               'Going live without a defined fallback: what happens when a message fails to deliver? Who checks? What is the manual backup process?',
               'Skipping exception testing: cancelled class after reminders sent, payment reversal, learner who re-registers at the last minute.',
             ],
+          },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'Name the fallback process BrightPath must define before launching class reminder automation. If a reminder fails to deliver to three learners on a class day, what does a staff member do?',
           },
         ],
       },
@@ -570,7 +765,7 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
       {
         lessonNumber: '4.1',
         title: 'Structured enquiry and registration intake',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Explain why structured intake is the most upstream leverage point in BrightPath\'s automation redesign.',
         blocks: [
           {
@@ -582,12 +777,17 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
               'Why this is the highest-leverage change: every downstream automation reads from this record. Fix name formatting once, at intake, rather than cleaning inconsistencies at every later step.',
             ],
           },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'Why does fixing the enquiry intake form also improve certificate accuracy — even though certificates are produced months later? State the data connection in one sentence.',
+          },
         ],
       },
       {
         lessonNumber: '4.2',
         title: 'Automated course info and class reminder workflows',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Map the trigger, automated action, and exception path for course info emails and class reminders.',
         blocks: [
           {
@@ -608,12 +808,17 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
               'Exception: class cancelled or rescheduled → update message fires to the same learner list. Staff must update the class record promptly to trigger the exception correctly.',
             ],
           },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'State the exception path for course info emails when a course is full. What should the automation send instead of the standard course info document?',
+          },
         ],
       },
       {
         lessonNumber: '4.3',
         title: 'Payment follow-up tracker',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Identify the human checkpoint the payment tracker must preserve to control financial risk.',
         blocks: [
           {
@@ -621,12 +826,17 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
             title: 'Before and after: payment confirmation',
             content: 'Before: learner sends WhatsApp payment screenshot. Coordinator checks against bank records and types a confirmation. 15% error/delay rate from unclear screenshots, name mismatches, and deprioritization during busy periods. After: a shared tracker shows payment status per learner — "awaiting," "screenshot received," "verified," "confirmed." The human checkpoint: only finance/admin can move a record from "screenshot received" to "verified." Once that step is completed, the system automatically sends the confirmation and updates the registration record. Automation speeds communication after the human decision — it does not replace the decision.',
           },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'State the exact human checkpoint in the payment workflow in one sentence: who does what, and only after that step does the automation fire.',
+          },
         ],
       },
       {
         lessonNumber: '4.4',
         title: 'Attendance and certificate workflow',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Describe the human review checkpoint in the automated certificate workflow and explain why removing it increases error risk.',
         blocks: [
           {
@@ -639,12 +849,17 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
               'Why the review step stays: the coordinator catches edge cases — name changes, partial attendance, date corrections — in 2–3 minutes. The 70% time reduction comes from eliminating manual template-filling, not from removing oversight.',
             ],
           },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'Name one edge case the coordinator catches during certificate review that a fully automated system would miss. Why does that case justify keeping the review step?',
+          },
         ],
       },
       {
         lessonNumber: '4.5',
         title: 'The after workflow map — visualizing the improvement',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Describe two concrete changes in the after workflow that reduce delay and error simultaneously.',
         blocks: [
           {
@@ -658,6 +873,11 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
               'Payment: manual screenshot check and typed confirmation (11.3 hrs, 15% error) → tracker with human verify + automated send (speed improved, human checkpoint preserved).',
               'Certificate: manual Word template (11.6 hrs, 18% error) → pre-filled template, coordinator approves (3.5 hrs, dramatically reduced errors).',
             ],
+          },
+          {
+            type: 'pause_and_check',
+            title: 'Before Module 5',
+            content: 'Pick one change from the before-to-after table that reduces both delay AND error rate at the same time. Name it and explain the dual benefit in two sentences before continuing.',
           },
         ],
       },
@@ -686,7 +906,7 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
     moduleNumber: 5,
     slug: 'business-value-risk-implementation',
     title: 'Module 5: Business Value, Risk, and Implementation',
-    durationMinutes: 15,
+    durationMinutes: 14,
     level: 'Intermediate',
     prerequisites: ['automation-foundations', 'understanding-current-workflow', 'finding-automation-opportunities', 'designing-future-workflow'],
     overview: 'Quantify BrightPath\'s time and cost impact honestly, audit for implementation risks, apply change management, build the 30-60-90 day roadmap, produce the executive recommendation, complete the learner practice exercise, and pass the 12-question application quiz.',
@@ -722,16 +942,57 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
             ],
           },
           {
+            type: 'bar_chart',
+            eyebrow: 'Projected time savings',
+            title: 'Hours saved per task — full automation plan',
+            chartItems: [
+              { label: 'Send course info', value: 10.8 },
+              { label: 'Prepare certificate', value: 8.1 },
+              { label: 'Respond to enquiry', value: 5.6 },
+              { label: 'Enter registration', value: 5.0 },
+              { label: 'Confirm payment', value: 4.5 },
+              { label: 'Send class reminder', value: 4.2 },
+              { label: 'Track attendance', value: 3.2 },
+              { label: 'Send feedback form', value: 3.2 },
+            ],
+          },
+          {
+            type: 'stat_grid',
+            title: 'Impact summary',
+            statItems: [
+              { label: 'Current monthly hours', value: '75.3 hrs', sub: 'across 8 manual tasks' },
+              { label: 'Hours saved (projected)', value: '44.6 hrs', sub: '59% of total workload recovered' },
+              { label: 'Remaining manual hours', value: '30.7 hrs', sub: 'human checkpoints + exceptions' },
+              { label: 'Capacity value recovered', value: '$802.80/mo', sub: '44.6 hrs × $18/hr blended rate' },
+            ],
+          },
+          {
+            type: 'calculation_card',
+            eyebrow: 'Labor value formula',
+            title: 'What the recovered capacity is worth',
+            content: '44.6 hours × $18/hour = $802.80 per month',
+            bullets: [
+              'This is recovered capacity — BrightPath’s three staff are still employed.',
+              'True cash savings only occur if staffing costs are actually reduced.',
+              'Accurate claim: 44.6 hours freed for higher-value work, faster follow-up, and handling more learners.',
+            ],
+          },
+          {
             type: 'concept_explanation',
             title: 'Recovered capacity vs cash saved — the honest distinction',
             content: 'When automation frees 44.6 hours, BrightPath\'s three admin staff are still employed. The $802.80 represents recovered capacity for higher-value work — faster follow-up, fewer errors, handling more learners without hiring, better learner experience. Direct cost savings require actual staffing reductions. Claiming $802.80 in monthly savings when payroll is unchanged overstates ROI and damages credibility when the accounts do not show a lower salary bill. The accurate claim: 44.6 hours of capacity recovered, valued at $18/hour, now available for growth and quality improvement.',
+          },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'A manager claims BrightPath saves $802.80 per month in payroll costs. Is this claim accurate? If not, state what the $802.80 actually represents — in one sentence.',
           },
         ],
       },
       {
         lessonNumber: '5.2',
         title: 'Risk and control checklist',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Identify two risks in BrightPath\'s automation plan and name the specific control for each.',
         blocks: [
           {
@@ -749,12 +1010,17 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
               'Testing before launch: run each automation on test records with realistic exceptions before going live with real learners.',
             ],
           },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'Add one risk specific to BrightPath that is missing from the nine listed. Write it in the format: "Risk: [what could go wrong]. Control: [what prevents it]."',
+          },
         ],
       },
       {
         lessonNumber: '5.3',
         title: 'Change management — preparing people for automation',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Write a one-sentence explanation for a specific BrightPath staff role about why an automation change is happening and what they will handle differently.',
         blocks: [
           {
@@ -775,12 +1041,17 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
             title: 'How to communicate the course info email change to the admin assistant',
             content: 'Do not say: "We are automating your job." Say: "You currently spend 12 hours per month on course info emails — one and a half working days of repetition. Starting next week, form submissions trigger that email automatically. You will spend those hours on enquiries that need a real conversation: specific questions, payment arrangements, course selection guidance. You will still handle manually: enquiries arriving through WhatsApp, and any case where the automated reply generates a follow-up the system cannot answer."',
           },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'Write a one-sentence explanation for BrightPath\'s program coordinator about why the class reminder automation is happening — without using the word "automate" or "automation."',
+          },
         ],
       },
       {
         lessonNumber: '5.4',
         title: '30-60-90 day implementation roadmap',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Explain why certificate automation appears in days 61–90 rather than the first 30 days, using a dependency argument.',
         blocks: [
           {
@@ -808,18 +1079,68 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
               '· Prepare next automation phase proposal for leadership',
             ],
           },
+          {
+            type: 'roadmap_timeline',
+            title: 'BrightPath 30-60-90 day automation roadmap',
+            roadmapPhases: [
+              {
+                phase: 'Foundation and first automations',
+                days: 'First 30 days',
+                items: [
+                  'Map the current process including informal exceptions',
+                  'Standardize name, course, and contact fields in all records',
+                  'Launch structured enquiry and registration intake form',
+                  'Set up automated course info email on form submission',
+                  'Build class reminder templates with 48-hour trigger',
+                  'Establish baseline metrics for all 8 tasks',
+                ],
+              },
+              {
+                phase: 'Build on clean data',
+                days: 'Days 31–60',
+                items: [
+                  'Launch class reminder automation (clean registration data now exists)',
+                  'Build payment follow-up tracker with human verification checkpoint',
+                  'Pilot attendance form for one course',
+                  'Start automation performance dashboard',
+                  'Train staff on exception handling for each live automation',
+                ],
+              },
+              {
+                phase: 'Higher-dependency automations',
+                days: 'Days 61–90',
+                items: [
+                  'Implement certificate template automation (names standardized, attendance tracked)',
+                  'Add automated feedback form after certificate issue',
+                  'Review time saved and error reduction against baseline',
+                  'Improve exception handling from 60 days of operational data',
+                  'Prepare next automation phase proposal for leadership',
+                ],
+              },
+            ],
+          },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'Certificate automation appears in days 61–90. Name the specific records that must exist and be reliable before it can start — and which earlier phase creates those records.',
+          },
         ],
       },
       {
         lessonNumber: '5.5',
         title: 'Executive recommendation',
-        estimatedMinutes: 2,
+        estimatedMinutes: 3,
         learnerGoal: 'Understand the logic and structure of an executive-style automation recommendation.',
         blocks: [
           {
             type: 'worked_example',
             title: 'BrightPath executive recommendation',
             content: 'BrightPath should begin with three first-phase workflows: structured enquiry and registration intake, automated course information emails, and class reminder automation. These workflows are the right starting point because they are high-volume, low-risk, and independent of the cleaner attendance and completion records that later automations require. Together they recover an estimated 20.6 staff hours per month and address the two most visible learner follow-up gaps — delayed course information and missing class reminders. Certificate automation should be implemented in the second phase because certificate delays are BrightPath\'s most serious learner experience failure, but certificate accuracy depends on consistent name records from structured intake and reliable attendance data from the attendance form — both created in phase one. Launching certificate automation before this foundation exists produces automated errors at scale, not improvement.',
+          },
+          {
+            type: 'pause_and_check',
+            title: 'Checkpoint',
+            content: 'BrightPath\'s recommendation prioritizes course info emails, structured intake, and reminders over certificate automation — even though certificates save more hours. State the sequencing logic in one sentence.',
           },
         ],
       },
@@ -835,6 +1156,11 @@ export const BUSINESS_PROCESS_AUTOMATION_MODULES: StandaloneCourseModule[] = [
             content: 'Scenario: a small training center handles enquiries, registration, payment confirmation, reminders, attendance, certificates, and feedback manually — identical to BrightPath\'s starting position.',
             learnerTask: 'Use the BrightPath dataset to answer all eight analysis questions: (1) Which task has the highest monthly workload in hours? (2) Which task has the highest error/delay rate? (3) Which task is high-volume and low-risk enough to automate early? (4) Which task affects learner experience most directly when it fails? (5) Which process should stay partly human-led and why? (6) What data must be standardized before automation can work reliably? (7) What should be included in the first 30 days of the implementation plan? (8) What is your final first-phase recommendation in two sentences?',
             outputExpectation: 'Strong answers: Q1 — Respond to enquiry (16.0 hrs). Q2 — Send feedback form (20%). Q3 — Send course info (120/mo, 10% error, no financial dependency). Q4 — Prepare certificate (learners need it professionally). Q5 — Payment confirmation and complaint responses (financial stakes and judgment required). Q6 — Name fields, course codes, date formats — standardized in the structured intake form. Q7 — Map process, clean registration data, launch intake form, set up course info email, build reminder templates. Q8 — First phase should prioritize automated course info emails, structured intake, and class reminder automation: high-volume, low-risk, and independent of downstream data that is not yet clean. Certificate automation follows in phase two because it depends on the clean records phase one creates.',
+          },
+          {
+            type: 'pause_and_check',
+            title: 'Before the quiz',
+            content: 'You have worked through five modules of BrightPath analysis. Name one principle from this course that you will apply in your own organization. One sentence. Then start the quiz.',
           },
           {
             type: 'quiz_intro',

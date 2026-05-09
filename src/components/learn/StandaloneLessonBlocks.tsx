@@ -1,5 +1,6 @@
 import { useId, useState, type ReactNode } from 'react'
 import type { StandaloneCourseLessonBlock } from '../../data/courses/practicalMathematicsCourseTypes'
+import { StandaloneVisualBlock } from './StandaloneVisualBlocks'
 
 function LessonParagraphs({ text }: { text: string | undefined }) {
   if (!text?.trim()) return null
@@ -104,6 +105,16 @@ export function StandaloneLessonBlocks({ blocks, lessonSlug }: { blocks: Standal
                     ))}
                   </ol>
                 ) : null}
+                {block.bullets?.length ? (
+                  <ul className="mt-4 space-y-2.5 border-t border-orange-100/60 pt-4 text-[14px] text-stone-800">
+                    {block.bullets.map((b) => (
+                      <li key={b} className="flex gap-2.5">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-500" aria-hidden />
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
               </BlockShell>
             )
 
@@ -162,6 +173,16 @@ export function StandaloneLessonBlocks({ blocks, lessonSlug }: { blocks: Standal
                 <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-amber-900">Heads up — easy fixes</p>
                 {block.title ? <h2 className="mt-2 text-xl font-semibold text-amber-950">{block.title}</h2> : null}
                 {block.content ? <div className="mt-4 text-[15px] text-amber-950/90"><LessonParagraphs text={block.content} /></div> : null}
+                {block.bullets?.length ? (
+                  <ul className="mt-4 space-y-2 text-[14px] text-amber-950/90">
+                    {block.bullets.map((b) => (
+                      <li key={b} className="flex gap-2">
+                        <span className="mt-0.5 font-bold text-amber-700" aria-hidden>✗</span>
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
               </BlockShell>
             )
 
@@ -174,6 +195,16 @@ export function StandaloneLessonBlocks({ blocks, lessonSlug }: { blocks: Standal
                 </p>
                 {block.title ? <h2 className="mt-2 text-xl font-semibold text-emerald-950">{block.title}</h2> : null}
                 {block.content ? <div className="mt-4 text-[15px] text-emerald-950/90"><LessonParagraphs text={block.content} /></div> : null}
+                {block.bullets?.length ? (
+                  <ul className="mt-4 space-y-2.5 border-t border-emerald-200/60 pt-4 text-[14px] text-emerald-950/90">
+                    {block.bullets.map((b) => (
+                      <li key={b} className="flex gap-2.5">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-600" aria-hidden />
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
               </BlockShell>
             )
 
@@ -220,6 +251,13 @@ export function StandaloneLessonBlocks({ blocks, lessonSlug }: { blocks: Standal
                 ) : null}
                 {block.title ? <h2 className="mt-2 text-xl font-semibold text-zinc-900">{block.title}</h2> : null}
                 {block.content ? <div className="mt-4"><LessonParagraphs text={block.content} /></div> : null}
+                {block.bullets?.length ? (
+                  <ul className="mt-4 list-disc space-y-2 pl-5 text-[14px] text-stone-800">
+                    {block.bullets.map((b) => (
+                      <li key={b}>{b}</li>
+                    ))}
+                  </ul>
+                ) : null}
               </BlockShell>
             )
 
@@ -232,6 +270,20 @@ export function StandaloneLessonBlocks({ blocks, lessonSlug }: { blocks: Standal
                 {block.title ? <h2 className="mt-2 text-lg font-semibold text-zinc-900">{block.title}</h2> : null}
                 {block.content ? <div className="mt-3 text-[14px] leading-relaxed text-stone-800"><LessonParagraphs text={block.content} /></div> : null}
               </BlockShell>
+            )
+
+          case 'dataset_table':
+          case 'bar_chart':
+          case 'heatmap':
+          case 'calculation_card':
+          case 'stat_grid':
+          case 'roadmap_timeline':
+          case 'priority_matrix':
+          case 'process_flow':
+            return (
+              <div key={key}>
+                <StandaloneVisualBlock block={block} lessonSlug={lessonSlug} />
+              </div>
             )
 
           default:

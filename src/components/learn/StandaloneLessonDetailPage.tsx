@@ -7,17 +7,21 @@ import {
   getStandaloneLessonNavTargets,
   getStandaloneLessonSlug,
 } from '../../data/courses'
-import {
-  businessProcessAutomationSlideManifest,
-  getBpaSlidesForLesson,
-} from '../../data/courses/businessProcessAutomationSlides'
+import { businessProcessAutomationSlideManifest, getBpaSlidesForLesson } from '../../data/courses/businessProcessAutomationSlides'
 import { lessonKey } from '../../data/courses/practicalMathematicsProgression'
 import type { StandaloneCatalogEntry } from '../../data/courses/standaloneCoursesCatalog'
-import type { StandaloneCourseLesson, StandaloneCourseModule } from '../../data/courses/practicalMathematicsCourseTypes'
+import type { StandaloneCourseLesson, StandaloneCourseLessonBlock, StandaloneCourseModule } from '../../data/courses/practicalMathematicsCourseTypes'
+import {
+  pickBpaBrightPathBlock,
+  pickBpaCheckpointBlock,
+  pickBpaKeyIdeaBlock,
+  pickBpaOptionalVisualBlock,
+} from '../../lib/bpaLessonNarrative'
 import { useStandaloneCourseProgress } from '../../hooks/usePracticalMathProgress'
 import { ORANGE_GRADIENT } from './discoveryHubSections'
 import { JifunzeSlidePlayer } from './JifunzeSlidePlayer'
 import { StandaloneLessonBlocks } from './StandaloneLessonBlocks'
+import { StandaloneVisualBlock } from './StandaloneVisualBlocks'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
 import type { StandaloneLessonNavTargets } from '../../data/courses/standaloneCourseLearnPaths'
@@ -29,13 +33,200 @@ type StandaloneLessonLoadedProps = {
   nav: StandaloneLessonNavTargets
 }
 
+function BpaLessonParagraphs({ text }: { text: string | undefined }) {
+  if (!text?.trim()) return null
+  const parts = text.trim().split(/\n{2,}/)
+  return (
+    <div className="space-y-2 text-[14px] leading-relaxed text-stone-800">
+      {parts.map((p, i) => (
+        <p key={i}>{p.replace(/\n/g, ' ')}</p>
+      ))}
+    </div>
+  )
+}
+
+function BpaNarrativeCard({
+  label,
+  block,
+}: {
+  label: string
+  block: StandaloneCourseLessonBlock | undefined
+}) {
+  if (!block) return null
+  const title =
+    block.type === 'concept_explanation' || block.type === 'worked_example' || block.type === 'real_world_application' || block.type === 'scenario'
+      ? block.title
+      : block.type === 'pause_and_check'
+        ? block.title
+        : undefined
+  const content =
+    'content' in block && typeof block.content === 'string' ? block.content : undefined
+  const bullets = 'bullets' in block && Array.isArray(block.bullets) ? block.bullets : undefined
+  if (!title && !content && !bullets?.length) return null
+  return (
+    <div className="rounded-xl border border-stone-200/90 bg-white p-5 shadow-sm">
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-stone-500">{label}</p>
+      {title ? <h2 className="mt-2 text-[17px] font-semibold text-stone-900">{title}</h2> : null}
+      {content ? (
+        <div className="mt-3">
+          <BpaLessonParagraphs text={content} />
+        </div>
+      ) : null}
+      {bullets?.length ? (
+        <ul className="mt-3 list-disc space-y-1.5 pl-5 text-[14px] text-stone-800">
+          {bullets.map((b) => (
+            <li key={b}>{b}</li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
+  )
+}
+
 function StandaloneLessonDetailLoaded({ entry, module, lesson, nav }: StandaloneLessonLoadedProps) {
   const { progress, markLessonComplete } = useStandaloneCourseProgress(entry.internalKey)
   const { source } = entry
   const done = progress.completedLessonKeys.has(lessonKey(module, lesson.lessonNumber))
   const slug = getStandaloneLessonSlug(lesson)
-  const bpaLessonSlides =
-    entry.slug === BUSINESS_PROCESS_AUTOMATION_SLUG ? getBpaSlidesForLesson(module.slug, lesson.lessonNumber) : []
+
+  if (entry.slug === BUSINESS_PROCESS_AUTOMATION_SLUG) {
+    const bpaLessonSlides = getBpaSlidesForLesson(module.slug, lesson.lessonNumber)
+    const bpaVisual = pickBpaOptionalVisualBlock(module.slug, lesson.blocks)
+    const bpaKey = pickBpaKeyIdeaBlock(lesson.blocks)
+    const bpaBright = pickBpaBrightPathBlock(lesson.blocks)
+    const bpaCheck = pickBpaCheckpointBlock(lesson.blocks)
+
+    return (
+      <div
+        className="jf-learn-warm min-h-screen w-full bg-[var(--jf-bg-page)] px-4 py-8 text-[color:var(--jf-text)] sm:px-6 sm:py-10"
+        data-testid={`standalone-lesson-detail-${module.slug}-${slug}`}
+      >
+        <div className="mx-auto w-full max-w-4xl space-y-8">
+          <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[color:var(--jf-border)] pb-5">
+            <JifunzeBrandLogo to="/" size="md" variant="compact" surface="light" />
+            <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
+              <Link className="text-xs font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to="/learn">
+                Catalog
+              </Link>
+              <Link className="text-xs font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to={nav.coursePath}>
+                Course overview
+              </Link>
+              <SignedInPublicLearningActions />
+            </div>
+          </header>
+
+          <nav className="text-[12px] text-[color:var(--jf-muted)]" aria-label="Breadcrumb">
+            <Link to="/learn" className="hover:text-[color:var(--jf-text)]">
+              Learn
+            </Link>
+            <span className="mx-1.5">/</span>
+            <Link to={nav.coursePath} className="hover:text-[color:var(--jf-text)]">
+              {source.title}
+            </Link>
+            <span className="mx-1.5">/</span>
+            <Link to={nav.modulePath} className="hover:text-[color:var(--jf-text)]">
+              Module {module.moduleNumber}
+            </Link>
+            <span className="mx-1.5">/</span>
+            <span className="text-[color:var(--jf-text)]">Lesson {lesson.lessonNumber}</span>
+          </nav>
+
+          <article data-testid="standalone-lesson-content" className="space-y-6">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-stone-500">Lesson {lesson.lessonNumber}</p>
+              <h1 className="mt-1 text-2xl font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-3xl">{lesson.title}</h1>
+              <p className="mt-2 text-[13px] text-stone-500">{lesson.estimatedMinutes} min</p>
+            </div>
+
+            {bpaLessonSlides.length > 0 ? (
+              <div data-testid={`standalone-bpa-slide-player-lesson-${slug}`}>
+                <JifunzeSlidePlayer
+                  title="Lesson slides"
+                  subtitle="Follow the deck here, then use the notes below."
+                  slides={bpaLessonSlides}
+                  slideCounterTotal={businessProcessAutomationSlideManifest.totalSlides}
+                  showDownload={false}
+                />
+              </div>
+            ) : null}
+
+            <div className="space-y-4">
+              <BpaNarrativeCard label="Key idea" block={bpaKey} />
+              <BpaNarrativeCard label="BrightPath example" block={bpaBright} />
+              <BpaNarrativeCard label="Check yourself" block={bpaCheck} />
+            </div>
+
+            {bpaVisual ? (
+              <div className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-sm">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-stone-500">Figure</p>
+                <div className="mt-3">
+                  <StandaloneVisualBlock block={bpaVisual} lessonSlug={slug} />
+                </div>
+              </div>
+            ) : null}
+
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                className={`inline-flex min-h-[2.5rem] items-center justify-center rounded-full px-6 text-sm font-semibold text-white shadow-md transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60 ${ORANGE_GRADIENT}`}
+                disabled={done}
+                onClick={() => markLessonComplete(module, lesson.lessonNumber)}
+                data-testid="standalone-lesson-mark-complete"
+              >
+                {done ? 'Marked as studied' : 'Mark lesson as studied'}
+              </button>
+              {nav.nextLessonPath ? (
+                <Link
+                  to={nav.nextLessonPath}
+                  className="inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-stone-300 bg-white px-5 text-sm font-semibold text-stone-800 shadow-sm transition hover:bg-stone-50"
+                  data-testid="standalone-lesson-next"
+                >
+                  Continue →
+                </Link>
+              ) : (
+                <Link
+                  to={nav.modulePath}
+                  className="inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-stone-300 bg-white px-5 text-sm font-semibold text-stone-800 shadow-sm transition hover:bg-stone-50"
+                  data-testid="standalone-lesson-next"
+                >
+                  Back to module →
+                </Link>
+              )}
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[color:var(--jf-border)] pt-6">
+              {nav.prevLessonPath ? (
+                <Link
+                  to={nav.prevLessonPath}
+                  className="text-sm font-medium text-stone-600 hover:text-stone-900"
+                  data-testid="standalone-lesson-prev"
+                >
+                  ← Previous lesson
+                </Link>
+              ) : (
+                <Link to={nav.modulePath} className="text-sm font-medium text-stone-600 hover:text-stone-900" data-testid="standalone-lesson-prev">
+                  ← Module
+                </Link>
+              )}
+              <Link to={nav.modulePath} className="text-sm text-stone-500 hover:text-stone-800" data-testid="standalone-lesson-back-module">
+                All lessons in this module
+              </Link>
+            </div>
+          </article>
+
+          {module.safetyNote ? (
+            <aside
+              className="rounded-lg border-l-[3px] border-amber-400 bg-amber-50/85 px-4 py-3 text-[12px] leading-snug text-amber-950"
+              data-testid={`standalone-lesson-safety-${module.slug}`}
+            >
+              <span className="font-semibold text-amber-950">Safety: </span>
+              {module.safetyNote}
+            </aside>
+          ) : null}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div
@@ -80,19 +271,6 @@ function StandaloneLessonDetailLoaded({ entry, module, lesson, nav }: Standalone
             <p className="text-[11px] font-semibold uppercase tracking-wide text-orange-800">Learner goal</p>
             <p className="mt-2 text-[15px] leading-relaxed text-stone-800">{lesson.learnerGoal}</p>
           </div>
-
-          {entry.slug === BUSINESS_PROCESS_AUTOMATION_SLUG && bpaLessonSlides.length > 0 ? (
-            <div className="mt-10" data-testid={`standalone-bpa-slide-player-lesson-${slug}`}>
-              <JifunzeSlidePlayer
-                title="Slides for this lesson"
-                subtitle="This slide range aligns with the lesson you are reading. Use the deck for the full visual narrative, then continue with the guided blocks below."
-                slides={bpaLessonSlides}
-                slideCounterTotal={businessProcessAutomationSlideManifest.totalSlides}
-                deckDownloadUrl={businessProcessAutomationSlideManifest.deckDownloadUrl}
-                showDownload
-              />
-            </div>
-          ) : null}
 
           <div className="mt-10">
             <StandaloneLessonBlocks blocks={lesson.blocks} lessonSlug={slug} />

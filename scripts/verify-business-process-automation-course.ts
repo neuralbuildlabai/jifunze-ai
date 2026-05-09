@@ -13,6 +13,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import { formatHoursFromMinutes } from '../src/components/learn/standaloneCoursePresentation'
 import {
   BPA_MODULE_SLUGS,
   businessProcessAutomationCourse,
@@ -345,13 +346,39 @@ function testSlideAssetsAndManifest() {
   assert.ok(overview.includes('JifunzeSlidePlayer'), 'overview integration references JifunzeSlidePlayer')
   assert.ok(overview.includes('businessProcessAutomationSlideManifest'), 'overview integration references slide manifest')
 
-  const modPage = readFileSync(join(REPO_ROOT, 'src/components/learn/StandaloneModuleDetailPage.tsx'), 'utf8')
-  assert.ok(modPage.includes('JifunzeSlidePlayer'), 'module page references JifunzeSlidePlayer')
-  assert.ok(modPage.includes('getBpaSlidesForModule'), 'module page references slide helper')
+  const modRouter = readFileSync(join(REPO_ROOT, 'src/components/learn/StandaloneModuleDetailPage.tsx'), 'utf8')
+  assert.ok(modRouter.includes('BpaStandaloneModulePage'), 'module router delegates BPA layout')
+  assert.ok(modRouter.includes('getBpaSlidesForModule'), 'module page references slide helper')
+
+  const bpaModLayout = readFileSync(join(REPO_ROOT, 'src/components/learn/BpaStandaloneModulePage.tsx'), 'utf8')
+  assert.ok(bpaModLayout.includes('JifunzeSlidePlayer'), 'BPA module layout includes slide player')
+  const modPlayerIdx = bpaModLayout.indexOf('<JifunzeSlidePlayer')
+  const modLessonsIdx = bpaModLayout.indexOf('standalone-module-lessons')
+  assert.ok(
+    modPlayerIdx !== -1 && modLessonsIdx !== -1 && modPlayerIdx < modLessonsIdx,
+    'BPA module layout: slide player appears before lesson list in source order',
+  )
 
   const lessonPage = readFileSync(join(REPO_ROOT, 'src/components/learn/StandaloneLessonDetailPage.tsx'), 'utf8')
   assert.ok(lessonPage.includes('JifunzeSlidePlayer'), 'lesson page references JifunzeSlidePlayer')
   assert.ok(lessonPage.includes('getBpaSlidesForLesson'), 'lesson page references slide helper')
+  const lsIdx = lessonPage.indexOf('title="Lesson slides"')
+  const lkIdx = lessonPage.indexOf('label="Key idea"')
+  assert.ok(
+    lsIdx !== -1 && lkIdx !== -1 && lsIdx < lkIdx,
+    'BPA lesson layout: slide player section appears before key notes in source order',
+  )
+}
+
+function testBpaDurationFormattingAndSum() {
+  assert.equal(formatHoursFromMinutes(0), '', 'sub-hour formatter must not emit 0 hours for zero minutes')
+  assert.equal(formatHoursFromMinutes(9), '9 min', 'module minute formatting')
+  let sum = 0
+  for (const m of businessProcessAutomationCourse.modules) {
+    assert.ok(m.durationMinutes > 0, `${m.slug}: durationMinutes must be > 0`)
+    sum += m.durationMinutes
+  }
+  assert.equal(sum, 57, 'BPA module durations should sum to 57 minutes')
 }
 
 function main() {
@@ -377,7 +404,11 @@ function main() {
   testLessonUrlSlugsUniqueWithinEachModule()
   testModuleMapMatchesModules()
   testSlideAssetsAndManifest()
+  testBpaDurationFormattingAndSum()
   console.log('verify-business-process-automation-course: OK — all checks passed')
+  console.log(
+    'Manual UX check (browser): /learn/business-process-automation-for-work/modules/automation-foundations — slide player near top, compact lesson rows, no 0 hours, certificate link only in completion panel.',
+  )
 }
 
 main()

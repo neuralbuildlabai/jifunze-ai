@@ -1,7 +1,9 @@
 import type { StandaloneCourseLesson } from '../../data/courses/practicalMathematicsCourseTypes'
 
-/** One clean duration label from minutes (e.g. "2.5 hours", "3 hours"). */
+/** One clean duration label from minutes (e.g. "10 min", "1 hour", "2.5 hours"). Empty when minutes are 0 or negative. */
 export function formatHoursFromMinutes(totalMinutes: number): string {
+  if (totalMinutes <= 0) return ''
+  if (totalMinutes < 60) return `${totalMinutes} min`
   const h = totalMinutes / 60
   const rounded = Math.round(h * 2) / 2
   if (rounded === 1) return '1 hour'
@@ -9,8 +11,12 @@ export function formatHoursFromMinutes(totalMinutes: number): string {
   return `${rounded.toFixed(1)} hours`
 }
 
-/** Course-level duration line. */
+/** Course-level duration line (uses minutes when under one hour). */
 export function formatCourseDurationLabel(estimatedHours: number): string {
+  if (estimatedHours > 0 && estimatedHours < 1) {
+    const mins = Math.max(1, Math.round(estimatedHours * 60))
+    return `About ${mins} min`
+  }
   const n = Number.isInteger(estimatedHours) ? String(estimatedHours) : estimatedHours.toFixed(1).replace(/\.0$/, '')
   return `About ${n} hours`
 }

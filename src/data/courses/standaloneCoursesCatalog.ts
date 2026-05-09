@@ -78,7 +78,7 @@ const BUSINESS_PROCESS_AUTOMATION_CATALOG_ENTRY: StandaloneCatalogEntry = {
   accessLabel: businessProcessAutomationCourse.accessLabel,
   school: businessProcessAutomationCourse.school,
   publicRoute: `/learn/${businessProcessAutomationCourse.slug}`,
-  durationLabel: '45–60 minutes',
+  durationLabel: '57 min total',
   source: businessProcessAutomationCourse,
 }
 

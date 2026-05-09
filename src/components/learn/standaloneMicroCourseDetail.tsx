@@ -7,6 +7,7 @@ import {
 import { businessProcessAutomationSlideManifest } from '../../data/courses/businessProcessAutomationSlides'
 import type { PracticalMathematicsCourse } from '../../data/courses/practicalMathematicsCourseTypes'
 import type { StandaloneCatalogEntry } from '../../data/courses/standaloneCoursesCatalog'
+import { truncateWords } from './standaloneCoursePresentation'
 import { ORANGE_GRADIENT } from './discoveryHubSections'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
@@ -103,11 +104,10 @@ export function StandaloneMicroCourseDetailView({ entry }: { entry: StandaloneCa
           <section data-testid="standalone-bpa-slide-player-overview" className="space-y-4">
             <JifunzeSlidePlayer
               title="Play the course slides"
-              subtitle="Use the arrows to move through the professional training deck. The modules below break the same material into guided lessons, practice, quiz, and certificate steps."
+              subtitle="Use the arrows to move through the deck, then open modules for notes and practice."
               slides={businessProcessAutomationSlideManifest.slides}
               slideCounterTotal={businessProcessAutomationSlideManifest.totalSlides}
-              deckDownloadUrl={businessProcessAutomationSlideManifest.deckDownloadUrl}
-              showDownload
+              showDownload={false}
               showThumbnails
             />
           </section>
@@ -164,7 +164,7 @@ export function StandaloneMicroCourseDetailView({ entry }: { entry: StandaloneCa
           </div>
         </section>
 
-        {micro.slidePreviewCards?.length ? (
+        {micro.slidePreviewCards?.length && entry.slug !== BUSINESS_PROCESS_AUTOMATION_SLUG ? (
           <section>
             <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
               Course deck — module by module
@@ -195,7 +195,9 @@ export function StandaloneMicroCourseDetailView({ entry }: { entry: StandaloneCa
                 <Link to={`/learn/${entry.slug}/modules/${m.slug}`} className="mt-0.5 block text-[16px] font-semibold text-zinc-900 hover:text-orange-700">
                   {m.title}
                 </Link>
-                <p className="mt-2 text-[13px] leading-snug text-stone-600">{m.overview}</p>
+                <p className="mt-2 text-[13px] leading-snug text-stone-600">
+                  {entry.slug === BUSINESS_PROCESS_AUTOMATION_SLUG ? truncateWords(m.overview, 22) : m.overview}
+                </p>
               </li>
             ))}
           </ol>

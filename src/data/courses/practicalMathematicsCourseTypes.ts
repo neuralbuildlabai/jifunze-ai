@@ -47,6 +47,14 @@ export type StandaloneMicroWorkshopDetail = {
   }
   quizSummary: string
   suggestedNextCourses: Array<{ title: string; href: string; subtitle?: string }>
+  /** Optional slide preview cards shown on course overview page. */
+  slidePreviewCards?: Array<{
+    moduleNumber: number
+    title: string
+    subtitle: string
+    visualCue: string
+    learnerOutput: string
+  }>
 }
 
 export type StandaloneCourseLessonBlockType =
@@ -62,6 +70,15 @@ export type StandaloneCourseLessonBlockType =
   | 'quiz_intro'
   /** Scenario-style narrative (same render path as real_world_application in most readers). */
   | 'scenario'
+  /** Visual block types — rendered by StandaloneVisualBlocks.tsx. */
+  | 'dataset_table'
+  | 'bar_chart'
+  | 'heatmap'
+  | 'calculation_card'
+  | 'stat_grid'
+  | 'roadmap_timeline'
+  | 'priority_matrix'
+  | 'process_flow'
 
 export type StandaloneCourseLessonBlock = {
   type: StandaloneCourseLessonBlockType
@@ -75,6 +92,28 @@ export type StandaloneCourseLessonBlock = {
   outputExpectation?: string
   prompt?: string
   facilitatorNote?: string
+  /** dataset_table */
+  tableColumns?: string[]
+  tableRows?: Array<{ cells: string[] }>
+  /** bar_chart */
+  chartItems?: Array<{ label: string; value: number; unit?: string }>
+  /** stat_grid */
+  statItems?: Array<{ label: string; value: string; sub?: string }>
+  /** roadmap_timeline */
+  roadmapPhases?: Array<{ phase: string; days: string; items: string[] }>
+  /** priority_matrix */
+  matrixQuadrants?: {
+    topLeft: { label: string; items: string[] }
+    topRight: { label: string; items: string[] }
+    bottomLeft: { label: string; items: string[] }
+    bottomRight: { label: string; items: string[] }
+    xLabel?: string
+    yLabel?: string
+  }
+  /** heatmap */
+  heatmapRows?: Array<{ label: string; displayValue: string; level: 'low' | 'medium' | 'high' | 'critical' }>
+  /** process_flow */
+  processSteps?: Array<{ step: string; detail?: string }>
 }
 
 export type StandaloneCourseLesson = {

@@ -16,7 +16,8 @@ const root = join(__dirname, '..')
 const playerPath = join(root, 'src/components/learn/JifunzeSlidePlayer.tsx')
 const slidesPath = join(root, 'src/data/courses/businessProcessAutomationSlides.ts')
 const overviewPath = join(root, 'src/components/learn/standaloneMicroCourseDetail.tsx')
-const modulePath = join(root, 'src/components/learn/StandaloneModuleDetailPage.tsx')
+const moduleRouterPath = join(root, 'src/components/learn/StandaloneModuleDetailPage.tsx')
+const bpaModulePath = join(root, 'src/components/learn/BpaStandaloneModulePage.tsx')
 const lessonPath = join(root, 'src/components/learn/StandaloneLessonDetailPage.tsx')
 
 function read(p: string): string {
@@ -46,8 +47,10 @@ function main() {
   assert.ok(overview.includes('JifunzeSlidePlayer'), 'overview integration references slide player')
   assert.ok(overview.includes('businessProcessAutomationSlideManifest'), 'overview integration references slide manifest')
 
-  const mod = read(modulePath)
-  assert.ok(mod.includes('JifunzeSlidePlayer') && mod.includes('getBpaSlidesForModule'), 'module integration references slide player/manifest')
+  const modRouter = read(moduleRouterPath)
+  assert.ok(modRouter.includes('BpaStandaloneModulePage') && modRouter.includes('getBpaSlidesForModule'), 'module router wires BPA slides')
+  const bpaMod = read(bpaModulePath)
+  assert.ok(bpaMod.includes('JifunzeSlidePlayer'), 'BPA module layout includes slide player')
 
   const les = read(lessonPath)
   assert.ok(les.includes('JifunzeSlidePlayer') && les.includes('getBpaSlidesForLesson'), 'lesson integration references slide player/manifest')
