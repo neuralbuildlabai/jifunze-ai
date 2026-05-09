@@ -21,6 +21,12 @@ export {
 } from './practicalMathematicsCourse'
 
 export {
+  businessAnalyticsDecisionMakingCourse,
+  BUSINESS_ANALYTICS_DECISION_MAKING_SLUG,
+  BUSINESS_ANALYTICS_DECISION_MAKING_INTERNAL_KEY,
+} from './businessAnalyticsDecisionMakingCourse'
+
+export {
   PRACTICAL_MATH_MODULES_REQUIRING_SAFETY_NOTE,
   type PracticalMathModuleSlug,
 } from './practicalMathematicsCourseConstants'

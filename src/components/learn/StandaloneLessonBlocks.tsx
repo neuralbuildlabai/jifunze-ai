@@ -166,6 +166,7 @@ export function StandaloneLessonBlocks({ blocks, lessonSlug }: { blocks: Standal
             )
 
           case 'real_world_application':
+          case 'scenario':
             return (
               <BlockShell key={key} className="border-emerald-200/80 bg-emerald-50/30 shadow-sm">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-800">

@@ -1,6 +1,9 @@
 import { expect, test } from '@playwright/test'
 import { lessonKey, practicalMathematicsCourse } from '../src/data/courses'
-import { PRACTICAL_MATH_PROGRESS_STORAGE_KEY } from '../src/lib/practicalMathProgressStorage'
+import {
+  PRACTICAL_MATH_PROGRESS_STORAGE_KEY,
+  STANDALONE_COURSES_PROGRESS_V2_KEY,
+} from '../src/lib/practicalMathProgressStorage'
 import { applyPublicE2eMaintenanceBypass } from './helpers/publicE2eMaintenanceBypass'
 
 /**
@@ -121,13 +124,14 @@ test.describe('Practical Mathematics — public discovery (standalone)', () => {
   })
 
   test('certificate route exists and is locked before completion', async ({ page }) => {
-    await page.addInitScript((key) => {
-      localStorage.removeItem(key)
+    await page.addInitScript(([k1, k2]) => {
+      localStorage.removeItem(k1)
+      localStorage.removeItem(k2)
       localStorage.removeItem('jifunze.practical_math.certificate_meta.v1')
-    }, PRACTICAL_MATH_PROGRESS_STORAGE_KEY)
+    }, [PRACTICAL_MATH_PROGRESS_STORAGE_KEY, STANDALONE_COURSES_PROGRESS_V2_KEY])
     await page.goto(`/learn/${SLUG}/certificate`)
     await expect(page.getByTestId('standalone-certificate-locked')).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByText(/Complete all modules, pass with 75% or higher, and submit the capstone/)).toBeVisible()
+    await expect(page.getByText(/Complete all modules, pass with 75% or higher/)).toBeVisible()
   })
 
   test('certificate stays locked when lessons and quizzes are complete but capstone is not marked', async ({ page }) => {
@@ -141,15 +145,16 @@ test.describe('Practical Mathematics — public discovery (standalone)', () => {
     }
     const payload = JSON.stringify({ v: 1, completedLessonKeys, passedModuleQuizzes, capstoneComplete: false })
     await page.addInitScript(
-      ([key, val]) => {
+      ([key, key2, val]) => {
+        localStorage.removeItem(key2)
         localStorage.setItem(key, val)
         localStorage.removeItem('jifunze.practical_math.certificate_meta.v1')
       },
-      [PRACTICAL_MATH_PROGRESS_STORAGE_KEY, payload],
+      [PRACTICAL_MATH_PROGRESS_STORAGE_KEY, STANDALONE_COURSES_PROGRESS_V2_KEY, payload],
     )
     await page.goto(`/learn/${SLUG}/certificate`)
     await expect(page.getByTestId('standalone-certificate-locked')).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByText(/Module 16 capstone marked complete/)).toBeVisible()
+    await expect(page.getByText(/Module 16/)).toBeVisible()
   })
 
   test('module 16 page shows capstone completion action', async ({ page }) => {
@@ -170,11 +175,12 @@ test.describe('Practical Mathematics — public discovery (standalone)', () => {
     }
     const payload = JSON.stringify({ v: 1, completedLessonKeys, passedModuleQuizzes, capstoneComplete: true })
     await page.addInitScript(
-      ([key, val]) => {
+      ([key, key2, val]) => {
+        localStorage.removeItem(key2)
         localStorage.setItem(key, val)
         localStorage.removeItem('jifunze.practical_math.certificate_meta.v1')
       },
-      [PRACTICAL_MATH_PROGRESS_STORAGE_KEY, payload],
+      [PRACTICAL_MATH_PROGRESS_STORAGE_KEY, STANDALONE_COURSES_PROGRESS_V2_KEY, payload],
     )
     await page.goto(`/learn/${SLUG}/certificate`)
     await expect(page.getByTestId('standalone-certificate-printable')).toBeVisible({ timeout: 20_000 })

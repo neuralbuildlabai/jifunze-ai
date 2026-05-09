@@ -72,6 +72,7 @@ export function moduleQuizPassed(
   module: StandaloneCourseModule,
   progress: PracticalMathProgressState,
 ): boolean {
+  if (module.moduleQuiz.length === 0) return true
   const score = progress.passedModuleQuizzes.get(module.slug)
   if (!score) return false
   return practicalMathQuizPassed(score)
@@ -120,6 +121,7 @@ export function practicalMathWeightedScorePercent(
   let correct = 0
   let total = 0
   for (const m of course.modules) {
+    if (m.moduleQuiz.length === 0) continue
     const s = progress.passedModuleQuizzes.get(m.slug)
     if (!s) return null
     correct += s.correct
@@ -141,7 +143,8 @@ export function practicalMathCertificateEligible(
   const pct = practicalMathWeightedScorePercent(course, progress)
   if (pct === null) return false
   if (pct + 1e-9 < 75) return false
-  return practicalMathCapstoneComplete(progress)
+  if (course.capstoneModuleSlug && !practicalMathCapstoneComplete(progress)) return false
+  return true
 }
 
 /** Internal-key + course-slug echo so consumers that route by key find the right course. */

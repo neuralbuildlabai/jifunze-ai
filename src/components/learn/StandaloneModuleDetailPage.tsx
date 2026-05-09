@@ -7,15 +7,15 @@ import {
   getStandaloneLessonPath,
   getStandaloneLessonSlug,
   getStandaloneQuizPath,
-  PRACTICAL_MATH_INTERNAL_KEY,
   practicalMathQuizPassed,
 } from '../../data/courses'
-import { usePracticalMathProgress } from '../../hooks/usePracticalMathProgress'
+import { useStandaloneCourseProgress } from '../../hooks/usePracticalMathProgress'
 import { ORANGE_GRADIENT } from './discoveryHubSections'
 import { buildLessonPreview, formatHoursFromMinutes } from './standaloneCoursePresentation'
-import { PracticalMathCapstonePanel } from './PracticalMathCapstonePanel'
+import { StandaloneCapstonePanel } from './StandaloneCapstonePanel'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
+import type { StandaloneCatalogEntry } from '../../data/courses/standaloneCoursesCatalog'
 import type { StandaloneCourseModule } from '../../data/courses/practicalMathematicsCourseTypes'
 
 /**
@@ -46,8 +46,14 @@ function isDevManualScoreEnabled(): boolean {
  * Hidden-by-default manual score input used only for development testing.
  * Real learners take the quiz at `/learn/.../modules/:moduleSlug/quiz`.
  */
-function ModuleQuizDevManualScore({ module }: { module: StandaloneCourseModule }) {
-  const { progress, setModuleQuizScore } = usePracticalMathProgress()
+function ModuleQuizDevManualScore({
+  module,
+  courseInternalKey,
+}: {
+  module: StandaloneCourseModule
+  courseInternalKey: string
+}) {
+  const { progress, setModuleQuizScore } = useStandaloneCourseProgress(courseInternalKey)
   const [correctInput, setCorrectInput] = useState('')
   const [totalInput, setTotalInput] = useState(String(module.moduleQuiz.length))
   const [quizMessage, setQuizMessage] = useState<string | null>(null)
@@ -116,35 +122,13 @@ function ModuleQuizDevManualScore({ module }: { module: StandaloneCourseModule }
   )
 }
 
-/**
- * Standalone course module — overview, lessons linking to full pages, lab & quiz summaries.
- */
-export function StandaloneModuleDetailPage() {
-  const { standaloneCourseSlug, moduleSlug } = useParams<{
-    standaloneCourseSlug: string
-    moduleSlug: string
-  }>()
-  const { progress } = usePracticalMathProgress()
+type StandaloneModuleLoadedProps = {
+  entry: StandaloneCatalogEntry
+  module: StandaloneCourseModule
+}
 
-  const entry = useMemo(
-    () => (standaloneCourseSlug ? findStandaloneCourseBySlug(standaloneCourseSlug) : undefined),
-    [standaloneCourseSlug],
-  )
-
-  const resolved = useMemo(() => {
-    if (!standaloneCourseSlug || !moduleSlug) return undefined
-    return findStandaloneModule(standaloneCourseSlug, moduleSlug)
-  }, [standaloneCourseSlug, moduleSlug])
-
-  if (!standaloneCourseSlug || !entry) {
-    return <Navigate to="/learn" replace />
-  }
-
-  if (!resolved) {
-    return <Navigate to={`/learn/${standaloneCourseSlug}`} replace />
-  }
-
-  const { module } = resolved
+function StandaloneModuleDetailLoaded({ entry, module }: StandaloneModuleLoadedProps) {
+  const { progress } = useStandaloneCourseProgress(entry.internalKey)
   const { source } = entry
   const idx = source.modules.findIndex((m) => m.slug === module.slug)
   const prev = idx > 0 ? source.modules[idx - 1] : null
@@ -153,13 +137,15 @@ export function StandaloneModuleDetailPage() {
   const modulePath = (slug: string) => `${base}/modules/${slug}`
   const quizPath = getStandaloneQuizPath(entry.slug, module.slug)
   const certificateHref = getStandaloneCertificatePath(entry.slug)
-  const showCapstonePanel = entry.internalKey === PRACTICAL_MATH_INTERNAL_KEY && module.slug === 'final-integration-mastery'
+  const showCapstonePanel = module.slug === source.capstoneModuleSlug
   const devManualScoreEnabled = isDevManualScoreEnabled()
 
   const savedQuizScore = progress.passedModuleQuizzes.get(module.slug) ?? null
-  const savedQuizPassed = savedQuizScore ? practicalMathQuizPassed(savedQuizScore) : false
-  let quizStatusLabel: 'Passed' | 'Needs retry' | 'Not started'
-  if (savedQuizPassed) quizStatusLabel = 'Passed'
+  const savedQuizPassed =
+    module.moduleQuiz.length === 0 ? true : savedQuizScore ? practicalMathQuizPassed(savedQuizScore) : false
+  let quizStatusLabel: 'Passed' | 'Needs retry' | 'Not started' | 'N/A (reflection modules)'
+  if (module.moduleQuiz.length === 0) quizStatusLabel = 'N/A (reflection modules)'
+  else if (savedQuizPassed) quizStatusLabel = 'Passed'
   else if (savedQuizScore) quizStatusLabel = 'Needs retry'
   else quizStatusLabel = 'Not started'
 
@@ -237,7 +223,7 @@ export function StandaloneModuleDetailPage() {
 
         {showCapstonePanel ? (
           <div className="space-y-4">
-            <PracticalMathCapstonePanel />
+            <StandaloneCapstonePanel courseInternalKey={entry.internalKey} acknowledgement={source.capstoneAcknowledgement} />
           </div>
         ) : null}
 
@@ -295,48 +281,61 @@ export function StandaloneModuleDetailPage() {
 
         <section data-testid={`standalone-module-quiz-section-${module.slug}`}>
           <h2 className="text-lg font-semibold text-[color:var(--jf-text)]">Module quiz</h2>
-          <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-            {module.moduleQuiz.length} questions · pass at 75% or higher ({Math.ceil(module.moduleQuiz.length * 0.75)} or more
-            correct for this length).
-          </p>
-          <div className="mt-5 rounded-xl border border-orange-100/90 bg-white p-5 shadow-sm sm:p-6">
-            <div className="flex flex-wrap items-baseline justify-between gap-3">
-              <p className="text-[13px] font-semibold text-stone-800">
-                Quiz status:{' '}
-                <span
-                  className={
-                    quizStatusLabel === 'Passed'
-                      ? 'text-emerald-700'
-                      : quizStatusLabel === 'Needs retry'
-                        ? 'text-rose-700'
-                        : 'text-stone-600'
-                  }
-                  data-testid={`standalone-module-quiz-status-${module.slug}`}
-                >
-                  {quizStatusLabel}
-                </span>
-              </p>
-              {savedQuizScore ? (
-                <p className="text-[12px] text-stone-500" data-testid={`standalone-module-quiz-latest-score-${module.slug}`}>
-                  Latest score: {savedQuizScore.correct}/{savedQuizScore.total}
-                </p>
-              ) : null}
-            </div>
-            <p className="mt-3 text-[13px] leading-relaxed text-stone-600">
-              Take the interactive quiz. Your answers are graded against the answer keys; you must score 75% or higher to pass
-              and progress toward your certificate.
+          {module.moduleQuiz.length === 0 ? (
+            <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+              This module uses reflection labs instead of an auto-graded quiz. Complete the lessons and practice lab, then continue.
+              {source.productTier === 'professional_micro'
+                ? ' The graded mini quiz is scheduled in the final module.'
+                : null}
             </p>
-            <div className="mt-5 flex flex-wrap gap-3">
-              <Link
-                to={quizPath}
-                className={`inline-flex min-h-[2.5rem] items-center justify-center rounded-full px-6 text-sm font-semibold text-white shadow-md shadow-orange-500/25 transition hover:brightness-105 ${ORANGE_GRADIENT}`}
-                data-testid={`standalone-module-take-quiz-${module.slug}`}
-              >
-                {savedQuizPassed ? 'Retake module quiz' : savedQuizScore ? 'Retry module quiz' : 'Take module quiz'}
-              </Link>
-            </div>
-          </div>
-          {devManualScoreEnabled ? <ModuleQuizDevManualScore key={module.slug} module={module} /> : null}
+          ) : (
+            <>
+              <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+                {module.moduleQuiz.length} questions · pass at 75% or higher ({Math.ceil(module.moduleQuiz.length * 0.75)} or more
+                correct for this length).
+              </p>
+              <div className="mt-5 rounded-xl border border-orange-100/90 bg-white p-5 shadow-sm sm:p-6">
+                <div className="flex flex-wrap items-baseline justify-between gap-3">
+                  <p className="text-[13px] font-semibold text-stone-800">
+                    Quiz status:{' '}
+                    <span
+                      className={
+                        quizStatusLabel === 'Passed'
+                          ? 'text-emerald-700'
+                          : quizStatusLabel === 'Needs retry'
+                            ? 'text-rose-700'
+                            : 'text-stone-600'
+                      }
+                      data-testid={`standalone-module-quiz-status-${module.slug}`}
+                    >
+                      {quizStatusLabel}
+                    </span>
+                  </p>
+                  {savedQuizScore ? (
+                    <p className="mt-2 text-[12px] text-stone-500" data-testid={`standalone-module-quiz-latest-score-${module.slug}`}>
+                      Latest score: {savedQuizScore.correct}/{savedQuizScore.total}
+                    </p>
+                  ) : null}
+                </div>
+                <p className="mt-3 text-[13px] leading-relaxed text-stone-600">
+                  Take the interactive quiz. Your answers are graded against the answer keys; you must score 75% or higher to pass
+                  and progress toward your certificate.
+                </p>
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <Link
+                    to={quizPath}
+                    className={`inline-flex min-h-[2.5rem] items-center justify-center rounded-full px-6 text-sm font-semibold text-white shadow-md shadow-orange-500/25 transition hover:brightness-105 ${ORANGE_GRADIENT}`}
+                    data-testid={`standalone-module-take-quiz-${module.slug}`}
+                  >
+                    {savedQuizPassed ? 'Retake module quiz' : savedQuizScore ? 'Retry module quiz' : 'Take module quiz'}
+                  </Link>
+                </div>
+              </div>
+              {devManualScoreEnabled ? (
+                <ModuleQuizDevManualScore key={module.slug} module={module} courseInternalKey={entry.internalKey} />
+              ) : null}
+            </>
+          )}
         </section>
 
         {module.safetyNote ? (
@@ -365,4 +364,31 @@ export function StandaloneModuleDetailPage() {
       </div>
     </div>
   )
+}
+
+export function StandaloneModuleDetailPage() {
+  const { standaloneCourseSlug, moduleSlug } = useParams<{
+    standaloneCourseSlug: string
+    moduleSlug: string
+  }>()
+
+  const entry = useMemo(
+    () => (standaloneCourseSlug ? findStandaloneCourseBySlug(standaloneCourseSlug) : undefined),
+    [standaloneCourseSlug],
+  )
+
+  const resolved = useMemo(() => {
+    if (!standaloneCourseSlug || !moduleSlug) return undefined
+    return findStandaloneModule(standaloneCourseSlug, moduleSlug)
+  }, [standaloneCourseSlug, moduleSlug])
+
+  if (!standaloneCourseSlug || !entry) {
+    return <Navigate to="/learn" replace />
+  }
+
+  if (!resolved) {
+    return <Navigate to={`/learn/${standaloneCourseSlug}`} replace />
+  }
+
+  return <StandaloneModuleDetailLoaded entry={entry} module={resolved.module} />
 }

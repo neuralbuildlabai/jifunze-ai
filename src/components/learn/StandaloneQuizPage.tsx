@@ -9,7 +9,9 @@ import {
   practicalMathQuizPassed,
   type StandaloneCourseQuizQuestion,
 } from '../../data/courses'
-import { usePracticalMathProgress } from '../../hooks/usePracticalMathProgress'
+import type { StandaloneCatalogEntry } from '../../data/courses/standaloneCoursesCatalog'
+import type { StandaloneCourseModule } from '../../data/courses/practicalMathematicsCourseTypes'
+import { useStandaloneCourseProgress } from '../../hooks/usePracticalMathProgress'
 import { ORANGE_GRADIENT } from './discoveryHubSections'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
@@ -167,33 +169,16 @@ function QuestionCard({
   )
 }
 
-export function StandaloneQuizPage() {
-  const { standaloneCourseSlug, moduleSlug } = useParams<{
-    standaloneCourseSlug: string
-    moduleSlug: string
-  }>()
-  const { progress, setModuleQuizScore } = usePracticalMathProgress()
+type StandaloneQuizLoadedProps = {
+  entry: StandaloneCatalogEntry
+  module: StandaloneCourseModule
+}
 
-  const entry = useMemo(
-    () => (standaloneCourseSlug ? findStandaloneCourseBySlug(standaloneCourseSlug) : undefined),
-    [standaloneCourseSlug],
-  )
-  const resolved = useMemo(() => {
-    if (!standaloneCourseSlug || !moduleSlug) return undefined
-    return findStandaloneModule(standaloneCourseSlug, moduleSlug)
-  }, [standaloneCourseSlug, moduleSlug])
-
+function StandaloneQuizLoaded({ entry, module }: StandaloneQuizLoadedProps) {
+  const { progress, setModuleQuizScore } = useStandaloneCourseProgress(entry.internalKey)
   const [answers, setAnswers] = useState<AnswerMap>({})
   const [graded, setGraded] = useState<GradedQuiz | null>(null)
 
-  if (!standaloneCourseSlug || !entry) {
-    return <Navigate to="/learn" replace />
-  }
-  if (!resolved) {
-    return <Navigate to={`/learn/${standaloneCourseSlug}`} replace />
-  }
-
-  const { module } = resolved
   const { source } = entry
   const idx = source.modules.findIndex((m) => m.slug === module.slug)
   const next = idx >= 0 && idx < source.modules.length - 1 ? source.modules[idx + 1] : null
@@ -392,4 +377,33 @@ export function StandaloneQuizPage() {
       </div>
     </div>
   )
+}
+
+export function StandaloneQuizPage() {
+  const { standaloneCourseSlug, moduleSlug } = useParams<{
+    standaloneCourseSlug: string
+    moduleSlug: string
+  }>()
+
+  const entry = useMemo(
+    () => (standaloneCourseSlug ? findStandaloneCourseBySlug(standaloneCourseSlug) : undefined),
+    [standaloneCourseSlug],
+  )
+  const resolved = useMemo(() => {
+    if (!standaloneCourseSlug || !moduleSlug) return undefined
+    return findStandaloneModule(standaloneCourseSlug, moduleSlug)
+  }, [standaloneCourseSlug, moduleSlug])
+
+  if (!standaloneCourseSlug || !entry) {
+    return <Navigate to="/learn" replace />
+  }
+  if (!resolved) {
+    return <Navigate to={`/learn/${standaloneCourseSlug}`} replace />
+  }
+
+  if (resolved.module.moduleQuiz.length === 0) {
+    return <Navigate to={getStandaloneModulePath(entry.slug, resolved.module.slug)} replace />
+  }
+
+  return <StandaloneQuizLoaded entry={entry} module={resolved.module} />
 }

@@ -8,7 +8,46 @@
 
 export type StandaloneCourseAccessLabel = 'Free' | 'Free Access' | 'Start Free' | 'Included'
 
-export type StandaloneCourseLevel = 'Foundational' | 'Foundational to Intermediate' | 'Intermediate'
+export type StandaloneCourseLevel =
+  | 'Foundational'
+  | 'Foundational to Intermediate'
+  | 'Intermediate'
+  | 'Beginner to early-intermediate'
+
+export type StandaloneProductTier = 'full_standalone' | 'professional_micro'
+
+/** Certificate / portfolio acknowledgment copy for the capstone module page. */
+export type StandaloneCapstoneAcknowledgement = {
+  title: string
+  intro: string
+  checkboxLabel: string
+}
+
+/** Optional rich detail used by professional micro-courses on the course overview page. */
+export type StandaloneMicroWorkshopDetail = {
+  cardSubtitle: string
+  cardMeta: string
+  cardTags: string[]
+  whoThisIsFor: string[]
+  caseStudy: {
+    headline: string
+    businessType: string
+    revenueStreams: string[]
+    salesChannels: string[]
+    centralProblem: string
+    diagnosisFraming: string
+  }
+  analyticsMethods: string[]
+  visualsInDeck: string[]
+  learnerPractice: {
+    title: string
+    artifactTitle: string
+    prompt: string
+    metricsChecklist: string[]
+  }
+  quizSummary: string
+  suggestedNextCourses: Array<{ title: string; href: string; subtitle?: string }>
+}
 
 export type StandaloneCourseLessonBlockType =
   | 'concept_explanation'
@@ -21,6 +60,8 @@ export type StandaloneCourseLessonBlockType =
   | 'reflection_or_application'
   | 'summary'
   | 'quiz_intro'
+  /** Scenario-style narrative (same render path as real_world_application in most readers). */
+  | 'scenario'
 
 export type StandaloneCourseLessonBlock = {
   type: StandaloneCourseLessonBlockType
@@ -124,6 +165,8 @@ export type PracticalMathematicsCourse = {
   school: string
   format: string
   certificate: string
+  /** Prefix used on printable certificate IDs (e.g., PM, BA). */
+  certificateIdPrefix: string
   prerequisites: string[]
   description: string
   targetAudience: string[]
@@ -134,4 +177,14 @@ export type PracticalMathematicsCourse = {
   capstoneDescription: string
   moduleMap: StandaloneCourseModuleMapEntry[]
   modules: StandaloneCourseModule[]
+  /**
+   * Module whose page shows the portfolio/capstone acknowledgment control.
+   * Required for certificate eligibility when present.
+   */
+  capstoneModuleSlug: string
+  productTier: StandaloneProductTier
+  /** Public paths (e.g. `/training/...`) for learner downloads. */
+  downloadableResources?: Array<{ label: string; href: string }>
+  capstoneAcknowledgement: StandaloneCapstoneAcknowledgement
+  microWorkshopDetail?: StandaloneMicroWorkshopDetail
 }

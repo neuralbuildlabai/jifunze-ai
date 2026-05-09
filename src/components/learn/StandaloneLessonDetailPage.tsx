@@ -2,60 +2,25 @@ import { useMemo } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { findStandaloneCourseBySlug, findStandaloneLesson, getStandaloneLessonNavTargets, getStandaloneLessonSlug } from '../../data/courses'
 import { lessonKey } from '../../data/courses/practicalMathematicsProgression'
-import { usePracticalMathProgress } from '../../hooks/usePracticalMathProgress'
+import type { StandaloneCatalogEntry } from '../../data/courses/standaloneCoursesCatalog'
+import type { StandaloneCourseLesson, StandaloneCourseModule } from '../../data/courses/practicalMathematicsCourseTypes'
+import { useStandaloneCourseProgress } from '../../hooks/usePracticalMathProgress'
 import { ORANGE_GRADIENT } from './discoveryHubSections'
 import { StandaloneLessonBlocks } from './StandaloneLessonBlocks'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
+import type { StandaloneLessonNavTargets } from '../../data/courses/standaloneCourseLearnPaths'
 
-/**
- * Full standalone lesson reader — Practical Mathematics and future standalone courses.
- */
-export function StandaloneLessonDetailPage() {
-  const { standaloneCourseSlug, moduleSlug, lessonSlug } = useParams<{
-    standaloneCourseSlug: string
-    moduleSlug: string
-    lessonSlug: string
-  }>()
-  const { progress, markLessonComplete } = usePracticalMathProgress()
+type StandaloneLessonLoadedProps = {
+  entry: StandaloneCatalogEntry
+  module: StandaloneCourseModule
+  lesson: StandaloneCourseLesson
+  nav: StandaloneLessonNavTargets
+}
 
-  const catalogEntry = useMemo(
-    () => (standaloneCourseSlug ? findStandaloneCourseBySlug(standaloneCourseSlug) : undefined),
-    [standaloneCourseSlug],
-  )
-
-  const resolved = useMemo(() => {
-    if (!standaloneCourseSlug || !moduleSlug || !lessonSlug) return undefined
-    return findStandaloneLesson(standaloneCourseSlug, moduleSlug, lessonSlug)
-  }, [standaloneCourseSlug, moduleSlug, lessonSlug])
-
-  if (!standaloneCourseSlug) {
-    return <Navigate to="/learn" replace />
-  }
-
-  if (!catalogEntry) {
-    return <Navigate to="/learn" replace />
-  }
-
-  if (!moduleSlug || !lessonSlug) {
-    return <Navigate to={`/learn/${standaloneCourseSlug}`} replace />
-  }
-
-  if (!resolved) {
-    const modExists = catalogEntry.source.modules.some((m) => m.slug === moduleSlug)
-    if (modExists) {
-      return <Navigate to={`/learn/${standaloneCourseSlug}/modules/${moduleSlug}`} replace />
-    }
-    return <Navigate to={`/learn/${standaloneCourseSlug}`} replace />
-  }
-
-  const { source } = catalogEntry
-  const { module, lesson } = resolved
-  const nav = getStandaloneLessonNavTargets(standaloneCourseSlug, moduleSlug, lessonSlug)
-  if (!nav) {
-    return <Navigate to={`/learn/${standaloneCourseSlug}/modules/${moduleSlug}`} replace />
-  }
-
+function StandaloneLessonDetailLoaded({ entry, module, lesson, nav }: StandaloneLessonLoadedProps) {
+  const { progress, markLessonComplete } = useStandaloneCourseProgress(entry.internalKey)
+  const { source } = entry
   const done = progress.completedLessonKeys.has(lessonKey(module, lesson.lessonNumber))
   const slug = getStandaloneLessonSlug(lesson)
 
@@ -182,5 +147,55 @@ export function StandaloneLessonDetailPage() {
         ) : null}
       </div>
     </div>
+  )
+}
+
+/**
+ * Full standalone lesson reader — Practical Mathematics and future standalone courses.
+ */
+export function StandaloneLessonDetailPage() {
+  const { standaloneCourseSlug, moduleSlug, lessonSlug } = useParams<{
+    standaloneCourseSlug: string
+    moduleSlug: string
+    lessonSlug: string
+  }>()
+
+  const catalogEntry = useMemo(
+    () => (standaloneCourseSlug ? findStandaloneCourseBySlug(standaloneCourseSlug) : undefined),
+    [standaloneCourseSlug],
+  )
+
+  const resolved = useMemo(() => {
+    if (!standaloneCourseSlug || !moduleSlug || !lessonSlug) return undefined
+    return findStandaloneLesson(standaloneCourseSlug, moduleSlug, lessonSlug)
+  }, [standaloneCourseSlug, moduleSlug, lessonSlug])
+
+  if (!standaloneCourseSlug) {
+    return <Navigate to="/learn" replace />
+  }
+
+  if (!catalogEntry) {
+    return <Navigate to="/learn" replace />
+  }
+
+  if (!moduleSlug || !lessonSlug) {
+    return <Navigate to={`/learn/${standaloneCourseSlug}`} replace />
+  }
+
+  if (!resolved) {
+    const modExists = catalogEntry.source.modules.some((m) => m.slug === moduleSlug)
+    if (modExists) {
+      return <Navigate to={`/learn/${standaloneCourseSlug}/modules/${moduleSlug}`} replace />
+    }
+    return <Navigate to={`/learn/${standaloneCourseSlug}`} replace />
+  }
+
+  const nav = getStandaloneLessonNavTargets(standaloneCourseSlug, moduleSlug, lessonSlug)
+  if (!nav) {
+    return <Navigate to={`/learn/${standaloneCourseSlug}/modules/${moduleSlug}`} replace />
+  }
+
+  return (
+    <StandaloneLessonDetailLoaded entry={catalogEntry} module={resolved.module} lesson={resolved.lesson} nav={nav} />
   )
 }

@@ -1,12 +1,18 @@
 import { useState } from 'react'
-import { usePracticalMathProgress } from '../../hooks/usePracticalMathProgress'
+import type { StandaloneCapstoneAcknowledgement } from '../../data/courses/practicalMathematicsCourseTypes'
+import { useStandaloneCourseProgress } from '../../hooks/usePracticalMathProgress'
 import { ORANGE_GRADIENT } from './discoveryHubSections'
 
+type StandaloneCapstonePanelProps = {
+  courseInternalKey: string
+  acknowledgement: StandaloneCapstoneAcknowledgement
+}
+
 /**
- * Module 16 only — honest self-check to mark the Practical Mathematics capstone complete (local progress).
+ * Portfolio / capstone acknowledgment for standalone courses (local progress only).
  */
-export function PracticalMathCapstonePanel() {
-  const { progress, markCapstoneComplete, clearCapstoneComplete } = usePracticalMathProgress()
+export function StandaloneCapstonePanel({ courseInternalKey, acknowledgement }: StandaloneCapstonePanelProps) {
+  const { progress, markCapstoneComplete, clearCapstoneComplete } = useStandaloneCourseProgress(courseInternalKey)
   const [acknowledged, setAcknowledged] = useState(false)
 
   if (progress.capstoneComplete) {
@@ -15,10 +21,10 @@ export function PracticalMathCapstonePanel() {
         className="rounded-2xl border border-emerald-200/90 bg-emerald-50/40 p-5 sm:p-6"
         data-testid="standalone-capstone-complete"
       >
-        <h2 className="text-lg font-semibold text-emerald-950">Capstone marked complete</h2>
+        <h2 className="text-lg font-semibold text-emerald-950">{acknowledgement.title} — confirmed</h2>
         <p className="mt-2 text-[14px] leading-relaxed text-emerald-900/90">
-          You confirmed your Module 16 artifact. Before acting on any numbers, still verify with the appropriate qualified
-          professional.
+          You confirmed your artifact is ready for stakeholder review. This does not replace organizational approvals, data
+          verification, or professional sign-off where required.
         </p>
         <button
           type="button"
@@ -28,7 +34,7 @@ export function PracticalMathCapstonePanel() {
             clearCapstoneComplete()
           }}
         >
-          Undo capstone confirmation (for practice only)
+          Undo confirmation (for practice only)
         </button>
       </section>
     )
@@ -36,11 +42,8 @@ export function PracticalMathCapstonePanel() {
 
   return (
     <section className="rounded-2xl border border-orange-200/90 bg-white p-5 shadow-sm sm:p-6" data-testid="standalone-capstone-panel">
-      <h2 className="text-lg font-semibold text-zinc-900">Module 16 capstone</h2>
-      <p className="mt-3 text-[14px] leading-relaxed text-stone-700">
-        Finish your capstone artifact off-platform (written document or spreadsheet). When it is ready, confirm below. This
-        does not upload files — it records your honest self-check for certificate eligibility only.
-      </p>
+      <h2 className="text-lg font-semibold text-zinc-900">{acknowledgement.title}</h2>
+      <p className="mt-3 text-[14px] leading-relaxed text-stone-700">{acknowledgement.intro}</p>
       <label className="mt-5 flex cursor-pointer gap-3 text-[14px] leading-snug text-stone-800">
         <input
           type="checkbox"
@@ -49,9 +52,7 @@ export function PracticalMathCapstonePanel() {
           onChange={(e) => setAcknowledged(e.target.checked)}
           data-testid="standalone-capstone-ack-checkbox"
         />
-        <span>
-          I have completed my capstone artifact and understand what must be verified by a qualified professional before acting.
-        </span>
+        <span>{acknowledgement.checkboxLabel}</span>
       </label>
       <button
         type="button"
@@ -60,7 +61,7 @@ export function PracticalMathCapstonePanel() {
         data-testid="standalone-capstone-mark-complete"
         onClick={() => markCapstoneComplete()}
       >
-        Mark capstone complete
+        Mark portfolio complete
       </button>
     </section>
   )

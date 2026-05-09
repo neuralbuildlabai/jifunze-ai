@@ -12,6 +12,13 @@ const STANDALONE_CARD_CHROME: Record<
   string,
   { badge: string; badgeClass: string; bannerClass: string; learners: string; rating: string }
 > = {
+  'business-analytics-decision-making': {
+    badge: 'Professional micro-course',
+    badgeClass: 'bg-emerald-700 text-white',
+    bannerClass: 'from-emerald-700 via-teal-600 to-slate-800',
+    learners: 'Open to all',
+    rating: '5.0',
+  },
   'practical-mathematics-life-work-business': {
     badge: 'New · Free',
     badgeClass: 'bg-orange-600 text-white',
@@ -41,10 +48,11 @@ export function StandaloneCoursesSection({
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-orange-700">Career &amp; Practical Skills</p>
           <h2 id="new-free-courses-heading" className="mt-2 text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">
-            New free course
+            Professional workshops &amp; standalone courses
           </h2>
           <p className="mt-4 text-[17px] leading-relaxed text-zinc-600">
-            A complete standalone path — same warm catalog experience as flagship courses, with free access and no paywall language.
+            Premium short workshops alongside deeper standalone paths—structured practice, serious cases, and free access without paywall
+            language on these catalog items today.
           </p>
         </div>
         <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-2">
@@ -57,8 +65,11 @@ export function StandaloneCoursesSection({
               rating: '5.0',
             }
             const moduleCount = entry.source.modules.length
-            const duration =
-              moduleCount > 0 ? `${moduleCount} modules · ~${entry.estimatedHours} hours` : `~${entry.estimatedHours} hours`
+            const duration = entry.durationLabel
+              ? `${entry.durationLabel} · ${moduleCount} modules`
+              : moduleCount > 0
+                ? `${moduleCount} modules · ~${entry.estimatedHours} hours`
+                : `~${entry.estimatedHours} hours`
             return (
               <article
                 key={entry.slug}

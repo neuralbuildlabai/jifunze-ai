@@ -1,6 +1,9 @@
 import { expect, test } from '@playwright/test'
 import { practicalMathematicsCourse } from '../src/data/courses'
-import { PRACTICAL_MATH_PROGRESS_STORAGE_KEY } from '../src/lib/practicalMathProgressStorage'
+import {
+  PRACTICAL_MATH_PROGRESS_STORAGE_KEY,
+  STANDALONE_COURSES_PROGRESS_V2_KEY,
+} from '../src/lib/practicalMathProgressStorage'
 import { applyPublicE2eMaintenanceBypass } from './helpers/publicE2eMaintenanceBypass'
 
 /**
@@ -14,9 +17,10 @@ test.describe('Practical Mathematics — interactive module quiz', () => {
   test.beforeEach(async ({ page }) => {
     await applyPublicE2eMaintenanceBypass(page)
     // Reset progress so tests are isolated.
-    await page.addInitScript((key) => {
-      localStorage.removeItem(key)
-    }, PRACTICAL_MATH_PROGRESS_STORAGE_KEY)
+    await page.addInitScript(([k1, k2]) => {
+      localStorage.removeItem(k1)
+      localStorage.removeItem(k2)
+    }, [PRACTICAL_MATH_PROGRESS_STORAGE_KEY, STANDALONE_COURSES_PROGRESS_V2_KEY])
   })
 
   test('module 1 page shows Take module quiz CTA and hides manual self-score box', async ({ page }) => {

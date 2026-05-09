@@ -45,6 +45,7 @@ export const practicalMathematicsCourse: PracticalMathematicsCourse = {
   school: 'Career & Practical Skills',
   format: 'Self-paced structured course',
   certificate: 'Certificate of Completion',
+  certificateIdPrefix: 'PM',
   prerequisites: ['Basic arithmetic: addition, subtraction, multiplication, division'],
 
   description:
@@ -94,6 +95,16 @@ export const practicalMathematicsCourse: PracticalMathematicsCourse = {
 
   capstoneDescription:
     'The Module 16 capstone asks you to choose one real or realistic decision (a household budget, small-business pricing plan, project timeline with resources, property or rental analysis, healthcare cost comparison, or trade quote) and produce a short, reviewable artifact: the question, the numbers, the calculations, the assumptions, the limits of your analysis, and what you would still verify with a qualified professional before acting.',
+
+  capstoneModuleSlug: 'final-integration-mastery',
+  productTier: 'full_standalone',
+  capstoneAcknowledgement: {
+    title: 'Module 16 capstone',
+    intro:
+      'Finish your capstone artifact off-platform (written document or spreadsheet). When it is ready, confirm below. This does not upload files — it records your honest self-check for certificate eligibility only.',
+    checkboxLabel:
+      'I have completed my capstone artifact and understand what must be verified by a qualified professional before acting.',
+  },
 
   moduleMap: PRACTICAL_MATH_MODULE_SLUGS.map((slug, index) => {
     const m = MODULES.find((mm) => mm.slug === slug)

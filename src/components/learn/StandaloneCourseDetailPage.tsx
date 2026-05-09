@@ -9,6 +9,7 @@ import { ORANGE_GRADIENT } from './discoveryHubSections'
 import { formatCourseDurationLabel, formatHoursFromMinutes, truncateWords } from './standaloneCoursePresentation'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
+import { StandaloneMicroCourseDetailView } from './standaloneMicroCourseDetail'
 
 const COURSE_SUCCESS_CHECKLIST = [
   'Complete all 16 modules in order',
@@ -40,6 +41,11 @@ export function StandaloneCourseDetailPage() {
   }
 
   const { source } = entry
+
+  if (source.productTier === 'professional_micro') {
+    return <StandaloneMicroCourseDetailView entry={entry} />
+  }
+
   const firstModuleSlug = source.modules[0]?.slug
   const startHref =
     getStandaloneFirstLessonPath(entry.slug, source as PracticalMathematicsCourse) ??

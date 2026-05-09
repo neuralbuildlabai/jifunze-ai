@@ -9,6 +9,7 @@
  * progression, capstone rubrics, or pathway integration.
  */
 
+import { businessAnalyticsDecisionMakingCourse } from './businessAnalyticsDecisionMakingCourse'
 import { practicalMathematicsCourse } from './practicalMathematicsCourse'
 import type {
   PracticalMathematicsCourse,
@@ -32,6 +33,8 @@ export type StandaloneCatalogEntry = {
   school: string
   /** Public route hint; final routing is owned by the consuming app. */
   publicRoute: string
+  /** Optional display for cards (e.g. “45–60 minutes”) when hours are a poor fit. */
+  durationLabel?: string
   /** Source-of-truth course object for renderers that want full content. */
   source: PracticalMathematicsCourse
 }
@@ -50,7 +53,22 @@ const PRACTICAL_MATH_CATALOG_ENTRY: StandaloneCatalogEntry = {
   source: practicalMathematicsCourse,
 }
 
+const BUSINESS_ANALYTICS_CATALOG_ENTRY: StandaloneCatalogEntry = {
+  slug: businessAnalyticsDecisionMakingCourse.slug,
+  internalKey: businessAnalyticsDecisionMakingCourse.internalKey,
+  title: 'Business Analytics for Decision-Making',
+  subtitle: businessAnalyticsDecisionMakingCourse.microWorkshopDetail?.cardSubtitle ?? businessAnalyticsDecisionMakingCourse.description,
+  level: businessAnalyticsDecisionMakingCourse.level,
+  estimatedHours: businessAnalyticsDecisionMakingCourse.estimatedHours,
+  accessLabel: businessAnalyticsDecisionMakingCourse.accessLabel,
+  school: businessAnalyticsDecisionMakingCourse.school,
+  publicRoute: `/learn/${businessAnalyticsDecisionMakingCourse.slug}`,
+  durationLabel: '45–60 minutes',
+  source: businessAnalyticsDecisionMakingCourse,
+}
+
 export const STANDALONE_LEARNER_CATALOG: readonly StandaloneCatalogEntry[] = [
+  BUSINESS_ANALYTICS_CATALOG_ENTRY,
   PRACTICAL_MATH_CATALOG_ENTRY,
 ]
 

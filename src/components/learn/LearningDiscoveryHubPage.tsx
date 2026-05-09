@@ -27,7 +27,7 @@ export function LearningDiscoveryHubPage() {
     <div className="min-h-screen bg-white text-zinc-900 antialiased [color-scheme:light]">
       <DiscoveryTopNav
         links={[
-          { label: 'Free course', href: '#new-free-courses', testId: 'learn-nav-free-course' },
+          { label: 'Workshops', href: '#new-free-courses', testId: 'learn-nav-free-course' },
           { label: 'Courses', href: '#featured-courses' },
           { label: 'Schools', href: '#schools' },
           { label: 'About', href: '#about-public' },
@@ -56,7 +56,7 @@ export function LearningDiscoveryHubPage() {
       <DiscoveryFooter
         showSignupCard={supabase}
         quickLinks={[
-          { label: 'New free course', href: '#new-free-courses' },
+          { label: 'Workshops & standalone courses', href: '#new-free-courses' },
           { label: 'All Courses', href: '#featured-courses' },
           { label: 'Schools', href: '#schools' },
           { label: 'About', href: '#about-public' },

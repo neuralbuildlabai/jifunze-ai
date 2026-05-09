@@ -140,7 +140,11 @@ export const EMPLOYABLE_PATHWAYS: EmployablePathway[] = [
     schoolId: 'business_growth',
     learnerGoals: ['Spreadsheets', 'Metrics', 'Finance basics'],
     includedCourseSlugs: ['data-and-decisions', 'money-and-finance'],
-    plannedCourseSlugs: ['excel-google-sheets-business-reporting', 'data-analytics-excel-sql-dashboards'],
+    plannedCourseSlugs: [
+      'excel-google-sheets-business-reporting',
+      'data-analytics-excel-sql-dashboards',
+      'business-analytics-decision-making',
+    ],
     skillsGained: [
       'Stakeholder-safe metric definitions',
       'Basic scenario thinking for costs and trade-offs',
@@ -180,7 +184,11 @@ export const EMPLOYABLE_PATHWAYS: EmployablePathway[] = [
     schoolId: 'business_growth',
     learnerGoals: ['Offer clarity', 'Go-to-market thinking', 'Unit economics'],
     includedCourseSlugs: ['business-builder', 'marketing-and-growth', 'money-and-finance', 'product-thinking'],
-    plannedCourseSlugs: ['kenya-financial-literacy-tax-business-compliance', 'ai-entrepreneurs-small-businesses'],
+    plannedCourseSlugs: [
+      'kenya-financial-literacy-tax-business-compliance',
+      'ai-entrepreneurs-small-businesses',
+      'business-analytics-decision-making',
+    ],
     skillsGained: [
       'Offer and ICP clarity (evidence-based)',
       'Lightweight channel experiments',
