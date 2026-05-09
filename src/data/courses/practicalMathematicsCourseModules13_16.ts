@@ -13,7 +13,7 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
     moduleNumber: 13,
     slug: 'real-estate-property-math',
     title: 'Real Estate and Property Math',
-    durationMinutes: 165,
+    durationMinutes: 130,
     level: 'Intermediate',
     prerequisites: ['advanced-business-math'],
     safetyNote:
@@ -41,65 +41,91 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
         lessonNumber: '13.1',
         title: 'Mortgages and Total Cost of Borrowing',
         estimatedMinutes: 35,
-        learnerGoal: 'Compute monthly mortgage payments, compare term lengths, understand PMI.',
+        learnerGoal:
+          'Compute a fixed-rate mortgage monthly payment from principal, rate, and term; compare 15-year and 30-year shapes by total interest cost; understand how PMI fits in below 20% down.',
         blocks: [
           {
             type: 'concept_explanation',
             eyebrow: 'Mortgage anatomy',
             title: 'Principal, rate, term, payment',
-            content: 'Long amortising loan secured by property.',
-          },
-          {
-            type: 'worked_example',
-            eyebrow: 'Worked example',
-            title: '$280k at 6.5% / 30 yr',
-            content: 'Payment ≈ $1,769.88. Total ≈ $637,157. Interest ≈ $357,157.',
-          },
-          {
-            type: 'worked_example',
-            eyebrow: '15 vs 30 years',
-            title: 'Same loan, very different total cost',
             content:
-              '$250k at 6%. 30-yr: $1,498.88/mo, total $539,595, interest $289,595. 15-yr: $2,109.64/mo, total $379,735, interest $129,735.',
+              'A fixed-rate mortgage is a long amortising loan secured by the property. Four numbers describe it: principal P (the loan amount), rate r (annual %, divided by 12 for monthly), term n (months), and monthly payment M. Each payment is split between interest (rate × current balance) and principal (the rest). Early payments are mostly interest; late payments are mostly principal. The total interest paid over the life of the loan is M × n − P.',
           },
           {
             type: 'concept_explanation',
-            eyebrow: 'PMI',
-            title: 'Private mortgage insurance below 20% down',
-            content: '$270k loan × 0.5% / 12 ≈ $112.50/mo. Removable at 80% LTV.',
+            eyebrow: 'Formula',
+            title: 'The standard amortisation payment',
+            content:
+              'Monthly payment M = P × i ÷ (1 − (1 + i)^(−n)) where i = annual rate ÷ 12 and n = term in months. Use this verbatim or rely on a calculator/spreadsheet PMT function (most spreadsheets accept =PMT(rate/12, term*12, -principal) and return a positive monthly payment). Always sanity-check by multiplying back: M × n should be a believable total cost.',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 1 — 30-year mortgage',
+            title: '$280,000 loan at 6.5% over 30 years',
+            content:
+              'Given: P = 280,000; annual rate = 6.5% → i = 0.065 / 12 = 0.005417; n = 30 × 12 = 360.\n\nFormula: M = P × i ÷ (1 − (1 + i)^(−n)).\n\nEstimate: rough payment for a 30-yr loan at 6–7% lands around $6 per $1,000 borrowed → 280 × 6 ≈ 1,680. Final answer should be near $1,700–$1,800.\n\nSubstitute: M = 280,000 × 0.005417 ÷ (1 − 1.005417^(−360)).\n\nCalculate: numerator = 280,000 × 0.005417 = 1,516.67. Denominator: 1.005417^360 = 7.0098, so 1.005417^(−360) = 1/7.0098 = 0.14266; 1 − 0.14266 = 0.85734. M = 1,516.67 ÷ 0.85734 = 1,769.88.\n\nAnswer: M ≈ $1,769.88/month.\n\nReasonableness: 1,769.88 vs $1,680 estimate → 5.4% over, but estimate used a mid-band 6% per $1,000 — at 6.5% rate the per-$1,000 figure is closer to $6.32, giving 1,770. Accept. Total cost = 1,769.88 × 360 = $637,157. Total interest = 637,157 − 280,000 = $357,157 — more than the principal itself.',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 2 — 15 vs 30 years',
+            title: 'Same loan, very different total cost',
+            content:
+              'Given: P = 250,000; rate = 6%; compare 30-year vs 15-year.\n\n30-year: i = 0.005, n = 360. M = 250,000 × 0.005 ÷ (1 − 1.005^(−360)) = 1,250 ÷ 0.83396 = $1,498.88/mo. Total = 1,498.88 × 360 = $539,595. Interest = $289,595.\n\n15-year: i = 0.005, n = 180. M = 250,000 × 0.005 ÷ (1 − 1.005^(−180)) = 1,250 ÷ 0.59230 = $2,109.64/mo. Total = 2,109.64 × 180 = $379,735. Interest = $129,735.\n\nAnswer: 15-year payment is $610.76/mo higher, but saves $159,860 in lifetime interest (55% less interest than the 30-year).\n\nReasonableness: 15 years is half the time but the monthly payment is only ~41% higher (not double) because each payment kills more principal earlier. The huge interest gap is the cost of stretching the loan out.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Compare two real-style quotes side by side',
+            content:
+              'Goal: borrower has $400,000 to borrow. Quote A: 30-year at 7.0%. Quote B: 30-year at 6.25% but $4,000 in extra origination fees. Decide which is cheaper over 7 years (typical hold).\n\nStep 1 — Compute A: i = 0.07/12 = 0.0058333; n = 360. M_A = 400,000 × 0.0058333 ÷ (1 − 1.0058333^(−360)) = 2,333.33 ÷ 0.87697 = $2,661.21/mo.\n\nStep 2 — Compute B: i = 0.0625/12 = 0.0052083; n = 360. M_B = 400,000 × 0.0052083 ÷ (1 − 1.0052083^(−360)) = 2,083.33 ÷ 0.84571 = $2,463.31/mo.\n\nStep 3 — 7-year cash out. A: 2,661.21 × 84 = $223,541. B: 2,463.31 × 84 + 4,000 fee = $206,918 + 4,000 = $210,918.\n\nStep 4 — Compare: B saves 223,541 − 210,918 = $12,623 over 7 years. The fee is recovered in fee ÷ monthly savings = 4,000 ÷ (2,661.21 − 2,463.31) = 4,000 ÷ 197.90 = 20 months — well inside a 7-year hold.\n\nStep 5 — Verify with a different lens: per-$1,000 monthly: A ≈ $6.65, B ≈ $6.16 — a $0.49/$1,000 saving × 400 = $196/mo, matches.',
+            learnerTask:
+              'Run the same comparison for $300,000 borrowed: Quote X at 7.5%/30-yr no fee; Quote Y at 6.75%/30-yr with $5,500 in fees. Show monthly payments, 7-year cash out, payback months for the fee, and your recommendation.',
+            answerKey:
+              'Quote X: i = 0.625%, n = 360. M_X = 300,000 × 0.00625 ÷ (1 − 1.00625^(−360)) = 1,875 ÷ 0.89393 = $2,097.64/mo. Quote Y: i = 0.5625%, n = 360. M_Y = 300,000 × 0.005625 ÷ (1 − 1.005625^(−360)) = 1,687.50 ÷ 0.86668 = $1,946.65/mo. 7-year cash: X = 2,097.64 × 84 = 176,202; Y = 1,946.65 × 84 + 5,500 = 163,519 + 5,500 = 169,019. Y saves $7,183 over 7 yr. Fee payback: 5,500 ÷ (2,097.64 − 1,946.65) = 5,500 ÷ 150.99 = 36.4 months → 3.0 years — recovers within hold. Recommendation: choose Y if you plan to hold ≥4 years; otherwise X. Verify by checking your actual hold-time intent and asking the lender for a written rate-lock period.',
           },
           {
             type: 'pause_and_check',
             eyebrow: 'Pause and check',
             title: 'Read a mortgage quote',
             content:
-              "$300k at 7%/30 yr → $1,995.91/mo. Total interest ≈ $418,528.",
+              '$300,000 at 7%/30-year: i = 0.005833, n = 360. M = 300,000 × 0.005833 ÷ (1 − 1.005833^(−360)) = 1,750 ÷ 0.87697 = $1,995.91/mo. Total = 1,995.91 × 360 = $718,528. Total interest ≈ $418,528 — more than the principal itself.',
+          },
+          {
+            type: 'concept_explanation',
+            eyebrow: 'PMI',
+            title: 'Private mortgage insurance below 20% down',
+            content:
+              'When the down payment is less than 20% of the home price (LTV > 80%), most conventional mortgages require PMI — a monthly insurance premium that protects the lender. Typical PMI rates: 0.3–1.5% of the loan amount per year, paid monthly. Example: $270,000 loan × 0.5% per year = $1,350/yr ÷ 12 = $112.50/mo. PMI is removable once LTV reaches 80% (either through paying down principal or appreciation, depending on the policy).',
           },
           {
             type: 'common_mistakes',
             eyebrow: 'Watch for these',
             title: 'Mortgage traps',
-            content: 'Choosing 30-year because monthly looks lower without checking total interest.',
+            content:
+              'Choosing the 30-year purely because the monthly is lower without checking the total interest gap; ignoring origination fees in lender comparisons; forgetting PMI when comparing high-down vs low-down options; quoting a "rate" that includes points without showing the points cost separately.',
           },
           {
             type: 'real_world_application',
             eyebrow: 'Where this shows up',
             title: 'Buying, refinancing, comparison shopping',
-            content: 'A 1-pp lower rate saves tens of thousands.',
+            content:
+              'Mortgage payment math drives the buying decision, the refinance break-even, and the lender comparison. A 1-percentage-point lower rate on a $300,000/30-year loan saves roughly $200/mo and ~$70,000 over the life of the loan — the math always rewards shopping at least three lenders.',
           },
           {
             type: 'practice_task',
             eyebrow: 'Practice task',
             title: 'Compare two real mortgage quotes',
-            content: 'Use a calculator for 15 vs 30 at current rates.',
+            content:
+              'Pull two real or realistic 15-year and 30-year quotes for the same loan amount. Compute monthly payments, total interest, and your assumed years-of-stay. Recommend the term and explain in one sentence what would change your mind.',
             answerKey:
-              'Lesson anchors: $280k @ 6.5%/30 → ≈$1,769.88/mo, total interest ≈$357k vs principal $280k. $250k @ 6%: 30-yr ≈$1,498.88/mo ($289.6k interest); 15-yr ≈$2,109.64/mo ($129.7k interest) — shorter term saves ≈$160k interest for ≈$611/mo higher payment.',
+              'Anchor: $280,000 at 6.5%/30-year → M ≈ $1,769.88/mo, total interest ≈ $357,157. Same loan at 5.875%/15-year → M ≈ $2,344.25, total interest ≈ $141,965. Shorter term saves ~$215k interest at the cost of ~$574/mo. Recommendation depends on cash flow: if the higher payment leaves <3 months of emergency reserves, take the 30-year and consider extra principal payments; if reserves are healthy, take the 15-year for the interest savings. What would change my mind: a meaningful pay raise or a downsizing decision within 5 years.',
           },
           {
             type: 'summary',
             eyebrow: 'Lesson 13.1 summary',
             title: 'Term and rate, then total cost',
-            content: 'Term and rate determine total cost more than monthly payment alone.',
+            content:
+              'Term and rate determine the total cost of borrowing far more than the monthly payment alone. Always compute total interest, then decide whether your cash flow supports the better-shape loan. Verify any closing-cost-driven decision with a written quote from the lender.',
           },
         ],
       },
@@ -184,28 +210,42 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
           },
           {
             type: 'worked_example',
-            eyebrow: 'Worked example',
-            title: '$250k rental, 25% down',
+            eyebrow: 'Worked example 1 — $250k rental, 25% down',
+            title: 'Cash flow with all reserves',
             content:
-              'Loan $187,500 at 7%/30 yr → P&I ≈ $1,247. Tax $250, ins $125, HOA $100, mgmt 10% $220, maint 5% $110, vac 5% $110. Total $2,162. Rent $2,200 → cash flow $38/mo. CoC = $456 / $62,500 ≈ 0.73%.',
+              'Given: $250,000 purchase; 25% down ($62,500 cash) plus closing costs ~$5,000; loan $187,500 at 7%/30 yr; rent $2,200/month.\n\nFormula: monthly cash flow = rent − (P&I + tax + insurance + HOA + management + maintenance + vacancy).\n\nP&I: 187,500 × (0.07/12) ÷ (1 − 1.005833^-360) = 1,093.75 ÷ 0.87697 = $1,247.40/mo.\nTax (1.2% of value annually): 250,000 × 0.012 / 12 = $250/mo.\nInsurance (0.6% of value): 250,000 × 0.006 / 12 = $125/mo.\nHOA: $100/mo.\nManagement (10% of rent): $220/mo.\nMaintenance reserve (5% of rent): $110/mo.\nVacancy reserve (5% of rent): $110/mo.\nTotal expenses: $2,162.\n\nMonthly cash flow: 2,200 − 2,162 = $38.\nAnnual cash flow: $38 × 12 = $456.\nCash-on-cash: 456 ÷ 62,500 = 0.73%.\n\nReasonableness: cash-on-cash 0.73% is poor for a rental — most investors target 6-10% CoC. This deal works only if appreciation (5-7%/yr typical) and principal paydown bridge the gap. If anything goes wrong (extra vacancy, big repair), the deal turns negative.',
           },
           {
-            type: 'concept_explanation',
-            eyebrow: 'Cap rate',
-            title: 'NOI ÷ purchase price',
-            content: '$30k rent − $12k expenses = $18k NOI ÷ $300k = 6%.',
+            type: 'worked_example',
+            eyebrow: 'Worked example 2 — Cap rate and quick comparison',
+            title: 'Compare two listings without financing',
+            content:
+              'Given: Property A asks $300,000; expected gross rent $30,000/yr; expected operating expenses $12,000/yr (taxes, insurance, management, maintenance, vacancy — NOT mortgage). Property B asks $480,000; expected gross rent $54,000/yr; expected operating expenses $19,000/yr.\n\nFormula: NOI = gross rent − operating expenses; cap rate = NOI ÷ purchase price.\n\nProperty A: NOI = 30,000 − 12,000 = $18,000. Cap rate = 18,000 ÷ 300,000 = 6.0%.\n\nProperty B: NOI = 54,000 − 19,000 = $35,000. Cap rate = 35,000 ÷ 480,000 = 7.3%.\n\nAnswer: Property B has a higher cap rate (7.3% vs 6.0%) — better unleveraged yield. But cap rate ignores financing AND market risk; B might be in a less-liquid market with longer time-on-market between tenants.\n\nReasonableness: typical residential cap rates by market: low-cost cities 6-8%; high-cost cities 3-5% (you pay for appreciation potential). Cap rate 7.3% suggests B is in a moderate market; sense-check against local sales comps before committing.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Stress-test a rental with vacancy and repair scenarios',
+            content:
+              'Goal: same $250k rental from Worked Example 1. Stress-test under three scenarios.\n\nBaseline: $38/mo cash flow, $456/yr.\n\nScenario A — Vacancy doubles (5% → 10%): vacancy reserve grows from $110 to $220/mo. New cash flow: 2,200 − 2,272 = −$72/mo (annual −$864). Negative.\n\nScenario B — Major repair (HVAC $5,000 in year 1): year 1 cash flow gets hit by 5,000/12 = ~$417/mo extra cost on average. New average: −$379/mo year 1. Even baseline ($38/mo) cannot absorb this; the maintenance reserve helps but only $110/mo over the year ($1,320 saved over 12 months) — short by $3,680. Owner must come out of pocket.\n\nScenario C — Rent rises 5% in year 2: rent goes from 2,200 to 2,310, +$110/mo. New cash flow: $148/mo, $1,776/yr. CoC bumps to 2.84% (if expenses stay flat).\n\nDecision frame: this deal has no margin of safety — works only with rent growth and clean tenants. A more conservative buyer would pass; a value-investor buyer might bid lower (e.g. $225k) to widen the margin.',
+            learnerTask:
+              'Run a stress test on a $400k rental with 25% down, $300k loan at 7%/30 yr, rent $3,200/mo, expenses 50% of rent (mgmt + maint + vacancy + tax + ins). Compute baseline cash flow and CoC, then test what happens if vacancy doubles from 5% to 10% (rent reserve $160 → $320).',
+            answerKey:
+              'P&I on $300k @ 7%: 1,995.91. Expenses 50% × 3,200 = $1,600 (already includes the listed reserves). Total: 1,995.91 + 1,600 = $3,595.91. Cash flow: 3,200 − 3,595.91 = −$395.91/mo. Already negative at baseline! Stress test (vacancy to 10%): expenses become 50% + 5% extra vacancy = 55% × 3,200 = 1,760. Total: 1,995.91 + 1,760 = 3,755.91. Cash flow: −$555.91/mo. Down payment: 100,000. CoC at baseline: −395.91 × 12 / 100,000 = −4.75%/yr — losing money. This deal does not work; pass on it or renegotiate price down by ~$100k. Strong answer rejects the deal; weak answer crunches numbers and recommends moving forward without flagging the loss.',
           },
           {
             type: 'concept_explanation',
             eyebrow: 'ROI lenses',
             title: 'Cash-on-cash, total return, IRR',
-            content: 'Cash-on-cash = annual cash flow ÷ cash invested.',
+            content:
+              'Three ways to measure rental ROI: Cash-on-cash (CoC) = annual cash flow ÷ cash invested (what you actually pocket each year). Total return = (cash flow + appreciation + principal paydown − selling costs) ÷ cash invested over the holding period. IRR = the discount rate that makes total NPV zero, accounting for timing of cash flows. CoC is the easiest; IRR is the most accurate. Use CoC for screening, IRR for committed analysis.',
           },
           {
             type: 'pause_and_check',
             eyebrow: 'Pause and check',
             title: 'Pressure-test the rent',
-            content: 'Vacancy 5% → 10% drops cash flow ~$110.',
+            content:
+              'Vacancy 5% → 10% drops cash flow by ~$110/mo on a $2,200 rent (5% × 2,200 = $110). On a thin-margin deal ($38/mo cash flow), that flips to a $72/mo loss. Always stress-test vacancy when assessing rentals.',
           },
           {
             type: 'common_mistakes',
@@ -255,22 +295,42 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
           },
           {
             type: 'worked_example',
-            eyebrow: 'Worked example',
-            title: 'Comparative market analysis (CMA)',
+            eyebrow: 'Worked example 1 — Comparative market analysis (CMA)',
+            title: 'Estimate value from three comps',
             content:
-              '2,000 sq ft subject. Comps avg $172/sq ft. Estimate $344,000. Adjust +$10k kitchen, −$8k roof, +$5k corner → $351,000.',
+              'Given: subject home is 2,000 sq ft, 3 bed/2 bath, built 2005, tile roof. Three nearby recent sales:\nComp A: 1,950 sq ft, sold $338k → $173.33/sq ft.\nComp B: 2,100 sq ft, sold $362k → $172.38/sq ft.\nComp C: 1,950 sq ft, sold $336k → $172.31/sq ft.\n\nFormula: average $/sq ft × subject sq ft + adjustments.\n\nStep 1 — Average $/sq ft: (173.33 + 172.38 + 172.31) ÷ 3 = $172.67/sq ft.\n\nStep 2 — Base estimate: 2,000 × 172.67 = $345,340. Round to $345,000.\n\nStep 3 — Adjustments for differences:\n+$10,000 — subject has new kitchen (comps had original).\n−$8,000 — subject roof has 5 years remaining (Comp A had a new roof).\n+$5,000 — subject is on a corner lot with extra parking.\n\nFinal estimate: 345,000 + 10,000 − 8,000 + 5,000 = $352,000.\n\nReasonableness: estimate sits within ~5% of comps adjusted for size; an appraiser would typically find within $10–15k of this number. CMA is most accurate when comps are within 6 months and within 0.5 miles.',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 2 — Equity, LTV, refinance opportunity',
+            title: 'When does refinancing remove PMI?',
+            content:
+              'Given: bought home for $400,000 with 10% down ($40k); current loan balance $355,000; market value now $470,000. Pays PMI $148/mo. Wants to refinance to drop PMI.\n\nFormula: equity = value − loan; LTV = loan ÷ value. PMI usually drops at 80% LTV.\n\nCurrent equity: 470,000 − 355,000 = $115,000.\nCurrent LTV: 355,000 ÷ 470,000 = 75.5%. Below 80% → eligible to drop PMI.\n\nPath A — request lender to remove PMI on existing loan: many lenders allow this when LTV < 80% based on a new appraisal (cost ~$500). Saves $148/mo with one-time $500 outlay → payback 4 months.\n\nPath B — refinance to a new loan at current market rates: same LTV calculation; refinance closing costs typically $4–8k; only worth doing if rate is meaningfully better (≥0.5% lower) AND you stay 3+ years.\n\nAnswer: Path A is the better move here — PMI removal alone at low cost.\n\nReasonableness: home value rose 17.5% since purchase ($400k → $470k); combined with principal paydown, the equity grew from $40k to $115k. The math here protects $1,776/yr in PMI for a $500 outlay — strong return.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Read closing costs and compute true purchase cost',
+            content:
+              'Goal: a buyer is purchasing a $300,000 home. Loan $240k (20% down). Closing-cost disclosure shows: lender origination $2,400; appraisal $500; title insurance $1,400; escrow setup $700; transfer tax $1,200; prepaid property tax (3 mo) $750; prepaid insurance (12 mo) $1,500; pre-paid interest (15 days) $580.\n\nStep 1 — Sum closing costs: 2,400 + 500 + 1,400 + 700 + 1,200 + 750 + 1,500 + 580 = $9,030.\n\nStep 2 — Closing cost as % of loan: 9,030 ÷ 240,000 = 3.76% (within typical 2–6% range).\n\nStep 3 — True cash needed at closing: down payment $60,000 + closing costs $9,030 = $69,030.\n\nStep 4 — True initial cost basis (for ROI later): purchase $300,000 + closing $9,030 = $309,030.\n\nStep 5 — Some closing costs are recoverable (prepaids), some are sunk (lender fees, transfer tax). Recoverable lines: $750 prepaid tax (escrow refunded over 3 mo); $1,500 prepaid insurance (consumed over 12 mo); $580 prepaid interest (consumed in first month). Sunk: $5,200.\n\nReasonableness: the buyer must come up with ~$69k cash at closing — much more than the $60k down payment alone. Many first-time buyers underbudget here.',
+            learnerTask:
+              'A $250k home with 5% down requires PMI. Market value rises to $310k after 3 years; loan balance is now $230k. Compute current LTV, current equity, and whether the buyer is eligible to drop PMI.',
+            answerKey:
+              'Current equity: 310,000 − 230,000 = $80,000. Current LTV: 230,000 ÷ 310,000 = 74.2%. Below 80% threshold → eligible to request PMI removal. Recommendation: order an updated appraisal (~$500), submit removal request to lender. Expected savings: $50-150/mo in PMI depending on original loan terms. Strong answer states the dollar savings AND payback period; weak answer only says "yes, eligible." A buyer who never requests removal often pays PMI 5+ years after technically becoming eligible.',
           },
           {
             type: 'concept_explanation',
             eyebrow: 'Other valuation approaches',
             title: 'Income capitalisation and cost approach',
-            content: 'NOI ÷ cap rate. Replacement cost − depreciation + land.',
+            content:
+              'Income capitalisation: NOI ÷ cap rate = property value (mainly for rental and commercial). Cost approach: replacement cost − depreciation + land value (mainly for new construction or unique properties). For owner-occupied homes, comparable sales (CMA) is the dominant approach; for investment properties, income capitalisation is primary.',
           },
           {
             type: 'pause_and_check',
             eyebrow: 'Pause and check',
             title: 'Compute LTV',
-            content: 'Home $450k, loan $260k. Equity $190k; LTV ≈ 57.8%.',
+            content:
+              'Home value $450k, loan balance $260k. Equity = 450k − 260k = $190k. LTV = 260k ÷ 450k = 57.8%. Comfortably below 80% — no PMI required, eligible for cash-out refinance up to ~$100k more debt while staying under 80% LTV.',
           },
           {
             type: 'common_mistakes',
@@ -458,7 +518,7 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
     moduleNumber: 14,
     slug: 'healthcare-medical-math',
     title: 'Healthcare and Medical Math',
-    durationMinutes: 150,
+    durationMinutes: 120,
     level: 'Intermediate',
     prerequisites: ['real-estate-property-math'],
     safetyNote:
@@ -518,6 +578,17 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
               'Workflow protections live outside arithmetic.',
           },
           {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice — Verify a paediatric label step by step (numeracy only)',
+            title: 'Multi-step dose by weight + unit conversion + double-check',
+            content:
+              'Goal: a caregiver picks up a child antibiotic. The label reads: "Suspension 200 mg / 5 mL. Dose: 25 mg/kg/day, divided in 2 doses." The child weighs 18 kg. Verify the per-dose volume in mL, then sanity-check against the bottle size of 100 mL for a 10-day course. Numeracy practice only — never set or change a dose without a licensed clinician.\n\nStep 1 — Daily dose by weight: 25 mg/kg × 18 kg = 450 mg/day.\n\nStep 2 — Per-dose amount (divided in 2): 450 ÷ 2 = 225 mg per dose.\n\nStep 3 — Convert mg to mL using the suspension concentration. The concentration is 200 mg per 5 mL → 1 mg per 0.025 mL → 225 mg × 0.025 = 5.625 mL per dose.\n\nStep 4 — Sanity check the bottle. 5.625 mL × 2 doses/day × 10 days = 112.5 mL total course. The bottle is 100 mL — short by 12.5 mL. Numeracy flag: the dispensed bottle is too small for the prescribed course; phone the pharmacist before starting.\n\nStep 5 — Common-error check. If you misread mg/kg as mg/lb, the calculation would give 25 × 40 (lb) = 1,000 mg/day → 500 mg per dose → 12.5 mL per dose — more than DOUBLE the correct volume. Always confirm whether the label is mg/kg or mg/lb before computing.\n\nReasonableness: a typical 18 kg toddler dose for a common antibiotic is 5–8 mL twice daily. Our 5.625 mL fits the band; the 12.5 mL would not. Numeracy supports the conversation with the pharmacist; numeracy never replaces it.',
+            learnerTask:
+              'A 32 kg child is prescribed acetaminophen 15 mg/kg/dose, every 6 hours as needed. The bottle reads "160 mg / 5 mL". Compute (a) per-dose mg, (b) per-dose mL, (c) maximum mL in 24 hours if every-6-hour dosing is used, (d) one common error to watch for. State each step. Numeracy practice only.',
+            answerKey:
+              '(a) 15 mg/kg × 32 kg = 480 mg per dose. (b) Concentration 160 mg per 5 mL → 1 mg per 0.03125 mL → 480 mg × 0.03125 = 15 mL per dose. (c) Every 6 hours = 4 doses/day max → 15 mL × 4 = 60 mL/day. (d) Common error: doubling the dose because the parent missed the previous dose — never double; use the 4-doses/day maximum to keep the total below the safe ceiling, and verify with a paediatrician or pharmacist before any deviation. Strong answer also notes the bottle size: a 120 mL bottle covers only 2 days at maximum dosing — confirm refill timing. Reasonableness: 15 mL is at the higher end for a 32 kg child; verify with the prescribing label and dispensing pharmacist.',
+          },
+          {
             type: 'pause_and_check',
             eyebrow: 'Pause and check',
             title: 'Numeracy verification',
@@ -556,59 +627,84 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
         lessonNumber: '14.2',
         title: 'BMI, Heart Rate, and Health Metrics',
         estimatedMinutes: 25,
-        learnerGoal: 'Compute BMI in two systems, target heart rate, and use health metrics with context.',
+        learnerGoal:
+          'Compute BMI in metric and imperial units, target heart-rate zones from age, and read these as screening signals — not diagnoses — that prompt a conversation with a clinician.',
         blocks: [
           {
             type: 'concept_explanation',
             eyebrow: 'BMI',
-            title: 'Two formulas',
+            title: 'Two formulas, one ratio',
             content:
-              'Metric: kg ÷ m². Imperial: (lb ÷ in²) × 703. <18.5 underweight; 18.5–24.9 normal; 25–29.9 over; ≥30 obese. Population-level screening, not a diagnosis.',
-          },
-          {
-            type: 'worked_example',
-            eyebrow: 'Worked example',
-            title: 'BMI both ways',
-            content:
-              'Metric 75/1.75² ≈ 24.5. Imperial (180/4900)×703 ≈ 25.8.',
+              'Body Mass Index relates weight to height. Metric: BMI = kg ÷ m². Imperial: BMI = (lb ÷ in²) × 703. Standard adult bands: <18.5 underweight; 18.5–24.9 normal; 25.0–29.9 overweight; ≥30 obese. BMI is a population-level screening tool — it does not measure body composition, fitness, or health. Athletes with high muscle mass and older adults often score outside the "normal" band without clinical concern. Treat the number as the start of a question, not the answer.',
           },
           {
             type: 'concept_explanation',
             eyebrow: 'Heart rate zones',
             title: 'Maximum and target',
-            content: 'Max ≈ 220 − age. Moderate 50–70%; vigorous 70–85%.',
+            content:
+              'Estimated max heart rate ≈ 220 − age (a rough average; individuals vary). Moderate-intensity zone is 50–70% of max; vigorous-intensity is 70–85%. Zones are training guidance, not medical limits — anyone with cardiac history, hypertension, or who is starting exercise after a long break should consult a clinician before targeting vigorous zones.',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 1 — BMI metric',
+            title: 'Adult, 75 kg, 1.75 m',
+            content:
+              'Given: weight = 75 kg; height = 1.75 m.\n\nFormula: BMI = kg ÷ m².\n\nEstimate: 1.75² ≈ 3; 75 ÷ 3 ≈ 25 — top of normal band.\n\nSubstitute: BMI = 75 ÷ (1.75)².\n\nCalculate: 1.75² = 3.0625; 75 ÷ 3.0625 = 24.49.\n\nAnswer: BMI ≈ 24.5 — within normal band.\n\nReasonableness: estimate said ≈25; calculation 24.5 is 2% off. Accept. The screening signal is "no flag from BMI alone" — not "this person is healthy."',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 2 — BMI imperial + heart rate',
+            title: 'Adult, 180 lb, 70 in tall, 35 years old',
+            content:
+              'BMI: BMI = (lb ÷ in²) × 703.\n\nEstimate: 70² = 4,900; 180 ÷ 4,900 ≈ 0.0367; × 703 ≈ 25.8 — just into overweight band.\n\nCalculate: 4,900 → 180 ÷ 4,900 = 0.03673; × 703 = 25.83.\n\nAnswer: BMI ≈ 25.8 — overweight by screening.\n\nHeart rate: max ≈ 220 − 35 = 185 bpm. Moderate zone 50–70%: 0.50 × 185 = 92.5; 0.70 × 185 = 129.5 → ~93–130 bpm. Vigorous 70–85%: 0.85 × 185 = 157 → ~130–157 bpm.\n\nReasonableness: a 35-year-old jogging conversationally should land in moderate zone (≈100–130 bpm). If a fitness watch shows 170 bpm during a casual walk, the watch or the person should be checked — that is in the vigorous band.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Compute your own BMI and target zone',
+            content:
+              'Pick the system you prefer. Step 1 — record weight and height accurately (no shoes; ideally morning weight). Step 2 — apply the formula. Metric example: 68 kg, 1.65 m → 68 ÷ (1.65)² = 68 ÷ 2.7225 = 24.98 ≈ 25.0 — boundary of overweight band. Step 3 — compute max heart rate from age. Age 42 → max ≈ 220 − 42 = 178; moderate ≈ 89–125 bpm. Step 4 — note one screening signal and one limitation: BMI 25.0 is a flag-worth-discussing only with other context (waist circumference, fitness, family history). Step 5 — write the number down and the date so trends are comparable later.',
+            learnerTask:
+              'Compute your BMI in your preferred system and your moderate-intensity heart-rate band from your age. Write one sentence on what these numbers do and do not tell you, and one action item (e.g. discuss with clinician at next visit, restart 30 min walks, etc.).',
+            answerKey:
+              'Sample done well: 70 kg, 1.72 m → BMI = 70 ÷ 1.72² = 70 ÷ 2.9584 = 23.66 → 23.7, normal band. Age 38 → max ≈ 182 bpm; moderate 91–127 bpm. Sentence: "BMI 23.7 is a single screening signal and ignores muscle mass, body fat distribution, and cardiovascular fitness; my moderate-zone target is 91–127 bpm during sustained activity." Action: "I will keep a 30-minute walk three times a week and discuss the trend with my GP at the next physical." Weak answers skip units, treat BMI as a diagnosis, or pick zones outside 50–85% of max.',
           },
           {
             type: 'pause_and_check',
             eyebrow: 'Pause and check',
-            title: 'Compute your BMI and zone',
-            content: 'In your preferred system.',
+            title: 'Two quick reads',
+            content:
+              'BMI 70 kg / 1.55 m: 70 ÷ 2.4025 ≈ 29.1 → high end of overweight band. BMI 220 lb / 68 in: (220 ÷ 4624) × 703 ≈ 33.4 → obese band. Both are screening signals, not diagnoses; clinical follow-up adds the missing context.',
           },
           {
             type: 'common_mistakes',
             eyebrow: 'Watch for these',
             title: 'Metric traps',
-            content: 'Treating BMI as a diagnosis.',
+            content:
+              'Squaring height after the division (always square height first); using cm or inches without converting (BMI metric needs metres, BMI imperial needs inches); treating BMI as a diagnosis instead of a screening signal; computing heart-rate zones outside 50–85% of max; ignoring rest-day heart-rate context.',
           },
           {
             type: 'real_world_application',
             eyebrow: 'Where this shows up',
             title: 'Wellness checks, fitness apps',
-            content: 'Useful starting points for conversation with a clinician.',
+            content:
+              'Health intake forms compute BMI. Fitness watches use estimated max heart rate to label workout zones. Insurance underwriting may reference BMI bands. Always pair the number with clinical context before acting on it.',
           },
           {
             type: 'practice_task',
             eyebrow: 'Practice task',
-            title: 'Three reps',
+            title: 'Three reps with one limitation each',
             content:
-              '(1) BMI 80 kg / 1.80 m. (2) BMI 200 lb / 72 in. (3) Moderate zone for 35-yr-old.',
-            answerKey: '≈24.7; ≈27.1; max ≈185, moderate ≈92–129.',
+              '(1) BMI for 80 kg, 1.80 m. (2) BMI for 200 lb, 72 in. (3) Moderate-zone heart rate for a 35-year-old. For each, add one limitation in plain language.',
+            answerKey:
+              '(1) 80 ÷ 1.80² = 80 ÷ 3.24 = 24.69 ≈ 24.7 → top of normal band. Limitation: BMI does not separate fat from muscle.\n(2) (200 ÷ 5,184) × 703 = 0.03858 × 703 = 27.13 ≈ 27.1 → overweight band. Limitation: BMI does not capture waist-to-hip ratio.\n(3) Max ≈ 220 − 35 = 185 bpm; 50–70% → 0.50 × 185 = 92.5 and 0.70 × 185 = 129.5 → 93–130 bpm. Limitation: 220 − age is a rough population estimate; individual max varies ±10 bpm or more.',
           },
           {
             type: 'summary',
             eyebrow: 'Lesson 14.2 summary',
             title: 'Numbers with context',
-            content: 'Pair formulas with clinical context.',
+            content:
+              'BMI and heart-rate zones are screening signals. Compute them right, log them with the date, and pair them with clinical context before acting.',
           },
         ],
       },
@@ -627,29 +723,49 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
           },
           {
             type: 'worked_example',
-            eyebrow: 'Worked example',
-            title: 'A surgery year',
+            eyebrow: 'Worked example 1 — A surgery year',
+            title: 'Premium + deductible + coinsurance + OOP cap',
             content:
-              'Premium $400/mo, ded $2k, coins 20%, OOP $6k. $30 copay + $25k surgery + $500 follow-ups. Premiums $4,800. OOP $6,000. Total $10,800.',
+              'Given: premium $400/mo; deductible $2,000; coinsurance 20%; OOP max $6,000. Year activity: one office visit ($30 copay) + scheduled surgery (allowed-amount $25,000) + follow-up visits ($500 in copays).\n\nFormula: total annual cost = premiums + deductible (paid first) + coinsurance × eligible cost (until OOP max hit) + remaining copays (after OOP max, $0 eligible).\n\nStep 1 — Premiums: 400 × 12 = $4,800.\n\nStep 2 — Patient share of surgery: deductible $2,000 (first applied) + coinsurance 20% on remaining $23,000 = $4,600. Cumulative patient share so far: 2,000 + 4,600 = $6,600 — but OOP max caps at $6,000. So patient pays only $6,000 on this surgery.\n\nStep 3 — Once OOP max hit, remaining services in-network are at $0 patient cost (assuming standard plan). So follow-up copays this year = $0 (OOP max already met).\n\nStep 4 — Total annual: premiums 4,800 + OOP-capped 6,000 = $10,800.\n\nReasonableness: surgery cost was $25,000 but patient paid only $6,000 of it (24%) plus their year of premiums. The other $19,000 is the insurance-pool subsidy. Always know your OOP max — it caps the worst case.',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 2 — Plan shopping by usage scenario',
+            title: 'Compare two plans across low/mid/high years',
+            content:
+              'Given: Plan A — premium $200/mo; deductible $4,500; coinsurance 30%; OOP max $7,000. Plan B — premium $400/mo; deductible $1,500; coinsurance 20%; OOP max $5,000.\n\nFormula: total annual cost = premiums + (eligible patient share, capped by OOP max).\n\nLow-usage year ($500 in care, mostly preventive):\nPlan A: 200×12 + 500 = $2,900.\nPlan B: 400×12 + 500 = $5,300.\nWinner: A by $2,400.\n\nMid-usage year ($6,000 in care):\nPlan A: 200×12 + 4,500 + 30% × 1,500 = 2,400 + 4,500 + 450 = $7,350.\nPlan B: 400×12 + 1,500 + 20% × 4,500 = 4,800 + 1,500 + 900 = $7,200.\nWinner: B by $150 (essentially tied).\n\nHigh-usage year ($30,000 in care):\nPlan A: 2,400 + OOP capped 7,000 = $9,400.\nPlan B: 4,800 + OOP capped 5,000 = $9,800.\nWinner: A by $400 (Plan A wins on extreme usage too because its lower premium offsets the higher OOP).\n\nAnswer: Plan A is best when usage is very low OR very high. Plan B beats Plan A only in mid-usage years (~$5–8k care).\n\nReasonableness: lower-premium plans usually win in healthy years; lower-deductible plans win in mid years; OOP max determines extreme years. The match-to-expected-usage decision is what plan-shopping math is for.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Run a 3-scenario plan comparison + HSA tax effect',
+            content:
+              'Goal: choose between Plan X (premium $300/mo, ded $1,500, coins 30%, OOP $5,000, no HSA-eligible) and Plan Y (premium $250/mo, ded $3,000, coins 20%, OOP $6,000, HSA-eligible).\n\nLow-usage year ($800 care, 22% tax bracket):\nPlan X: 300×12 + 800 = $4,400.\nPlan Y: 250×12 + 800 = $3,800. + HSA contribution $3,850 saves 22% × 3,850 = $847 in taxes. Net effective cost: 3,800 − 847 = $2,953.\nWinner: Plan Y by $1,447 in net effective cost.\n\nMid-usage year ($8,000 care):\nPlan X: 3,600 + ded 1,500 + 30% × 6,500 = 3,600 + 1,500 + 1,950 = $7,050. (OOP max reached — capped at 5,000 patient share + 3,600 premiums = $8,600 total.) Adjust: patient share = 1,500 + 1,950 = 3,450; not at OOP cap (5,000). Total: 3,600 + 3,450 = $7,050.\nPlan Y: 3,000 + ded 3,000 + 20% × 5,000 = 3,000 + 3,000 + 1,000 = $7,000. Plus HSA tax saving on $3,850: net $7,000 − 847 = $6,153.\nWinner: Plan Y by $897 in net effective cost.\n\nHigh-usage year ($30,000 care):\nPlan X: 3,600 + OOP 5,000 = $8,600.\nPlan Y: 3,000 + OOP 6,000 = $9,000. With HSA tax saving: 9,000 − 847 = $8,153.\nWinner: Plan Y by $447.\n\nAcross all three scenarios, Plan Y wins because of the HSA tax shield. Without the HSA effect, Plan X would win in 2 of 3 years.\n\nReasonableness: HSA tax savings can reverse a plan-comparison ranking. Always model the after-tax effective cost when one plan is HSA-eligible.',
+            learnerTask:
+              'A worker is choosing between Plan A (premium $200/mo, ded $2,000, coins 30%, OOP $5,000) and Plan B (premium $350/mo, ded $1,000, coins 20%, OOP $4,000). She expects $4,000 in care this year. Compute total annual cost for each and state the winner.',
+            answerKey:
+              'Plan A: 200×12 + 2,000 + 30% × 2,000 = 2,400 + 2,000 + 600 = $5,000. Plan B: 350×12 + 1,000 + 20% × 3,000 = 4,200 + 1,000 + 600 = $5,800. Plan A wins by $800. At higher usage ($10k care), Plan A: 2,400 + OOP 5,000 = $7,400; Plan B: 4,200 + OOP 4,000 = $8,200; Plan A still wins by $800. Plan A is the better choice across both scenarios because the $1,800/yr premium savings outweighs the $1,000 OOP-cap difference. Strong answer tests at least two usage levels; weak answer compares at only one and misses sensitivity.',
           },
           {
             type: 'concept_explanation',
             eyebrow: 'Plan-shopping math',
             title: 'Compare two plans by total annual cost',
-            content: 'Healthy years favour high-deductible; high-use favour low-deductible.',
+            content:
+              'Total annual cost = annual premiums + expected patient share (deductible, coinsurance, copays). Healthy years favour low-premium / high-deductible plans (premium savings outweigh higher OOP). High-use years favour low-deductible / high-premium plans (OOP cap is reached fast). Mid years are close — model with your specific expected usage.',
           },
           {
             type: 'concept_explanation',
             eyebrow: 'HSA/FSA basics',
             title: 'Tax-advantaged medical savings',
-            content: '$3,850 HSA at 22% saves $847 in taxes.',
+            content:
+              'Health Savings Accounts (HSAs) are paired with high-deductible plans. 2024 contribution limits: $3,850 individual, $7,750 family. Contributions reduce taxable income; withdrawals for qualified medical are tax-free. At a 22% marginal tax rate, a $3,850 HSA contribution saves $847 in taxes — effectively a 22% discount on medical spending. FSAs are similar but use-it-or-lose-it within the plan year.',
           },
           {
             type: 'pause_and_check',
             eyebrow: 'Pause and check',
             title: 'Compute one year',
             content:
-              '$300/mo, $1,500 ded, 30% coins, $5,000 OOP max, $8,000 bills. ≈$7,050 patient.',
+              'Plan: premium $300/mo; deductible $1,500; coinsurance 30%; OOP max $5,000. Year medical bills: $8,000.\nPremium: 3,600. Deductible: 1,500. Coinsurance on remaining $6,500: 30% × 6,500 = $1,950. Patient share: 1,500 + 1,950 = $3,450 — under the OOP max of $5,000. Total: 3,600 + 3,450 = $7,050. Verify: not at OOP cap; if the bill grew to $13k+, patient share would hit the $5k cap.',
           },
           {
             type: 'common_mistakes',
@@ -711,6 +827,17 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
             eyebrow: 'Generic vs brand savings',
             title: 'Quick math on prescriptions',
             content: '$40 vs $25/mo brand vs generic = $180/yr savings.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice — Audit a hospital bill end-to-end',
+            title: 'Charges, adjustments, deductible, coinsurance, and verification',
+            content:
+              'Goal: you receive a hospital bill after an outpatient procedure. Walk through every line so you can flag any error before paying.\n\nBill summary as printed:\nLine 1 — Facility charge: $4,200.\nLine 2 — Surgeon professional fee: $1,800.\nLine 3 — Anaesthesia fee: $900.\nLine 4 — Pathology lab: $300.\nLine 5 — Recovery / supplies: $250.\nSubtotal of charges: $7,450.\n\nInsurance adjustment (negotiated discount): −35% of subtotal = −$2,607.50.\nAllowed amount: $7,450 − $2,607.50 = $4,842.50.\n\nPlan: $1,500 deductible (not yet met this year), 20% coinsurance, $5,000 OOP max.\n\nStep 1 — Verify the subtotal arithmetic. 4,200 + 1,800 + 900 + 300 + 250 = 7,450 ✓.\n\nStep 2 — Verify the adjustment. 35% of 7,450 = 2,607.50 ✓; allowed amount 4,842.50 ✓. (If the bill prints "adjustment $2,500" instead, the discount was applied at ~33.6% — phone billing to confirm which percentage your plan actually negotiated.)\n\nStep 3 — Apply the deductible. Patient pays the full $1,500 deductible first → remaining allowed = 4,842.50 − 1,500 = $3,342.50 subject to coinsurance.\n\nStep 4 — Coinsurance: 20% × 3,342.50 = $668.50.\n\nStep 5 — Patient share so far: 1,500 + 668.50 = $2,168.50. This is below the $5,000 OOP max → no cap kicks in this year (yet).\n\nStep 6 — Total patient responsibility for THIS bill: $2,168.50.\n\nStep 7 — Verification cross-checks before paying:\n(a) Did each line item actually happen? (Pathology fee — did you have a biopsy taken? If not, dispute the line.)\n(b) Was anaesthesia in-network? (Out-of-network anaesthesiologists at in-network facilities are a common surprise; ask for a written network statement.)\n(c) Did the insurer process at the contracted rate? (Compare allowed amount to your EOB — Explanation of Benefits.)\n(d) Are duplicate line items present? (Recovery + supplies are sometimes billed twice.)\n\nReasonableness: patient share $2,168.50 is 29% of the original $7,450 charges and 45% of the $4,842.50 allowed amount — typical for a procedure during the deductible portion of the year. If the bill demanded more than $5,000 from you, the OOP-max cap should have kicked in; if it demanded $4,842.50 (the full allowed amount), the insurer didn\'t apply your coverage — dispute.',
+            learnerTask:
+              'You receive a bill: $5,800 charges, 30% insurance adjustment, $1,000 of your $2,500 deductible already met this year, 25% coinsurance, $4,500 OOP max (already $1,200 of OOP spent this year). Compute (a) allowed amount, (b) patient share toward deductible, (c) patient share toward coinsurance, (d) total patient responsibility for THIS bill, (e) running OOP total after this bill, (f) one verification step you would take before paying.',
+            answerKey:
+              '(a) Allowed amount = 5,800 × (1 − 0.30) = 5,800 × 0.70 = $4,060. (b) Deductible remaining = 2,500 − 1,000 = $1,500; patient pays $1,500 toward deductible. (c) Remaining allowed after deductible: 4,060 − 1,500 = $2,560 subject to coinsurance; 25% × 2,560 = $640 coinsurance. (d) Total patient share for this bill = 1,500 + 640 = $2,140. (e) Running OOP after this bill = 1,200 (prior) + 2,140 (this) = $3,340 — under the $4,500 OOP max, so no cap kicks in. (f) Verification: request the EOB from the insurer and compare line-by-line to the bill; confirm any out-of-network charges; verify the 30% adjustment matches your plan\'s contracted rate. Strong answer separates the deductible portion from the coinsurance portion AND tracks running OOP toward the cap; weak answer lumps everything together and misses the cap-tracking insight.',
           },
           {
             type: 'pause_and_check',
@@ -885,6 +1012,30 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
         relatedLesson: '14.1',
         difficulty: 'medium',
       },
+      {
+        id: 'm14-q11',
+        question:
+          'A relative shows you their plan: $5,000 deductible / 20% coinsurance / $8,000 OOP max. They are about to need surgery costing $30,000 (allowed amount). State the maximum they will pay this year for the surgery, and one verification step before they sign.',
+        type: 'short_answer',
+        correctAnswer:
+          'Maximum patient share = OOP max $8,000 (deductible $5,000 + 20% × $25,000 = $5,000 + $5,000 = $10,000, capped at $8,000 OOP). Verification: confirm the surgeon, anaesthesiologist, and facility are all in-network — out-of-network providers at in-network facilities are a common surprise that bypasses the OOP max.',
+        explanation:
+          'OOP max caps in-network spending; out-of-network is the common gotcha that breaks the cap.',
+        relatedLesson: '14.3',
+        difficulty: 'hard',
+      },
+      {
+        id: 'm14-q12',
+        question:
+          'A patient receives a hospital bill claiming "patient responsibility = $4,200" for a procedure with $7,500 charges. The bill shows no insurance adjustment line. What is wrong, and what should the patient do?',
+        type: 'short_answer',
+        correctAnswer:
+          'A charges-to-patient bill with no insurance adjustment usually means the claim was not processed by insurance (rejected, missed, or filed under the wrong policy). Patient should: (1) call the insurer to confirm whether the claim was received and processed, (2) request the EOB, (3) ask the provider to resubmit if the insurer never received the claim. Do NOT pay before reconciling.',
+        explanation:
+          'Missing insurance adjustment is the #1 flag of an unprocessed claim. Always reconcile bill against EOB before paying.',
+        relatedLesson: '14.4',
+        difficulty: 'hard',
+      },
     ],
     moduleSummary:
       'You can do dose-by-weight and unit conversion at a numeracy level, compute BMI and target HR, model insurance, verify bills, run IV arithmetic, and reason about HSA tax savings.',
@@ -904,7 +1055,7 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
     moduleNumber: 15,
     slug: 'construction-trade-math',
     title: 'Construction and Trade Math',
-    durationMinutes: 165,
+    durationMinutes: 125,
     level: 'Intermediate',
     prerequisites: ['healthcare-medical-math'],
     safetyNote:
@@ -951,6 +1102,17 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
             eyebrow: 'Board feet',
             title: 'Lumber pricing unit',
             content: 'bf = (T × W × L_ft) ÷ 12. 2×10×12 = 20 bf at $4.50/bf = $90.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice — Multi-cut lumber problem with pricing',
+            title: 'Convert formats, sum cuts, compute board feet, total the order',
+            content:
+              'Goal: a small framing job needs five cuts. Compute the total length needed in two formats, total board feet, and the lumber bill at $4.50/bf.\n\nCut list:\nC1 — 2×4 × 8 ft: need 4 pieces.\nC2 — 2×4 × 10 ft: need 3 pieces.\nC3 — 2×6 × 12 ft: need 2 pieces.\nC4 — 2×8 × 14 ft: need 1 piece.\nC5 — 2×10 × 16 ft: need 1 piece.\n\nStep 1 — Total linear feet of each:\nC1: 4 × 8 = 32 ft.\nC2: 3 × 10 = 30 ft.\nC3: 2 × 12 = 24 ft.\nC4: 1 × 14 = 14 ft.\nC5: 1 × 16 = 16 ft.\nSum: 32 + 30 + 24 + 14 + 16 = 116 linear feet.\n\nStep 2 — Convert to board feet (bf = T × W × L_ft ÷ 12):\nC1: (2 × 4 × 8) ÷ 12 = 64 ÷ 12 = 5.33 bf per piece × 4 = 21.33 bf.\nC2: (2 × 4 × 10) ÷ 12 = 6.67 bf × 3 = 20.0 bf.\nC3: (2 × 6 × 12) ÷ 12 = 12.0 bf × 2 = 24.0 bf.\nC4: (2 × 8 × 14) ÷ 12 = 18.67 bf × 1 = 18.67 bf.\nC5: (2 × 10 × 16) ÷ 12 = 26.67 bf × 1 = 26.67 bf.\nTotal board feet: 21.33 + 20.0 + 24.0 + 18.67 + 26.67 = 110.67 bf → round up to 111 bf for ordering.\n\nStep 3 — Bill at $4.50/bf: 111 × 4.50 = $499.50. Add 8% sales tax: 499.50 × 0.08 = 39.96. Total: $539.46 → round to $540 for the quote.\n\nStep 4 — Add waste allowance for cutting losses (typical 10% on framing): 111 × 1.10 = 122.1 → order 123 bf. Revised material cost: 123 × 4.50 = $553.50 + 8% tax = $597.78 → round to $600 for the quote.\n\nReasonableness: the rough rule "linear feet × dimensional factor ÷ 12" gives board feet quickly. A 2×4 × 12 ft is 8 bf — memorise three or four of these and you can estimate any cut list in seconds. Always add waste BEFORE applying tax — waste affects the material order; tax applies to the final invoice.',
+            learnerTask:
+              'A deck job needs: 6 pieces of 2×6 × 10 ft (joists), 3 pieces of 2×8 × 12 ft (beams), 2 pieces of 4×4 × 8 ft (posts). Compute (a) total board feet, (b) cost at $4.75/bf, (c) cost with 10% waste allowance, (d) total with 7% sales tax on the waste-adjusted cost.',
+            answerKey:
+              '(a) 2×6×10 = 10 bf each × 6 = 60 bf. 2×8×12 = 16 bf each × 3 = 48 bf. 4×4×8 = 10.67 bf each × 2 = 21.33 bf. Total = 60 + 48 + 21.33 = 129.33 → round to 130 bf. (b) 130 × $4.75 = $617.50. (c) With 10% waste: 130 × 1.10 = 143 bf × $4.75 = $679.25. (d) Total with 7% tax: 679.25 × 1.07 = $726.80 → round to $727. Strong answer applies waste BEFORE tax (waste affects the material order; tax applies to the final invoice). Weak answer applies tax then waste, or skips waste entirely and short-orders the job.',
           },
           {
             type: 'pause_and_check',
@@ -1020,6 +1182,17 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
               '20×15×0.333 = 100 cu ft = 3.7 cu yd; +10% allowance ≈ 4.1 cu yd.',
           },
           {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice — Full kitchen remodel material take-off',
+            title: 'Floor + walls + concrete: end-to-end estimation',
+            content:
+              'Goal: estimate materials for a kitchen remodel from a single floor plan. Kitchen is 14 ft × 18 ft, ceiling height 9 ft. Two doorways (each 21 sq ft) and one window (15 sq ft) interrupt the walls. The plan adds a 6 ft × 3 ft kitchen island with a 4-inch concrete pad underneath.\n\nStep 1 — Floor area for tile.\nFloor: 14 × 18 = 252 sq ft.\n+ 10% waste for cuts and breakage: 252 × 1.10 = 277.2 → order 278 sq ft.\nAt $6.50/sq ft for mid-grade tile: 278 × 6.50 = $1,807.\n\nStep 2 — Wall area for paint.\nPerimeter: 2 × (14 + 18) = 64 ft.\nWall area: 64 × 9 = 576 sq ft.\nSubtract openings: 2 doorways × 21 + 1 window × 15 = 57 sq ft.\nNet paintable: 576 − 57 = 519 sq ft.\nCoverage at 350 sq ft per gallon, two coats: (519 × 2) ÷ 350 = 1,038 ÷ 350 = 2.97 gallons → buy 3 gallons.\nAt $42/gallon for mid-grade interior paint: 3 × 42 = $126.\n\nStep 3 — Concrete pad under the island.\nPad: 6 ft × 3 ft × (4/12) ft = 6 × 3 × 0.333 = 6 cu ft.\nConvert to cubic yards: 6 ÷ 27 = 0.222 cu yd.\n+ 10% waste: 0.222 × 1.10 = 0.244 cu yd → order 0.25 cu yd.\nAt $180/cu yd for ready-mix delivered (small-load surcharge applies): typically a $250 minimum delivery charge for sub-1 cu yd loads → budget $250 minimum, not $45.\n\nStep 4 — Total material estimate.\nTile: $1,807.\nPaint: $126.\nConcrete: $250 (delivery minimum).\nSum: $2,183 raw materials.\n\nStep 5 — Add labour, overhead, contingency.\nLabour 24 h × $55/hr = $1,320.\nOverhead 15% × labour = $198.\nSubtotal: 2,183 + 1,320 + 198 = $3,701.\nContingency 10% × subtotal = $370.\nTotal quote: ≈ $4,071 → round $4,100.\n\nReasonableness: tile is the largest line at 44% of materials; paint is small (3% of materials); concrete is a fixed-minimum gotcha. Real-world estimators always check delivery minimums BEFORE quoting — they trip up DIY estimators routinely.',
+            learnerTask:
+              'Estimate materials for a small bathroom remodel. Bathroom is 8 ft × 10 ft, ceiling 8 ft. One door (21 sq ft), one window (12 sq ft). Compute: (a) floor tile area + 10% waste, (b) paint coverage for two coats, (c) total material cost using tile $7/sq ft, paint $40/gal, and 5% sales tax.',
+            answerKey:
+              '(a) Floor: 8 × 10 = 80 sq ft × 1.10 = 88 sq ft to order. Tile cost: 88 × 7 = $616. (b) Wall area: perimeter 2×(8+10) = 36 ft × 8 ft height = 288 sq ft. Subtract openings: 21 + 12 = 33 sq ft → net 255 sq ft. Two coats: 510 sq ft ÷ 350 sq ft/gal = 1.46 → buy 2 gallons. Paint cost: 2 × 40 = $80. (c) Materials subtotal: 616 + 80 = $696. + 5% tax = 696 × 1.05 = $730.80. Strong answer rounds order quantities UP (88 sq ft tile, 2 gallons paint), applies waste BEFORE tax, and notes that only the materials are taxed (not labour). Weak answer skips waste or applies tax to labour.',
+          },
+          {
             type: 'pause_and_check',
             eyebrow: 'Pause and check',
             title: 'Estimate one material',
@@ -1058,58 +1231,98 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
         lessonNumber: '15.3',
         title: 'Pitch, Stairs, and Geometry',
         estimatedMinutes: 30,
-        learnerGoal: 'Compute roof pitch, lay out stairs, and use Pythagoras.',
+        learnerGoal:
+          'Compute roof pitch from rise and run, lay out a flight of stairs that matches the rise, and use Pythagoras to square layouts and size braces — always verifying against local code before cutting.',
         blocks: [
           {
             type: 'concept_explanation',
             eyebrow: 'Roof pitch',
             title: 'Rise over run',
-            content: '6:12 = 0.5 slope; arctan(0.5) ≈ 26.57°.',
-          },
-          {
-            type: 'worked_example',
-            eyebrow: 'Worked example',
-            title: 'Stair layout',
             content:
-              '108 in rise / 7 in target = 15.43 → 16 risers; actual 6.75. Treads 15. Run 150 in = 12.5 ft. Verify against code.',
+              'Roof pitch is expressed as rise:run, almost always with run = 12. A 6:12 pitch means the roof rises 6 in for every 12 in of horizontal run. The slope as a decimal = rise ÷ run = 6 ÷ 12 = 0.5. The pitch angle from horizontal = arctan(rise ÷ run) = arctan(0.5) ≈ 26.57°. A 4:12 is a low-slope roof (≈18.43°); 12:12 is a steep 45° roof.',
+          },
+          {
+            type: 'concept_explanation',
+            eyebrow: 'Stair geometry',
+            title: 'Risers and treads',
+            content:
+              'For a flight of stairs, total rise (floor-to-floor height) is divided into risers; each riser is a small step up. Number of treads = number of risers − 1. Common code targets: rise per riser ≈ 7 in (180 mm), tread depth ≈ 11 in (280 mm). The 2R + T ≈ 24–25 in rule and the R × T ≈ 75 in² rule are quick comfort checks. Always verify against your local code — values vary by jurisdiction.',
+          },
+          {
+            type: 'concept_explanation',
+            eyebrow: 'Pythagoras',
+            title: 'Squaring corners and sizing braces',
+            content:
+              'For a right triangle with legs a and b, the hypotenuse c satisfies a² + b² = c². The 3-4-5 rule (and its multiples like 6-8-10 and 9-12-15) is the carpenter\'s shortcut for squaring a foundation: measure 3 ft along one wall, 4 ft along the perpendicular wall, and the diagonal must read 5 ft for the corner to be square.',
           },
           {
             type: 'worked_example',
-            eyebrow: 'Worked example',
-            title: 'Pythagoras for braces',
-            content: '8² + 6² = 100; diag = 10 ft.',
+            eyebrow: 'Worked example 1 — Stair layout',
+            title: 'Floor-to-floor rise of 108 in',
+            content:
+              'Given: total rise = 108 in; target riser height ≈ 7 in.\n\nFormula: number of risers N = round(total rise ÷ target). Actual riser = total rise ÷ N. Treads = N − 1. Total run = treads × tread depth.\n\nEstimate: 108 ÷ 7 ≈ 15.4 — round up to 16 to keep risers under 7 in.\n\nSubstitute: actual riser = 108 ÷ 16 = 6.75 in. Treads = 16 − 1 = 15. With tread depth 10 in, total run = 15 × 10 = 150 in = 12 ft 6 in.\n\nAnswer: 16 risers at 6.75 in, 15 treads at 10 in, total run 12 ft 6 in.\n\nReasonableness: 2R + T = 2(6.75) + 10 = 23.5 in (within the 24–25 in target band, slightly tight). R × T = 6.75 × 10 = 67.5 in² (under 75 in² → consider 11 in tread). Verify against your local code before cutting stringers.',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 2 — Pythagoras brace',
+            title: 'Diagonal brace for an 8 ft × 6 ft frame',
+            content:
+              'Given: legs a = 8 ft, b = 6 ft.\n\nFormula: c = √(a² + b²).\n\nEstimate: 6-8-10 triple → c = 10 ft exactly. (The 3-4-5 family scaled by 2.)\n\nSubstitute: c = √(8² + 6²) = √(64 + 36).\n\nCalculate: 100 → c = √100 = 10 ft.\n\nAnswer: cut the brace 10 ft long.\n\nReasonableness: matches the 6-8-10 right-triangle triple exactly — no calc error possible. Use the same approach to square a foundation: 3 ft along one wall + 4 ft along the perpendicular wall must give 5 ft on the diagonal.',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 3 — Pitch and angle',
+            title: '6:12 pitch, what slope and angle?',
+            content:
+              'Given: rise:run = 6:12.\n\nFormula: slope = rise ÷ run; angle = arctan(slope).\n\nSubstitute: slope = 6 ÷ 12 = 0.5; angle = arctan(0.5).\n\nCalculate: angle ≈ 26.57°.\n\nAnswer: 6:12 pitch ≈ 0.5 slope ≈ 26.57° from horizontal.\n\nReasonableness: 12:12 = 45° (standard reference); 6:12 is half the rise so the angle should be roughly half — and it is, close to 26.6°. A 4:12 (slope 0.333) gives ≈18.4°. The relationship is non-linear — angles compress at low pitches and expand at steep pitches.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Lay out a smaller stair from rise alone',
+            content:
+              'Goal: a basement-to-main-floor rise of 96 in, target riser ≈ 7 in.\n\nStep 1 — Estimate: 96 ÷ 7 ≈ 13.7 — round to 14 risers.\nStep 2 — Actual riser: 96 ÷ 14 = 6.86 in.\nStep 3 — Treads: 14 − 1 = 13.\nStep 4 — With 10.5 in tread depth, total run = 13 × 10.5 = 136.5 in = 11 ft 4.5 in.\nStep 5 — Comfort checks: 2R + T = 2(6.86) + 10.5 = 24.22 in ✓; R × T = 6.86 × 10.5 = 72.0 in² (close to 75, acceptable). Step 6 — Verify against local building code before purchasing materials.',
+            learnerTask:
+              'Lay out a stair for a 110 in rise with a 7.25 in target riser and 11 in treads. Show every step and the comfort checks.',
+            answerKey:
+              'Number of risers: 110 ÷ 7.25 ≈ 15.17 → 15 risers. Actual riser: 110 ÷ 15 = 7.33 in (above 7.25 target — could try 16 risers: 110 ÷ 16 = 6.875 in, which is gentler). With 15 risers: treads = 14; total run = 14 × 11 = 154 in = 12 ft 10 in. Comfort: 2R + T = 2(7.33) + 11 = 25.66 (slightly over 24–25 band → tighten by going to 16 risers). With 16 risers, actual = 6.88 in, 2R + T = 24.75 ✓; R × T = 75.7 in² ✓. Final pick: 16 risers at 6.88 in is more comfortable than 15 at 7.33. Always verify against local code before cutting.',
           },
           {
             type: 'pause_and_check',
             eyebrow: 'Pause and check',
-            title: 'Stair check',
-            content: '96/7 = 13.7 → 14 risers; 6.86 in actual.',
+            title: 'Quick stair check',
+            content:
+              '96 ÷ 7 = 13.71 → 14 risers; actual 96 ÷ 14 = 6.86 in. Treads = 13. With 11 in treads, run = 143 in = 11 ft 11 in. 2R + T = 24.72 ✓.',
           },
           {
             type: 'common_mistakes',
             eyebrow: 'Watch for these',
             title: 'Geometry traps',
-            content: 'Confusing pitch with angle. Risers count one more than treads.',
+            content:
+              'Confusing pitch (rise:run) with the angle in degrees; counting treads = risers (treads are always risers − 1); skipping the local-code check before cutting stringers; using the wrong unit when squaring legs (mixing inches and feet); rounding pitch decimals before computing the angle.',
           },
           {
             type: 'real_world_application',
             eyebrow: 'Where this shows up',
             title: 'Roofing, decks, framing',
-            content: 'Squaring foundations uses 3-4-5.',
+            content:
+              'Roofers quote pitches when ordering shingles (steeper roofs use more material per ground square foot). Deck builders size diagonal braces with Pythagoras. Framers square foundations with 3-4-5. Stair builders derive riser/tread layouts from total rise.',
           },
           {
             type: 'practice_task',
             eyebrow: 'Practice task',
-            title: 'Three reps',
+            title: 'Three reps with one verification each',
             content:
-              '(1) 8:12 pitch + angle. (2) 120 in rise, 7.5 in target. (3) Diag of 12×9.',
-            answerKey: '0.667; ≈33.69°; 16 risers @ 7.5; 15 ft.',
+              '(1) Compute slope and angle of an 8:12 pitch.\n(2) Lay out stairs for a 120 in rise with a 7.5 in target riser and 10.5 in treads — number of risers, actual rise, treads, run, comfort checks.\n(3) Compute the diagonal of a 12 ft × 9 ft layout to size a brace.\n\nFor each, write the verification step you would do before committing materials.',
+            answerKey:
+              '(1) Slope = 8 ÷ 12 = 0.667; angle = arctan(0.667) ≈ 33.69°. Verify: 12:12 = 45° → 8:12 should be less steep, and 33.69° is less than 45° ✓.\n(2) 120 ÷ 7.5 = 16 risers exactly; actual rise = 120 ÷ 16 = 7.5 in; treads = 15; run = 15 × 10.5 = 157.5 in = 13 ft 1.5 in. 2R + T = 25.5 in (slight over — consider 11 in tread for 25.0 ✓); R × T = 78.75 in² ✓. Verify against local code.\n(3) c = √(12² + 9²) = √(144 + 81) = √225 = 15 ft. Verify: 9-12-15 = 3-4-5 × 3 ✓.',
           },
           {
             type: 'summary',
             eyebrow: 'Lesson 15.3 summary',
             title: 'Three small geometries',
-            content: 'Verify against local code before building.',
+            content:
+              'Pitch is rise over run; stair layout starts from total rise; Pythagoras squares and sizes diagonals. Always verify against local code before cutting.',
           },
         ],
       },
@@ -1320,6 +1533,30 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
         relatedLesson: '15.4',
         difficulty: 'hard',
       },
+      {
+        id: 'm15-q11',
+        question:
+          'A homeowner asks for a quote on tiling a 200 sq ft bathroom floor. The contractor quotes "$8/sq ft installed" and says the total is "exactly $1,600." Name three things missing from this quote that you would ask about.',
+        type: 'short_answer',
+        correctAnswer:
+          'Waste allowance (typical 10% on tile = $160 extra material), demolition / prep / removal of old flooring, and contingency for sub-floor surprises (rotted plywood, uneven slab, plumbing notches). A quote with no waste, no prep line, and no contingency is incomplete.',
+        explanation:
+          'Honest trade quotes always include waste, demolition or prep, and contingency for hidden conditions. A "round-number total" with none of these is a red flag.',
+        relatedLesson: '15.4',
+        difficulty: 'hard',
+      },
+      {
+        id: 'm15-q12',
+        question:
+          'A learner computes a stair layout with 14 risers at 7.5 in each. The total floor-to-floor rise is supposed to be 110 in. Verify the math, identify the error, and state what an acceptable layout would look like for a 110 in rise.',
+        type: 'short_answer',
+        correctAnswer:
+          '14 × 7.5 = 105 in, not 110 — a 5-inch gap. The riser height does not divide the stated rise evenly. Acceptable layouts for 110 in rise: 15 risers at 7.33 in (close to comfort target) or 16 risers at 6.875 in (gentler). Cutting 14 risers at 7.5 in for a 110 in rise leaves a 5-inch gap — code violation and trip hazard. Always verify against local code before cutting stringers.',
+        explanation:
+          'Stair rise must divide evenly across risers; never cut a stringer that does not match the actual measured floor-to-floor rise.',
+        relatedLesson: '15.3',
+        difficulty: 'hard',
+      },
     ],
     moduleSummary:
       'You can convert and add trade measurements, compute board feet, estimate area/volume with waste, lay out roofs and stairs at numeracy level, read blueprint scale, and produce a small-project quote.',
@@ -1341,7 +1578,7 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
     moduleNumber: 16,
     slug: 'final-integration-mastery',
     title: 'Final Integration and Mastery',
-    durationMinutes: 210,
+    durationMinutes: 190,
     level: 'Intermediate',
     prerequisites: ['construction-trade-math'],
     safetyNote:
@@ -1368,53 +1605,84 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
         lessonNumber: '16.1',
         title: 'Integrated Problem-Solving Framework',
         estimatedMinutes: 30,
-        learnerGoal: 'Apply a 6-step process integrating skills.',
+        learnerGoal:
+          'Apply a 6-step problem-solving framework that integrates skills from at least four prior modules and produces a reviewable artifact: question, formulas, results, and caveats.',
         blocks: [
           {
             type: 'concept_explanation',
             eyebrow: 'The 6 steps',
             title: 'Understand → identify → plan → execute → verify → communicate',
             content:
-              '1) Understand. 2) Identify modules. 3) Plan. 4) Execute. 5) Verify. 6) Communicate (Q/F/R/C).',
+              'Step 1 — Understand: state the question in one sentence. What decision will the math support? Step 2 — Identify modules: which 3–5 prior modules carry the relevant formulas (number sense, percent, ratios, units, business math, finance, data, time, project, advanced finance, real estate, healthcare, trade)? Step 3 — Plan: list the inputs you need, the formulas you will apply, and the order. Step 4 — Execute: compute each step on paper or in a spreadsheet so the work is auditable. Step 5 — Verify: run a reasonableness estimate, then compare against your calculated value within ~10%. Step 6 — Communicate: deliver Q/F/R/C — Question, Formulas, Results, Caveats — in plain language.',
+          },
+          {
+            type: 'concept_explanation',
+            eyebrow: 'What makes a strong artifact',
+            title: 'Six things every reviewer expects',
+            content:
+              'A strong learner artifact: (1) names the question precisely; (2) lists named inputs with sources; (3) shows formulas, not just answers; (4) reports the calculation in steps a reviewer can audit; (5) attaches a sensitivity sentence — "if input X falls 20%, the answer falls Y%"; (6) ends with a short list of items that need professional verification before action (tax advisor, lender, licensed trade, clinician, attorney, etc.).',
           },
           {
             type: 'worked_example',
-            eyebrow: 'Worked example',
-            title: 'A small expansion decision',
+            eyebrow: 'Worked example 1 — Coffee shop expansion',
+            title: 'Should the owner spend $75k on expansion?',
             content:
-              'Coffee shop: $250k revenue, 15% margin. $75k expansion → +40% revenue, +$50k costs. Payback 1.5 yr; 5-yr NPV ≈ $114.5k. Recommend expand; note revenue assumption.',
+              'Step 1 — Understand: should the owner add seating and a second espresso machine for $75,000?\n\nStep 2 — Identify modules: 6 (revenue/cost), 11 (cash flow), 12 (TVM/NPV), 9 (sensitivity).\n\nStep 3 — Plan: project incremental cash flow over 5 years; compute payback and NPV; sensitivity-test demand.\n\nStep 4 — Execute. Current revenue $250k. Expansion adds 40% revenue → +$100,000/yr; incremental operating cost +$50,000/yr (extra rent + labour + supplies). Incremental annual cash flow = +$100,000 − $50,000 = +$50,000/yr. Payback = $75,000 ÷ $50,000 = 1.5 years. 5-year NPV at 12%: PV factor for a 5-yr annuity at 12% = (1 − 1.12^(−5)) ÷ 0.12 = 3.6048; PV of inflows = $50,000 × 3.6048 = $180,240; NPV = $180,240 − $75,000 = $105,240. (A first-year ramp adjustment to ~80% of full uplift trims year-1 cash flow to $40k and pulls NPV down to ≈$95k — still strongly positive.)\n\nStep 5 — Verify: payback under 2 years and NPV strongly positive both support the same decision — accept.\n\nStep 6 — Communicate (Q/F/R/C): Q "Should I spend $75k on expansion?" F "5-year NPV at 12% discount; payback = upfront ÷ annual benefit." R "NPV ≈ +$105k (≈+$95k after first-year ramp); payback ≈ 1.5 yr." C "Hinges on +40% revenue assumption; demand drop to +20% would still justify but with thinner margin — verify with sales-history trend before committing."',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 2 — Personal car decision',
+            title: 'Lease vs buy for a 4-year horizon',
+            content:
+              'Step 1 — Understand: lease at $389/mo for 36 months vs buy at $32,000 with $4,000 down, 60-month loan at 6%, then sell at month 48.\n\nStep 2 — Modules: 5 (loan math), 12 (TVM, lease vs buy), 9 (sensitivity to resale).\n\nStep 3 — Plan: total 4-year cash out for each path; resale value adjustment.\n\nStep 4 — Execute. Lease: 36 × 389 + new lease/buy at month 36 (assume continue at $389): 48 × 389 = $18,672 over 4 years. Buy: $4,000 down + monthly payment on $28,000 at 6%/60. Monthly = 28,000 × 0.06/12 ÷ (1 − 1.005^-60) = 28,000 × 0.005 ÷ (1 − 0.7414) = 140 ÷ 0.2586 = $541.46. 48 months: $25,990. Plus down: $29,990. Estimate resale at month 48 ≈ $14,000. Net buy cash = 29,990 − 14,000 = $15,990 (excluding loan balance still owing — refine in spreadsheet).\n\nStep 5 — Verify: buy ≈ $16k vs lease ≈ $18.7k for 4 years → buy looks cheaper if resale assumption holds.\n\nStep 6 — Communicate Q/F/R/C: Q "Lease or buy for 4 years?" F "Cash out comparison + resale adjustment." R "Buy ≈ $16k net; Lease ≈ $18.7k." C "Sensitive to resale value; verify with depreciation data and tax treatment if business use."',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Walk the framework on a real decision in 5 minutes',
+            content:
+              'Pick a real decision facing you (rent vs buy, freelance rate, project timeline, equipment purchase). Time yourself.\n\nMinute 1 — Understand: write the question in one sentence, names and units included.\nMinute 2 — Identify modules: list 3–5 prior modules that carry the formulas you need.\nMinute 3 — Plan: list inputs (with sources) and formulas in execution order.\nMinute 4 — Execute: compute the headline number on paper or quickly in a spreadsheet.\nMinute 5 — Verify and communicate: rule-of-thumb estimate the answer; write four sentences (Q/F/R/C).\n\nIf you cannot do this in 5 minutes for a small decision, the question is too big — split it into a smaller scoped sub-question first.',
+            learnerTask:
+              'Run all 6 steps on a real decision and write four Q/F/R/C sentences. Length goal: 80–120 words total.',
+            answerKey:
+              'Sample done well (rent vs buy, 5 yr): Q "Is buying a $300k home better than renting at $1,800/mo over 5 years?" F "Total cash out: own = down + 60×P&I + taxes + insurance + maintenance − resale. Rent = 60 × monthly + renter\'s insurance." R "Own ≈ $185k cash out (incl. resale at $325k after 5 yr). Rent = $108k cash out." C "Hinges on resale assumption (+1.6%/yr) and 5-yr time-on-property; below 3 yr, transaction costs flip the answer. Verify property tax rate, HOA, and insurance with local quotes; verify resale band with comparable home sales." A weak answer skips the modules used or the verify step.',
           },
           {
             type: 'pause_and_check',
             eyebrow: 'Pause and check',
-            title: 'Run framework on your own decision',
-            content: 'Walk through 6 steps in 5 minutes for a real decision.',
+            title: 'Six-step rhythm',
+            content:
+              'You should be able to recite the six steps without looking: understand, identify, plan, execute, verify, communicate. If any step feels skippable today, that is the step that will fail your real-world artifact later.',
           },
           {
             type: 'common_mistakes',
             eyebrow: 'Watch for these',
             title: 'Framework traps',
-            content: 'Skipping understanding and solving the wrong problem.',
+            content:
+              'Skipping the understanding step and solving the wrong problem; using only one module when the decision spans several; treating an optimistic case as the expected case; reporting only the answer with no caveats; forgetting to name what still needs professional verification.',
           },
           {
             type: 'real_world_application',
             eyebrow: 'Where this shows up',
             title: 'Memos, board papers, contractor quotes',
-            content: 'Every professional document worth reading.',
+            content:
+              'Every professional document worth reading follows the same shape: question, method, results, caveats. The capstone artifact (lessons 16.4) and the integrated scenarios (16.2 and 16.3) are practice runs of this exact pattern.',
           },
           {
             type: 'practice_task',
             eyebrow: 'Practice task',
-            title: 'Frame a decision',
-            content: 'Pick a decision; write each step in one sentence.',
+            title: 'Frame two decisions',
+            content:
+              'Pick two decisions: one personal (e.g. car, lease, savings goal) and one work-related (e.g. price change, hire, equipment). For each, write the six steps in one sentence each, plus one caveat.',
             answerKey:
-              'Lesson expansion pattern: (1) Understand café capacity constraint. (2) Modules: revenue/cost (6), cash timing (11–12), risk (9). (3) Plan scenarios A/B. (4) Execute NPV sketch. (5) Verify against break-even cups/day. (6) Communicate Q/F/R/C in four sentences.',
+              'Personal example (savings): (1) Understand: "Can I have $20k saved in 5 yr?" (2) Modules: 5 (budgeting), 12 (TVM annuity). (3) Plan: needed monthly = FV target ÷ annuity factor at expected return. (4) Execute: at 5%, 5 yr → factor 67.5 (months); needed ≈ 20,000/67.5 ≈ $296/mo. (5) Verify: 5 yr × 12 × 296 = 17,760 contributions + ≈$2,240 growth = 20k ✓. (6) Communicate: Q/F/R/C four sentences. Caveat: assumes 5% steady return; if real return is 3%, target rises to ~$310/mo.\n\nWork example (price change): (1) "Should I raise prices 8% if I expect 3% volume loss?" (2) Modules 6, 9. (3) Plan: revenue impact = (1.08)(0.97) − 1 = +4.76%. (4) Execute on actual numbers. (5) Verify with break-even sensitivity. (6) Communicate. Caveat: volume loss is an estimate — track and revise after one quarter.',
           },
           {
             type: 'summary',
             eyebrow: 'Lesson 16.1 summary',
             title: 'A repeatable method',
-            content: 'Six steps; three sentences per step.',
+            content:
+              'Six steps; three sentences per step. The framework is the spine of the capstone artifact. Practice it now on small decisions so the rhythm is automatic when the capstone is due.',
           },
         ],
       },
@@ -1426,36 +1694,35 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
         blocks: [
           {
             type: 'worked_example',
-            eyebrow: 'Worked example',
-            title: 'Launching a new product line',
+            eyebrow: 'Worked example 1 — Launch a new product line',
+            title: 'Six modules combined into one decision',
             content:
-              'Dev $150k; equipment $200k (5 yr SL); WC $50k. Variable $50/u; fixed $220k/yr. Demand 15,000/yr; price $89.',
+              'Given: development $150,000; equipment $200,000 (5-yr straight-line depreciation); working capital $50,000; variable cost $50/unit; fixed cost $220,000/yr; expected demand 15,000 units/yr; price $89/unit.\n\nStep 1 — Initial investment (Y0): 150,000 + 200,000 + 50,000 = $400,000.\n\nStep 2 — Contribution per unit (Module 6): 89 − 50 = $39/unit.\n\nStep 3 — Break-even units: 220,000 ÷ 39 = 5,641 units. Break-even revenue: 5,641 × 89 = $502,049.\n\nStep 4 — At 15,000 units expected:\nRevenue: 15,000 × 89 = $1,335,000.\nVariable cost: 15,000 × 50 = $750,000.\nContribution: 1,335,000 − 750,000 = $585,000.\nMinus fixed: 585,000 − 220,000 = $365,000 operating profit.\n\nStep 5 — Margin of safety: (15,000 − 5,641) ÷ 15,000 = 62%. Strong cushion.\n\nStep 6 — Annual cash flow: operating profit + depreciation = 365,000 + 40,000 (equipment 200k/5) = $405,000/yr.\n\nReasonableness: NPV at 12% over 5 years (Module 12): PV factor = 3.6048; PV inflows = 405,000 × 3.6048 + 70,000 (year 5 WC + salvage recovery) ÷ 1.12^5 = 1,459,944 + 39,725 = ~$1,500,000. NPV = 1,500,000 − 400,000 = ~$1,100,000. Strongly positive.',
           },
           {
-            type: 'concept_explanation',
-            eyebrow: 'Build break-even',
-            title: 'Module 6',
+            type: 'worked_example',
+            eyebrow: 'Worked example 2 — Sensitivity test',
+            title: 'What if demand drops to 10,000 units?',
             content:
-              'Contribution $39. Break-even ≈ 5,641 units / $502k. At 15k units: profit $365k. MoS 62%.',
+              'Given: same product launch, but demand drops to 10,000 units/yr (33% drop).\n\nStep 1 — Recompute revenue: 10,000 × 89 = $890,000.\nStep 2 — Variable cost: 10,000 × 50 = $500,000.\nStep 3 — Contribution: 890,000 − 500,000 = $390,000.\nStep 4 — Operating profit: 390,000 − 220,000 = $170,000.\nStep 5 — Annual cash flow: 170,000 + 40,000 dep = $210,000/yr.\nStep 6 — NPV at 12% × 5 yr: 210,000 × 3.6048 + 39,725 (recovery) − 400,000 = 757,008 + 39,725 − 400,000 = ~$397,000.\n\nAnswer: NPV drops from $1.1M to $397k — still positive, but margin of safety thins. At 8,000 units, NPV would approach zero.\n\nMargin of safety at 10k units: (10,000 − 5,641) ÷ 10,000 = 43.6%. Still cushioned, but less so.\n\nReasonableness: a 33% demand miss cuts NPV by 64% — the leverage of fixed cost amplifies demand variance. This is why expected demand cannot be the optimistic case; it must be the median expectation, with separate stress test at 70% of plan.',
           },
           {
-            type: 'concept_explanation',
-            eyebrow: 'Cash flow and NPV',
-            title: 'Modules 11 and 12',
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Walk a different small-business scenario through the framework',
             content:
-              'Y0 −$400k. Y1–5 $405k (op profit + dep). Y5 +$70k recovery. NPV at 12% ≈ +$1.1M.',
-          },
-          {
-            type: 'concept_explanation',
-            eyebrow: 'Sensitivity',
-            title: 'Lower demand',
-            content: '12,000 units → cash flow $288k/yr; NPV smaller but still positive.',
+              'Goal: a coffee shop owner is considering a $75,000 expansion. Project: add 15 seats and a second espresso machine. Expected uplift: +40% revenue (current $250k/yr); incremental costs $50k/yr (rent + extra labour + supplies).\n\nStep 1 — Understand: should they invest $75k?\n\nStep 2 — Identify modules: 6 (revenue/cost), 11 (cash flow), 12 (TVM/NPV), 9 (sensitivity).\n\nStep 3 — Plan: project incremental cash flow over 5 years; compute payback and NPV; sensitivity test demand.\n\nStep 4 — Execute:\nIncremental revenue: 250,000 × 0.40 = $100,000/yr.\nIncremental costs: $50,000/yr.\nIncremental operating profit: 100,000 − 50,000 = $50,000/yr.\nPayback: 75,000 ÷ 50,000 = 1.5 years.\n5-yr NPV at 12%: 50,000 × 3.6048 = $180,240; minus 75,000 = $105,240.\n\nStep 5 — Sensitivity (50% of expected demand uplift, +20% revenue):\nIncremental revenue: $50,000.\nIncremental profit: 50,000 − 50,000 = $0.\nNPV: −$75,000 (loss of investment).\nDecision flips. Optimistic case wins; pessimistic case loses badly.\n\nStep 6 — Communicate Q/F/R/C:\nQ: Should we spend $75k on expansion?\nF: At expected +40% revenue, NPV ≈ +$105k, payback 1.5 yr. At +20% revenue, NPV is −$75k.\nR: Proceed only if customer-traffic data shows ≥30% headroom; otherwise hold.\nC: Demand assumption is the dominant risk. Verify with foot-traffic data before committing.\n\nReasonableness: project NPV at expected case is positive but the sensitivity flip warns that demand uplift is the critical assumption.',
+            learnerTask:
+              'A bakery considers $25,000 to add online ordering. Expected uplift: 25 extra orders/day × $12 average × 350 days = $105,000/yr revenue; incremental costs $30,000/yr (delivery commissions + packaging). Compute incremental profit, payback, and rough 5-yr NPV at 10%. State a sensitivity caveat.',
+            answerKey:
+              'Incremental profit: 105,000 − 30,000 = $75,000/yr. Payback: 25,000 / 75,000 = 0.33 years (4 months). NPV at 10% × 5 yr: PV factor 3.7908; 75,000 × 3.7908 = $284,310; minus 25,000 = $259,310. Sensitivity: at 15 extra orders/day (40% lower), revenue drops to $63,000; profit = 63,000 − 30,000 = $33,000; NPV = 33,000 × 3.7908 − 25,000 = $100,096. Still strongly positive — robust decision. Caveat: assumes online demand grows independently of in-store; if it cannibalises (replaces 10 in-store orders/day), uplift drops to net 15 orders, weakening the case. Verify with a 30-day pilot.',
           },
           {
             type: 'pause_and_check',
             eyebrow: 'Pause and check',
             title: 'Weakest assumption?',
-            content: 'Demand at 15,000.',
+            content:
+              'Demand at 15,000 units is the weakest assumption — it depends on market acceptance, pricing, and competition. Stress-test by recomputing at 12k, 10k, and 8k units; if NPV stays positive at 70% of expected demand, the decision is robust; if it flips, the call is too sensitive to demand to commit yet.',
           },
           {
             type: 'common_mistakes',
@@ -1493,37 +1760,56 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
         blocks: [
           {
             type: 'worked_example',
-            eyebrow: 'Worked example',
-            title: "A 30-year-old's plan",
+            eyebrow: 'Worked example 1 — A 30-year-old\'s plan',
+            title: 'Budget + debt + housing as one decision',
             content:
-              '$4,000/mo net. Rent $1,400. Card $5,000 at 18%. Considering $300k home.',
+              'Given: $4,000/mo net income; rent $1,400/mo; current credit card balance $5,000 at 18% APR; emergency fund $3,000; considering buying a $300,000 home.\n\nStep 1 — Modules to integrate: 5 (budget), 7 (loan/debt math), 12 (TVM), 13 (mortgage + affordability).\n\nStep 2 — Current monthly cash flow: 4,000 − 1,400 (rent) − 350 (utilities & food est.) − 200 (transport) − 100 (card minimum) − 100 (savings) = $1,850/mo discretionary. Healthy.\n\nStep 3 — Debt payoff acceleration: pay $400/mo to card instead of $100. Time to payoff: ~14 months; total interest paid ≈ $580 vs minimum-only ~$2,500 over many years.\n\nStep 4 — Affordability for home: 28% rule on $4,000 net = $1,120/mo housing. 36% rule including all debt = $1,440/mo. With current card, capacity is constrained.\n\nStep 5 — Mortgage on $300k with 20% down ($60k), 6.5%/30 yr: P&I = 1,517; plus tax 300, insurance 125, HOA 0–200 = PITI $1,942–$2,142. Far above the 28% guideline.\n\nReasonableness: cannot afford home today. Card debt + below-target emergency fund + insufficient down payment = three blockers. Sequence matters.',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 2 — 24-month plan',
+            title: 'Sequence the priorities to reach the home goal',
+            content:
+              'Given: same person; goal to be home-ready in 24 months.\n\nMonth 0–16 — Pay off card aggressively at $400/mo. Reduces interest exposure; clears the 36% DTI blocker.\n\nMonth 0–24 — Build emergency fund to $12,000 (3-mo expenses): contribute $375/mo from ex-card-payment cash flow once card cleared. After 16 mo of $400/mo to card + 8 mo of $375/mo to savings, fund grows by 16×0 (committed to card) + 8×400 + 8×375 = 6,200 from rerouted card payment (months 17-24). Plus initial $3,000 = $9,200 emergency fund. Short of $12k goal — extend timeline 4 more months to month 28.\n\nMonth 0–24 — Down-payment savings: budget $300/mo from existing discretionary. 24 × 300 = $7,200. With initial savings + employer bonuses, target $30,000 (10% down on $300k) is reachable in ~30 months.\n\nMonth 30 outlook: emergency fund $12k + down-payment $30k = $42k cash. Home becomes financially supportable IF income holds.\n\nReasonableness: the realistic path takes ~2.5 years, not "today." Anyone offering a "home now with 5% down and PMI" path is increasing risk for the buyer.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Run your own integration on a real personal goal',
+            content:
+              'Goal: pick a real personal financial goal (debt payoff, home, savings target, retirement, big purchase). Walk all six framework steps.\n\nStep 1 — Understand: state goal in one sentence with timeline and dollar figure.\n\nStep 2 — Identify modules: 5 (budget), 7/12 (debt/TVM), 13 (mortgage if applicable), 12.2 (savings annuity), 14.3 (insurance if relevant).\n\nStep 3 — Plan: list current cash flows, current debt, current savings, expected return rate.\n\nStep 4 — Execute: compute monthly contribution needed, time to goal at expected return, sensitivity at 50% of expected savings rate.\n\nStep 5 — Verify: rule-of-thumb estimate; does the answer feel right? At 5% return, money doubles every 14 years (rule of 72: 72/5).\n\nStep 6 — Communicate Q/F/R/C and a caveat list.\n\nWhat changes the answer the most: income shocks, market returns, unexpected expenses. Plan for at least one. Verify rates and tax assumptions with a financial professional before committing major moves.',
+            learnerTask:
+              'A 35-year-old earning $5,500/mo net, no debt, $8k savings, wants to retire at 65 with $1M. Compute monthly investment needed at 7% annual return. State whether the plan is realistic given remaining cash flow after $3,500 in expenses.',
+            answerKey:
+              'Annuity FV formula: $1M = PMT × ((1.07/12)^360 − 1) ÷ (0.07/12). Adjusting: monthly r = 0.005833; n = 360. FV factor = ((1.005833)^360 − 1)/0.005833 = (8.1163 − 1)/0.005833 = 1,219.97. Required PMT = 1,000,000 / 1,219.97 = $819.69/mo. Discretionary cash: 5,500 − 3,500 = $2,000/mo. $820/mo is 41% of discretionary — feasible but tight. Verdict: realistic if discipline holds and no income shocks. Caveat: 7% real return is optimistic; at 5% real, required PMT rises to $1,202/mo (60% of discretionary — tight). Strong answer tests both return assumptions; weak answer reports only the 7% case.',
           },
           {
             type: 'concept_explanation',
             eyebrow: 'Budget and debt',
             title: 'Modules 5 and 7',
             content:
-              'Card payoff at $400/mo: ~16 mo, ~$675 interest.',
+              'Personal budget always comes first: monthly income minus fixed expenses minus debt service equals discretionary cash. High-interest debt (>10% APR) is paid down before any savings beyond a small emergency fund. Card payoff at $400/mo on a $5,000 balance at 18% APR clears in ~14 months with ~$580 in total interest — versus $2,500+ over many years at minimum payments.',
           },
           {
             type: 'concept_explanation',
             eyebrow: 'Home purchase',
-            title: 'Module 13',
+            title: 'Module 13 + affordability rules',
             content:
-              '$300k, 20% down, 6.5%/30 yr → P&I $1,517 + tax $300 + ins $125 + (HOA 0–200) → PITI $1,942–$2,142. 28% on $4,000 net ≈ $1,400. Not yet supported.',
+              'Home purchase math: $300k home with 20% down, 6.5% APR, 30-yr mortgage → P&I $1,517 + property tax $300 + homeowner\'s insurance $125 + HOA $0–200 → PITI $1,942–$2,142/mo. Affordability rule: 28% of net income for housing → $1,120 on $4,000 net. The PITI exceeds capacity, so home is not currently supportable. Plan to clear other debt + build down payment first.',
           },
           {
             type: 'concept_explanation',
             eyebrow: 'The honest call',
             title: 'Recommend with evidence',
             content:
-              'Prioritise card payoff and emergency fund. Continue renting 18–24 months. Verify rate and tax.',
+              'Recommendation must match the math: prioritise card payoff (~16 mo at $400/mo); rebuild emergency fund to 3 months of expenses (~$12k); save the $30k+ down payment; revisit home purchase in 24-30 months. Verify mortgage rate and property tax with a lender; verify income tax effects with a tax professional before signing.',
           },
           {
             type: 'pause_and_check',
             eyebrow: 'Pause and check',
             title: 'Walk your own version',
-            content: 'Apply the flow to your numbers.',
+            content:
+              'Apply the same flow to your real numbers. The math will tell you how long the plan takes; the discipline of writing it down is what makes it actually happen.',
           },
           {
             type: 'common_mistakes',
@@ -1543,7 +1829,7 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
             title: 'Build your own integration',
             content: 'State recommendation with caveats.',
             answerKey:
-              'Lesson honest call: pay card $5k @18% aggressively ($400/mo clears ≈16 mo, ~$675 interest) before maxing housing; PITI on $300k with 20% down ≈$1,942–$2,142 vs 28% of $4k net ($1,120) — wait until debt cleared and emergency fund built; cite rate/tax verification with a lender and tax pro.',
+              'Lesson honest call: pay card $5k @18% aggressively ($400/mo clears ≈14 mo, ~$580 interest) before maxing housing; PITI on $300k with 20% down ≈$1,942–$2,142 vs 28% of $4k net ($1,120) — wait until debt cleared and emergency fund built; cite rate/tax verification with a lender and tax pro.',
           },
           {
             type: 'summary',
@@ -1569,10 +1855,17 @@ export const PRACTICAL_MATH_MODULES_13_16: StandaloneCourseModule[] = [
           },
           {
             type: 'worked_example',
-            eyebrow: 'Worked example',
-            title: 'Mini household budget (numbers only)',
+            eyebrow: 'Worked example 1 — Mini household budget',
+            title: 'A skeleton capstone',
             content:
-              'Given: net $4,000/mo; rent $1,400; utilities $220; groceries $600; transport $280; debt payment $350.\n\nFormula: discretionary = net − fixed sum.\n\nSubstitute: fixed = 1,400 + 220 + 600 + 280 + 350 = 2,850.\n\nCalculate: 4,000 − 2,850 = 1,150.\n\nAnswer: $1,150/mo discretionary before savings goals.\n\nReasonableness: fixed is a bit under 3/4 of net — plausible; if discretionary were negative, the budget would be infeasible.',
+              'Given: net income $4,000/mo; fixed expenses — rent $1,400; utilities $220; groceries $600; transport $280; debt payment $350.\n\nFormula: discretionary = net − fixed sum.\n\nFixed total: 1,400 + 220 + 600 + 280 + 350 = $2,850.\n\nCalculate: 4,000 − 2,850 = $1,150/mo discretionary.\n\nAnswer: $1,150 discretionary before savings goals.\n\nReasonableness: fixed expenses are 71% of net (2,850 / 4,000). Healthy households target ≤70%; this is just at the boundary. If a savings rate of 20% is the goal, that\'s $800/mo to savings, leaving $350 for everything else — workable but tight.\n\nCapstone integration angle: this single budget calculation hits Modules 5 (budgeting), 11 (cash flow over time if extended to 12 months), and 12 (TVM if savings accumulate at a rate). Naming the modules used is part of the capstone artifact.',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 2 — Small-business pricing capstone',
+            title: 'A four-module capstone walkthrough',
+            content:
+              'Given: a freelancer wants to set their hourly rate. Inputs: target annual income $80,000; expected billable hours 25/week × 48 weeks = 1,200 hrs/yr; business costs $12,000/yr (software, insurance, taxes); self-employment tax 15.3% on net SE income.\n\nStep 1 — Modules used: 6 (revenue/cost), 8 (productivity/utilisation), 5 (taxes & take-home), 12 (TVM if planning savings).\n\nStep 2 — Required gross revenue: 80,000 (target take-home) ÷ (1 − 0.153 SE tax) = 80,000 ÷ 0.847 = $94,452 gross. Plus business costs $12,000 = $106,452 total revenue needed.\n\nStep 3 — Hourly rate: 106,452 ÷ 1,200 hrs = $88.71/hr → round to $90/hr.\n\nStep 4 — Sensitivity: if billable drops to 1,000 hrs (low-utilisation year), required rate rises to 106,452 / 1,000 = $107/hr. If costs rise to $18,000, rate rises to $103/hr at 1,200 hrs. Recommend $95/hr to build cushion.\n\nStep 5 — Reasonableness: $95/hr × 1,200 = $114,000 gross. After SE tax 15.3% × ($114,000 − $12,000 deductions) = ~$15.6k tax; take-home ~$86k — slightly above $80k target, robust to small variance.\n\nCapstone caveat: real billable utilisation often runs lower than planned in year 1 (60–70% of plan). Verify rate vs market with 2–3 competitor quotes; verify tax assumptions with a CPA who handles freelancers.',
           },
           {
             type: 'concept_explanation',

@@ -56,50 +56,82 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
           },
           {
             type: 'worked_example',
-            eyebrow: 'Worked example',
+            eyebrow: 'Worked example 1',
             title: 'Subtotal check (two items)',
             content:
-              'Given: KES 480 and KES 720.\n\nFormula: total T = A + B.\n\nSubstitute: T = 480 + 720.\n\nCalculate: T = 1,200.\n\nAnswer: wallet KES 1,250 is enough.\n\nReasonableness: 500 + 700 = 1,200 (rounded) — matches.',
+              'Given: two grocery items at KES 480 and KES 720.\n\nFormula: total T = A + B.\n\nEstimate: round to nearest 100 → 500 + 700 = 1,200. Final answer should land near 1,200.\n\nSubstitute: T = 480 + 720.\n\nCalculate: T = 1,200.\n\nAnswer: T = KES 1,200; a wallet with KES 1,250 is enough.\n\nReasonableness check: estimate 1,200 matches the calculated 1,200 exactly — confidence is high. If the calculator had shown 12,000, the estimate would have caught a missing decimal or extra zero.',
             examples: [
-              'Mental: grocery running totals, tips.',
+              'Mental: grocery running totals, tips, change owed.',
               'Written + calculator: invoices with tax lines.',
             ],
           },
           {
-            type: 'pause_and_check',
-            eyebrow: 'Try it',
-            title: 'Estimate then calculate',
+            type: 'worked_example',
+            eyebrow: 'Worked example 2',
+            title: 'Invoice multiplication sanity check',
             content:
-              'Estimate 37 × 22 in one line (hint: 40 × 20). Then compute 37 × 22 = 814. Does your estimate land near 814?',
+              'Given: 18 hours of consulting at $42/hour, plus a flat $35 setup fee.\n\nFormula: invoice total I = (hours × rate) + setup.\n\nEstimate: 20 × 40 = 800; plus 35 ≈ 835. Final answer should land near 800–850.\n\nSubstitute: I = (18 × 42) + 35.\n\nCalculate: 18 × 42 = (18 × 40) + (18 × 2) = 720 + 36 = 756. Then 756 + 35 = 791.\n\nAnswer: I = $791.\n\nReasonableness check: 791 is inside the 800–850 estimate band (within ~7% of the rounded value). If the calculator had shown 7,910 or 79.10, the estimate would have flagged a decimal-place error before sending the invoice.',
+            examples: [
+              'Use this for any “rate × quantity + fee” line: hourly billing, freelance work, materials + delivery.',
+              'When the estimate and calculation differ by more than ~10%, recheck the numbers before you commit.',
+            ],
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Estimate first, calculate second',
+            content:
+              'Walk this in three steps for a small purchase total of 6 items at $7.85 each, plus 8% sales tax.\n\nStep 1 — Estimate: round 7.85 ≈ 8; 6 × 8 = 48 subtotal; tax ≈ 10% of 48 = 4.80, then trim a bit since real tax is 8% not 10% → ≈ 4. Final estimate ≈ 48 + 4 = 52.\n\nStep 2 — Calculate exactly: subtotal = 6 × 7.85 = 47.10. Tax = 47.10 × 0.08 = 3.768 ≈ 3.77. Total = 47.10 + 3.77 = 50.87.\n\nStep 3 — Verify: 50.87 vs estimate 52. Difference is 1.13, about 2.2% of the estimate — well inside the “within 10%” band. Accept the answer.',
+            learnerTask:
+              'Re-do this with your own example: pick a quantity, a unit price, and a tax rate. Write the estimate line, the calculation line, and a one-sentence reasonableness verdict.',
+            answerKey:
+              'Sample: 4 items at $12.50 each plus 7% tax. Estimate: 4 × 13 = 52; tax ≈ 7% of 52 ≈ 3.50; total ≈ 55–56. Calculate: 4 × 12.50 = 50.00; tax = 50.00 × 0.07 = 3.50; total = 53.50. Verdict: 53.50 is within 5% of estimate 55 → accept. Strong answers always show all three lines (estimate / calculate / verify) and name the percentage gap, not just the absolute difference.',
+          },
+          {
+            type: 'pause_and_check',
+            eyebrow: 'Quick check 1',
+            title: 'Multiply estimate',
+            content:
+              'Estimate 37 × 22 in one line (hint: 40 × 20 = 800). Then compute 37 × 22 = 814. Does the estimate land near 814? Difference 14 / 800 ≈ 1.75% — well inside band, accept.',
+          },
+          {
+            type: 'pause_and_check',
+            eyebrow: 'Quick check 2',
+            title: 'Decimal-place trap',
+            content:
+              'A calculator shows 0.0782 for the cost of one paperclip when you expected ~$0.08. Estimate first: a box of 100 clips at $7.99 → per-clip ≈ 8 cents = $0.08. Calculator: 7.99 / 100 = 0.0799. The display 0.0782 is close but off — likely a typo. Re-enter and confirm. The verify habit caught a wrong digit, not a wrong method.',
           },
           {
             type: 'common_mistakes',
             eyebrow: 'Common mistakes',
             title: 'What trips adults up',
             content:
-              'Skipping the estimate line; trusting a display without units; rounding every intermediate step in a chain.',
+              'Skipping the estimate line and trusting whatever the calculator displays; rounding every intermediate step instead of keeping precision until the end; mixing units (per-item vs per-box, hours vs minutes); copying a partial number from a screen and missing a decimal or trailing digit.',
           },
           {
             type: 'real_world_application',
             eyebrow: 'Real-world use',
             title: 'Where this shows up',
-            content: 'Quotes, payslips, receipts, and schedules all reward the same three-step habit.',
+            content:
+              'Quotes, invoices, payslips, receipts, expense reports, contractor bids, and lab schedules all reward the same three-step habit. Anywhere a wrong number costs you time or money, the estimate line is your insurance.',
           },
           {
             type: 'practice_task',
             eyebrow: 'Practice task',
-            title: 'Build your toolkit list',
+            title: 'Verify a small receipt or quote',
             content:
-              'List: calculator, spreadsheet, notebook for steps, one reference strip (common %, conversions), and the rule “estimate → calculate → verify.”',
-            learnerTask: 'Write one sentence you will reread before important math (your own words).',
+              'Pick a real receipt, invoice, or quote from this week. Cover the total with your finger. (1) Write a one-line estimate using rounded numbers. (2) Compute the exact total on paper or with a calculator. (3) Compare the two — is the calculated value within ~10% of your estimate? If yes, accept. If not, find the source of the gap (wrong unit, missed line, rounding, decimal-place error) and re-verify.',
+            learnerTask:
+              'Submit your three lines: estimate, calculation, verdict. Include the receipt total you were checking.',
             answerKey:
-              'Example toolkit: phone calculator; spreadsheet; paper; sticky with “10% = ÷10 on base.” Example sentence: I estimate first, calculate on paper, then compare to my estimate before I share the number.',
+              'Sample done well: Receipt total shown $63.42. (1) Estimate: 4 items ≈ $15 each → 60; plus tax ≈ 5 → ≈ 65. (2) Calculate: 14.99 + 14.99 + 16.49 + 12.99 = 59.46; tax 8% = 4.76; total = 64.22. (3) Verdict: 64.22 is within 1.3% of my estimate 65, but the receipt shows 63.42 — gap is small but non-zero, so check whether one item was on sale (line item differs from listed price). The verify step caught a small discount the receipt did include.',
           },
           {
             type: 'summary',
             eyebrow: 'Lesson wrap-up',
             title: 'Lesson 1.1',
-            content: 'You now have a concrete verification habit that supports every later module.',
+            content:
+              'You now have a concrete verification habit (estimate → calculate → verify) plus a small written toolkit. Every later module assumes this habit; carry it forward into Lesson 1.2 on number sense and magnitude.',
           },
         ],
       },
@@ -295,17 +327,35 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
           },
           {
             type: 'worked_example',
-            eyebrow: 'Worked example',
+            eyebrow: 'Worked example 1',
             title: 'An invoice line that fails the estimate test',
             content:
-              'A supplier sends an invoice line: 47 units × $23 each = $1,081. Estimate: 50 × 20 = 1,000. Close. If the line had read $10,810 or $108, you would catch the decimal-point error in the same five seconds.',
+              'Given: invoice line "47 units × $23 each = $1,081".\n\nFormula: line total = quantity × unit price.\n\nEstimate: 50 × 20 = 1,000. The final answer should land near 1,000.\n\nSubstitute: 47 × 23.\n\nCalculate: 47 × 23 = (47 × 20) + (47 × 3) = 940 + 141 = 1,081.\n\nAnswer: $1,081, matching the invoice. Reasonableness: 1,081 is within 8% of the 1,000 estimate. Accept.\n\nReasonableness fail-mode: had the line read $10,810 or $108, the estimate would have flagged a 10× decimal-place error in five seconds.',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 2',
+            title: 'Inverse operation catches a typo',
+            content:
+              'Given: bookkeeper enters "salary $52,000/year ÷ 2,080 hours = $20/hour".\n\nFormula: hourly = annual ÷ 2,080.\n\nEstimate: 50,000 ÷ 2,000 = 25/hour. Final answer should be near $25.\n\nSubstitute and calculate: 52,000 ÷ 2,080 = 25.00.\n\nThe stated $20 fails the estimate (off by 25%). Run the inverse: 20 × 2,080 = 41,600 — not $52,000. The right answer: $25/hour. The bookkeeper used 2,600 hours by mistake.\n\nReasonableness rule: every multiplication should pass its inverse division and vice-versa. If both directions don\'t agree to within rounding, one of them has a typo.',
           },
           {
             type: 'concept_explanation',
             eyebrow: 'Inverse operations',
             title: 'Run the calculation backwards',
             content:
-              'Addition checks with subtraction. Multiplication checks with division. If 47 × 23 = 1,081, then 1,081 ÷ 23 should give 47.',
+              'Addition checks with subtraction. Multiplication checks with division. If 47 × 23 = 1,081, then 1,081 ÷ 23 should give 47. If 52,000 ÷ 2,080 = 25.00, then 25.00 × 2,080 should give 52,000. The inverse always reproduces the original input within rounding; if it doesn\'t, you have a typo, an order-of-operations slip, or a unit-of-measure mismatch.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Verify three lines on a small business invoice',
+            content:
+              'A small invoice arrives. Verify each line in three steps: (1) one-line estimate, (2) precise calculation, (3) inverse-operation check.\n\nLine A — 8 hours × $115/hour = stated $920. Estimate: 10 × 100 = 1,000 → final near 900–1,000. Calculate: 8 × 115 = 920 ✓. Inverse: 920 ÷ 115 = 8 ✓.\n\nLine B — 12 cases × $34.50 = stated $414.00. Estimate: 12 × 35 = 420 → near 410–420. Calculate: 12 × 34.50 = 414 ✓. Inverse: 414 ÷ 12 = 34.50 ✓.\n\nLine C — Subtotal = 920 + 414 = stated $1,344. Tax 8% = stated $107.52. Total = stated $1,441.52. Estimate tax: 10% of 1,344 = 134.4; 8% ≈ 107 → near 107. Calculate: 1,344 × 0.08 = 107.52 ✓. Inverse on total: 1,441.52 − 107.52 = 1,334.00 — but subtotal was stated $1,344.00. Gap of $10. Recheck.\n\nVerification finds the inconsistency: the stated subtotal $1,344, stated tax $107.52, and stated total $1,441.52 don\'t reconcile. Total minus tax = 1,441.52 − 107.52 = $1,334.00, but the stated subtotal is $1,344.00 — a $10 gap. Either the subtotal is mis-summed (920 + 414 = $1,334, not $1,344), the tax was computed on the wrong base, or the printed total is off by $10. Recompute every line before paying. The inverse-operation check found what individual line checks missed.',
+            learnerTask:
+              'Take this stated invoice — quantity 14 × unit price $42.50 = $595, plus 9% tax stated at $53.55, total stated at $648.55. Run estimate, calculate, and inverse check on each line. State whether the invoice is consistent.',
+            answerKey:
+              'Line: 14 × 42.50. Estimate 14 × 40 = 560 → near 560–600. Calculate 14 × 42.50 = 595 ✓. Inverse 595 ÷ 14 = 42.50 ✓. Tax: 595 × 0.09 = 53.55 ✓. Total: 595 + 53.55 = 648.55 ✓. Inverse on total: 648.55 − 53.55 = 595 ✓. All three checks agree → invoice is consistent. Strong answers always run the inverse on at least one line; weak answers only check forward.',
           },
           {
             type: 'common_mistakes',
@@ -568,16 +618,34 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
           },
           {
             type: 'worked_example',
-            eyebrow: 'Conversion methods',
+            eyebrow: 'Worked example 1 — Conversion methods',
             title: 'Five conversions you will actually do',
             content:
-              'Fraction → decimal: divide top by bottom. 3/4 = 3 ÷ 4 = 0.75. Decimal → percentage: multiply by 100 (move decimal two places right). 0.75 → 75%. Percentage → decimal: divide by 100 (move decimal two places left). 45% → 0.45. Fraction → percentage: convert to decimal first, then multiply by 100. 3/8 → 0.375 → 37.5%. Percentage → fraction: write over 100, then simplify. 75% → 75/100 → 3/4.',
+              'Given: convert 3/4, 0.75, 45%, 3/8, and 75% across forms.\n\nFraction → decimal: divide top by bottom. 3/4 = 3 ÷ 4 = 0.75.\nDecimal → percentage: multiply by 100 (move decimal two places right). 0.75 → 75%.\nPercentage → decimal: divide by 100 (move decimal two places left). 45% → 0.45.\nFraction → percentage: convert to decimal first, then multiply by 100. 3/8 → 0.375 → 37.5%.\nPercentage → fraction: write over 100, then simplify. 75% → 75/100 → 3/4.\n\nReasonableness: 3/4 lies between 1/2 (50%) and 1 (100%); 75% sits sensibly in the middle. 3/8 is just under 1/2; 37.5% is just under 50%. Both pass the magnitude check.',
             examples: [
               '5/8 = 0.625 = 62.5%',
               '8.5% = 0.085',
               '0.4 = 4/10 = 2/5 = 40%',
               '60% = 60/100 = 3/5',
             ],
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 2 — Conversions in real prices',
+            title: 'Translate a discount label three ways',
+            content:
+              'Given: a tag reads "1/3 off". The original price is $90.\n\nFormula: discount amount = price × fraction; sale price = price × (1 − fraction).\n\nStep 1 — Express the fraction three ways for clarity. 1/3 = 0.333… = 33.3%.\n\nStep 2 — Compute the discount. 90 × 1/3 = 30. Equivalently, 90 × 0.333… = 30. Equivalently, 90 × 33.3% = 90 × 0.333 = 29.97 ≈ $30 (the small gap is rounding the repeating decimal).\n\nStep 3 — Compute the sale price. 90 − 30 = $60. Equivalently, 90 × (1 − 1/3) = 90 × 2/3 = 60. Equivalently, 90 × 0.667 = $60.03 ≈ $60.\n\nAnswer: $30 off → $60 sale price. All three forms agree to within rounding; if any disagrees, you have a typo.\n\nReasonableness: 1/3 off should leave 2/3 standing; 2/3 of 90 is 60 — confirmed.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Convert and apply across forms',
+            content:
+              'Walk through three real-life conversions.\n\n(1) A receipt shows tax 0.085. Convert to percentage: 0.085 × 100 = 8.5%. Apply to a $46 purchase: 46 × 0.085 = $3.91 tax.\n\n(2) A bank quotes 5/8 of a percent monthly fee. Convert: 5/8 = 0.625; as a percentage of the deposit, 0.625% = 0.00625 in calculation form. On $1,200, fee = 1,200 × 0.00625 = $7.50.\n\n(3) A pay raise of 0.04 means 4% raise. On a $52,000 salary: 52,000 × 0.04 = $2,080 raise → new salary $54,080.\n\nVerify with fractions: 4% = 4/100 = 1/25; 52,000 ÷ 25 = $2,080 ✓.',
+            learnerTask:
+              'Convert and apply: a deal advertises 3/8 off a $144 jacket. Compute the discount, sale price, and equivalent decimal/percentage. Verify with the inverse view (2/3 of the original is 96 — but 5/8 of 144 = …) and reconcile.',
+            answerKey:
+              '3/8 = 0.375 = 37.5%. Discount = 144 × 3/8 = 54. Sale price = 144 − 54 = $90. Equivalent: 144 × 0.375 = $54 ✓; 144 × 37.5% = $54 ✓. Reverse view: 5/8 standing = 144 × 5/8 = $90 ✓ (matches sale price). Conversions all agree → calculation passes. Strong answers reconcile across all three forms; weak answers only show one form.',
           },
           {
             type: 'pause_and_check',
@@ -645,17 +713,35 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
           },
           {
             type: 'worked_example',
-            eyebrow: 'Worked example',
-            title: 'Increase and decrease, with both directions',
+            eyebrow: 'Worked example 1 — Increase and decrease',
+            title: 'Both directions, both methods',
             content:
-              'Percentage change = ((new − old) ÷ old) × 100. From $50 to $60: (10 ÷ 50) × 100 = 20% increase. From $80 to $60: (−20 ÷ 80) × 100 = −25%, i.e. 25% decrease. To apply an increase, multiply by (1 + rate). 20% increase on $150 = $150 × 1.20 = $180. 25% off $80 = $80 × 0.75 = $60.',
+              'Given: price moves from $50 to $60; another item moves from $80 to $60. Compute percentage change for each.\n\nFormula: % change = ((new − old) ÷ old) × 100.\n\nCase A ($50 → $60): (60 − 50) ÷ 50 × 100 = 10/50 × 100 = 20% increase.\nCase B ($80 → $60): (60 − 80) ÷ 80 × 100 = −20/80 × 100 = −25%, i.e. 25% decrease.\n\nApplying changes the other way: 20% increase on $150 → 150 × 1.20 = $180. 25% off $80 → 80 × 0.75 = $60. Reasonableness: 25% is 1/4, so 1/4 off $80 = $20 off → $60 ✓.',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 2 — Stacked discounts',
+            title: 'Two successive 10% discounts on a $200 jacket',
+            content:
+              'Given: jacket priced $200; first 10% discount, then a 10% loyalty discount on the already-reduced price.\n\nFormula: final = original × (1 − r₁) × (1 − r₂).\n\nStep 1 — Apply first 10%: 200 × 0.90 = 180. (10% of 200 is 20; 200 − 20 = 180.)\n\nStep 2 — Apply second 10% on the new $180: 180 × 0.90 = 162. (10% of 180 is 18; 180 − 18 = 162.)\n\nFinal: $162. Total discount: 200 − 162 = $38, which is 19% of the original — not 20%.\n\nLesson: stacked 10% + 10% ≠ 20%. The combined effective discount is 1 − 0.90 × 0.90 = 0.19 = 19%.\n\nReasonableness: each 10% removes a slice; the second slice is from a smaller pie, so the combined discount is always less than the simple sum.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Salary uplift with percentage-points trap',
+            content:
+              'Goal: a worker on $48,000 receives a 4% raise this year and then a 3% raise next year. Compute the final salary and the total percentage change.\n\nStep 1 — First raise: 48,000 × 1.04 = $49,920.\nStep 2 — Second raise: 49,920 × 1.03 = $51,417.60.\nStep 3 — Total change: (51,417.60 − 48,000) ÷ 48,000 × 100 = 3,417.60 / 48,000 × 100 = 7.12%.\n\nNotice: 4% + 3% ≠ 7%; the compounded effect is 7.12% because the second raise was applied to the larger $49,920 base.\n\nVerify with the formula: (1.04 × 1.03) − 1 = 1.0712 − 1 = 0.0712 = 7.12% ✓.',
+            learnerTask:
+              'A bond yields 5%; later it is "raised by 3 percentage points." Compute the new yield, the percentage change, and explain in one sentence why the two numbers differ.',
+            answerKey:
+              'New yield = 5% + 3 percentage points = 8%. Percentage change = (8 − 5) ÷ 5 × 100 = 60% increase. The two numbers differ because "percentage points" measures the absolute gap between two rates; "percentage change" measures the relative change as a fraction of the starting rate. A jump from 5% to 8% is 3 percentage points but a 60% increase. Strong answer reconciles both with the formulas; weak answer reports only one.',
           },
           {
             type: 'concept_explanation',
             eyebrow: 'Successive percentages',
             title: 'They do not simply add',
             content:
-              'Two 10% increases on $100 give $121, not $120. The second 10% is calculated on the new $110, not on the original $100.',
+              'Two 10% increases on $100 give $121, not $120 (10% of 100 = 10 → $110; 10% of 110 = 11 → $121). The second 10% is calculated on the new $110, not on the original $100.',
           },
           {
             type: 'concept_explanation',
@@ -718,10 +804,17 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
           },
           {
             type: 'worked_example',
-            eyebrow: 'Scaling recipes and quantities',
+            eyebrow: 'Worked example 1 — Scaling recipes',
             title: 'Multiply each ingredient by the scaling factor',
             content:
-              'A recipe for 4 servings: 2 cups flour, 3 eggs, 1 1/2 cups milk. To scale to 6 servings, multiply each by 6 ÷ 4 = 1.5. Flour: 3 cups. Eggs: 4.5 → round to 5. Milk: 2 1/4 cups.',
+              'Given: a recipe for 4 servings calls for 2 cups flour, 3 eggs, and 1 1/2 cups milk. Scale to 6 servings.\n\nFormula: scale factor = target servings ÷ original servings; new amount = original × scale.\n\nStep 1 — Scale: 6 ÷ 4 = 1.5 (or 3/2).\nStep 2 — Apply to each ingredient.\nFlour: 2 × 1.5 = 3 cups.\nEggs: 3 × 1.5 = 4.5 → round up to 5 (you can\'t use half an egg cleanly without splitting).\nMilk: 1 1/2 × 1.5 = 1.5 × 1.5 = 2.25 → 2 1/4 cups.\n\nReasonableness: 6 servings is 1.5× of 4, so each ingredient should grow by ~50%. Flour 2 → 3 (50% up ✓). Milk 1.5 → 2.25 (50% up ✓). Eggs round up because you can\'t split an egg neatly.',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 2 — Trade fractions',
+            title: 'Cutting lumber with mixed-number arithmetic',
+            content:
+              'Given: a board is 8 1/2 feet long. You need three pieces: 2 3/4 ft, 1 7/8 ft, and 3 1/4 ft. Will the cuts fit, and what scrap remains?\n\nFormula: total cut = sum of pieces; scrap = board − total cut.\n\nStep 1 — Find a common denominator for 1/2, 3/4, 7/8, 1/4. LCD = 8.\n8 1/2 = 8 4/8; 2 3/4 = 2 6/8; 1 7/8 = 1 7/8; 3 1/4 = 3 2/8.\n\nStep 2 — Sum the cuts: 2 6/8 + 1 7/8 + 3 2/8 = (2 + 1 + 3) + (6 + 7 + 2)/8 = 6 + 15/8 = 6 + 1 7/8 = 7 7/8 ft.\n\nStep 3 — Scrap: 8 4/8 − 7 7/8 = 8 4/8 − 7 7/8 = 7 12/8 − 7 7/8 = 5/8 ft (borrowed 1 = 8/8 from the whole).\n\nAnswer: cuts fit; scrap remaining = 5/8 ft.\n\nReasonableness: rough check 8.5 − 2.75 − 1.875 − 3.25 = 0.625 ft = 5/8 ft ✓. Decimal verifies the fraction work.',
           },
           {
             type: 'concept_explanation',
@@ -729,6 +822,17 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
             title: 'Same denominator, then add or subtract numerators',
             content:
               'Same denominator: 2/5 + 1/5 = 3/5. Different denominators: find a common denominator first. 1/3 + 1/4 — common denominator 12, so 1/3 = 4/12 and 1/4 = 3/12, total 7/12.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Scale and add fractions on a real budget',
+            content:
+              'Goal: a project budget allocates 1/3 to labour, 1/4 to materials, 1/6 to overhead, and the rest to contingency. Total budget $48,000. Compute each line.\n\nStep 1 — Common denominator 12. Labour 1/3 = 4/12; materials 1/4 = 3/12; overhead 1/6 = 2/12. Sum = 9/12 = 3/4 of the budget.\n\nStep 2 — Contingency = 1 − 3/4 = 1/4 of budget.\n\nStep 3 — Apply to $48,000.\nLabour: 48,000 × 4/12 = 48,000 ÷ 3 = $16,000.\nMaterials: 48,000 × 3/12 = 48,000 ÷ 4 = $12,000.\nOverhead: 48,000 × 2/12 = 48,000 ÷ 6 = $8,000.\nContingency: 48,000 × 3/12 = 48,000 ÷ 4 = $12,000.\n\nStep 4 — Verify: 16,000 + 12,000 + 8,000 + 12,000 = 48,000 ✓.\n\nReasonableness: the largest line is labour (1/3) and it is the largest dollar value; contingency (1/4) and materials (1/4) tie at $12,000.',
+            learnerTask:
+              'Allocate a $90,000 grant: 2/5 to programme delivery, 1/5 to evaluation, 1/10 to admin, the rest to reserves. Compute each, verify the sum, and state the largest and smallest line.',
+            answerKey:
+              'Common denom 10. Programme 2/5 = 4/10 → 90,000 × 4/10 = $36,000. Evaluation 1/5 = 2/10 → $18,000. Admin 1/10 → $9,000. Allocated = 4/10 + 2/10 + 1/10 = 7/10 → $63,000. Reserves = 3/10 → $27,000. Verify sum: 36 + 18 + 9 + 27 = $90,000 ✓. Largest line: programme delivery ($36,000). Smallest: admin ($9,000). Strong answers find LCD first; weak answers convert each fraction to decimal and lose precision.',
           },
           {
             type: 'concept_explanation',
@@ -796,17 +900,35 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
           },
           {
             type: 'worked_example',
-            eyebrow: 'Compound rounding error',
+            eyebrow: 'Worked example 1 — Compound rounding error',
             title: 'Why early rounding goes wrong',
             content:
-              'Wrong: 100 ÷ 3 ≈ 33.33; 33.33 × 3 = 99.99 (a one-cent error from a single rounding). Correct: keep 33.333… in memory; 33.333… × 3 = 100.',
+              'Given: split $100 evenly into 3 shares.\n\nFormula: share = total ÷ 3.\n\nWrong path (rounded too early): 100 ÷ 3 ≈ 33.33 per share; 33.33 × 3 = 99.99 — total is one cent off.\n\nCorrect path: keep 33.333… in memory; 33.333… × 3 = 100.00 ✓.\n\nFix in practice: round only at the final step. Two of three shares get $33.33 and one gets $33.34 to make the total $100.00 exactly.\n\nReasonableness: tiny early rounds compound. A penny here, a penny there, and a 50-line invoice can be off by 50 cents — small enough to miss but big enough to flag in audit.',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 2 — Sales-tax precision',
+            title: 'Where to round on a multi-line bill',
+            content:
+              'Given: three items at $4.95, $7.79, $12.50 plus 6.5% sales tax.\n\nFormula: subtotal = sum; tax = subtotal × rate; total = subtotal + tax. Round the subtotal and the tax to two decimals once at the end.\n\nStep 1 — Subtotal exact: 4.95 + 7.79 + 12.50 = 25.24.\n\nStep 2 — Tax exact: 25.24 × 0.065 = 1.6406. Round to two decimals: $1.64.\n\nStep 3 — Total: 25.24 + 1.64 = $26.88.\n\nWrong path: rounding tax per line (e.g. 4.95 × 0.065 = 0.32 each) and summing rounded lines often disagrees with the all-at-once method by 1–3 cents on a multi-line bill — that\'s why retailers compute tax on the subtotal, not per item.\n\nReasonableness: estimate tax 25 × 0.07 = 1.75 → $1.64 lands close enough; total ≈ 26.88 ≈ 27 ✓.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Pick the right precision per context',
+            content:
+              'Walk through three real precision calls.\n\n(1) Project hours: 137.6 hours billed at $112.50/hour. Where to round?\nKeep full precision while computing: 137.6 × 112.50 = 15,480.00 — clean cent. No rounding needed.\n\n(2) Lab measurement: 0.4827 g recorded by a scale that reads to 0.01 g. The 4th digit is noise; report 0.48 g.\n\n(3) Survey result: 142 of 250 respondents = 0.568 = 56.8%. Headlines round to whole percent (57%); methodology footnote keeps one decimal (56.8%); raw counts (142/250) preserve everything.\n\nGeneral rule: keep maximum precision in calculations; match displayed precision to the smallest meaningful step in the situation.',
+            learnerTask:
+              'Compute the total for 7 items at $14.85 each plus 7.25% sales tax. Show the unrounded subtotal, unrounded tax, and final rounded total. Then explain in one sentence why rounding at the end matters.',
+            answerKey:
+              'Subtotal exact: 7 × 14.85 = 103.95. Tax exact: 103.95 × 0.0725 = 7.5364 (full precision); rounded $7.54. Total: 103.95 + 7.54 = $111.49. If you had rounded each item\'s tax separately (14.85 × 0.0725 = 1.076625 → 1.08 per item × 7 = 7.56), you would over-collect by 2 cents. Rounding once at the end avoids cumulative bias.',
           },
           {
             type: 'concept_explanation',
             eyebrow: 'Standard rounding',
             title: 'Round half up',
             content:
-              'If the next digit is 5 or more, round up; otherwise round down. 12.4 → 12; 12.5 → 13; 12.6 → 13.',
+              'If the next digit is 5 or more, round up; otherwise round down. 12.4 → 12; 12.5 → 13; 12.6 → 13. Banker\'s rounding (used in some financial software) rounds half-to-even — 12.5 → 12 and 13.5 → 14 — to avoid bias on long sums; check which mode your tool uses.',
           },
           {
             type: 'pause_and_check',
@@ -862,10 +984,28 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
           },
           {
             type: 'worked_example',
-            eyebrow: 'Worked example',
-            title: 'Five real estimates',
+            eyebrow: 'Worked example 1 — Five real estimates',
+            title: 'Front-end + friendly + compatible + benchmark in action',
             content:
-              '(1) 847 + 1,234 ≈ 2,000; precise 2,081. (2) 47 × 23 ≈ 1,000; precise 1,081. (3) 15% of $47 ≈ $7.50; precise $7.05. (4) 3/8 of 80 ≈ 27; precise 30. (5) 37% of 80 ≈ 27; precise 29.6.',
+              'Given: five computations to estimate before exact calc.\n\n(1) 847 + 1,234. Front-end: keep leading digits → 800 + 1,200 = 2,000. Precise: 2,081. Gap: 81/2,081 ≈ 3.9%. Accept.\n\n(2) 47 × 23. Friendly: 50 × 20 = 1,000. Precise: 1,081. Gap: 8.1%. Accept.\n\n(3) 15% of $47. Compatible: round to $50 → 15% × 50 = 7.50. Precise: 47 × 0.15 = 7.05. Gap: 6.4%. Accept.\n\n(4) 3/8 of 80. Benchmark: 3/8 ≈ 0.375 ≈ 1/3 → 80/3 ≈ 27. Precise: 80 × 3/8 = 30. Gap: 10%. Accept (just at threshold; tighter benchmark 3/8 = 0.375 gives exact).\n\n(5) 37% of 80. Benchmark: 37% ≈ 1/3 → 80/3 ≈ 27. Precise: 80 × 0.37 = 29.6. Gap: 8.8%. Accept.',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 2 — Big-receipt estimate',
+            title: 'A grocery run before reaching the till',
+            content:
+              'Given: cart contents: bread 4.79, milk 5.49, eggs 4.29, cheese 12.49, apples 3.89, pasta 2.39, sauce 4.99, chicken 14.99, juice 6.79, biscuits 3.49.\n\nFront-end estimate (round to nearest dollar, sum quickly):\n5 + 5 + 4 + 12 + 4 + 2 + 5 + 15 + 7 + 3 = 62.\n\nPrecise sum: 4.79 + 5.49 + 4.29 + 12.49 + 3.89 + 2.39 + 4.99 + 14.99 + 6.79 + 3.49 = 63.60.\n\nGap: 1.60 / 63.60 ≈ 2.5%.\n\nAnswer: estimate $62, actual $63.60. Add 8% sales tax in head: 0.08 × 63 ≈ 5 → with-tax estimate ~$68. Precise: 63.60 × 1.08 = 68.69. Estimate held within $1.\n\nReasonableness: the estimate stayed honest because the rounding directions roughly cancelled (some up, some down). When all numbers happen to round the same way (e.g. all "round up to nearest dollar"), expect the estimate to drift in that direction by a few percent.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Estimate four real numbers from this week',
+            content:
+              'Pick four real situations and estimate each with one of the four moves before calculating exactly.\n\n(1) Tip 18% on a $73.25 dinner. Friendly + benchmark: 10% = 7.33; double = 14.66; subtract about 2% (≈ 1.50) → ~13.20. Precise: 73.25 × 0.18 = 13.19. Within 0.5%.\n\n(2) Sale price of an $85 item at 30% off. Friendly: 30% = 1/3 ≈ 28; sale ~57. Precise: 85 × 0.70 = 59.50. Within 4%.\n\n(3) Fraction of a stockpile: 5/8 of 240 lb of rice. Benchmark: 5/8 ≈ 0.625; 240 × 0.6 = 144. Precise: 240 × 5/8 = 150. Within 4%.\n\n(4) Annual salary $51,500 → monthly. Compatible: 51,500 ≈ 52,000 ÷ 12 = 4,333. Precise: 4,291.67. Within 1%.\n\nIn each case the estimate landed within ~5% of the precise answer — the goal of estimation, not an exact match.',
+            learnerTask:
+              'Estimate three real numbers from your week using exactly one move per number. State the move, the estimate, the precise calculation, and the gap as a percentage.',
+            answerKey:
+              'Sample: (1) Coffee bill 4.79 + 3.85 + 2.99 = ?. Front-end: 5 + 4 + 3 = 12. Precise: 11.63. Gap 3.2%. (2) Bus pass cost 137 days × 2.50. Friendly: 140 × 2.50 = 350. Precise: 342.50. Gap 2.2%. (3) Tax 8.5% on $189. Compatible: 10% of 189 = 18.9; subtract 1.5% ≈ 2.8 → 16.1. Precise: 189 × 0.085 = 16.07. Gap 0.2%. Strong answers always state the move name; weak answers report only the numbers.',
           },
           {
             type: 'pause_and_check',
@@ -1069,7 +1209,7 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
     moduleNumber: 3,
     slug: 'ratios-proportions-unit-rates-comparisons',
     title: 'Ratios, Proportions, Unit Rates, and Comparisons',
-    durationMinutes: 180,
+    durationMinutes: 155,
     level: 'Foundational',
     prerequisites: ['math-confidence-number-sense', 'fractions-decimals-percentages-estimation'],
     overview:
@@ -1126,6 +1266,17 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
             title: 'The single most important distinction',
             content:
               'A class with 12 boys and 18 girls (30 total) has a part-to-part boys-to-girls ratio of 12:18 = 2:3. The part-to-whole ratio of boys to total is 12:30 = 2:5 (or 40%).',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice — Read four real ratios honestly',
+            title: 'Simplify, classify part-to-part vs part-to-whole, and interpret',
+            content:
+              'Goal: walk four real-world ratios through three steps each — write in colon form, simplify, classify as part-to-part or part-to-whole, and state what the ratio answers.\n\n(1) Staff-to-customer ratio: a small clinic has 3 nurses and 24 scheduled patients per shift.\nColon: 3:24 → simplified 1:8.\nType: part-to-part (nurses vs patients are two distinct groups).\nAnswers: "for every nurse on shift, there are 8 patients to attend." Used in staffing decisions.\n\n(2) Salt-to-sugar mix in a baking recipe: 1 tsp salt to 8 tsp sugar.\nColon: 1:8.\nType: part-to-part.\nAnswers: "for every 1 tsp of salt, use 8 tsp of sugar." Scale up by multiplying both sides.\n\n(3) Defect rate at a small bakery: 5 burnt loaves out of 200 produced.\nColon: 5:200 → simplified 1:40.\nType: part-to-whole (5 defects are part of the 200 total).\nEquivalent percentage: 5 ÷ 200 = 2.5%.\nAnswers: "2.5% of loaves are defective." Used in quality reporting.\n\n(4) Equity-to-debt structure of a small business: $300k equity, $200k debt.\nColon: 300:200 → simplified 3:2.\nType: part-to-part (equity and debt are two distinct sources of capital).\nAnswers: "for every $3 of equity, there is $2 of debt." Lenders read this as a leverage signal.\n\nReasonableness: confusing part-to-part with part-to-whole is the #1 ratio error. The clinic\'s 1:8 nurse-to-patient ratio is NOT "1 of every 8 staff is a nurse" — it is "1 nurse for every 8 patients." Two completely different statements share the same colon notation depending on what you put on each side.',
+            learnerTask:
+              'For each, write the simplified colon form, classify part-to-part vs part-to-whole, and state what the ratio answers in one sentence. (a) A class has 12 boys and 18 girls; girls-to-total ratio. (b) Office supplies cost $400 of an $1,800 budget; supplies-to-budget ratio. (c) Concrete mix: 2 parts sand to 5 parts gravel; sand-to-gravel ratio. (d) Investment portfolio: $40k stocks, $20k bonds, $40k cash; stock-to-total ratio.',
+            answerKey:
+              '(a) 18:30 → 3:5; part-to-whole; "3 of every 5 students are girls" (60%). (b) 400:1,800 → 2:9; part-to-whole; "supplies are 2/9 of the budget" (≈22%). (c) 2:5; part-to-part; "for every 2 parts sand, use 5 parts gravel." (d) 40:100 → 2:5; part-to-whole; "stocks are 2/5 of the portfolio" (40%). Strong answer always names the ratio TYPE before computing percentages; weak answer skips classification and risks calling a part-to-part ratio "40% of something" it isn\'t.',
           },
           {
             type: 'pause_and_check',
@@ -1204,14 +1355,25 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
             eyebrow: 'Are these two ratios proportional?',
             title: 'Three ways to check',
             content:
-              'Cross-multiply, simplify both, or convert to decimals. 2:3 vs 8:12 → 24 = 24 ✓.',
+              'Cross-multiply, simplify both, or convert to decimals. Example: are 2:3 and 8:12 the same ratio? Cross-multiply: 2 × 12 = 24 and 3 × 8 = 24 ✓. Simplify: 8/12 = 2/3 ✓. Decimals: 2/3 = 0.667 and 8/12 = 0.667 ✓. Three independent checks should all agree; if any one disagrees, you have a typo.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Catering scale-up with cross-multiplication',
+            content:
+              'Goal: a salad recipe for 8 people uses 600 g greens, 240 g feta, 12 olives. Scale to 22 guests for an event.\n\nStep 1 — Set up the proportion using consistent units. People-to-greens: 8/600 = 22/x → cross-multiply: 8x = 600 × 22 = 13,200 → x = 13,200 / 8 = 1,650 g greens.\n\nStep 2 — Feta: 8/240 = 22/y → 8y = 240 × 22 = 5,280 → y = 660 g feta.\n\nStep 3 — Olives: 8/12 = 22/z → 8z = 12 × 22 = 264 → z = 33 olives.\n\nStep 4 — Sanity check: scale factor = 22/8 = 2.75. Greens 600 × 2.75 = 1,650 ✓; feta 240 × 2.75 = 660 ✓; olives 12 × 2.75 = 33 ✓.\n\nReasonableness: 22 is roughly 3× of 8 (actually 2.75×); each ingredient should be ~3× larger. All three confirm.',
+            learnerTask:
+              'A construction crew lays 75 m² of tile in 5 hours. How many m² in a 12-hour day? Set up the proportion, cross-multiply, and verify with the scale factor.',
+            answerKey:
+              'Set up: 5/75 = 12/x → 5x = 75 × 12 = 900 → x = 180 m². Verify: scale factor = 12/5 = 2.4; 75 × 2.4 = 180 ✓. Strong answer cross-multiplies AND verifies via scale factor; weak answer only does one of the two and risks a setup error.',
           },
           {
             type: 'pause_and_check',
             eyebrow: 'Pause and check',
             title: 'One scaling rep',
             content:
-              'A 1:4 cleaner-to-water mix; you have 750 mL of cleaner. Water needed? Confirm: 3,000 mL = 3 L.',
+              'A 1:4 cleaner-to-water mix; you have 750 mL of cleaner. Set up: 1/4 = 750/x → x = 4 × 750 = 3,000 mL = 3 L of water. Verify: 750 + 3,000 = 3,750 mL of solution at the right ratio.',
           },
           {
             type: 'common_mistakes',
@@ -1276,14 +1438,25 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
             eyebrow: 'Cost per unit in business',
             title: 'The number that should sit next to every product',
             content:
-              'Manufacturing: $50,000 ÷ 2,000 = $25/unit. Services: $8,000 monthly fixed costs ÷ 160 billable hours = $50/hour.',
+              'Manufacturing cost per unit: total cost ÷ units produced. Example: $50,000 of materials and labour to produce 2,000 widgets → $25/unit. Services cost per hour: total fixed cost ÷ billable hours. Example: $8,000 monthly rent + insurance + tools ÷ 160 billable hours = $50/hour. Knowing per-unit cost lets you set price floors honestly: a $25 unit cannot be sold sustainably at $19.99 even on promotion.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Compare three real shopping options',
+            content:
+              'Goal: choose the best per-unit deal for olive oil.\n\nOption A: 750 mL bottle for $14.99.\nOption B: 1 L bottle for $18.49.\nOption C: 3 L tin for $48.99.\n\nStep 1 — Convert all to same unit (per 100 mL).\nA: 14.99 ÷ 7.5 = $2.00 per 100 mL.\nB: 18.49 ÷ 10 = $1.85 per 100 mL.\nC: 48.99 ÷ 30 = $1.633 per 100 mL.\n\nStep 2 — Rank: C ($1.63) < B ($1.85) < A ($2.00). C wins per unit.\n\nStep 3 — Sanity check ranking via scale: A is the smallest and most expensive per unit (typical retail); C is largest and cheapest (bulk discount). Ranking matches expectation.\n\nStep 4 — Decide whether bulk wins for YOU. C saves $0.37/100 mL but requires you to actually use 3 L before it goes off (12-month shelf life typical). If you cook 100 mL/week, that\'s 30 weeks — fits inside shelf life. If you cook 20 mL/week, you\'d throw out half. Cheapest per unit ≠ best value for you if you waste it.',
+            learnerTask:
+              'A coffee shop is comparing two bean suppliers. Supplier X: 5-lb bag at $86. Supplier Y: 12-lb bag at $192. Which is cheaper per pound, and by how much?',
+            answerKey:
+              'X: 86 ÷ 5 = $17.20/lb. Y: 192 ÷ 12 = $16.00/lb. Y is cheaper by $1.20/lb (about 7% lower). Verify with scale: per 12 lb, X would cost 12 × 17.20 = $206.40 vs Y at $192 → save $14.40 per 12 lb. Strong answers always include the per-unit difference AND the dollar impact at a meaningful scale; weak answers only state which is cheaper.',
           },
           {
             type: 'pause_and_check',
             eyebrow: 'Pause and check',
             title: 'Pick the better deal',
             content:
-              'Internet plans: A $50/100 Mbps; B $70/200 Mbps; C $90/300 Mbps. Plan C wins per Mbps.',
+              'Internet plans: A $50/100 Mbps → $0.50/Mbps. B $70/200 Mbps → $0.35/Mbps. C $90/300 Mbps → $0.30/Mbps. Plan C wins per Mbps. But ask: do you need 300 Mbps? Cheapest per unit isn\'t always best value if you don\'t use the units.',
           },
           {
             type: 'common_mistakes',
@@ -1332,17 +1505,35 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
           },
           {
             type: 'worked_example',
-            eyebrow: 'Worked example',
+            eyebrow: 'Worked example 1 — Recipe scale-up',
             title: 'From 8 servings to 20',
             content:
-              'Original (serves 8): 2 cups flour, 3 eggs, 1.5 cups milk. Factor 2.5. Flour 5; eggs 7.5 → 8; milk 3.75.',
+              'Given: original recipe (serves 8) uses 2 cups flour, 3 eggs, 1.5 cups milk. Scale to 20 servings.\n\nFormula: scaling factor = target ÷ original; scaled amount = original × factor.\n\nFactor: 20 ÷ 8 = 2.5.\n\nFlour: 2 × 2.5 = 5 cups.\nEggs: 3 × 2.5 = 7.5 → round up to 8 (you can\'t use half an egg cleanly).\nMilk: 1.5 × 2.5 = 3.75 cups (3 cups + 12 tablespoons, since 1 cup = 16 tbsp).\n\nReasonableness: 20 is 2.5× of 8, so each ingredient should grow ~2.5×. Flour 2 → 5 ✓; eggs round up; milk 1.5 → 3.75 ✓. Bakery rule: round eggs up, never down.',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 2 — Mixture ratio at scale',
+            title: 'Concrete batch with parts arithmetic',
+            content:
+              'Given: 1:2:3 cement:sand:gravel mix needed for 60 wheelbarrows of concrete.\n\nFormula: total parts = sum of ratio terms; amount per part = total ÷ total parts; each component = parts × amount per part.\n\nStep 1 — Total parts: 1 + 2 + 3 = 6.\n\nStep 2 — Amount per part: 60 ÷ 6 = 10 wheelbarrows per part.\n\nStep 3 — Each component:\nCement: 1 × 10 = 10 wheelbarrows.\nSand: 2 × 10 = 20 wheelbarrows.\nGravel: 3 × 10 = 30 wheelbarrows.\n\nVerify: 10 + 20 + 30 = 60 ✓.\n\nReasonableness: gravel is the largest share (3/6 = half the mix); sand is one-third; cement is one-sixth. Mix proportions match expected concrete profile.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Scale a production run with mixed units',
+            content:
+              'Goal: a paint factory produces 1,000 liters of mid-blue paint using 600 L white base, 300 L blue tint, 100 L conditioner. Scale down to a 250-L test batch.\n\nStep 1 — Factor: 250 ÷ 1,000 = 0.25 (or 1/4).\n\nStep 2 — Each component:\nWhite base: 600 × 0.25 = 150 L.\nBlue tint: 300 × 0.25 = 75 L.\nConditioner: 100 × 0.25 = 25 L.\n\nStep 3 — Verify: 150 + 75 + 25 = 250 L ✓. Ratio check: 150 : 75 : 25 simplifies to 6:3:1 = original 600:300:100 ratio ✓.\n\nStep 4 — Real-world caveat: physical mixing of paint loses ~2% to equipment surfaces, so the test batch should target ~2% extra of each component to actually deliver 250 L of usable paint. That is a process consideration on top of the math.',
+            learnerTask:
+              'A 5-acre farm uses 800 lb seed, 1,200 lb fertilizer, and 200 lb soil amendment. The neighbour has 12 acres. How much of each does the neighbour need? Show factor, each component, and verification.',
+            answerKey:
+              'Factor: 12/5 = 2.4. Seed: 800 × 2.4 = 1,920 lb. Fertilizer: 1,200 × 2.4 = 2,880 lb. Soil amendment: 200 × 2.4 = 480 lb. Verify: total per acre on 5-acre = (800+1200+200)/5 = 440 lb/acre; on 12-acre = 12 × 440 = 5,280 lb total. Sum of scaled = 1,920 + 2,880 + 480 = 5,280 ✓. Strong answer verifies via two routes (component-by-component AND total-per-acre); weak answer only does one and risks an arithmetic slip.',
           },
           {
             type: 'concept_explanation',
             eyebrow: 'Mixtures must keep the ratio',
             title: 'Concrete, cleaner, fertiliser, paint',
             content:
-              'A 1:2:3 cement-sand-gravel for 30 units of mix: total parts 6, per part 5; cement 5, sand 10, gravel 15.',
+              'For any 1:2:3 mixture wanted in 30 units total: total parts = 6; per part = 30 ÷ 6 = 5; cement = 5, sand = 10, gravel = 15. Verify by summing: 5 + 10 + 15 = 30 ✓.',
           },
           {
             type: 'concept_explanation',
@@ -1553,7 +1744,7 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
     moduleNumber: 4,
     slug: 'measurement-units-conversions-precision',
     title: 'Measurement, Units, Conversions, and Precision',
-    durationMinutes: 165,
+    durationMinutes: 160,
     level: 'Foundational',
     prerequisites: [
       'math-confidence-number-sense',
@@ -1613,6 +1804,17 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
             title: 'cm → inches',
             content:
               'Given: shelf length 96 cm.\n\nFormula: inches = cm ÷ 2.54.\n\nSubstitute: 96 ÷ 2.54.\n\nCalculate: ≈ 37.795…\n\nAnswer: about 37.8 in (round to what your tape shows).\n\nReasonableness: 2.54 × 38 ≈ 96.5 ✓',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice — Pick the system, then convert',
+            title: 'Three real conversions across systems',
+            content:
+              'Goal: practise picking the right system for the audience, then converting cleanly.\n\n(1) A US-based baker is sourcing flour from a French supplier whose price is "€1.20 per kg." How much flour should the baker order if the recipe calls for 8 lb? Convert to kg first.\nConversion: 1 kg ≈ 2.205 lb → 8 ÷ 2.205 = 3.628 kg.\nRound up to 3.7 kg for a clean order.\nCost: 3.7 × €1.20 = €4.44.\n\n(2) A Kenyan freight company quoting a US client gives a package size in cm: 60 × 40 × 30 cm. Convert to inches for the US waybill.\n60 cm ÷ 2.54 = 23.62 in → round up to 24 in.\n40 cm ÷ 2.54 = 15.75 in → round up to 16 in.\n30 cm ÷ 2.54 = 11.81 in → round up to 12 in.\nWaybill reads ~24 × 16 × 12 in. (Rounding up favours the carrier; rounding down can cause re-grading at intake.)\n\n(3) A recipe says "1 cup of milk." A learner only has a 250 mL measuring jug. How much should they pour?\n1 US cup ≈ 237 mL → pour to about the 240 mL line on the 250 mL jug. (Close enough for cooking.)\nNote: the UK / Commonwealth "metric cup" is 250 mL exactly — if the recipe is from a UK source, use the full jug. Always confirm the recipe\'s system of origin before converting.\n\nReasonableness in each case: the US baker doesn\'t reorder in pounds because the supplier prices in kg — convert ONCE at the order, then keep using kg in the bakery; the freight company rounds in the direction the carrier expects; the recipe pour is "close enough" because 13 mL out of 240 mL is ~5% — well inside cooking tolerance.',
+            learnerTask:
+              'Convert each, naming the conversion factor and the rounding direction. (a) A road trip of 350 mi to km. (b) A package weighing 22 lb to kg, for an international waybill. (c) A patient\'s height of 5 ft 10 in to cm, for a metric medical form.',
+            answerKey:
+              '(a) 350 mi × 1.609 km/mi = 563.15 km. Round to 563 km for a trip plan; round up to 565 km for fuel-budgeting safety. (b) 22 lb × 0.4536 kg/lb = 9.98 kg ≈ 10 kg. Round up to 10 kg for the waybill (carriers grade upward). (c) 5 ft 10 in = 70 in × 2.54 cm/in = 177.8 cm. Round to 178 cm for the form (medical forms typically take whole cm). Strong answer always names the rounding direction and why; weak answer just reports the converted number with no rounding intent.',
           },
           {
             type: 'pause_and_check',
@@ -1879,17 +2081,35 @@ export const PRACTICAL_MATH_MODULES_01_04: StandaloneCourseModule[] = [
           },
           {
             type: 'worked_example',
-            eyebrow: 'Worked example',
-            title: 'Tolerance on a nominal weight',
+            eyebrow: 'Worked example 1 — Tolerance on a nominal weight',
+            title: 'Three bags, one spec',
             content:
-              'Given: nominal 500 g, tolerance ±5 g. Three bags: 497 g, 503 g, 508 g.\n\nFormula: acceptable if 495 ≤ m ≤ 505.\n\nSubstitute: test each m.\n\nCalculate: 497 ✓, 503 ✓, 508 ✗.\n\nAnswer: reject 508 g bag.\n\nReasonableness: 508 is 1.6% above nominal vs ±1% band — outside spec.',
+              'Given: nominal weight 500 g, tolerance ±5 g. Three bags measure 497 g, 503 g, 508 g.\n\nFormula: acceptable if (nominal − tolerance) ≤ measured ≤ (nominal + tolerance).\n\nBand: 495 ≤ m ≤ 505.\n\nTest each:\n497 g — within band ✓.\n503 g — within band ✓.\n508 g — exceeds upper limit by 3 g → ✗ reject.\n\nAnswer: reject the 508 g bag.\n\nReasonableness: tolerance ±1% (5/500) is tight; 508 is +1.6% above nominal — clearly outside band. Bag should be opened, contents weighed precisely, and either rejected or repacked.',
+          },
+          {
+            type: 'worked_example',
+            eyebrow: 'Worked example 2 — Stacking tolerances',
+            title: 'When two measurements add',
+            content:
+              'Given: a shelf is built from a 36 in ± 0.5 in plank and a 12 in ± 0.25 in extension piece. What is the combined length and combined tolerance?\n\nFormula: combined nominal = sum of nominals; combined tolerance = sum of tolerances (worst case for additive errors).\n\nNominal length: 36 + 12 = 48 in.\n\nTolerance: 0.5 + 0.25 = 0.75 in.\n\nAcceptable range: 47.25 to 48.75 in.\n\nAnswer: 48 in ± 0.75 in (range 47.25–48.75).\n\nReasonableness: tolerances always grow when you add measurements. Two pieces each within ±1% can together drift up to ±1.5% if both errors point the same way. For tight builds, demand tighter tolerance per piece; for casual, the loose band is fine. Statistical view (root-sum-square, used when errors are independent and random): √(0.5² + 0.25²) = √0.3125 = 0.559 → tighter than 0.75 worst-case but never exceeded.',
+          },
+          {
+            type: 'guided_practice',
+            eyebrow: 'Guided practice',
+            title: 'Reading a real spec sheet',
+            content:
+              'Goal: a printed circuit board specifies trace width 0.20 mm ± 0.02 mm. A QC scan finds traces measuring 0.18 mm, 0.205 mm, 0.225 mm, 0.193 mm. Decide accept/reject for each.\n\nStep 1 — Compute band: 0.20 − 0.02 = 0.18; 0.20 + 0.02 = 0.22. Band: 0.18 ≤ m ≤ 0.22.\n\nStep 2 — Test each:\n0.18 mm — at the lower limit, accept (boundary inclusive by convention; some specs use strict < which would reject, so always confirm the spec\'s convention).\n0.205 mm — within band ✓.\n0.225 mm — exceeds upper by 0.005 mm → ✗ reject.\n0.193 mm — within band ✓.\n\nStep 3 — Decision: reject 1 of 4 (the 0.225 mm trace). Note the boundary case (0.18) for QC review.\n\nReasonableness: rejection rate 1/4 = 25% on a small sample is high; alert process engineer and run a larger sample before accepting the lot.',
+            learnerTask:
+              'A pharmaceutical tablet must weigh 250 mg ± 10 mg. Test these five tablets: 248, 252, 261, 245, 240. State accept/reject for each, the rejection rate, and whether the lot passes a 95% acceptance threshold.',
+            answerKey:
+              'Band: 240 ≤ m ≤ 260. Tests: 248 ✓; 252 ✓; 261 ✗ (above by 1 mg); 245 ✓; 240 ✓ (boundary). Rejected 1/5 = 20% rejection rate. Lot does NOT pass 95% acceptance (95% threshold means ≤5% can fail; we have 20% failing). Action: hold lot, investigate cause, either rework or destroy. A weak answer would miss the boundary case at 240; a strong answer flags it as boundary and treats it cautiously.',
           },
           {
             type: 'concept_explanation',
             eyebrow: 'Significant figures',
             title: 'How many digits the measurement actually carries',
             content:
-              'All non-zero digits significant. Leading zeros not. Trailing zeros after decimal significant. 123 has 3; 0.0123 has 3; 1.230 has 4.',
+              'All non-zero digits are significant. Leading zeros are NOT significant. Trailing zeros after a decimal point ARE significant. 123 has 3 sig figs; 0.0123 has 3; 1.230 has 4 (the trailing zero is real precision); 1,200 is ambiguous (write 1.2 × 10³ for 2 sig figs or 1.200 × 10³ for 4). Reporting more sig figs than your tool measured is a common honesty error in lab and field work.',
           },
           {
             type: 'pause_and_check',
