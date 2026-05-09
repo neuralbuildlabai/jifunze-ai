@@ -1,0 +1,7 @@
+# Episode 2 — Memory & RAG
+# Heavier than Episode 1 because we add the vector store.
+
+openai>=1.40.0
+python-dotenv>=1.0.0
+chromadb>=0.5.0
+tiktoken>=0.7.0

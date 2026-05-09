@@ -1,0 +1,11 @@
+# Episode 3 — Production & Safety
+# Reuses Episode 2's deps for the agent, adds schema validation.
+
+openai>=1.40.0
+python-dotenv>=1.0.0
+chromadb>=0.5.0
+tiktoken>=0.7.0
+jsonschema>=4.21.0
+
+# Optional — enables the Anthropic comparison appendix.
+anthropic>=0.30.0

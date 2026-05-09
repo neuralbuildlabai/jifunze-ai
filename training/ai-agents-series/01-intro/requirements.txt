@@ -1,0 +1,8 @@
+# Episode 1 — Intro
+# Keep this minimal. Episode 2 adds the heavier deps.
+
+openai>=1.40.0
+python-dotenv>=1.0.0
+
+# For the optional Tavily search tool. Comment out if you don't want it.
+tavily-python>=0.3.0

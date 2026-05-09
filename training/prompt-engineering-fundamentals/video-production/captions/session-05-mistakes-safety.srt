@@ -1,0 +1,339 @@
+1
+00:00:00,000 --> 00:00:01,286
+Five common mistakes.
+
+2
+00:00:01,286 --> 00:00:03,857
+These come up over and over.
+
+3
+00:00:03,857 --> 00:00:06,000
+If you can avoid them,
+
+4
+00:00:06,000 --> 00:00:10,714
+your prompts will land in the top quartile of what most
+
+5
+00:00:10,714 --> 00:00:11,914
+people produce.
+
+6
+00:00:11,914 --> 00:00:14,057
+One — being too vague.
+
+7
+00:00:14,057 --> 00:00:18,771
+"Write something about marketing." That's not a prompt, that's a topic.
+
+8
+00:00:18,771 --> 00:00:23,486
+Replace it with: "Write a 500-word blog post about email marketing
+
+9
+00:00:23,486 --> 00:00:25,629
+best practices for small businesses,
+
+10
+00:00:25,629 --> 00:00:30,343
+aimed at owners with no marketing background." Now the AI has
+
+11
+00:00:30,343 --> 00:00:32,914
+a target it can actually hit.
+
+12
+00:00:32,914 --> 00:00:34,629
+Two — assuming context.
+
+13
+00:00:34,629 --> 00:00:37,200
+"Fix this code." Where's the code?
+
+14
+00:00:37,200 --> 00:00:39,343
+"Improve this paragraph." Which paragraph?
+
+15
+00:00:39,343 --> 00:00:42,771
+You can't reference content the AI can't see.
+
+16
+00:00:42,771 --> 00:00:47,486
+Always paste in the actual material you're asking it to work
+
+17
+00:00:47,486 --> 00:00:48,686
+on.
+
+18
+00:00:48,686 --> 00:00:50,400
+Or summarize it explicitly.
+
+19
+00:00:50,400 --> 00:00:52,114
+Three — ignoring format.
+
+20
+00:00:52,114 --> 00:00:56,829
+If you don't say what shape you want the answer in,
+
+21
+00:00:56,829 --> 00:01:00,257
+you'll get whatever shape the model defaults to.
+
+22
+00:01:00,257 --> 00:01:01,543
+Specify: bullet points.
+
+23
+00:01:01,543 --> 00:01:02,743
+Numbered list.
+
+24
+00:01:02,743 --> 00:01:03,943
+Paragraphs.
+
+25
+00:01:03,943 --> 00:01:05,143
+Table.
+
+26
+00:01:05,143 --> 00:01:06,343
+Markdown headers.
+
+27
+00:01:06,343 --> 00:01:07,543
+JSON.
+
+28
+00:01:07,543 --> 00:01:12,257
+The format isn't an afterthought — it's part of the deliverable.
+
+29
+00:01:12,257 --> 00:01:13,971
+Four — not iterating.
+
+30
+00:01:13,971 --> 00:01:17,400
+The first response is rarely the best one.
+
+31
+00:01:17,400 --> 00:01:19,543
+Treat it as a draft.
+
+32
+00:01:19,543 --> 00:01:20,743
+Refine.
+
+33
+00:01:20,743 --> 00:01:21,943
+Tighten.
+
+34
+00:01:21,943 --> 00:01:23,229
+Reroll a section.
+
+35
+00:01:23,229 --> 00:01:27,086
+Iteration is the work — it's not extra effort,
+
+36
+00:01:27,086 --> 00:01:28,800
+it's the actual job.
+
+37
+00:01:28,800 --> 00:01:30,086
+Five — overcomplicating.
+
+38
+00:01:30,086 --> 00:01:31,371
+The opposite mistake.
+
+39
+00:01:31,371 --> 00:01:36,086
+A 500-word prompt with thirteen constraints and four examples is harder
+
+40
+00:01:36,086 --> 00:01:40,371
+to debug than a 100-word prompt that gets it right.
+
+41
+00:01:40,371 --> 00:01:42,086
+Be concise but complete.
+
+42
+00:01:42,086 --> 00:01:45,086
+Cut anything that doesn't earn its place.
+
+43
+00:01:45,086 --> 00:01:49,800
+If you're not sure whether a sentence in your prompt is
+
+44
+00:01:49,800 --> 00:01:52,800
+helping, delete it and see what happens.
+
+45
+00:01:52,800 --> 00:01:57,514
+The checklist on screen is the version you'll see in the
+
+46
+00:01:57,514 --> 00:02:01,371
+workbook — before, during, after, and for production use.
+
+47
+00:02:01,371 --> 00:02:06,086
+I want to add three more habits you won't see on
+
+48
+00:02:06,086 --> 00:02:07,286
+the slide.
+
+49
+00:02:07,286 --> 00:02:09,000
+These are about safety.
+
+50
+00:02:09,000 --> 00:02:12,429
+First — don't paste sensitive data into prompts.
+
+51
+00:02:12,429 --> 00:02:13,629
+Customer names.
+
+52
+00:02:13,629 --> 00:02:14,829
+Internal credentials.
+
+53
+00:02:14,829 --> 00:02:16,029
+Unreleased pricing.
+
+54
+00:02:16,029 --> 00:02:17,229
+Private documents.
+
+55
+00:02:17,229 --> 00:02:18,514
+Personal health information.
+
+56
+00:02:18,514 --> 00:02:23,229
+AI providers may use prompt content for evaluation or model improvement,
+
+57
+00:02:23,229 --> 00:02:26,229
+depending on your plan and your settings.
+
+58
+00:02:26,229 --> 00:02:30,943
+Treat your prompt like a public message until you've confirmed otherwise.
+
+59
+00:02:30,943 --> 00:02:34,800
+If a prompt would be embarrassing to see leaked,
+
+60
+00:02:34,800 --> 00:02:39,514
+find another way to do the task — strip identifying details,
+
+61
+00:02:39,514 --> 00:02:43,371
+swap in fake data, or use a self-hosted model.
+
+62
+00:02:43,371 --> 00:02:45,514
+Second — verify factual claims.
+
+63
+00:02:45,514 --> 00:02:46,800
+AI models hallucinate.
+
+64
+00:02:46,800 --> 00:02:51,514
+Names, dates, statistics, citations, court cases, product specifications, version numbers —
+
+65
+00:02:51,514 --> 00:02:55,371
+they can sound completely confident, and be completely wrong.
+
+66
+00:02:55,371 --> 00:03:00,086
+Anything you'll put your name on, double-check from a primary source.
+
+67
+00:03:00,086 --> 00:03:04,800
+The rule of thumb I use: if a customer or boss
+
+68
+00:03:04,800 --> 00:03:07,800
+could ask "where did this come from?",
+
+69
+00:03:07,800 --> 00:03:11,657
+you should know the answer before you hit send.
+
+70
+00:03:11,657 --> 00:03:15,943
+Third — be aware of where the model's expertise ends.
+
+71
+00:03:15,943 --> 00:03:18,943
+Models are pattern matchers, not domain experts.
+
+72
+00:03:18,943 --> 00:03:22,800
+They're great for first drafts, brainstorming, and structured tasks.
+
+73
+00:03:22,800 --> 00:03:27,514
+They're not a substitute for legal advice, medical advice, financial decisions,
+
+74
+00:03:27,514 --> 00:03:30,943
+or anything where being wrong has real consequences.
+
+75
+00:03:30,943 --> 00:03:33,943
+The further you push outside common patterns,
+
+76
+00:03:33,943 --> 00:03:37,800
+the more carefully you need to check the output.
+
+77
+00:03:37,800 --> 00:03:39,514
+And for high-stakes domains,
+
+78
+00:03:39,514 --> 00:03:44,229
+the model should be a research assistant — not the decision-maker.
+
+79
+00:03:44,229 --> 00:03:48,943
+Those three habits — don't share sensitive data, verify factual claims,
+
+80
+00:03:48,943 --> 00:03:51,086
+know the model's edges —
+
+81
+00:03:51,086 --> 00:03:54,943
+are how working prompt engineers stay out of trouble.
+
+82
+00:03:54,943 --> 00:03:58,800
+Pair them with the technique playbook from earlier sessions,
+
+83
+00:03:58,800 --> 00:04:02,229
+and you've got a workflow you can trust.
+
+84
+00:04:02,229 --> 00:04:06,514
+In the final session, we'll wrap up — quiz, workbook,
+
+85
+00:04:06,514 --> 00:04:08,657
+and what comes next. ---

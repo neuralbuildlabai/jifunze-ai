@@ -1,0 +1,223 @@
+1
+00:00:00,000 --> 00:00:02,143
+Quick recap before we wrap.
+
+2
+00:00:02,143 --> 00:00:06,429
+The five core principles — clarity, context, structure, constraints, examples.
+
+3
+00:00:06,429 --> 00:00:07,714
+They're the foundation.
+
+4
+00:00:07,714 --> 00:00:10,714
+Every technique we covered builds on them.
+
+5
+00:00:10,714 --> 00:00:15,429
+The eight techniques — zero-shot, few-shot, chain-of-thought, role prompting, iterative refinement,
+
+6
+00:00:15,429 --> 00:00:17,143
+template, negative prompting, comparative.
+
+7
+00:00:17,143 --> 00:00:20,571
+Each one fits a specific kind of task.
+
+8
+00:00:20,571 --> 00:00:24,857
+Pick the right one, and your prompts get noticeably better.
+
+9
+00:00:24,857 --> 00:00:29,143
+The four advanced patterns — system prompts, temperature, prompt chaining,
+
+10
+00:00:29,143 --> 00:00:30,343
+meta prompting.
+
+11
+00:00:30,343 --> 00:00:33,771
+These are how production work gets done —
+
+12
+00:00:33,771 --> 00:00:38,486
+when you've moved past one-off questions and you're building real workflows.
+
+13
+00:00:38,486 --> 00:00:42,343
+And the practice loop — write, test, iterate, document.
+
+14
+00:00:42,343 --> 00:00:44,486
+The skill isn't memorizing techniques.
+
+15
+00:00:44,486 --> 00:00:47,914
+It's noticing when a prompt isn't quite right,
+
+16
+00:00:47,914 --> 00:00:50,486
+and knowing how to fix it.
+
+17
+00:00:50,486 --> 00:00:54,771
+Three things to do before you call this course complete.
+
+18
+00:00:54,771 --> 00:00:56,914
+First — take the quiz.
+
+19
+00:00:56,914 --> 00:00:59,914
+It's in the course folder, called quiz.md.
+
+20
+00:00:59,914 --> 00:01:02,914
+Twelve questions, ten minutes, answer key included.
+
+21
+00:01:02,914 --> 00:01:04,200
+Score yourself honestly.
+
+22
+00:01:04,200 --> 00:01:07,629
+Nine out of twelve is the pass mark.
+
+23
+00:01:07,629 --> 00:01:10,629
+If you fall short on a section,
+
+24
+00:01:10,629 --> 00:01:14,057
+re-watch the corresponding video and try again —
+
+25
+00:01:14,057 --> 00:01:17,914
+it's not a graded exam, it's a calibration check.
+
+26
+00:01:17,914 --> 00:01:20,914
+Second — work through the learner workbook.
+
+27
+00:01:20,914 --> 00:01:25,200
+Four practice tasks, each takes about ten to fifteen minutes.
+
+28
+00:01:25,200 --> 00:01:28,200
+The first is an internal email —
+
+29
+00:01:28,200 --> 00:01:32,057
+a perfect first run at applying all five principles.
+
+30
+00:01:32,057 --> 00:01:35,057
+The second is a few-shot triage exercise.
+
+31
+00:01:35,057 --> 00:01:38,057
+The third is a chain-of-thought decision problem.
+
+32
+00:01:38,057 --> 00:01:41,914
+The fourth is iterative refinement on a creative brief.
+
+33
+00:01:41,914 --> 00:01:46,629
+Each task ends with a rubric you can check yourself against.
+
+34
+00:01:46,629 --> 00:01:47,914
+When you're done,
+
+35
+00:01:47,914 --> 00:01:51,771
+you'll have something I want you to keep —
+
+36
+00:01:51,771 --> 00:01:53,486
+a starter prompt library.
+
+37
+00:01:53,486 --> 00:01:57,343
+Four prompts you actually wrote, that solve real problems,
+
+38
+00:01:57,343 --> 00:02:00,343
+that you can keep tweaking and reusing.
+
+39
+00:02:00,343 --> 00:02:03,771
+That library is the artifact of this course.
+
+40
+00:02:03,771 --> 00:02:06,343
+It's worth more than any certificate.
+
+41
+00:02:06,343 --> 00:02:11,057
+Third — when you're ready, the next course is AI Agents.
+
+42
+00:02:11,057 --> 00:02:15,771
+That's where we take everything you just learned and use it
+
+43
+00:02:15,771 --> 00:02:20,057
+to build systems that don't just respond to prompts —
+
+44
+00:02:20,057 --> 00:02:24,343
+they plan, they take actions, and they run real workflows.
+
+45
+00:02:24,343 --> 00:02:26,486
+Prompt engineering is the foundation.
+
+46
+00:02:26,486 --> 00:02:29,486
+Agents are what you build on top.
+
+47
+00:02:29,486 --> 00:02:30,771
+One last thing.
+
+48
+00:02:30,771 --> 00:02:35,057
+The skill you've started building today only deepens with practice.
+
+49
+00:02:35,057 --> 00:02:39,771
+Every prompt you write from here on is a chance to
+
+50
+00:02:39,771 --> 00:02:42,343
+use one of these techniques deliberately.
+
+51
+00:02:42,343 --> 00:02:44,914
+Notice when you reach for chain-of-thought.
+
+52
+00:02:44,914 --> 00:02:48,771
+Notice when few-shot would have saved you a back-and-forth.
+
+53
+00:02:48,771 --> 00:02:53,486
+The point of the workbook isn't to pass a test —
+
+54
+00:02:53,486 --> 00:02:55,629
+it's to build the muscle.
+
+55
+00:02:55,629 --> 00:02:56,914
+Thanks for watching.
+
+56
+00:02:56,914 --> 00:02:59,486
+Now go write some prompts. ---

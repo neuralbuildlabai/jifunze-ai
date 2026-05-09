@@ -1,0 +1,547 @@
+1
+00:00:00,000 --> 00:00:01,200
+Five principles.
+
+2
+00:00:01,200 --> 00:00:04,200
+They're not magic, and they're not new.
+
+3
+00:00:04,200 --> 00:00:08,914
+They're the same five things that make any kind of communication
+
+4
+00:00:08,914 --> 00:00:11,057
+work — but stated explicitly,
+
+5
+00:00:11,057 --> 00:00:15,771
+because the AI won't fill in gaps the way a human
+
+6
+00:00:15,771 --> 00:00:16,971
+collaborator does.
+
+7
+00:00:16,971 --> 00:00:18,171
+Clarity.
+
+8
+00:00:18,171 --> 00:00:19,371
+Context.
+
+9
+00:00:19,371 --> 00:00:20,571
+Structure.
+
+10
+00:00:20,571 --> 00:00:21,771
+Constraints.
+
+11
+00:00:21,771 --> 00:00:22,971
+Examples.
+
+12
+00:00:22,971 --> 00:00:26,400
+We'll go through each with a quick before-and-after,
+
+13
+00:00:26,400 --> 00:00:29,400
+and you'll start to see the pattern.
+
+14
+00:00:29,400 --> 00:00:31,543
+Once you internalize these five,
+
+15
+00:00:31,543 --> 00:00:36,257
+almost every prompt-engineering technique will feel like a small twist on
+
+16
+00:00:36,257 --> 00:00:37,543
+one of them.
+
+17
+00:00:37,543 --> 00:00:39,257
+Principle one — clarity.
+
+18
+00:00:39,257 --> 00:00:40,457
+Be specific.
+
+19
+00:00:40,457 --> 00:00:45,171
+Watch what happens when I ask: "Help me with my email."
+
+20
+00:00:45,171 --> 00:00:46,886
+That's not a prompt.
+
+21
+00:00:46,886 --> 00:00:51,600
+That's the opening line of a conversation I haven't had yet.
+
+22
+00:00:51,600 --> 00:00:56,314
+The AI doesn't know what email, who it's to, what tone,
+
+23
+00:00:56,314 --> 00:00:58,029
+what outcome I want.
+
+24
+00:00:58,029 --> 00:01:00,171
+So it's going to guess.
+
+25
+00:01:00,171 --> 00:01:01,457
+And guess wrong.
+
+26
+00:01:01,457 --> 00:01:06,171
+Now look at this version: "Write a professional email to my
+
+27
+00:01:06,171 --> 00:01:09,171
+client apologizing for a delayed project delivery.
+
+28
+00:01:09,171 --> 00:01:12,600
+The delay was due to unexpected technical issues.
+
+29
+00:01:12,600 --> 00:01:14,314
+Maintain a positive tone,
+
+30
+00:01:14,314 --> 00:01:18,600
+and propose a new deadline of next Friday." What changed?
+
+31
+00:01:18,600 --> 00:01:21,171
+I named the type of content.
+
+32
+00:01:21,171 --> 00:01:22,371
+The recipient.
+
+33
+00:01:22,371 --> 00:01:23,571
+The purpose.
+
+34
+00:01:23,571 --> 00:01:24,771
+The reason.
+
+35
+00:01:24,771 --> 00:01:25,971
+The tone.
+
+36
+00:01:25,971 --> 00:01:28,114
+And the action I want.
+
+37
+00:01:28,114 --> 00:01:31,543
+That's six pieces of information I added —
+
+38
+00:01:31,543 --> 00:01:35,400
+and the result will be six times more useful.
+
+39
+00:01:35,400 --> 00:01:39,257
+There's a quick mental check I use for clarity.
+
+40
+00:01:39,257 --> 00:01:41,400
+Read your prompt out loud.
+
+41
+00:01:41,400 --> 00:01:46,114
+If a contractor could deliver three completely different things and all
+
+42
+00:01:46,114 --> 00:01:49,543
+of them would technically match what you wrote,
+
+43
+00:01:49,543 --> 00:01:51,686
+the prompt isn't clear yet.
+
+44
+00:01:51,686 --> 00:01:56,400
+Add the next constraint until only one shape of answer makes
+
+45
+00:01:56,400 --> 00:01:57,600
+sense.
+
+46
+00:01:57,600 --> 00:02:02,314
+The takeaway is simple: never assume the AI knows your context.
+
+47
+00:02:02,314 --> 00:02:03,514
+State it.
+
+48
+00:02:03,514 --> 00:02:05,229
+Principle two — context.
+
+49
+00:02:05,229 --> 00:02:08,229
+Where clarity is about what you want,
+
+50
+00:02:08,229 --> 00:02:12,514
+context is about why it matters and who it's for.
+
+51
+00:02:12,514 --> 00:02:14,229
+Compare these two prompts.
+
+52
+00:02:14,229 --> 00:02:18,943
+First: "Explain quantum computing." The AI gives you a wall of
+
+53
+00:02:18,943 --> 00:02:22,371
+physics jargon — and depending on the model,
+
+54
+00:02:22,371 --> 00:02:27,086
+it may be technically accurate but completely useless to your audience.
+
+55
+00:02:27,086 --> 00:02:31,800
+Now: "I'm a high school teacher preparing a lesson for tenth
+
+56
+00:02:31,800 --> 00:02:35,657
+graders, who have basic knowledge of atoms and electricity.
+
+57
+00:02:35,657 --> 00:02:39,943
+Explain quantum computing using simple analogies they can relate to.
+
+58
+00:02:39,943 --> 00:02:44,657
+Keep it under three hundred words." Context tells the AI five
+
+59
+00:02:44,657 --> 00:02:45,857
+things.
+
+60
+00:02:45,857 --> 00:02:47,571
+Your role — teacher.
+
+61
+00:02:47,571 --> 00:02:49,714
+Your audience — tenth graders.
+
+62
+00:02:49,714 --> 00:02:52,286
+Their knowledge level — basic physics.
+
+63
+00:02:52,286 --> 00:02:54,429
+The desired approach — analogies.
+
+64
+00:02:54,429 --> 00:02:57,857
+And the constraints — under three hundred words.
+
+65
+00:02:57,857 --> 00:03:00,857
+Think of context as setting the stage.
+
+66
+00:03:00,857 --> 00:03:05,143
+The more relevant detail you give, the better the performance.
+
+67
+00:03:05,143 --> 00:03:08,571
+And by relevant, I do mean relevant —
+
+68
+00:03:08,571 --> 00:03:11,571
+don't pad your prompts with unnecessary backstory.
+
+69
+00:03:11,571 --> 00:03:13,714
+Quality of context, not quantity.
+
+70
+00:03:13,714 --> 00:03:18,429
+A two-sentence context line that actually tells the model who's reading
+
+71
+00:03:18,429 --> 00:03:23,143
+and what they need is worth ten sentences of generic preamble.
+
+72
+00:03:23,143 --> 00:03:24,857
+Principle three — structure.
+
+73
+00:03:24,857 --> 00:03:28,714
+How you organize your prompt directly shapes the output.
+
+74
+00:03:28,714 --> 00:03:33,429
+If you ask for a business plan in a single run-on
+
+75
+00:03:33,429 --> 00:03:36,429
+sentence, you'll get a single run-on response.
+
+76
+00:03:36,429 --> 00:03:40,714
+If you ask for one with named sections and lengths,
+
+77
+00:03:40,714 --> 00:03:44,571
+you'll get something that looks like a real document.
+
+78
+00:03:44,571 --> 00:03:45,771
+Watch this.
+
+79
+00:03:45,771 --> 00:03:50,486
+The unstructured version: "I need a business plan for a coffee
+
+80
+00:03:50,486 --> 00:03:55,200
+shop with financial projections and marketing strategy and competitive analysis." The
+
+81
+00:03:55,200 --> 00:03:57,771
+AI knows roughly what you want,
+
+82
+00:03:57,771 --> 00:04:02,057
+but it has no scaffolding to hang the answer on.
+
+83
+00:04:02,057 --> 00:04:03,771
+Now the structured version.
+
+84
+00:04:03,771 --> 00:04:06,771
+I'm asking for the same thing —
+
+85
+00:04:06,771 --> 00:04:11,057
+but I'm naming each section, listing the subsections under it,
+
+86
+00:04:11,057 --> 00:04:14,486
+giving target word counts, and specifying bullet-point format.
+
+87
+00:04:14,486 --> 00:04:18,343
+The AI now has a template to fill in,
+
+88
+00:04:18,343 --> 00:04:22,629
+and the response comes back organized exactly like I asked.
+
+89
+00:04:22,629 --> 00:04:24,343
+Rule of thumb —
+
+90
+00:04:24,343 --> 00:04:28,629
+structure your prompt the way you'd want the output structured.
+
+91
+00:04:28,629 --> 00:04:32,486
+If you want headers, use headers in the prompt.
+
+92
+00:04:32,486 --> 00:04:36,343
+If you want a numbered list of five things,
+
+93
+00:04:36,343 --> 00:04:39,771
+ask for a numbered list of five things.
+
+94
+00:04:39,771 --> 00:04:44,486
+The shape of the prompt teaches the model the shape of
+
+95
+00:04:44,486 --> 00:04:45,686
+the answer.
+
+96
+00:04:45,686 --> 00:04:49,543
+Two principles in this slide, because they pair naturally.
+
+97
+00:04:49,543 --> 00:04:51,257
+Principle four — constraints.
+
+98
+00:04:51,257 --> 00:04:52,971
+Constraints don't limit creativity.
+
+99
+00:04:52,971 --> 00:04:54,257
+They focus it.
+
+100
+00:04:54,257 --> 00:04:58,971
+A prompt that says "write a story" gives you something generic.
+
+101
+00:04:58,971 --> 00:05:03,686
+A prompt that says "write a 500-word science fiction story about
+
+102
+00:05:03,686 --> 00:05:08,400
+a robot learning to paint, suitable for ages 8 to 12,
+
+103
+00:05:08,400 --> 00:05:11,400
+with a positive message about creativity" —
+
+104
+00:05:11,400 --> 00:05:14,829
+that prompt gives you a much better story.
+
+105
+00:05:14,829 --> 00:05:16,543
+The constraints aren't shackles.
+
+106
+00:05:16,543 --> 00:05:17,829
+They're a frame.
+
+107
+00:05:17,829 --> 00:05:22,114
+Useful constraints to remember: length, tone, format, audience, and style.
+
+108
+00:05:22,114 --> 00:05:25,543
+Pick the ones that matter for your task.
+
+109
+00:05:25,543 --> 00:05:30,257
+You don't need all five every time — but pick deliberately.
+
+110
+00:05:30,257 --> 00:05:31,971
+Principle five — examples.
+
+111
+00:05:31,971 --> 00:05:35,829
+When telling the AI what you want is hard,
+
+112
+00:05:35,829 --> 00:05:37,543
+showing it is easier.
+
+113
+00:05:37,543 --> 00:05:41,829
+If you've got a brand voice, paste in a sample.
+
+114
+00:05:41,829 --> 00:05:46,114
+If you want a specific output format, demonstrate it once.
+
+115
+00:05:46,114 --> 00:05:50,829
+If you want a tone you can't quite describe in words,
+
+116
+00:05:50,829 --> 00:05:54,686
+give the AI a paragraph that has that tone.
+
+117
+00:05:54,686 --> 00:05:58,543
+The model is incredibly good at pattern matching —
+
+118
+00:05:58,543 --> 00:06:02,829
+give it one good pattern, and it will follow it.
+
+119
+00:06:02,829 --> 00:06:07,114
+One good example often beats a thousand words of instruction.
+
+120
+00:06:07,114 --> 00:06:09,686
+And — small but useful —
+
+121
+00:06:09,686 --> 00:06:13,543
+the example you provide doesn't have to be perfect.
+
+122
+00:06:13,543 --> 00:06:17,829
+It just has to be in the direction you want.
+
+123
+00:06:17,829 --> 00:06:20,829
+The AI will smooth out the rest.
+
+124
+00:06:20,829 --> 00:06:22,114
+That's all five.
+
+125
+00:06:22,114 --> 00:06:23,314
+Clarity.
+
+126
+00:06:23,314 --> 00:06:24,514
+Context.
+
+127
+00:06:24,514 --> 00:06:25,714
+Structure.
+
+128
+00:06:25,714 --> 00:06:26,914
+Constraints.
+
+129
+00:06:26,914 --> 00:06:28,114
+Examples.
+
+130
+00:06:28,114 --> 00:06:32,400
+You'll see them woven through every technique we cover next.
+
+131
+00:06:32,400 --> 00:06:36,257
+If you want to start applying them right now,
+
+132
+00:06:36,257 --> 00:06:40,114
+open the learner workbook and start Task 1 —
+
+133
+00:06:40,114 --> 00:06:44,400
+it's a real-world internal email scenario that uses all five.
+
+134
+00:06:44,400 --> 00:06:47,829
+Or keep watching, and come back to it.
+
+135
+00:06:47,829 --> 00:06:49,543
+In the next session,
+
+136
+00:06:49,543 --> 00:06:53,829
+we'll layer eight practical techniques on top of these foundations.
+
+137
+00:06:53,829 --> 00:06:55,114
+Let's go. ---
