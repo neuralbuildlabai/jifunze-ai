@@ -5,6 +5,7 @@
 
 import { BUSINESS_PROCESS_AUTOMATION_SLUG } from './businessProcessAutomationConstants'
 import type { CourseNarrationManifest, NarrationStatus, SlideNarration } from './courseNarrationTypes'
+import { narrationAudioSrcWhenReady } from './narrationHelpers'
 import { businessProcessAutomationSlideManifest } from './businessProcessAutomationSlides'
 
 const ASSET_BASE = '/course-assets/business-process-automation-for-work'
@@ -84,8 +85,7 @@ export function getBpaModuleNarrationAudioSrc(moduleSlug: string): string | unde
 
 /** Only expose URLs to the player when narration is marked ready (avoids 404 / “fake” playable audio). */
 export function getBpaAudioSrcWhenReady(status: NarrationStatus, url: string | undefined): string | undefined {
-  if (status !== 'ready' || !url?.trim()) return undefined
-  return url
+  return narrationAudioSrcWhenReady(status, url)
 }
 
 /** Map slide number → transcript for `JifunzeSlidePlayer.slideTranscripts`. */

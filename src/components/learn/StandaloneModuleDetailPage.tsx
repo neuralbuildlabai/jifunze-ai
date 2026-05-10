@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import {
+  BUSINESS_ANALYTICS_DECISION_MAKING_SLUG,
   BUSINESS_PROCESS_AUTOMATION_SLUG,
   findStandaloneCourseBySlug,
   findStandaloneModule,
@@ -10,8 +11,10 @@ import {
   getStandaloneQuizPath,
   practicalMathQuizPassed,
 } from '../../data/courses'
+import { getBaSlidesForModule } from '../../data/courses/businessAnalyticsDecisionMakingSlides'
 import { getBpaSlidesForModule } from '../../data/courses/businessProcessAutomationSlides'
 import { useStandaloneCourseProgress } from '../../hooks/usePracticalMathProgress'
+import { BusinessAnalyticsStandaloneModulePage } from './BusinessAnalyticsStandaloneModulePage'
 import { BpaStandaloneModulePage } from './BpaStandaloneModulePage'
 import { ORANGE_GRADIENT } from './discoveryHubSections'
 import { buildLessonPreview, formatHoursFromMinutes } from './standaloneCoursePresentation'
@@ -165,6 +168,23 @@ function StandaloneModuleDetailLoaded({ entry, module }: StandaloneModuleLoadedP
     const slides = getBpaSlidesForModule(module.slug)
     return (
       <BpaStandaloneModulePage
+        entry={entry}
+        module={module}
+        source={source}
+        slides={slides}
+        progress={progress}
+        prev={prev}
+        next={next}
+        devManualScoreEnabled={devManualScoreEnabled}
+        ModuleQuizDevManualScore={ModuleQuizDevManualScore}
+      />
+    )
+  }
+
+  if (entry.slug === BUSINESS_ANALYTICS_DECISION_MAKING_SLUG) {
+    const slides = getBaSlidesForModule(module.slug)
+    return (
+      <BusinessAnalyticsStandaloneModulePage
         entry={entry}
         module={module}
         source={source}

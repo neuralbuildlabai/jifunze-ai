@@ -6,9 +6,11 @@
 import {
   BUSINESS_ANALYTICS_DECISION_MAKING_INTERNAL_KEY,
   BUSINESS_ANALYTICS_DECISION_MAKING_SLUG,
-} from './businessAnalyticsDecisionMakingConstants'
+} from './businessAnalyticsDecisionMakingIds.ts'
 import { BUSINESS_ANALYTICS_MODULES } from './businessAnalyticsDecisionMakingModules'
 import type { PracticalMathematicsCourse } from './practicalMathematicsCourseTypes'
+
+export { BUSINESS_ANALYTICS_DECISION_MAKING_INTERNAL_KEY, BUSINESS_ANALYTICS_DECISION_MAKING_SLUG } from './businessAnalyticsDecisionMakingIds.ts'
 
 export const businessAnalyticsDecisionMakingCourse: PracticalMathematicsCourse = {
   slug: BUSINESS_ANALYTICS_DECISION_MAKING_SLUG,
@@ -38,7 +40,7 @@ export const businessAnalyticsDecisionMakingCourse: PracticalMathematicsCourse =
   downloadableResources: [
     {
       label: 'Download slide deck (PowerPoint)',
-      href: '/training/business-analytics-decision-making/business_analytics_decision_making_serious_deck.pptx',
+      href: '/course-assets/business-analytics-decision-making/deck/business_analytics_decision_making_serious_deck.pptx',
     },
     {
       label: 'Download companion notes (Markdown)',
@@ -91,7 +93,7 @@ export const businessAnalyticsDecisionMakingCourse: PracticalMathematicsCourse =
   microWorkshopDetail: {
     cardSubtitle:
       'Turn business data into clear decisions using dashboards, KPIs, trend analysis, variance analysis, and a realistic business case.',
-    cardMeta: '45–60 min · Beginner–Intermediate · Professional micro-course',
+    cardMeta: '61 min · Beginner–Intermediate · Professional micro-course',
     cardTags: ['Business analytics', 'KPIs', 'dashboards', 'decision-making'],
     whoThisIsFor: [
       'Leaders who need to interrogate dashboards without drowning in jargon',
@@ -171,4 +173,3 @@ export const businessAnalyticsDecisionMakingCourse: PracticalMathematicsCourse =
   modules: BUSINESS_ANALYTICS_MODULES,
 }
 
-export { BUSINESS_ANALYTICS_DECISION_MAKING_SLUG, BUSINESS_ANALYTICS_DECISION_MAKING_INTERNAL_KEY } from './businessAnalyticsDecisionMakingConstants'

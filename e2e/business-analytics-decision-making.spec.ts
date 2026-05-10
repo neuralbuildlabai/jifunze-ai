@@ -79,22 +79,20 @@ test.describe('Business Analytics for Decision-Making — standalone smoke', () 
     await expect(page.getByTestId(`standalone-course-detail-${SLUG}`)).toBeVisible()
   })
 
-  test('detail page: hero, outcomes, modules, methods, downloads, suggested next, correct asset hrefs', async ({ page }) => {
+  test('detail page: hero, slide placeholder or player, module chapters, downloads, correct asset hrefs', async ({ page }) => {
     await page.goto(`/learn/${SLUG}`)
     await expect(page.getByTestId(`standalone-course-hero-${SLUG}`)).toBeVisible({ timeout: 20_000 })
     await expect(page.getByRole('heading', { level: 1 })).toContainText(/Business Analytics for Decision-Making/)
 
-    await expect(page.getByRole('heading', { name: 'What you will learn' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'What the course covers' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Analytics methods included' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Learner practice' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Downloadable resources' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Suggested next courses' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Module chapters' })).toBeVisible()
+    await expect(page.getByTestId('standalone-badm-slide-placeholder-overview')).toBeVisible()
 
     const deck = page.getByRole('link', { name: /Download slide deck/i }).first()
     const notes = page.getByRole('link', { name: /Download companion notes/i }).first()
-    await expect(deck).toHaveAttribute('href', '/training/business-analytics-decision-making/business_analytics_decision_making_serious_deck.pptx')
+    await expect(deck).toHaveAttribute('href', '/course-assets/business-analytics-decision-making/deck/business_analytics_decision_making_serious_deck.pptx')
     await expect(notes).toHaveAttribute('href', '/training/business-analytics-decision-making/business_analytics_decision_making_source.md')
+
+    await expect(page.locator('summary').filter({ hasText: 'More about this course' })).toBeVisible()
   })
 
   test('module and lesson navigation with back links', async ({ page }) => {

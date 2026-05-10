@@ -64,7 +64,7 @@ const BUSINESS_ANALYTICS_CATALOG_ENTRY: StandaloneCatalogEntry = {
   accessLabel: businessAnalyticsDecisionMakingCourse.accessLabel,
   school: businessAnalyticsDecisionMakingCourse.school,
   publicRoute: `/learn/${businessAnalyticsDecisionMakingCourse.slug}`,
-  durationLabel: '45–60 minutes',
+  durationLabel: '61 min total',
   source: businessAnalyticsDecisionMakingCourse,
 }
 
