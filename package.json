@@ -24,6 +24,7 @@
     "verify:business-process-automation": "tsx scripts/verify-business-process-automation-course.ts",
     "verify:business-analytics": "tsx scripts/verify-business-analytics-decision-making-course.ts",
     "verify:ai-productivity-smart-workflows": "tsx scripts/verify-ai-productivity-smart-workflows-production.ts",
+    "verify:hosted-rise-dist": "tsx scripts/verify-hosted-rise-dist.ts",
     "verify:course-slide-player": "tsx scripts/verify-course-slide-player.ts",
     "verify:practical-math-lessons": "tsx scripts/audit-practical-math-lesson-quality.ts",
     "test:practical-math-progression": "tsx scripts/test-practical-mathematics-progression.ts",
