@@ -213,11 +213,11 @@ export function DashboardLearnerHub() {
         <p className="mt-2 text-sm text-zinc-400">{pathwayBody}</p>
         <div className="mt-5">
           {pathwayPrimary ? (
-            <Link className={learnerShellTokens.primaryButton} to="/learn#schools" data-testid="dashboard-your-pathway-view">
+            <Link className={learnerShellTokens.primaryButton} to="/learn#available-now" data-testid="dashboard-your-pathway-view">
               Browse schools in catalog
             </Link>
           ) : (
-            <Link className={learnerShellTokens.primaryButton} to="/learn#schools" data-testid="dashboard-choose-pathway">
+            <Link className={learnerShellTokens.primaryButton} to="/learn#available-now" data-testid="dashboard-choose-pathway">
               Browse schools in catalog
             </Link>
           )}

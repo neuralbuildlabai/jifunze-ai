@@ -47,8 +47,10 @@ export function MyLearningPage() {
 
           {STANDALONE_LEARNER_CATALOG.length > 0 || FREE_STARTER_RISE_COURSES.length > 0 ? (
             <section className={warmCard} data-testid="my-learning-available-standalone">
-              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-stone-500">Available free courses</p>
-              <p className="mt-1 text-sm text-stone-600">Standalone paths — open anytime, no enrollment step.</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-stone-500">Available courses &amp; workshops</p>
+              <p className="mt-1 text-sm text-stone-600">
+                Same catalog as the public learning page — Rise starters use browser-local completion for now.
+              </p>
               <ul className="mt-4 space-y-2">
                 {FREE_STARTER_RISE_COURSES.map((e) => (
                   <li key={e.slug}>
@@ -63,7 +65,7 @@ export function MyLearningPage() {
                       </div>
                       <div className="flex flex-wrap gap-2">
                         <Link className={learnerShellTokens.primaryButton} to={e.publicRoute}>
-                          Open course
+                          {e.slug === 'smart-workflows-with-ai' ? 'Start workshop' : 'Start course'}
                         </Link>
                       </div>
                     </div>

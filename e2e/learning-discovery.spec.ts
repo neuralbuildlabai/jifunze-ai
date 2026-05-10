@@ -7,43 +7,43 @@ test.describe('Learning discovery (public)', () => {
     await applyPublicE2eMaintenanceBypass(page)
   })
 
-  test('/paths redirects to /learn with schools anchor', async ({ page }) => {
+  test('/paths redirects to /learn with available-now anchor', async ({ page }) => {
     await page.goto('/paths')
-    await expect(page).toHaveURL(/\/learn#schools$/)
+    await expect(page).toHaveURL(/\/learn#available-now$/)
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
   })
 
-  test('/learn hub lists Free Starter Rise pilot and course page embeds package path', async ({ page }) => {
+  test('/learn shows honest available catalog heading and no legacy flagship featured grid', async ({ page }) => {
     await page.goto('/learn')
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByTestId('discovery-free-starter-ai-at-work-chatgpt')).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: /available courses.*workshops/i })).toBeVisible()
+    await expect(page.locator('[data-testid^="discovery-featured-"]')).toHaveCount(0)
+    await expect(page.getByTestId('discovery-section-available-now')).toBeVisible()
+  })
+
+  test('/learn hub lists Free Starter Rise pilots with working iframe paths', async ({ page }) => {
+    await page.goto('/learn')
+    await expect(page.getByTestId('discovery-available-rise-ai-at-work-chatgpt')).toBeVisible()
+    await expect(page.getByTestId('discovery-available-rise-smart-workflows-with-ai')).toBeVisible()
+
     await page.goto('/learn/free/ai-at-work-chatgpt')
     await expect(page.getByTestId('free-starter-ai-at-work-chatgpt-page')).toBeVisible({ timeout: 20_000 })
-    const frame = page.locator('iframe[title="AI at Work — interactive lesson"]')
-    await expect(frame).toBeVisible()
-    await expect(frame).toHaveAttribute('src', /\/course-assets\/rise\/ai-at-work-chatgpt\/content\/index\.html$/)
-  })
+    const frameAi = page.locator('iframe[title="AI at Work — interactive lesson"]')
+    await expect(frameAi).toBeVisible()
+    await expect(frameAi).toHaveAttribute('src', /\/course-assets\/rise\/ai-at-work-chatgpt\/content\/index\.html$/)
 
-  test('/learn hub lists Smart Workflows free starter workshop and embeds Rise package path', async ({ page }) => {
-    await page.goto('/learn')
-    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByTestId('discovery-free-starter-smart-workflows-with-ai')).toBeVisible()
     await page.goto('/learn/free/smart-workflows-with-ai')
     await expect(page.getByTestId('free-starter-smart-workflows-with-ai-page')).toBeVisible({ timeout: 20_000 })
-    const frame = page.locator('iframe[title="Smart Workflows with AI — interactive workshop"]')
-    await expect(frame).toBeVisible()
-    await expect(frame).toHaveAttribute('src', /\/course-assets\/rise\/smart-workflows-with-ai\/content\/index\.html$/)
+    const frameSw = page.locator('iframe[title="Smart Workflows with AI — interactive workshop"]')
+    await expect(frameSw).toBeVisible()
+    await expect(frameSw).toHaveAttribute('src', /\/course-assets\/rise\/smart-workflows-with-ai\/content\/index\.html$/)
   })
 
-  test('/learn hub shows featured marketplace grid and school browse', async ({ page }) => {
+  test('/learn lists Practical Mathematics and standalone courses in available grid', async ({ page }) => {
     await page.goto('/learn')
-    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByRole('heading', { level: 1, name: /learn ai.*practical tech/i })).toBeVisible()
-    const catalogSection = page.getByTestId('discovery-section-flagship-catalog')
-    await expect(catalogSection).toBeVisible()
-    await expect(page.getByTestId('discovery-featured-ai-essentials')).toBeVisible()
-    await expect(catalogSection.locator('[data-testid^="discovery-featured-"]')).toHaveCount(6)
-    await expect(page.getByTestId('discovery-school-card-ai_digital')).toBeVisible()
+    await expect(page.getByTestId('discovery-available-standalone-practical-mathematics-life-work-business')).toBeVisible()
+    await expect(page.getByTestId('discovery-available-standalone-business-process-automation-for-work')).toBeVisible()
+    await expect(page.getByTestId('discovery-available-standalone-business-analytics-decision-making')).toBeVisible()
   })
 
   test('category page renders browse surface without subscription framing', async ({ page }) => {

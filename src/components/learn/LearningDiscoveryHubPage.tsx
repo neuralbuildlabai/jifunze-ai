@@ -1,24 +1,15 @@
 import { useAuth } from '../../auth/AuthContext'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
+import { AboutStrip, DiscoveryAuthCtas, DiscoveryFooter, DiscoveryTopNav } from './discoveryHubSections'
 import {
-  AboutStrip,
-  DiscoveryAuthCtas,
-  DiscoveryCTABanner,
-  DiscoveryFooter,
-  DiscoveryHero,
-  DiscoveryTopNav,
-  FeaturedCoursesSection,
-  PopularCategoriesSection,
-  SchoolsSection,
-  WhyLearnSection,
-} from './discoveryHubSections'
+  AvailableLearnHero,
+  AvailableLearningAreasSection,
+  AvailableNowSection,
+} from './AvailableLearnSurfaces'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
-import { StandaloneCoursesSection } from './StandaloneCoursesSection'
 
 /**
- * `/learn` — public course marketplace. The bright, premium layout is composed
- * from shared sections in `discoveryHubSections.tsx` so the homepage `/` can
- * present an identical visual direction.
+ * `/learn` — honest catalog of courses and workshops that are published and reachable today.
  */
 export function LearningDiscoveryHubPage() {
   const { user } = useAuth()
@@ -27,11 +18,10 @@ export function LearningDiscoveryHubPage() {
     <div className="min-h-screen bg-white text-zinc-900 antialiased [color-scheme:light]">
       <DiscoveryTopNav
         links={[
-          { label: 'Workshops', href: '#new-free-courses', testId: 'learn-nav-free-course' },
-          { label: 'Courses', href: '#featured-courses' },
-          { label: 'Schools', href: '#schools' },
-          { label: 'About', href: '#about-public' },
-          { label: 'Contact', href: '#contact-public' },
+          { label: 'Available now', href: '#available-now', testId: 'learn-nav-available-now' },
+          { label: 'Learning areas', href: '#learning-areas', testId: 'learn-nav-learning-areas' },
+          { label: 'About', href: '#about-public', testId: 'learn-nav-about' },
+          { label: 'Contact', href: '#contact-public', testId: 'learn-nav-contact' },
         ]}
         rightSlot={
           user ? (
@@ -44,21 +34,16 @@ export function LearningDiscoveryHubPage() {
         }
       />
       <main data-testid="learning-discovery-hub">
-        <DiscoveryHero headingId="learn-hero-heading" />
-        <StandaloneCoursesSection sectionTestId="discovery-section-standalone-catalog" />
-        <FeaturedCoursesSection sectionTestId="discovery-section-flagship-catalog" />
-        <SchoolsSection />
-        <PopularCategoriesSection />
+        <AvailableLearnHero headingId="learn-hero-heading" isLearnPage />
+        <AvailableNowSection />
+        <AvailableLearningAreasSection />
         <AboutStrip />
-        <WhyLearnSection />
-        <DiscoveryCTABanner showStartFree={Boolean(supabase && !user)} />
       </main>
       <DiscoveryFooter
         showSignupCard={supabase}
         quickLinks={[
-          { label: 'Workshops & standalone courses', href: '#new-free-courses' },
-          { label: 'All Courses', href: '#featured-courses' },
-          { label: 'Schools', href: '#schools' },
+          { label: 'Available courses', href: '#available-now' },
+          { label: 'Learning areas', href: '#learning-areas' },
           { label: 'About', href: '#about-public' },
           { label: 'Contact', href: '#contact-public' },
         ]}

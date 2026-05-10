@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../../auth/AuthContext'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
 import {
+  FLAGSHIP_COURSES,
   FLAGSHIP_SCHOOLS,
   getFlagshipCourseBySlug,
 } from '../../data/learning/flagshipCoursesCatalog'
@@ -12,7 +13,6 @@ import {
 } from '../../data/learning/employablePathwaysCatalog'
 import { getFlagshipCurriculum } from '../../data/learning/flagshipCourseCurricula'
 import { buildSessionsForCurriculum } from '../../data/learning/flagshipCourseSessions'
-import { learnerPublicCatalogFlagshipCourses } from '../../data/learning/flagshipLearnerCatalogPolicy'
 import { getFlagshipCourseDisplayProgressPercent } from '../../lib/aiEssentialsProgressMilestones'
 import {
   completionSet,
@@ -64,7 +64,10 @@ export function LearnerReportsPage() {
   const [loading, setLoading] = useState(true)
   const [selectedPathwayHint, setSelectedPathwayHint] = useState<SelectedPathwayReportHint | null>(null)
 
-  const catalogAllowSlugs = useMemo(() => new Set(learnerPublicCatalogFlagshipCourses().map((c) => c.slug)), [])
+  const catalogAllowSlugs = useMemo(
+    () => new Set(FLAGSHIP_COURSES.filter((c) => isFlagshipCoursePublished(c.slug)).map((c) => c.slug)),
+    [],
+  )
 
   useEffect(() => {
     let cancelled = false
@@ -182,7 +185,7 @@ export function LearnerReportsPage() {
               <span className="mx-1.5 text-stone-400">·</span>
               Next: {selectedPathwayHint.nextSummary}
             </p>
-            <Link className="mt-2 inline-block text-[12px] font-semibold text-orange-700 hover:underline" to="/learn#schools">
+            <Link className="mt-2 inline-block text-[12px] font-semibold text-orange-700 hover:underline" to="/learn#available-now">
               Browse schools in catalog
             </Link>
             {selectedPathwayHint.nextHref ? (

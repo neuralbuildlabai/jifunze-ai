@@ -7,38 +7,35 @@ test.describe('Homepage learning-first (public)', () => {
     await applyPublicE2eMaintenanceBypass(page)
   })
 
-  test('hero primary CTA navigates to /learn', async ({ page }) => {
+  test('hero primary CTA navigates to /learn with available-now anchor', async ({ page }) => {
     await gotoPublicHomeAnonymous(page)
-    await expect(
-      page.getByRole('heading', { level: 1, name: /learn ai.*practical tech/i }),
-    ).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole('heading', { level: 1, name: /available courses.*workshops/i })).toBeVisible({
+      timeout: 15_000,
+    })
     const primary = page.getByTestId('landing-hero-primary-cta')
-    await expect(primary).toHaveAttribute('href', /\/learn$/)
+    await expect(primary).toHaveAttribute('href', /\/learn#available-now$/)
     await primary.click()
-    await expect(page).toHaveURL(/\/learn$/)
+    await expect(page).toHaveURL(/\/learn#available-now$/)
   })
 
-  test('home shows featured AI Essentials card linking to course page', async ({ page }) => {
+  test('home shows preview cards for Smart Workflows and AI at Work', async ({ page }) => {
     await gotoPublicHomeAnonymous(page)
-    const card = page.getByTestId('home-featured-ai-essentials')
-    await expect(card).toBeVisible()
-    await expect(card.getByRole('link', { name: /^AI Essentials$/i })).toHaveAttribute(
-      'href',
-      /\/learn\/courses\/ai-essentials$/,
-    )
+    await expect(page.getByTestId('home-available-rise-smart-workflows-with-ai')).toBeVisible()
+    await expect(page.getByTestId('home-available-rise-ai-at-work-chatgpt')).toBeVisible()
+    await expect(page.getByTestId('home-available-practical-math')).toBeVisible()
   })
 
-  test('/paths redirects to warm learn catalog (schools anchor)', async ({ page }) => {
+  test('/paths redirects to warm learn catalog (available-now anchor)', async ({ page }) => {
     await page.goto('/paths')
-    await expect(page).toHaveURL(/\/learn#schools$/)
+    await expect(page).toHaveURL(/\/learn#available-now$/)
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
-    await expect(page.locator('#schools')).toBeVisible()
+    await expect(page.locator('#available-now')).toBeVisible()
   })
 
   test('header Courses reaches catalog', async ({ page }) => {
     await gotoPublicHomeAnonymous(page)
     await page.getByTestId('home-nav-courses').click()
-    await expect(page).toHaveURL(/\/learn$/)
+    await expect(page).toHaveURL(/\/learn#available-now$/)
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible()
   })
 })

@@ -64,8 +64,8 @@ export function StandaloneCourseDetailPage() {
             <Link className="text-xs font-medium text-[color:var(--jf-brand)] hover:text-[color:var(--jf-brand-hover)]" to="/learn">
               Catalog
             </Link>
-            <Link className="text-xs font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to="/learn#schools">
-              Schools
+            <Link className="text-xs font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to="/learn#available-now">
+              Catalog
             </Link>
             <SignedInPublicLearningActions />
           </div>

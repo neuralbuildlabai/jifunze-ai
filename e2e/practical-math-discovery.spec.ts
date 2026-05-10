@@ -21,35 +21,31 @@ test.describe('Practical Mathematics — public discovery (standalone)', () => {
     await applyPublicE2eMaintenanceBypass(page)
   })
 
-  test('appears on /learn above flagship grid with Free, 16 modules, and open CTAs', async ({ page }) => {
+  test('appears on /learn available grid with modules meta and start CTA', async ({ page }) => {
     await page.goto('/learn')
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
 
-    const standaloneSection = page.getByTestId('discovery-section-standalone-catalog')
-    await expect(standaloneSection).toBeVisible()
-    const card = page.getByTestId(`discovery-standalone-${SLUG}`)
+    await expect(page.getByTestId('discovery-section-available-now')).toBeVisible()
+    const card = page.getByTestId(`discovery-available-standalone-${SLUG}`)
     await expect(card).toBeVisible()
     await expect(card).toContainText(TITLE)
-    await expect(card).toContainText(/Free/i)
     await expect(card).toContainText(/16 modules/)
-    await expect(page.getByTestId(`discovery-standalone-${SLUG}-open-course`)).toBeVisible()
-    await expect(page.getByTestId(`discovery-standalone-${SLUG}-start-course`)).toBeVisible()
+    await expect(page.getByTestId(`discovery-available-cta-${SLUG}`)).toBeVisible()
 
-    await expect(page.getByTestId('discovery-section-flagship-catalog')).toBeVisible()
-    await expect(page.getByTestId('discovery-featured-ai-essentials')).toBeVisible()
+    await expect(page.locator('[data-testid^="discovery-featured-"]')).toHaveCount(0)
   })
 
-  test('learn nav includes anchor to new free course section', async ({ page }) => {
+  test('learn nav includes anchor to available section', async ({ page }) => {
     await page.goto('/learn')
-    await expect(page.getByTestId('learn-nav-free-course')).toBeVisible()
-    await page.getByTestId('learn-nav-free-course').click()
-    await expect(page.locator('#new-free-courses')).toBeVisible()
+    await expect(page.getByTestId('learn-nav-available-now')).toBeVisible()
+    await page.getByTestId('learn-nav-available-now').click()
+    await expect(page.locator('#available-now')).toBeVisible()
   })
 
   test('card click routes to course detail with Certificate of Completion and 75% copy', async ({ page }) => {
     await page.goto('/learn')
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
-    await page.getByTestId(`discovery-standalone-${SLUG}-title-link`).click()
+    await page.getByTestId(`discovery-available-standalone-${SLUG}`).getByRole('link', { name: TITLE }).first().click()
     await expect(page).toHaveURL(new RegExp(`/learn/${SLUG}$`))
     await expect(page.getByTestId(`standalone-course-detail-${SLUG}`)).toBeVisible()
     await expect(page.getByRole('heading', { level: 1, name: TITLE })).toBeVisible()
@@ -196,7 +192,7 @@ test.describe('Practical Mathematics — public discovery (standalone)', () => {
 
   test('/paths redirect still works', async ({ page }) => {
     await page.goto('/paths')
-    await expect(page).toHaveURL(/\/learn#schools$/)
+    await expect(page).toHaveURL(/\/learn#available-now$/)
   })
 
   test('flagship course detail still renders (no regression)', async ({ page }) => {

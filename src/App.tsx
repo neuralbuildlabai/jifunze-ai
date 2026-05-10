@@ -169,8 +169,8 @@ export default function App() {
         {LEARNER_MONETIZATION_UI_DISABLED ? (
           <Route path="/settings/subscription" element={<PublicPausedSubscriptionPage />} />
         ) : null}
-        <Route path="/paths" element={<Navigate to={{ pathname: '/learn', hash: 'schools' }} replace />} />
-        <Route path="/paths/:pathwaySlug" element={<Navigate to={{ pathname: '/learn', hash: 'schools' }} replace />} />
+        <Route path="/paths" element={<Navigate to={{ pathname: '/learn', hash: 'available-now' }} replace />} />
+        <Route path="/paths/:pathwaySlug" element={<Navigate to={{ pathname: '/learn', hash: 'available-now' }} replace />} />
         <Route path="/learn" element={<LearningDiscoveryHubPage />} />
         <Route path="/learn/free/ai-at-work-chatgpt" element={<AiAtWorkChatgptFreeStarterPage />} />
         <Route path="/learn/free/smart-workflows-with-ai" element={<SmartWorkflowsWithAiFreeStarterPage />} />

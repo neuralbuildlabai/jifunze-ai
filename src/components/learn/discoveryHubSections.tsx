@@ -371,7 +371,7 @@ export function DiscoveryHero({
   primaryCtaTestId,
   primaryCtaTo = '#featured-courses',
   secondaryCtaLabel = 'Browse schools',
-  secondaryCtaTo = '/learn#schools',
+  secondaryCtaTo = '/learn#available-now',
   headingId = 'discovery-hero-heading',
   belowCtaSlot,
 }: DiscoveryHeroProps) {
@@ -738,8 +738,7 @@ export function DiscoveryFooter({
   showSignupCard?: boolean
 }) {
   const links: DiscoveryFooterLink[] = quickLinks ?? [
-    { label: 'All Courses', href: '/learn' },
-    { label: 'Schools', href: '/learn#schools' },
+    { label: 'Available courses', href: '/learn#available-now' },
     { label: 'About', href: '#about-public' },
     { label: 'Contact', href: '#contact-public' },
   ]
