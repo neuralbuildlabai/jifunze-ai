@@ -13,18 +13,29 @@ test.describe('Learning discovery (public)', () => {
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
   })
 
-  test('/learn shows honest available catalog heading and no legacy flagship featured grid', async ({ page }) => {
+  test('/learn shows grouped free catalog heading and sections', async ({ page }) => {
     await page.goto('/learn')
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
     await expect(page.getByRole('heading', { level: 1, name: /available courses.*workshops/i })).toBeVisible()
     await expect(page.locator('[data-testid^="discovery-featured-"]')).toHaveCount(0)
-    await expect(page.getByTestId('discovery-section-available-now')).toBeVisible()
+    await expect(page.getByTestId('discovery-catalog-available')).toBeVisible()
+    await expect(page.getByRole('heading', { level: 2, name: /^Free Microlearning$/ })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 2, name: /^Free Full Courses$/ })).toBeVisible()
+    await expect(page.getByTestId('discovery-section-free-microlearning')).toBeVisible()
+    await expect(page.getByTestId('discovery-section-free-full-courses')).toBeVisible()
   })
 
-  test('/learn hub lists Free Starter Rise pilots with working iframe paths', async ({ page }) => {
+  test('/learn hero subtitle describes microlearning vs full courses', async ({ page }) => {
     await page.goto('/learn')
-    await expect(page.getByTestId('discovery-available-rise-ai-at-work-chatgpt')).toBeVisible()
-    await expect(page.getByTestId('discovery-available-rise-smart-workflows-with-ai')).toBeVisible()
+    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
+    await expect(page.getByText(/microlearning helps you quickly build confidence/i)).toBeVisible()
+    await expect(page.getByText(/full courses provide deeper guided practice/i)).toBeVisible()
+  })
+
+  test('/learn lists microlearning starters and hosted lesson paths', async ({ page }) => {
+    await page.goto('/learn')
+    await expect(page.getByTestId('discovery-microlearning-smart-workflows-with-ai')).toBeVisible()
+    await expect(page.getByTestId('discovery-microlearning-ai-at-work-chatgpt')).toBeVisible()
 
     await page.goto('/learn/free/ai-at-work-chatgpt')
     await expect(page.getByTestId('free-starter-ai-at-work-chatgpt-page')).toBeVisible({ timeout: 20_000 })
@@ -39,11 +50,38 @@ test.describe('Learning discovery (public)', () => {
     await expect(frameSw).toHaveAttribute('src', /\/course-assets\/rise\/smart-workflows-with-ai\/content\/index\.html$/)
   })
 
-  test('/learn lists Practical Mathematics and standalone courses in available grid', async ({ page }) => {
+  test('/learn microlearning section order: Smart Workflows then AI at Work', async ({ page }) => {
     await page.goto('/learn')
-    await expect(page.getByTestId('discovery-available-standalone-practical-mathematics-life-work-business')).toBeVisible()
-    await expect(page.getByTestId('discovery-available-standalone-business-process-automation-for-work')).toBeVisible()
-    await expect(page.getByTestId('discovery-available-standalone-business-analytics-decision-making')).toBeVisible()
+    const section = page.getByTestId('discovery-section-free-microlearning')
+    const cards = section.locator('[data-testid^="discovery-microlearning-"]')
+    await expect(cards.nth(0)).toHaveAttribute('data-testid', 'discovery-microlearning-smart-workflows-with-ai')
+    await expect(cards.nth(1)).toHaveAttribute('data-testid', 'discovery-microlearning-ai-at-work-chatgpt')
+  })
+
+  test('/learn lists three standalone full courses under Free Full Courses', async ({ page }) => {
+    await page.goto('/learn')
+    await expect(page.getByTestId('discovery-full-course-practical-mathematics-life-work-business')).toBeVisible()
+    await expect(page.getByTestId('discovery-full-course-business-process-automation-for-work')).toBeVisible()
+    await expect(page.getByTestId('discovery-full-course-business-analytics-decision-making')).toBeVisible()
+  })
+
+  test('/learn discovery copy avoids internal tooling terms', async ({ page }) => {
+    await page.goto('/learn')
+    const hub = page.getByTestId('learning-discovery-hub')
+    const text = (await hub.innerText()).toLowerCase()
+    expect(text).not.toContain('rise')
+    expect(text).not.toContain('articulate')
+    expect(text).not.toContain('scorm')
+    expect(text).not.toContain('iframe')
+  })
+
+  test('/learn does not market unavailable flagship placeholders as catalog cards', async ({ page }) => {
+    await page.goto('/learn')
+    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
+    await expect(page.getByText(/career launch/i)).toHaveCount(0)
+    await expect(page.getByText(/marketing and growth/i)).toHaveCount(0)
+    await expect(page.getByText(/business builder/i)).toHaveCount(0)
+    await expect(page.getByText(/data and decisions placeholder/i)).toHaveCount(0)
   })
 
   test('category page renders browse surface without subscription framing', async ({ page }) => {

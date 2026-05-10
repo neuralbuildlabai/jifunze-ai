@@ -18,11 +18,12 @@ test.describe('Homepage learning-first (public)', () => {
     await expect(page).toHaveURL(/\/learn#available-now$/)
   })
 
-  test('home shows preview cards for Smart Workflows and AI at Work', async ({ page }) => {
+  test('home shows preview cards for Smart Workflows, AI at Work, and Practical Mathematics', async ({ page }) => {
     await gotoPublicHomeAnonymous(page)
-    await expect(page.getByTestId('home-available-rise-smart-workflows-with-ai')).toBeVisible()
-    await expect(page.getByTestId('home-available-rise-ai-at-work-chatgpt')).toBeVisible()
-    await expect(page.getByTestId('home-available-practical-math')).toBeVisible()
+    await expect(page.getByRole('heading', { name: /^Start with available free learning$/ })).toBeVisible()
+    await expect(page.getByTestId('home-available-preview-smart-workflows-with-ai')).toBeVisible()
+    await expect(page.getByTestId('home-available-preview-ai-at-work-chatgpt')).toBeVisible()
+    await expect(page.getByTestId('home-available-preview-practical-mathematics-life-work-business')).toBeVisible()
   })
 
   test('/paths redirects to warm learn catalog (available-now anchor)', async ({ page }) => {

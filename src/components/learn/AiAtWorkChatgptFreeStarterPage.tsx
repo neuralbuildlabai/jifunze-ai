@@ -11,11 +11,7 @@ import { ORANGE_GRADIENT } from './discoveryHubSections'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
 
-/**
- * Learner-facing Free Starter Course page embedding an Articulate Rise export.
- *
- * INTERNAL: Pilot hosting path — completion is learner-declared local progress only until SCORM/LMS wiring exists.
- */
+/** Free Starter Course — hosted lesson player; completion is tracked locally on this device until account sync is available. */
 export function AiAtWorkChatgptFreeStarterPage() {
   const course = AI_AT_WORK_CHATGPT_FREE_STARTER
   const [complete, setComplete] = useState(() => isRisePilotCourseLearnerComplete(course.progressInternalKey))
@@ -36,7 +32,7 @@ export function AiAtWorkChatgptFreeStarterPage() {
   }, [course.progressInternalKey])
 
   const scrollToCourse = useCallback(() => {
-    document.getElementById('free-starter-rise-course-frame')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    document.getElementById('free-starter-lesson-player-ai-at-work')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [])
 
   return (
@@ -51,7 +47,7 @@ export function AiAtWorkChatgptFreeStarterPage() {
             <Link className="text-xs font-medium text-[color:var(--jf-brand)] hover:text-[color:var(--jf-brand-hover)]" to="/learn">
               Catalog
             </Link>
-            <Link className="text-xs font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to="/learn#new-free-courses">
+            <Link className="text-xs font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to="/learn#available-now">
               Free courses
             </Link>
             <SignedInPublicLearningActions />
@@ -62,9 +58,6 @@ export function AiAtWorkChatgptFreeStarterPage() {
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex rounded-lg bg-orange-600 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white shadow-sm">
               {course.label}
-            </span>
-            <span className="inline-flex rounded-lg border border-orange-200/90 bg-white/80 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-orange-800">
-              Pilot
             </span>
             <span className="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--jf-muted)]">{course.category}</span>
           </div>
@@ -79,7 +72,7 @@ export function AiAtWorkChatgptFreeStarterPage() {
             <span className="text-[color:var(--jf-border)]" aria-hidden>
               ·
             </span>
-            <span>{course.format}</span>
+            <span>{course.learnerDisplayFormat}</span>
             <span className="text-[color:var(--jf-border)]" aria-hidden>
               ·
             </span>
@@ -104,8 +97,7 @@ export function AiAtWorkChatgptFreeStarterPage() {
           </div>
 
           <p className="mt-6 rounded-xl border border-amber-200/80 bg-amber-50/90 p-4 text-[13px] leading-relaxed text-amber-950/90">
-            This is a <span className="font-semibold">free starter pilot</span> interactive course hosted inside Jifunze so we can learn how
-            externally authored lessons behave for learners. It is not a flagship or premium paid program.
+            Work through the lesson area on this page on Jifunze.ai. For the best experience, use an up-to-date desktop browser.
           </p>
         </section>
 
@@ -124,7 +116,7 @@ export function AiAtWorkChatgptFreeStarterPage() {
         </section>
 
         <section className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 sm:p-8">
-          <h2 className="text-xl font-semibold text-[color:var(--jf-text)]">Lessons in this interactive course</h2>
+          <h2 className="text-xl font-semibold text-[color:var(--jf-text)]">Lessons in this course</h2>
           <ol className="mt-4 list-decimal space-y-2 pl-5 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
             {course.lessonsIncluded.map((line) => (
               <li key={line}>{line}</li>
@@ -133,18 +125,18 @@ export function AiAtWorkChatgptFreeStarterPage() {
         </section>
 
         <section
-          id="free-starter-rise-course-frame"
+          id="free-starter-lesson-player-ai-at-work"
           className="scroll-mt-28 space-y-4 rounded-2xl border border-orange-100/80 bg-white p-4 shadow-[0_22px_50px_-20px_rgba(120,53,15,0.12)] sm:p-6"
         >
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <h2 className="text-xl font-semibold text-[color:var(--jf-text)]">Your course</h2>
               <p className="mt-1 text-[13px] text-[color:var(--jf-muted)]">
-                Use the frame below, or open in a new tab if your browser limits embedded interactive lessons.
+                Use the lesson area below, or open in a new tab if you prefer a full window.
               </p>
             </div>
             <a
-              href={course.iframeSrc}
+              href={course.lessonPlayerSrc}
               target="_blank"
               rel="noopener noreferrer"
               className="text-[13px] font-semibold text-orange-700 underline-offset-2 hover:text-orange-800 hover:underline"
@@ -157,7 +149,7 @@ export function AiAtWorkChatgptFreeStarterPage() {
           <div className="relative w-full overflow-hidden rounded-xl border border-stone-200/90 bg-stone-100/80 shadow-inner">
             <iframe
               title={`${course.shortTitle} — interactive lesson`}
-              src={course.iframeSrc}
+              src={course.lessonPlayerSrc}
               className="block h-[min(72vh,880px)] w-full min-h-[520px] md:min-h-[720px]"
               loading="lazy"
               referrerPolicy="strict-origin-when-cross-origin"
@@ -167,10 +159,11 @@ export function AiAtWorkChatgptFreeStarterPage() {
 
           <div className="rounded-xl border border-stone-200/80 bg-[#fffdfb] p-4 sm:p-5">
             <h3 className="text-[15px] font-semibold text-[color:var(--jf-text)]">Completion</h3>
-            <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{course.certificateNote}</p>
+            <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{course.learnerCompletionNote}</p>
             {complete ? (
               <p className="mt-4 text-[14px] font-medium text-emerald-800" data-testid="free-starter-ai-at-work-complete-label">
-                Marked complete — thank you for trying this pilot. Your progress is saved only in this browser for now.
+                Marked complete — thank you for finishing this course. On this device, your completion may show here before account-wide sync is
+                available.
               </p>
             ) : (
               <button

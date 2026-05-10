@@ -1,27 +1,30 @@
 import { Link } from 'react-router-dom'
 import {
-  getAvailableRiseOfferingsOrdered,
-  getAvailableStandaloneOfferingsOrdered,
+  getFullCourseCatalogItems,
+  getHomepageAvailablePreviewItems,
   getLearningAreasSummary,
-  type AvailableRiseSummary,
-  type AvailableStandaloneSummary,
+  getMicrolearningCatalogItems,
+  type FullCourseCatalogItem,
+  type MicrolearningCatalogItem,
 } from '../../data/learning/availablePublicLearnCatalog'
 import { HeroBrowserMockup, ORANGE_GRADIENT, IconArrowRight, IconSpark } from './discoveryHubSections'
 
 const CARD_SHELL =
   'group flex h-full flex-col overflow-hidden rounded-2xl border border-orange-100/90 bg-white shadow-[0_18px_40px_-24px_rgba(120,53,15,0.18)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_48px_-22px_rgba(251,146,60,0.2)]'
 
-function RiseCard({ course }: { course: AvailableRiseSummary }) {
+function MicrolearningCard({ course }: { course: MicrolearningCatalogItem }) {
   const isWorkshop = course.slug === 'smart-workflows-with-ai'
   const banner = isWorkshop
     ? 'from-violet-600 via-fuchsia-600 to-indigo-900'
     : 'from-sky-600 via-cyan-600 to-indigo-900'
+  const levelDuration =
+    course.level && course.durationLabel ? `${course.level} · ${course.durationLabel}` : course.level ?? course.durationLabel ?? ''
   return (
-    <article className={CARD_SHELL} data-testid={`discovery-available-rise-${course.slug}`}>
+    <article className={CARD_SHELL} data-testid={`discovery-microlearning-${course.slug}`}>
       <Link to={course.route} className="relative block aspect-[16/10] overflow-hidden">
         <div className={`absolute inset-0 bg-gradient-to-br ${banner} opacity-95`} aria-hidden />
         <span className="absolute left-4 top-4 inline-flex rounded-lg bg-white/95 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-zinc-900 shadow-sm">
-          {course.label}
+          {course.publicLabel}
         </span>
       </Link>
       <div className="flex flex-1 flex-col px-5 pb-5 pt-4">
@@ -30,8 +33,8 @@ function RiseCard({ course }: { course: AvailableRiseSummary }) {
             {course.shortTitle}
           </Link>
         </h3>
-        <p className="mt-2 text-[13px] leading-relaxed text-zinc-600">{course.levelLabel}</p>
-        <p className="mt-3 text-[12px] leading-relaxed text-zinc-500">{course.metaLine}</p>
+        {levelDuration ? <p className="mt-2 text-[13px] leading-relaxed text-zinc-600">{levelDuration}</p> : null}
+        <p className="mt-3 text-[12px] leading-relaxed text-zinc-500">{course.descriptionLearner}</p>
         <div className="mt-auto pt-6">
           <Link
             to={course.route}
@@ -46,13 +49,13 @@ function RiseCard({ course }: { course: AvailableRiseSummary }) {
   )
 }
 
-function StandaloneCard({ course }: { course: AvailableStandaloneSummary }) {
+function FullCourseCard({ course }: { course: FullCourseCatalogItem }) {
   return (
-    <article className={CARD_SHELL} data-testid={`discovery-available-standalone-${course.slug}`}>
+    <article className={CARD_SHELL} data-testid={`discovery-full-course-${course.slug}`}>
       <Link to={course.route} className="relative block aspect-[16/10] overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 opacity-95" aria-hidden />
         <span className="absolute left-4 top-4 inline-flex rounded-lg bg-white/95 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-zinc-900 shadow-sm">
-          {course.label}
+          {course.publicLabel}
         </span>
       </Link>
       <div className="flex flex-1 flex-col px-5 pb-5 pt-4">
@@ -61,8 +64,7 @@ function StandaloneCard({ course }: { course: AvailableStandaloneSummary }) {
             {course.title}
           </Link>
         </h3>
-        <p className="mt-2 text-[13px] leading-relaxed text-zinc-600">{course.levelLabel}</p>
-        <p className="mt-3 text-[12px] leading-relaxed text-zinc-500">{course.metaLine}</p>
+        <p className="mt-3 text-[12px] leading-relaxed text-zinc-500">{course.descriptionLearner}</p>
         <div className="mt-auto pt-6">
           <Link
             to={course.route}
@@ -111,8 +113,8 @@ export function AvailableLearnHero({
             Available Courses &amp; Workshops
           </h1>
           <p className="mt-6 text-[17px] leading-relaxed text-zinc-600 sm:text-lg">
-            Start with the courses that are ready now. Each item below opens directly and includes practical learning activities or guided
-            outputs.
+            Start with free learning now. Microlearning helps you quickly build confidence, while full courses provide deeper guided practice
+            and practical outputs.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             {isLearnPage ? (
@@ -127,10 +129,6 @@ export function AvailableLearnHero({
               </Link>
             )}
           </div>
-          <p className="mt-8 max-w-prose text-[13px] leading-relaxed text-zinc-500">
-            Rise pilots use browser-local completion until account-backed tracking is available. Standalone Jifunze courses save progress in
-            your browser for those paths.
-          </p>
         </div>
         <HeroBrowserMockup />
       </div>
@@ -138,35 +136,55 @@ export function AvailableLearnHero({
   )
 }
 
-export function AvailableNowSection({ sectionTestId = 'discovery-section-available-now' }: { sectionTestId?: string }) {
-  const rise = getAvailableRiseOfferingsOrdered()
-  const standalone = getAvailableStandaloneOfferingsOrdered()
+export function AvailableNowSection() {
+  const micro = getMicrolearningCatalogItems()
+  const full = getFullCourseCatalogItems()
   return (
-    <section
-      id="available-now"
-      data-testid={sectionTestId}
-      className="scroll-mt-24 border-t border-orange-100/60 bg-white px-4 py-16 sm:px-6 lg:px-8 lg:py-20"
-      aria-labelledby="available-now-heading"
-    >
-      <div className="mx-auto max-w-7xl">
-        <div className="mx-auto max-w-3xl text-center">
-          <h2 id="available-now-heading" className="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">
-            Available now
-          </h2>
-          <p className="mt-4 text-[17px] leading-relaxed text-zinc-600">
-            Everything listed here is open today—no placeholder flagship tiles or unavailable tracks.
-          </p>
+    <div id="available-now" data-testid="discovery-catalog-available" className="scroll-mt-24">
+      <section
+        data-testid="discovery-section-free-microlearning"
+        className="border-t border-orange-100/60 bg-white px-4 py-16 sm:px-6 lg:px-8 lg:py-20"
+        aria-labelledby="free-microlearning-heading"
+      >
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 id="free-microlearning-heading" className="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">
+              Free Microlearning
+            </h2>
+            <p className="mt-4 text-[17px] leading-relaxed text-zinc-600">
+              Short starter courses and workshops you can complete quickly while building useful skills.
+            </p>
+          </div>
+          <div className="mt-12 grid gap-8 sm:grid-cols-2">
+            {micro.map((c) => (
+              <MicrolearningCard key={c.slug} course={c} />
+            ))}
+          </div>
         </div>
-        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {rise.map((c) => (
-            <RiseCard key={c.slug} course={c} />
-          ))}
-          {standalone.map((c) => (
-            <StandaloneCard key={c.slug} course={c} />
-          ))}
+      </section>
+
+      <section
+        data-testid="discovery-section-free-full-courses"
+        className="border-t border-orange-100/50 bg-white px-4 py-16 sm:px-6 lg:px-8 lg:py-20"
+        aria-labelledby="free-full-courses-heading"
+      >
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 id="free-full-courses-heading" className="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">
+              Free Full Courses
+            </h2>
+            <p className="mt-4 text-[17px] leading-relaxed text-zinc-600">
+              Deeper guided courses with structured lessons, practice, and practical learning outputs.
+            </p>
+          </div>
+          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {full.map((c) => (
+              <FullCourseCard key={c.slug} course={c} />
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   )
 }
 
@@ -183,7 +201,7 @@ export function AvailableLearningAreasSection() {
           Learning areas
         </h2>
         <p className="mx-auto mt-3 max-w-2xl text-center text-[15px] leading-relaxed text-zinc-600">
-          Counts reflect only materials that are published and reachable from this catalog today.
+          Simple themes tied to what you can open from this catalog today. Counts include only items listed above.
         </p>
         <ul className="mt-10 grid gap-4 sm:grid-cols-2">
           {areas.map((a) => (
@@ -211,18 +229,9 @@ export function HomepageAvailablePreviewSection({
 }: {
   sectionTestId?: string
 }) {
-  const rise = getAvailableRiseOfferingsOrdered()
-  const standalone = getAvailableStandaloneOfferingsOrdered()
-  const pm = standalone.find((s) => s.slug === 'practical-mathematics-life-work-business')
-  if (!pm) throw new Error('Practical Mathematics missing from standalone catalog')
-  const preview = [
-    { ...rise[0], kind: 'rise' as const },
-    { ...rise[1], kind: 'rise' as const },
-    { title: pm.title, route: pm.route, label: pm.label, ctaLabel: pm.ctaLabel, kind: 'standalone' as const },
-  ]
+  const preview = getHomepageAvailablePreviewItems()
   return (
     <section
-      id="available-now"
       data-testid={sectionTestId}
       className="scroll-mt-24 bg-white px-4 py-16 sm:px-6 lg:px-8 lg:py-22"
       aria-labelledby="home-available-heading"
@@ -230,35 +239,35 @@ export function HomepageAvailablePreviewSection({
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto max-w-3xl text-center">
           <h2 id="home-available-heading" className="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">
-            Available now
+            Start with available free learning
           </h2>
           <p className="mt-4 text-[17px] leading-relaxed text-zinc-600">
-            Three starting points you can open immediately—see the full list on the learning catalog.
+            Explore practical Jifunze.ai courses and workshops you can open today.
           </p>
         </div>
         <div className="mt-12 grid gap-8 sm:grid-cols-3">
-          {preview.map((item) => (
-            <article
-              key={item.kind === 'rise' ? item.slug : 'practical-mathematics-preview'}
-              className="flex flex-col rounded-2xl border border-zinc-200/90 bg-white p-6 shadow-[0_18px_40px_-24px_rgba(15,23,42,0.12)]"
-              data-testid={
-                item.kind === 'rise' ? `home-available-rise-${item.slug}` : 'home-available-practical-math'
-              }
-            >
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-orange-700">{item.label}</p>
-              <h3 className="mt-3 text-lg font-bold text-zinc-900">
-                {item.kind === 'rise' ? item.shortTitle : item.title}
-              </h3>
-              <div className="mt-auto pt-8">
-                <Link
-                  to={item.route}
-                  className={`inline-flex min-h-[2.5rem] w-full items-center justify-center rounded-full px-5 text-[13px] font-semibold text-white shadow-md shadow-orange-500/25 transition hover:brightness-105 ${ORANGE_GRADIENT}`}
-                >
-                  {item.ctaLabel}
-                </Link>
-              </div>
-            </article>
-          ))}
+          {preview.map((item) => {
+            const key = item.slug
+            const headline = item.courseType === 'microlearning' ? item.shortTitle : item.title
+            return (
+              <article
+                key={key}
+                className="flex flex-col rounded-2xl border border-zinc-200/90 bg-white p-6 shadow-[0_18px_40px_-24px_rgba(15,23,42,0.12)]"
+                data-testid={`home-available-preview-${item.slug}`}
+              >
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-orange-700">{item.publicLabel}</p>
+                <h3 className="mt-3 text-lg font-bold text-zinc-900">{headline}</h3>
+                <div className="mt-auto pt-8">
+                  <Link
+                    to={item.route}
+                    className={`inline-flex min-h-[2.5rem] w-full items-center justify-center rounded-full px-5 text-[13px] font-semibold text-white shadow-md shadow-orange-500/25 transition hover:brightness-105 ${ORANGE_GRADIENT}`}
+                  >
+                    {item.ctaLabel}
+                  </Link>
+                </div>
+              </article>
+            )
+          })}
         </div>
         <div className="mt-10 text-center">
           <Link

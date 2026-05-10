@@ -11,9 +11,7 @@ import { ORANGE_GRADIENT } from './discoveryHubSections'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
 
-/**
- * Free Starter Workshop — Articulate Rise embed. Completion is learner-declared, browser-local for this pilot.
- */
+/** Free Starter Workshop — hosted lesson player; completion is tracked locally on this device until account sync is available. */
 export function SmartWorkflowsWithAiFreeStarterPage() {
   const course = SMART_WORKFLOWS_WITH_AI_FREE_STARTER
   const [complete, setComplete] = useState(() => isRisePilotCourseLearnerComplete(course.progressInternalKey))
@@ -34,7 +32,7 @@ export function SmartWorkflowsWithAiFreeStarterPage() {
   }, [course.progressInternalKey])
 
   const scrollToWorkshop = useCallback(() => {
-    document.getElementById('free-starter-rise-workshop-frame')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    document.getElementById('free-starter-lesson-player-smart-workflows')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [])
 
   return (
@@ -49,7 +47,7 @@ export function SmartWorkflowsWithAiFreeStarterPage() {
             <Link className="text-xs font-medium text-[color:var(--jf-brand)] hover:text-[color:var(--jf-brand-hover)]" to="/learn">
               Catalog
             </Link>
-            <Link className="text-xs font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to="/learn#new-free-courses">
+            <Link className="text-xs font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to="/learn#available-now">
               Free courses
             </Link>
             <SignedInPublicLearningActions />
@@ -60,9 +58,6 @@ export function SmartWorkflowsWithAiFreeStarterPage() {
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex rounded-lg bg-orange-600 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white shadow-sm">
               {course.label}
-            </span>
-            <span className="inline-flex rounded-lg border border-orange-200/90 bg-white/80 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-orange-800">
-              Pilot · Free interactive workshop
             </span>
             <span className="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--jf-muted)]">{course.category}</span>
           </div>
@@ -77,7 +72,7 @@ export function SmartWorkflowsWithAiFreeStarterPage() {
             <span className="text-[color:var(--jf-border)]" aria-hidden>
               ·
             </span>
-            <span>{course.format}</span>
+            <span>{course.learnerDisplayFormat}</span>
             <span className="text-[color:var(--jf-border)]" aria-hidden>
               ·
             </span>
@@ -102,8 +97,8 @@ export function SmartWorkflowsWithAiFreeStarterPage() {
           </div>
 
           <p className="mt-6 rounded-xl border border-amber-200/80 bg-amber-50/90 p-4 text-[13px] leading-relaxed text-amber-950/90">
-            This <span className="font-semibold">free starter workshop</span> is a practical, outcome-based introduction inside Jifunze—designed
-            to help you try real workflow habits before moving on to deeper courses. It is not a flagship program or a paid premium course.
+            This <span className="font-semibold">free starter workshop</span> is a practical, outcome-based introduction on Jifunze.ai—designed
+            to help you build reusable workflow habits before moving on to deeper courses.
           </p>
         </section>
 
@@ -131,18 +126,18 @@ export function SmartWorkflowsWithAiFreeStarterPage() {
         </section>
 
         <section
-          id="free-starter-rise-workshop-frame"
+          id="free-starter-lesson-player-smart-workflows"
           className="scroll-mt-28 space-y-4 rounded-2xl border border-orange-100/80 bg-white p-4 shadow-[0_22px_50px_-20px_rgba(120,53,15,0.12)] sm:p-6"
         >
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <h2 className="text-xl font-semibold text-[color:var(--jf-text)]">Your workshop</h2>
               <p className="mt-1 max-w-prose text-[13px] text-[color:var(--jf-muted)]">
-                Use the frame below, or open in a new tab if your browser works better with a full window.
+                Use the lesson area below, or open in a new tab if you prefer a full window.
               </p>
             </div>
             <a
-              href={course.iframeSrc}
+              href={course.lessonPlayerSrc}
               target="_blank"
               rel="noopener noreferrer"
               className="text-[13px] font-semibold text-orange-700 underline-offset-2 hover:text-orange-800 hover:underline"
@@ -155,7 +150,7 @@ export function SmartWorkflowsWithAiFreeStarterPage() {
           <div className="relative w-full max-w-full overflow-hidden rounded-xl border border-stone-200/90 bg-stone-100/80 shadow-inner">
             <iframe
               title={`${course.shortTitle} — interactive workshop`}
-              src={course.iframeSrc}
+              src={course.lessonPlayerSrc}
               className="block h-[min(72vh,880px)] w-full min-h-[520px] md:min-h-[720px]"
               loading="lazy"
               referrerPolicy="strict-origin-when-cross-origin"
@@ -165,13 +160,11 @@ export function SmartWorkflowsWithAiFreeStarterPage() {
 
           <div className="rounded-xl border border-stone-200/80 bg-[#fffdfb] p-4 sm:p-5">
             <h3 className="text-[15px] font-semibold text-[color:var(--jf-text)]">Completion</h3>
-            <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{course.certificateNote}</p>
+            <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{course.learnerCompletionNote}</p>
             {complete ? (
               <p className="mt-4 text-[14px] font-medium text-emerald-800" data-testid="free-starter-smart-workflows-complete-label">
-                Marked complete — thank you for finishing this workshop.{' '}
-                <span className="font-normal text-[color:var(--jf-muted)]">
-                  Browser-local completion for this pilot: your check stays on this device unless we add account-backed tracking later.
-                </span>
+                Marked complete — thank you for finishing this workshop. On this device, your completion may show here before account-wide sync is
+                available.
               </p>
             ) : (
               <button

@@ -1,34 +1,38 @@
 /**
- * Free Starter courses backed by externally authored Articulate Rise exports (HTML hosted under /public).
+ * Free starter microlearning entries (hosted player under /public; routes under /learn/free/...).
  *
- * INTERNAL / PRODUCT NOTE (not learner-facing):
- * These entries are pilots for externally packaged interactive courses (Rise/SCORM-style hosting).
- * They are intentionally isolated from the flagship 30-course blueprint and from premium positioning.
- * Do not promote as paid flagship content until editorial review and any licensing/compliance checks complete.
- * Rise-authored workshops here are not flagship or premium paid courses until deeper content, downloadable
- * templates, account-backed tracking, and certificate handling are in place.
+ * INTERNAL (not for learner UI): packaging/source notes live on `internalProductionMeta` only.
  */
+
+export type InternalProductionMeta = {
+  /** Authoring/source record for ops — never render in learner-facing components. */
+  source: string
+  /** Delivery implementation — never render in learner-facing components. */
+  deliveryEngine: string
+}
 
 export type FreeStarterRiseCourseEntry = {
   slug: string
-  /** Isolated key for local progress (`jifunze.standalone_courses.progress.v2`). */
   progressInternalKey: string
   progressSessionStartedMarker: string
   title: string
   shortTitle: string
   subtitle: string
   label: string
+  /** Internal flags only — do not surface “pilot” or similar in public learner UI. */
   status: 'pilot'
   level: string
   durationLabel: string
   priceLabel: string
   category: string
-  format: string
-  source: string
-  certificateNote: string
+  /** Learner-safe format line (no vendor/tool names). */
+  learnerDisplayFormat: string
+  internalProductionMeta: InternalProductionMeta
+  /** Shown on completion panel — device-local sync messaging only; no vendor terms. */
+  learnerCompletionNote: string
   publicRoute: string
-  /** Path under site origin; Rise exports often nest `index.html` under `content/`. */
-  iframeSrc: string
+  /** Site path to hosted lesson player — internal wiring only. */
+  lessonPlayerSrc: string
   descriptionShort: string
   descriptionLong: string
   learningOutcomes: readonly string[]
@@ -49,13 +53,17 @@ export const AI_AT_WORK_CHATGPT_FREE_STARTER: FreeStarterRiseCourseEntry = {
   durationLabel: '45–60 minutes',
   priceLabel: 'Free',
   category: 'AI & Productivity',
-  format: 'Interactive Rise Course',
-  source: 'Articulate Rise export',
-  certificateNote: 'Optional — learner-marked completion stored locally in this pilot (no external SCORM grade pass yet).',
+  learnerDisplayFormat: 'Guided interactive course',
+  internalProductionMeta: {
+    source: 'Articulate Rise export',
+    deliveryEngine: 'rise',
+  },
+  learnerCompletionNote:
+    'You can mark completion when you are finished. On this device, your completion may show here before account-wide sync is available.',
   publicRoute: '/learn/free/ai-at-work-chatgpt',
-  iframeSrc: '/course-assets/rise/ai-at-work-chatgpt/content/index.html',
+  lessonPlayerSrc: '/course-assets/rise/ai-at-work-chatgpt/content/index.html',
   descriptionShort:
-    'Learn how to use ChatGPT safely and productively for everyday work, school, and business tasks. This beginner-friendly course covers AI limits, better prompting, output review, safe use, practical examples, and a simple AI Work Starter Kit.',
+    'Learn how to use ChatGPT safely and productively for everyday work, school, and business tasks.',
   descriptionLong:
     'AI at Work is a beginner-friendly Free Starter Course that teaches learners how to use ChatGPT and similar AI tools safely, clearly, and productively. Learners explore what AI can and cannot do, how to write stronger prompts, how to review AI-generated output, how to avoid unsafe use of sensitive information, and how to apply AI to everyday work, study, and business tasks.\n\nBy the end of the course, learners will have built a simple AI Work Starter Kit with safe-use rules, reusable prompts, an output review checklist, and one before-and-after example of an AI-assisted task.',
   learningOutcomes: [
@@ -85,21 +93,24 @@ export const SMART_WORKFLOWS_WITH_AI_FREE_STARTER: FreeStarterRiseCourseEntry = 
   title: 'Smart Workflows with AI: Save Time, Organize Work, and Improve Repeated Tasks',
   shortTitle: 'Smart Workflows with AI',
   subtitle:
-    'Learn how to identify repetitive work, map a simple workflow, decide where AI can safely help, write reusable prompts, review AI output, and build a practical Smart Workflow Plan.',
+    'Learn how to identify repetitive work, map a workflow, decide where AI can safely help, write reusable prompts, review AI output, and build a practical Smart Workflow Plan.',
   label: 'Free Starter Workshop',
   status: 'pilot',
   level: 'Beginner to Early Intermediate',
   durationLabel: '75–120 minutes',
   priceLabel: 'Free',
   category: 'AI & Productivity',
-  format: 'Interactive Rise Course',
-  source: 'Articulate Rise export',
-  certificateNote:
-    'Completion for this pilot is stored in this browser only. If you switch devices, your completion may not appear there yet. Optional learner-declared completion — no external credential.',
+  learnerDisplayFormat: 'Guided interactive workshop',
+  internalProductionMeta: {
+    source: 'Articulate Rise export',
+    deliveryEngine: 'rise',
+  },
+  learnerCompletionNote:
+    'You can mark completion when you are finished. On this device, your completion may show here before account-wide sync is available.',
   publicRoute: '/learn/free/smart-workflows-with-ai',
-  iframeSrc: '/course-assets/rise/smart-workflows-with-ai/content/index.html',
+  lessonPlayerSrc: '/course-assets/rise/smart-workflows-with-ai/content/index.html',
   descriptionShort:
-    'Learn how to identify repetitive work, map a simple workflow, decide where AI can safely help, write reusable prompts, review AI output, and build a practical Smart Workflow Plan.',
+    'Learn how to identify repetitive work, map a workflow, decide where AI can safely help, write reusable prompts, review AI output, and build a practical Smart Workflow Plan.',
   descriptionLong:
     'Smart Workflows with AI is a practical Free Starter Workshop that helps learners improve repeated or messy work using AI responsibly. Learners explore how to identify workflow opportunities, map current steps, choose appropriate AI roles, write reusable workflow prompts, review AI-generated output, manage privacy and risk, and create a simple 7-day rollout plan.\n\nBy the end of the course, learners will have a Smart Workflow Plan that includes AI-supported steps, human review points, reusable prompts, success measures, risk controls, and an implementation plan.',
   learningOutcomes: [
@@ -124,10 +135,10 @@ export const SMART_WORKFLOWS_WITH_AI_FREE_STARTER: FreeStarterRiseCourseEntry = 
   ],
 }
 
-/** In-catalog order for discovery surfaces. */
+/** Catalog display order: Smart Workflows first, then AI at Work. */
 export const FREE_STARTER_RISE_COURSES: readonly FreeStarterRiseCourseEntry[] = [
-  AI_AT_WORK_CHATGPT_FREE_STARTER,
   SMART_WORKFLOWS_WITH_AI_FREE_STARTER,
+  AI_AT_WORK_CHATGPT_FREE_STARTER,
 ]
 
 export function findFreeStarterRiseCourseBySlug(slug: string): FreeStarterRiseCourseEntry | undefined {

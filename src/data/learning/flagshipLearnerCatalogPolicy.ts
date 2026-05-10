@@ -6,8 +6,8 @@ import { FLAGSHIP_COURSES } from './flagshipCoursesCatalog'
  * Expand this allowlist only when a course is content-complete and product-approved for discovery;
  * deep links, pathways, and progress stay available for all flagship slugs elsewhere.
  *
- * Intentionally empty: public catalog surfaces list only explicitly “available now” standalone +
- * Rise pilots (see `availablePublicLearnCatalog.ts`). Do not add slugs here until intentionally released.
+ * Intentionally empty: public `/learn` surfaces list only explicitly “available now” entries from
+ * `availablePublicLearnCatalog.ts` (microlearning + standalone full courses). Do not add slugs here until intentionally released.
  */
 const LEARNER_PUBLIC_CATALOG_FLAGSHIP_SLUGS = new Set<string>()
 

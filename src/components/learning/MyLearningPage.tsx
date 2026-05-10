@@ -1,7 +1,10 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { STANDALONE_LEARNER_CATALOG } from '../../data/courses'
-import { FREE_STARTER_RISE_COURSES } from '../../data/learning/freeStarterRiseCoursesCatalog'
+import { findStandaloneCourseBySlug } from '../../data/courses'
+import {
+  getFullCourseCatalogItems,
+  getMicrolearningCatalogItems,
+} from '../../data/learning/availablePublicLearnCatalog'
 import { learnerPublicCatalogFlagshipCourses } from '../../data/learning/flagshipLearnerCatalogPolicy'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { useAppAccess } from '../../access/useAppAccess'
@@ -24,12 +27,16 @@ export function MyLearningPage() {
   const catalogCourses = useMemo(() => learnerPublicCatalogFlagshipCourses(), [])
   const recommended = catalogCourses[1] ?? catalogCourses[0] ?? null
 
+  const microItems = useMemo(() => getMicrolearningCatalogItems(), [])
+  const fullItems = useMemo(() => getFullCourseCatalogItems(), [])
+  const hasPublicCatalogItems = microItems.length > 0 || fullItems.length > 0
+
   if (isLearner) {
     return (
       <div data-testid="learner-my-learning-home">
         <LearnerPageShell
           title="My Learning"
-          purpose="Self-paced courses, practical skills, and clear next steps—everything here is free to access for now."
+          purpose="Self-paced courses and practical skills — open the same catalog as the public learning page."
         >
           <div className="flex flex-wrap gap-2">
             <Link className={learnerShellTokens.primaryButton} to={LEGAL_ROUTES.learn} data-testid="my-learning-open-catalog">
@@ -45,55 +52,81 @@ export function MyLearningPage() {
 
           <SignedInContinueLearning supabase={supabase} userId={user?.id} surface="warm" />
 
-          {STANDALONE_LEARNER_CATALOG.length > 0 || FREE_STARTER_RISE_COURSES.length > 0 ? (
-            <section className={warmCard} data-testid="my-learning-available-standalone">
+          {hasPublicCatalogItems ? (
+            <section className={warmCard} data-testid="my-learning-available-catalog">
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-stone-500">Available courses &amp; workshops</p>
               <p className="mt-1 text-sm text-stone-600">
-                Same catalog as the public learning page — Rise starters use browser-local completion for now.
+                Grouped like the public catalog. Completion for shorter starters may stay on this device until account-wide sync is available.
               </p>
-              <ul className="mt-4 space-y-2">
-                {FREE_STARTER_RISE_COURSES.map((e) => (
-                  <li key={e.slug}>
-                    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-stone-200/80 bg-[#fffdfb] px-3 py-3">
-                      <div className="min-w-0">
-                        <Link to={e.publicRoute} className="font-medium text-zinc-900 hover:text-orange-700">
-                          {e.title}
-                        </Link>
-                        <p className="mt-1 text-[12px] text-stone-600">
-                          Free starter · {e.durationLabel} · {e.format}
-                        </p>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        <Link className={learnerShellTokens.primaryButton} to={e.publicRoute}>
-                          {e.slug === 'smart-workflows-with-ai' ? 'Start workshop' : 'Start course'}
-                        </Link>
-                      </div>
-                    </div>
-                  </li>
-                ))}
-                {STANDALONE_LEARNER_CATALOG.map((e) => (
-                  <li key={e.slug}>
-                    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-stone-200/80 bg-[#fffdfb] px-3 py-3">
-                      <div className="min-w-0">
-                        <Link to={e.publicRoute} className="font-medium text-zinc-900 hover:text-orange-700">
-                          {e.title}
-                        </Link>
-                        <p className="mt-1 text-[12px] text-stone-600">{e.source.modules.length} modules · ~{e.estimatedHours} hours</p>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        <Link className={learnerShellTokens.ghostButton} to={e.publicRoute}>
-                          Open course
-                        </Link>
-                        {e.source.modules[0]?.slug ? (
-                          <Link className={learnerShellTokens.primaryButton} to={`${e.publicRoute}/modules/${e.source.modules[0].slug}`}>
-                            Start course
-                          </Link>
-                        ) : null}
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+
+              {microItems.length ? (
+                <div className="mt-6">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-800">Free Microlearning</p>
+                  <ul className="mt-3 space-y-2">
+                    {microItems.map((item) => (
+                      <li key={item.slug}>
+                        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-stone-200/80 bg-[#fffdfb] px-3 py-3">
+                          <div className="min-w-0">
+                            <Link to={item.route} className="font-medium text-zinc-900 hover:text-orange-700">
+                              {item.title}
+                            </Link>
+                            <p className="mt-1 text-[12px] text-stone-600">
+                              {item.publicLabel} · {item.durationLabel} · {item.entry.learnerDisplayFormat}
+                            </p>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            <Link className={learnerShellTokens.primaryButton} to={item.route}>
+                              {item.ctaLabel}
+                            </Link>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              {fullItems.length ? (
+                <div className="mt-8">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-800">Free Full Courses</p>
+                  <ul className="mt-3 space-y-2">
+                    {fullItems.map((item) => {
+                      const standalone = findStandaloneCourseBySlug(item.slug)
+                      const firstModuleSlug = standalone?.source.modules[0]?.slug
+                      return (
+                        <li key={item.slug}>
+                          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-stone-200/80 bg-[#fffdfb] px-3 py-3">
+                            <div className="min-w-0">
+                              <Link to={item.route} className="font-medium text-zinc-900 hover:text-orange-700">
+                                {item.title}
+                              </Link>
+                              <p className="mt-1 text-[12px] text-stone-600">
+                                {item.publicLabel}
+                                {standalone
+                                  ? ` · ${standalone.source.modules.length} modules · ~${standalone.estimatedHours} hours`
+                                  : null}
+                              </p>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                              <Link className={learnerShellTokens.ghostButton} to={item.route}>
+                                Open course
+                              </Link>
+                              {firstModuleSlug ? (
+                                <Link
+                                  className={learnerShellTokens.primaryButton}
+                                  to={`${item.route}/modules/${firstModuleSlug}`}
+                                >
+                                  Start course
+                                </Link>
+                              ) : null}
+                            </div>
+                          </div>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </div>
+              ) : null}
             </section>
           ) : null}
 

@@ -21,15 +21,16 @@ test.describe('Practical Mathematics — public discovery (standalone)', () => {
     await applyPublicE2eMaintenanceBypass(page)
   })
 
-  test('appears on /learn available grid with modules meta and start CTA', async ({ page }) => {
+  test('appears on /learn Free Full Courses grid with label and start CTA', async ({ page }) => {
     await page.goto('/learn')
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
 
-    await expect(page.getByTestId('discovery-section-available-now')).toBeVisible()
-    const card = page.getByTestId(`discovery-available-standalone-${SLUG}`)
+    await expect(page.getByTestId('discovery-catalog-available')).toBeVisible()
+    await expect(page.getByRole('heading', { name: /^Free Full Courses$/ })).toBeVisible()
+    const card = page.getByTestId(`discovery-full-course-${SLUG}`)
     await expect(card).toBeVisible()
     await expect(card).toContainText(TITLE)
-    await expect(card).toContainText(/16 modules/)
+    await expect(card).toContainText(/free full course/i)
     await expect(page.getByTestId(`discovery-available-cta-${SLUG}`)).toBeVisible()
 
     await expect(page.locator('[data-testid^="discovery-featured-"]')).toHaveCount(0)
@@ -45,7 +46,7 @@ test.describe('Practical Mathematics — public discovery (standalone)', () => {
   test('card click routes to course detail with Certificate of Completion and 75% copy', async ({ page }) => {
     await page.goto('/learn')
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
-    await page.getByTestId(`discovery-available-standalone-${SLUG}`).getByRole('link', { name: TITLE }).first().click()
+    await page.getByTestId(`discovery-full-course-${SLUG}`).getByRole('link', { name: TITLE }).first().click()
     await expect(page).toHaveURL(new RegExp(`/learn/${SLUG}$`))
     await expect(page.getByTestId(`standalone-course-detail-${SLUG}`)).toBeVisible()
     await expect(page.getByRole('heading', { level: 1, name: TITLE })).toBeVisible()

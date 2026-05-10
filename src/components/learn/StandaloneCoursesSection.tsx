@@ -92,7 +92,7 @@ export function StandaloneCoursesSection({
               learners: 'Open to all',
               rating: '5.0',
             }
-            const duration = `${entry.durationLabel} · ${entry.format}`
+            const duration = `${entry.durationLabel} · ${entry.learnerDisplayFormat}`
             return (
               <article
                 key={entry.slug}
