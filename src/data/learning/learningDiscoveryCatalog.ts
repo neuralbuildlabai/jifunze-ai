@@ -52,6 +52,8 @@ export const LEARNING_DISCOVERY_CATEGORIES: LearningDiscoveryCategory[] = [
       'Monthly and Annual plans are framed to include curated standalone courses alongside library materials when your subscription tier supports full access—buy a single course if you only need one.',
     featuredCourses: [{ libraryKey: 'course_chatgpt_everyday', badge: 'Standalone course' }],
     supportingPaths: [
+      { label: 'AI at Work — Free Starter (interactive)', href: '/learn/free/ai-at-work-chatgpt' },
+      { label: 'Smart Workflows with AI — Free Starter Workshop', href: '/learn/free/smart-workflows-with-ai' },
       { label: 'AI Foundations library (starter map)', href: PUBLIC_AI_FOUNDATIONS_BASE_PATH },
       { label: 'Everyday Chatbots library', href: '/library/everyday-chatbots' },
       { label: 'Browse all categories', href: '/learn' },
@@ -168,6 +170,7 @@ export const LEARNING_DISCOVERY_CATEGORIES: LearningDiscoveryCategory[] = [
       'Full access is framed to include this curriculum alongside other standalone courses when entitled; purchasing a single course may be better when you want depth in one lane only.',
     featuredCourses: [{ libraryKey: 'course_agentic_ai_real_work', badge: 'New · standalone course' }],
     supportingPaths: [
+      { label: 'Smart Workflows with AI — Free Starter Workshop', href: '/learn/free/smart-workflows-with-ai' },
       { label: 'Cloud & DevOps library', href: EXTENDED_PUBLIC_LIBRARY_CONFIGS.cloud_devops.publicBasePath },
       { label: 'Monitoring & observability library', href: EXTENDED_PUBLIC_LIBRARY_CONFIGS.monitoring.publicBasePath },
     ],

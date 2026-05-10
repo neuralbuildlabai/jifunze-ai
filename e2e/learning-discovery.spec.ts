@@ -13,6 +13,28 @@ test.describe('Learning discovery (public)', () => {
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
   })
 
+  test('/learn hub lists Free Starter Rise pilot and course page embeds package path', async ({ page }) => {
+    await page.goto('/learn')
+    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
+    await expect(page.getByTestId('discovery-free-starter-ai-at-work-chatgpt')).toBeVisible()
+    await page.goto('/learn/free/ai-at-work-chatgpt')
+    await expect(page.getByTestId('free-starter-ai-at-work-chatgpt-page')).toBeVisible({ timeout: 20_000 })
+    const frame = page.locator('iframe[title="AI at Work — interactive lesson"]')
+    await expect(frame).toBeVisible()
+    await expect(frame).toHaveAttribute('src', /\/course-assets\/rise\/ai-at-work-chatgpt\/content\/index\.html$/)
+  })
+
+  test('/learn hub lists Smart Workflows free starter workshop and embeds Rise package path', async ({ page }) => {
+    await page.goto('/learn')
+    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
+    await expect(page.getByTestId('discovery-free-starter-smart-workflows-with-ai')).toBeVisible()
+    await page.goto('/learn/free/smart-workflows-with-ai')
+    await expect(page.getByTestId('free-starter-smart-workflows-with-ai-page')).toBeVisible({ timeout: 20_000 })
+    const frame = page.locator('iframe[title="Smart Workflows with AI — interactive workshop"]')
+    await expect(frame).toBeVisible()
+    await expect(frame).toHaveAttribute('src', /\/course-assets\/rise\/smart-workflows-with-ai\/content\/index\.html$/)
+  })
+
   test('/learn hub shows featured marketplace grid and school browse', async ({ page }) => {
     await page.goto('/learn')
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
@@ -54,7 +76,7 @@ test.describe('Learning discovery (public)', () => {
   test('flagship session page renders curated layout, blocks, and completion footer', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 })
     await page.goto('/learn/courses/ai-essentials/session/ae-m01-lesson')
-    await expect(page.getByRole('heading', { level: 1, name: /What AI Is and What It Is Not/i })).toBeVisible({ timeout: 20_000 })
+    await expect(page.getByRole('heading', { level: 1, name: /Map what AI does/i })).toBeVisible({ timeout: 20_000 })
     await expect(page.getByTestId('flagship-session-back-to-course')).toBeVisible()
     await expect(page.getByTestId('flagship-session-content')).toBeVisible()
     await expect(page.locator('[data-session-presentation="guided-lesson"]')).toBeVisible()

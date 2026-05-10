@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { STANDALONE_LEARNER_CATALOG } from '../../data/courses'
+import { FREE_STARTER_RISE_COURSES } from '../../data/learning/freeStarterRiseCoursesCatalog'
 import { learnerPublicCatalogFlagshipCourses } from '../../data/learning/flagshipLearnerCatalogPolicy'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { useAppAccess } from '../../access/useAppAccess'
@@ -44,11 +45,30 @@ export function MyLearningPage() {
 
           <SignedInContinueLearning supabase={supabase} userId={user?.id} surface="warm" />
 
-          {STANDALONE_LEARNER_CATALOG.length ? (
+          {STANDALONE_LEARNER_CATALOG.length > 0 || FREE_STARTER_RISE_COURSES.length > 0 ? (
             <section className={warmCard} data-testid="my-learning-available-standalone">
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-stone-500">Available free courses</p>
               <p className="mt-1 text-sm text-stone-600">Standalone paths — open anytime, no enrollment step.</p>
               <ul className="mt-4 space-y-2">
+                {FREE_STARTER_RISE_COURSES.map((e) => (
+                  <li key={e.slug}>
+                    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-stone-200/80 bg-[#fffdfb] px-3 py-3">
+                      <div className="min-w-0">
+                        <Link to={e.publicRoute} className="font-medium text-zinc-900 hover:text-orange-700">
+                          {e.title}
+                        </Link>
+                        <p className="mt-1 text-[12px] text-stone-600">
+                          Free starter · {e.durationLabel} · {e.format}
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <Link className={learnerShellTokens.primaryButton} to={e.publicRoute}>
+                          Open course
+                        </Link>
+                      </div>
+                    </div>
+                  </li>
+                ))}
                 {STANDALONE_LEARNER_CATALOG.map((e) => (
                   <li key={e.slug}>
                     <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-stone-200/80 bg-[#fffdfb] px-3 py-3">
