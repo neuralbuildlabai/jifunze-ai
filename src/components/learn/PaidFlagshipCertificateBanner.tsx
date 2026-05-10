@@ -16,8 +16,9 @@ function InnerPaidFlagshipCertificateBanner(props: {
   progressState: FlagshipCourseProgressState
   user: User
   supabase: SupabaseClient
+  suppressCapstoneCta?: boolean
 }) {
-  const { cfg, courseSlug, curriculum, sessions, progressState, user, supabase } = props
+  const { cfg, courseSlug, curriculum, sessions, progressState, user, supabase, suppressCapstoneCta = false } = props
   const [msg, setMsg] = useState<string | null>(null)
   const [eligibleDetail, setEligibleDetail] = useState<{
     issued: string | null
@@ -37,7 +38,9 @@ function InnerPaidFlagshipCertificateBanner(props: {
           setEligibleDetail(null)
           setMsg(
             r.blockers[0] ??
-              'Certificate locked. Complete all required modules, pass required checks, submit the capstone, and pass the capstone review.',
+              (cfg.hostedRiseIndexPath
+                ? 'Not eligible yet—finish the steps above, then submit and pass your capstone review.'
+                : 'Certificate locked. Complete all required modules, pass required checks, submit the capstone, and pass the capstone review.'),
           )
         }
       } catch {
@@ -47,14 +50,14 @@ function InnerPaidFlagshipCertificateBanner(props: {
     return () => {
       cancelled = true
     }
-  }, [courseSlug, curriculum, sessions, progressState, user, supabase])
+  }, [courseSlug, curriculum, sessions, progressState, user, supabase, cfg.hostedRiseIndexPath])
 
   return (
     <section
       className="mt-8 rounded-2xl border border-orange-100/80 bg-[#fffdfb] px-5 py-5 text-[color:var(--jf-text)] shadow-sm"
       data-testid="paid-flagship-certificate-banner"
     >
-      <h2 className="text-sm font-semibold text-orange-950">Certificate of completion</h2>
+      <h2 className="text-sm font-semibold text-orange-950">Certificate status</h2>
       {eligibleDetail?.issued ? (
         <div className="mt-2 space-y-1 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
           <p>
@@ -74,10 +77,12 @@ function InnerPaidFlagshipCertificateBanner(props: {
       ) : (
         <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
           {msg ??
-            'Certificate locked. Complete all required modules, pass required checks, submit the capstone, and pass the capstone review.'}
+            (cfg.hostedRiseIndexPath
+              ? 'Not eligible yet—finish the steps above, then submit and pass your capstone review.'
+              : 'Certificate locked. Complete all required modules, pass required checks, submit the capstone, and pass the capstone review.')}
         </p>
       )}
-      {cfg.capstoneSubmissionEnabled ? (
+      {cfg.capstoneSubmissionEnabled && !suppressCapstoneCta ? (
         <div className="mt-4">
           <Link
             to={`/learn/courses/${courseSlug}/capstone`}
@@ -98,8 +103,10 @@ export function PaidFlagshipCertificateBanner(props: {
   progressState: FlagshipCourseProgressState
   user: User | null
   supabase: SupabaseClient | null
+  /** When true, omit the capstone CTA (e.g. course page already surfaces Submit Final Capstone). */
+  suppressCapstoneCta?: boolean
 }) {
-  const { courseSlug, curriculum, sessions, progressState, user, supabase } = props
+  const { courseSlug, curriculum, sessions, progressState, user, supabase, suppressCapstoneCta = false } = props
   const cfg = getPaidFlagshipCertificateConfig(courseSlug)
   if (!cfg) return null
 
@@ -109,9 +116,9 @@ export function PaidFlagshipCertificateBanner(props: {
         className="mt-8 rounded-2xl border border-orange-100/80 bg-[#fffdfb] px-5 py-5 text-[color:var(--jf-text)] shadow-sm"
         data-testid="paid-flagship-certificate-banner"
       >
-        <h2 className="text-sm font-semibold text-orange-950">Certificate of completion</h2>
-        <p className="mt-2 text-[14px] text-[color:var(--jf-muted)]">Sign in to track certificate eligibility and open the capstone submission.</p>
-        {cfg.capstoneSubmissionEnabled ? (
+        <h2 className="text-sm font-semibold text-orange-950">Certificate status</h2>
+        <p className="mt-2 text-[14px] text-[color:var(--jf-muted)]">Sign in to see your progress toward a certificate.</p>
+        {cfg.capstoneSubmissionEnabled && !suppressCapstoneCta ? (
           <div className="mt-4">
             <Link
               to={`/auth/sign-in?redirect=/learn/courses/${courseSlug}/capstone`}
@@ -134,6 +141,7 @@ export function PaidFlagshipCertificateBanner(props: {
       progressState={progressState}
       user={user}
       supabase={supabase}
+      suppressCapstoneCta={suppressCapstoneCta}
     />
   )
 }

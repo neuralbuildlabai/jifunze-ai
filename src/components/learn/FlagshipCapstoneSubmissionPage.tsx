@@ -4,6 +4,7 @@ import { useAuth } from '../../auth/AuthContext'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
 import { getFlagshipCourseBySlug } from '../../data/learning/flagshipCoursesCatalog'
 import { getSupabaseBrowserClient } from '../../lib/supabaseClient'
+import { MODULE_QUIZ_DRAW_COUNT } from '../../lib/flagshipModuleQuizPools'
 import { getPaidFlagshipCertificateConfig, JIFUNZE_LEARNING_HUB_ISSUER } from '../../lib/paidFlagshipCertificateConfig'
 import { insertCapstoneSubmission } from '../../services/learning/learnerCapstoneSubmissionsRemote'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
@@ -23,7 +24,7 @@ function safeFileBase(name: string): string {
 const CHECKLIST = [
   'Scenario description',
   'AI productivity system overview',
-  'Selected portfolio artifacts',
+  'Selected artifacts',
   'Prompt library sample',
   'Workflow or process map',
   'Risk and privacy checklist',
@@ -134,24 +135,31 @@ export function FlagshipCapstoneSubmissionPage() {
 
       <main className="mx-auto max-w-3xl px-5 py-10 sm:px-8">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-800">Final capstone</p>
-        <h1 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">Submit Your Final Capstone</h1>
+        <h1 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">Submit Final Capstone</h1>
         <p className="mt-4 text-[15px] leading-relaxed text-[color:var(--jf-muted)]">
-          You have completed the learning sections and required checks for this course. Your final step is to submit your capstone project for
-          review. The certificate of completion is awarded only after your capstone has been reviewed and all course completion requirements are
-          met.
-        </p>
-        <p className="mt-2 text-sm text-[color:var(--jf-muted)]">
-          Issuer on eligible certificates: <span className="font-medium text-[color:var(--jf-text)]">{JIFUNZE_LEARNING_HUB_ISSUER}</span>
-          {cfg ? (
-            <>
-              {' '}
-              · Valid for {cfg.certificateValidityYears} years from issue · Module checks require {cfg.moduleQuizMinCorrect} of 8 correct ·
-              Capstone pass {cfg.capstonePassScore}%+
-            </>
-          ) : null}
+          Upload your portfolio for staff review. Your certificate is not issued automatically—it unlocks only after review and a passing score.
         </p>
 
-        <section className="mt-10 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6">
+        {cfg ? (
+          <section className="mt-8 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] p-6" aria-labelledby="cap-completion-req">
+            <h2 id="cap-completion-req" className="text-sm font-semibold text-[color:var(--jf-text)]">
+              Completion requirements
+            </h2>
+            <ul className="mt-3 space-y-2 text-[14px] leading-snug text-[color:var(--jf-muted)]">
+              <li>· Complete the course learning sections</li>
+              <li>
+                · Pass required checks: {cfg.moduleQuizMinCorrect} of {MODULE_QUIZ_DRAW_COUNT} correct
+              </li>
+              <li>· Submit the final capstone</li>
+              <li>· Pass capstone review: {cfg.capstonePassScore}% or higher</li>
+            </ul>
+            <p className="mt-4 text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">
+              Certificates are issued by {JIFUNZE_LEARNING_HUB_ISSUER} and are valid for {cfg.certificateValidityYears} years from the issue date.
+            </p>
+          </section>
+        ) : null}
+
+        <section className="mt-8 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6">
           <h2 className="text-sm font-semibold text-[color:var(--jf-text)]">Include in your package</h2>
           <ul className="mt-3 list-disc space-y-1 pl-5 text-[14px] text-[color:var(--jf-muted)]">
             {CHECKLIST.map((line) => (
@@ -222,7 +230,7 @@ export function FlagshipCapstoneSubmissionPage() {
               disabled={!readyToSubmit || busy}
               className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-orange-600 px-8 text-sm font-semibold text-white shadow-md disabled:cursor-not-allowed disabled:opacity-40"
             >
-              {busy ? 'Submitting…' : 'Submit Capstone Project'}
+              {busy ? 'Submitting…' : 'Submit Final Capstone'}
             </button>
           </form>
         )}

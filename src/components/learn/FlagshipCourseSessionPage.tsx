@@ -581,7 +581,7 @@ export function FlagshipCourseSessionPage() {
               canMarkThisChapterComplete={canMarkThisChapterComplete}
               timerHint={
                 timerGateActive && progressionAllowsMark && !timerSatisfied
-                  ? `Spend a little more time reviewing this lesson before continuing. Active time with this tab visible: about ${activeSeconds}s (aim for at least ${minimumSeconds}s).`
+                  ? `Review this section a little longer before continuing. Active time with this tab visible: about ${activeSeconds}s (aim for at least ${minimumSeconds}s).`
                   : null
               }
               onMarkComplete={() => progress.markSessionComplete(session.id, true)}

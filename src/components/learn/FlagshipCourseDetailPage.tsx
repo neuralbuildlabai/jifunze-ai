@@ -46,6 +46,7 @@ export function FlagshipCourseDetailPage() {
 
   const school = FLAGSHIP_SCHOOLS[course.schoolId]
   const firstLaunchSession = firstSessionInCourseOrder(sessions)
+  const isHostedRiseCompactCourse = slug === 'ai-productivity-smart-workflows'
 
   return (
     <div className="jf-learn-warm min-h-screen w-full bg-[var(--jf-bg-page)] text-[color:var(--jf-text)]">
@@ -105,58 +106,78 @@ export function FlagshipCourseDetailPage() {
           />
         ) : (
           <>
-        <div className="jf-learn-section-blush overflow-hidden rounded-2xl border border-[color:var(--jf-border)] shadow-[var(--jf-shadow-soft)]">
-          <div className="grid gap-8 px-5 py-8 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,230px)] lg:items-start lg:gap-10">
-            <div className="min-w-0">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:var(--jf-muted)]">
-                Flagship learning path · {school.label}
-              </p>
-              <h1 className="mt-3 text-[1.85rem] font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-[2.1rem] sm:leading-tight">
-                {course.title}
-              </h1>
-              <p className="mt-4 text-[17px] leading-relaxed text-[color:var(--jf-muted)]">{course.subtitle}</p>
+        {!isHostedRiseCompactCourse ? (
+          <div className="jf-learn-section-blush overflow-hidden rounded-2xl border border-[color:var(--jf-border)] shadow-[var(--jf-shadow-soft)]">
+            <div className="grid gap-8 px-5 py-8 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,230px)] lg:items-start lg:gap-10">
+              <div className="min-w-0">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:var(--jf-muted)]">
+                  Flagship learning path · {school.label}
+                </p>
+                <h1 className="mt-3 text-[1.85rem] font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-[2.1rem] sm:leading-tight">
+                  {course.title}
+                </h1>
+                <p className="mt-4 text-[17px] leading-relaxed text-[color:var(--jf-muted)]">{course.subtitle}</p>
 
-              <div className="mt-5 flex flex-wrap items-center gap-3 text-[13px] text-[color:var(--jf-muted)]">
-                <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-3 py-1 text-[12px] font-medium text-[color:var(--jf-text)] shadow-sm">
-                  {course.levelRange}
-                </span>
-                {curriculum ? (
-                  <span data-testid="flagship-module-count">
-                    <span className="font-semibold text-[color:var(--jf-text)]">{curriculum.modules.length}</span> modules
+                <div className="mt-5 flex flex-wrap items-center gap-3 text-[13px] text-[color:var(--jf-muted)]">
+                  <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-3 py-1 text-[12px] font-medium text-[color:var(--jf-text)] shadow-sm">
+                    {course.levelRange}
                   </span>
-                ) : null}
+                  {curriculum ? (
+                    <span data-testid="flagship-module-count">
+                      <span className="font-semibold text-[color:var(--jf-text)]">{curriculum.modules.length}</span> modules
+                    </span>
+                  ) : null}
+                </div>
+
+                <p className="mt-6 text-[15px] leading-[1.7] text-[color:var(--jf-text)]">{course.intro}</p>
+
+                <TrustBoundaryStrip
+                  variant="inline"
+                  compact
+                  strip="publicHero"
+                  presentation="utility"
+                  density="legalLink"
+                  className="mt-8 max-w-2xl text-[13px] leading-relaxed text-[color:var(--jf-subtle)]"
+                  dataTestId="flagship-course-trust"
+                />
               </div>
-
-              <p className="mt-6 text-[15px] leading-[1.7] text-[color:var(--jf-text)]">{course.intro}</p>
-
-              <TrustBoundaryStrip
-                variant="inline"
-                compact
-                strip="publicHero"
-                presentation="utility"
-                density="legalLink"
-                className="mt-8 max-w-2xl text-[13px] leading-relaxed text-[color:var(--jf-subtle)]"
-                dataTestId="flagship-course-trust"
-              />
-            </div>
-            <div className="mx-auto w-full max-w-[240px] lg:mx-0 lg:max-w-none lg:pt-1">
-              <LearnHeroAbstractFigure className="h-auto w-full drop-shadow-md" />
+              <div className="mx-auto w-full max-w-[240px] lg:mx-0 lg:max-w-none lg:pt-1">
+                <LearnHeroAbstractFigure className="h-auto w-full drop-shadow-md" />
+              </div>
             </div>
           </div>
-        </div>
-
-        {curriculum ? (
-          <PaidFlagshipCertificateBanner
-            courseSlug={slug}
-            curriculum={curriculum}
-            sessions={sessions}
-            progressState={progress.state}
-            user={user}
-            supabase={supabase}
-          />
         ) : null}
 
-        <PaidHostedRiseFlagshipSection courseSlug={slug} courseTitle={course.title} />
+        {isHostedRiseCompactCourse ? (
+          <>
+            <PaidHostedRiseFlagshipSection courseSlug={slug} courseTitle={course.title} />
+            {curriculum ? (
+              <PaidFlagshipCertificateBanner
+                courseSlug={slug}
+                curriculum={curriculum}
+                sessions={sessions}
+                progressState={progress.state}
+                user={user}
+                supabase={supabase}
+                suppressCapstoneCta
+              />
+            ) : null}
+          </>
+        ) : (
+          <>
+            {curriculum ? (
+              <PaidFlagshipCertificateBanner
+                courseSlug={slug}
+                curriculum={curriculum}
+                sessions={sessions}
+                progressState={progress.state}
+                user={user}
+                supabase={supabase}
+              />
+            ) : null}
+            <PaidHostedRiseFlagshipSection courseSlug={slug} courseTitle={course.title} />
+          </>
+        )}
 
         {LEARNER_MONETIZATION_UI_DISABLED ? null : (
           <section
@@ -213,13 +234,15 @@ export function FlagshipCourseDetailPage() {
           </section>
         )}
 
-        <section className="mt-14 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 shadow-[var(--jf-shadow-soft)] ring-1 ring-stone-900/[0.04] sm:p-8">
-          <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">Course promise</h2>
-          <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--jf-muted)]">{course.promise}</p>
-          <p className="mt-4 text-[13px] leading-relaxed text-[color:var(--jf-subtle)]">
-            This path is built for retained capability—layered progression, serious practice, and outputs you can reuse—not a shallow overview.
-          </p>
-        </section>
+        {!isHostedRiseCompactCourse ? (
+          <section className="mt-14 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 shadow-[var(--jf-shadow-soft)] ring-1 ring-stone-900/[0.04] sm:p-8">
+            <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">Course promise</h2>
+            <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--jf-muted)]">{course.promise}</p>
+            <p className="mt-4 text-[13px] leading-relaxed text-[color:var(--jf-subtle)]">
+              This path is built for retained capability—layered progression, serious practice, and outputs you can reuse—not a shallow overview.
+            </p>
+          </section>
+        ) : null}
 
         {curriculum ? (
           <FlagshipCourseCurriculumSections
@@ -280,79 +303,85 @@ export function FlagshipCourseDetailPage() {
           </>
         )}
 
-        <section className="mt-14" aria-labelledby="outcomes-heading">
-          <h2 id="outcomes-heading" className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
-            Learning outcomes
-          </h2>
-          <ul className="mt-6 space-y-3">
-            {course.learningOutcomes.map((o) => (
-              <li key={o} className="flex gap-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--jf-text)]/35" aria-hidden />
-                <span>{o}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+        {!isHostedRiseCompactCourse ? (
+          <section className="mt-14" aria-labelledby="outcomes-heading">
+            <h2 id="outcomes-heading" className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
+              Learning outcomes
+            </h2>
+            <ul className="mt-6 space-y-3">
+              {course.learningOutcomes.map((o) => (
+                <li key={o} className="flex gap-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--jf-text)]/35" aria-hidden />
+                  <span>{o}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
-        <section className="mt-14 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 sm:p-8" aria-labelledby="create-heading">
-          <h2 id="create-heading" className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
-            What you will create
-          </h2>
-          <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-            Capstone-style artifacts and revision-friendly packs—evidence of depth, not passive consumption.
-          </p>
-          <ul className="mt-6 space-y-3">
-            {course.whatYouCreate.map((w) => (
-              <li key={w} className="flex gap-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-600/45" aria-hidden />
-                <span>{w}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+        {!isHostedRiseCompactCourse ? (
+          <section className="mt-14 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 sm:p-8" aria-labelledby="create-heading">
+            <h2 id="create-heading" className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
+              What you will create
+            </h2>
+            <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+              Capstone-style artifacts and revision-friendly packs—evidence of depth, not passive consumption.
+            </p>
+            <ul className="mt-6 space-y-3">
+              {course.whatYouCreate.map((w) => (
+                <li key={w} className="flex gap-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-600/45" aria-hidden />
+                  <span>{w}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
-        <section className="mt-14 flex flex-col gap-4 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)] px-6 py-8 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-[15px] font-semibold text-[color:var(--jf-text)]">
-              {LEARNER_MONETIZATION_UI_DISABLED ? 'Start learning' : 'Build your plan'}
-            </p>
-            <p className="mt-1 text-[13px] text-[color:var(--jf-muted)]">
-              {LEARNER_MONETIZATION_UI_DISABLED
-                ? 'Open your first session when ready—modules unlock in order with checkpoints where marked.'
-                : 'Compare access options—then learn with guided progression and practical outputs.'}
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              to={
-                firstLaunchSession && slug
-                  ? `/learn/courses/${slug}/session/${firstLaunchSession.id}`
-                  : LEARNER_MONETIZATION_UI_DISABLED
-                    ? LEGAL_ROUTES.learn
-                    : LEGAL_ROUTES.pricing
-              }
-              className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-              data-testid="flagship-cta-start"
-            >
-              Start course
-            </Link>
-            {LEARNER_MONETIZATION_UI_DISABLED ? null : (
+        {!isHostedRiseCompactCourse ? (
+          <section className="mt-14 flex flex-col gap-4 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)] px-6 py-8 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-[15px] font-semibold text-[color:var(--jf-text)]">
+                {LEARNER_MONETIZATION_UI_DISABLED ? 'Start learning' : 'Build your plan'}
+              </p>
+              <p className="mt-1 text-[13px] text-[color:var(--jf-muted)]">
+                {LEARNER_MONETIZATION_UI_DISABLED
+                  ? 'Open your first session when ready—modules unlock in order with checkpoints where marked.'
+                  : 'Compare access options—then learn with guided progression and practical outputs.'}
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
               <Link
-                to="/learn/checkout?plan=all"
-                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-stone-100/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-                data-testid="flagship-cta-plan"
+                to={
+                  firstLaunchSession && slug
+                    ? `/learn/courses/${slug}/session/${firstLaunchSession.id}`
+                    : LEARNER_MONETIZATION_UI_DISABLED
+                      ? LEGAL_ROUTES.learn
+                      : LEGAL_ROUTES.pricing
+                }
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+                data-testid="flagship-cta-start"
               >
-                All-access checkout
+                Start course
               </Link>
-            )}
-            <Link
-              to={LEGAL_ROUTES.learn}
-              className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-            >
-              Back to catalog
-            </Link>
-          </div>
-        </section>
+              {LEARNER_MONETIZATION_UI_DISABLED ? null : (
+                <Link
+                  to="/learn/checkout?plan=all"
+                  className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-stone-100/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+                  data-testid="flagship-cta-plan"
+                >
+                  All-access checkout
+                </Link>
+              )}
+              <Link
+                to={LEGAL_ROUTES.learn}
+                className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold text-[color:var(--jf-muted)] transition hover:text-[color:var(--jf-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
+              >
+                Back to catalog
+              </Link>
+            </div>
+          </section>
+        ) : null}
           </>
         )}
       </main>

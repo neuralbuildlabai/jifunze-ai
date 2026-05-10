@@ -56,7 +56,11 @@ function testUiWiring() {
   const riseSection = readFileSync(join(REPO_ROOT, 'src/components/learn/PaidHostedRiseFlagshipSection.tsx'), 'utf8')
   assert.ok(riseSection.includes('/learn/courses/${courseSlug}/capstone'), 'Rise section links capstone by slug')
   assert.ok(riseSection.includes('Submit Final Capstone'), 'Rise section capstone CTA label')
-  assert.ok(riseSection.includes('certificate of completion is awarded only after'), 'Certificate award copy')
+  assert.ok(
+    riseSection.includes('Certificate unlocks after required checks are complete'),
+    'Launch card certificate note',
+  )
+  assert.ok(riseSection.includes('Your certificate is awarded only after your capstone is reviewed and passed'), 'Capstone card certificate note')
 
   const banner = readFileSync(join(REPO_ROOT, 'src/components/learn/PaidFlagshipCertificateBanner.tsx'), 'utf8')
   assert.ok(banner.includes('Submit Final Capstone'), 'Certificate banner uses capstone CTA label')
