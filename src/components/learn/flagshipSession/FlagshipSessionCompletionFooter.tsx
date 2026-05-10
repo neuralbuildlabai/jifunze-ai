@@ -24,6 +24,8 @@ export function FlagshipSessionCompletionFooter(props: {
   nextBlockedReason: string | null
   moduleAnchorId: string | null
   capstoneLinkOnly: boolean
+  /** Extra pacing hint (e.g. minimum active time on lesson) */
+  timerHint?: string | null
 }) {
   const {
     sessionTitle,
@@ -44,6 +46,7 @@ export function FlagshipSessionCompletionFooter(props: {
     nextBlockedReason,
     moduleAnchorId,
     capstoneLinkOnly,
+    timerHint,
   } = props
 
   const lessonLead =
@@ -101,6 +104,12 @@ export function FlagshipSessionCompletionFooter(props: {
       <p className="text-[12px] font-medium text-[color:var(--jf-muted)]">Before you continue</p>
       <h2 className="mt-2 text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">{heading}</h2>
       <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-[color:var(--jf-muted)]">{lead}</p>
+      {timerHint ? (
+        <p className="mt-4 max-w-2xl rounded-lg border border-amber-200/80 bg-amber-50/90 px-3 py-2 text-[13px] leading-relaxed text-amber-950">
+          {timerHint}
+        </p>
+      ) : null}
+
       <ul className="mt-4 max-w-2xl space-y-2">
         {checklist.map((line) => (
           <li key={line} className="flex gap-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">

@@ -9,6 +9,7 @@ import {
   MODULE_QUIZ_MIN_CORRECT,
   type ModuleQuizQuestion,
 } from '../../lib/flagshipModuleQuizPools'
+import { getPaidFlagshipCertificateConfig } from '../../lib/paidFlagshipCertificateConfig'
 import type { FlagshipModuleQuizRecord } from '../../lib/flagshipCourseProgressDerived'
 import { recordTeachingSignal } from '../../data/teaching/teachingSignals'
 
@@ -24,6 +25,8 @@ export function FlagshipModuleQuizPanel(props: {
   onUpdateQuiz: (record: Partial<FlagshipModuleQuizRecord>) => void
 }) {
   const { module, sessions, courseSlug, quizState, onUpdateQuiz } = props
+
+  const minCorrect = getPaidFlagshipCertificateConfig(courseSlug)?.moduleQuizMinCorrect ?? MODULE_QUIZ_MIN_CORRECT
 
   const pool = useMemo(() => buildModuleQuizPool(module, sessions, courseSlug), [module, sessions, courseSlug])
   const [attemptNonce, setAttemptNonce] = useState(0)
@@ -80,7 +83,7 @@ export function FlagshipModuleQuizPanel(props: {
     return n
   }, [submitted, questions, answers])
 
-  const failedAttempt = submitted && correctCount < MODULE_QUIZ_MIN_CORRECT
+  const failedAttempt = submitted && correctCount < minCorrect
   const canRetryAfterFail = failedAttempt && !locked && reviewAcknowledged
 
   function submit() {
@@ -101,7 +104,7 @@ export function FlagshipModuleQuizPanel(props: {
         drawCount: questions.length,
         elapsedMs: elapsed,
         cheatSignals,
-        passed: n >= MODULE_QUIZ_MIN_CORRECT,
+        passed: n >= minCorrect,
       },
     })
     if (elapsed < 4500 && questions.length >= MODULE_QUIZ_DRAW_COUNT) {
@@ -111,7 +114,7 @@ export function FlagshipModuleQuizPanel(props: {
       })
     }
 
-    if (n >= MODULE_QUIZ_MIN_CORRECT) {
+    if (n >= minCorrect) {
       onUpdateQuiz({ passedAt: ts, lockUntil: undefined, lastAttemptAt: ts, reviewAcknowledgedAt: undefined })
       setReviewAcknowledged(false)
       return
@@ -172,10 +175,11 @@ export function FlagshipModuleQuizPanel(props: {
       ) : null}
       <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-muted)]">Module checkpoint</p>
       <p className="mt-1 text-[13px] font-medium text-[color:var(--jf-text)]">
-        {MODULE_QUIZ_DRAW_COUNT} questions · pass with at least {MODULE_QUIZ_MIN_CORRECT} correct
+        {MODULE_QUIZ_DRAW_COUNT} questions · pass with at least {minCorrect} correct
       </p>
       <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-        Questions are drawn from this module&apos;s sessions. Pass unlocks the next module when earlier gates allow. Questions change between attempts.
+        Questions are drawn from this module&apos;s learning goals. A passing score unlocks the next module when your earlier sessions and checks are satisfied.
+        The item set changes between attempts so retakes stay meaningful.
       </p>
       {locked ? (
         <p className="mt-3 text-[13px] text-amber-900/90">
@@ -194,7 +198,7 @@ export function FlagshipModuleQuizPanel(props: {
               {q.choices.map((c, ci) => (
                 <label
                   key={`${q.id}-${ci}`}
-                  className="flex cursor-pointer items-start gap-3 rounded-lg border border-[color:var(--jf-border)] px-3 py-2 text-[13px] text-[color:var(--jf-muted)] hover:border-stone-400/45"
+                  className="flex cursor-pointer items-start gap-3 rounded-lg border border-[color:var(--jf-border)] px-3 py-2.5 text-[13px] leading-snug text-[color:var(--jf-muted)] transition hover:border-stone-400/50 hover:bg-[color:var(--jf-surface)]/80"
                 >
                   <input
                     type="radio"
@@ -202,7 +206,7 @@ export function FlagshipModuleQuizPanel(props: {
                     disabled={submitted || locked}
                     checked={answers[q.id] === ci}
                     onChange={() => setAnswers((prev) => ({ ...prev, [q.id]: ci }))}
-                    className="mt-1"
+                    className="mt-1 shrink-0 border-[color:var(--jf-border)] text-[color:var(--jf-brand)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--jf-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--jf-bg-page)]"
                   />
                   <span>{c}</span>
                 </label>
@@ -236,14 +240,14 @@ export function FlagshipModuleQuizPanel(props: {
               <span className="font-semibold text-[color:var(--jf-text)]">
                 {correctCount}/{questions.length}
               </span>{' '}
-              correct (need at least {MODULE_QUIZ_MIN_CORRECT} of {MODULE_QUIZ_DRAW_COUNT}).
+              correct (need at least {minCorrect} of {MODULE_QUIZ_DRAW_COUNT}).
             </p>
-            {correctCount >= MODULE_QUIZ_MIN_CORRECT ? null : (
+            {correctCount >= minCorrect ? null : (
               <>
                 <label className="mt-2 flex w-full max-w-xl cursor-pointer items-start gap-3 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
                   <input
                     type="checkbox"
-                    className="mt-1 rounded border-[color:var(--jf-border)]"
+                    className="mt-1 rounded border-[color:var(--jf-border)] text-[color:var(--jf-brand)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--jf-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--jf-bg-page)]"
                     checked={reviewAcknowledged}
                     onChange={(e) => {
                       const on = e.target.checked

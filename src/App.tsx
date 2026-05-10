@@ -61,6 +61,8 @@ import { AiAtWorkChatgptFreeStarterPage } from './components/learn/AiAtWorkChatg
 import { SmartWorkflowsWithAiFreeStarterPage } from './components/learn/SmartWorkflowsWithAiFreeStarterPage'
 import { LearningDiscoveryHubPage } from './components/learn/LearningDiscoveryHubPage'
 import { LearningSchoolCatalogPage } from './components/learn/LearningSchoolCatalogPage'
+import { AdminCapstonesReviewPage } from './components/admin/AdminCapstonesReviewPage'
+import { FlagshipCapstoneSubmissionPage } from './components/learn/FlagshipCapstoneSubmissionPage'
 import { FlagshipCourseDetailPage } from './components/learn/FlagshipCourseDetailPage'
 import { FlagshipCourseSessionPage } from './components/learn/FlagshipCourseSessionPage'
 import { StandaloneCertificatePage } from './components/learn/StandaloneCertificatePage'
@@ -181,6 +183,7 @@ export default function App() {
         <Route path="/auth/sign-in" element={<AuthSignInPage />} />
         <Route path="/auth/sign-up" element={<AuthSignUpPage />} />
         <Route path="/" element={<HomeEntryPage />} />
+        <Route path="/learn/courses/:slug/capstone" element={<FlagshipCapstoneSubmissionPage />} />
         <Route path="/learn/courses/:slug/session/:sessionId" element={<FlagshipCourseSessionPage />} />
         <Route
           path="/learn/courses/business-process-automation-for-work"
@@ -438,6 +441,14 @@ export default function App() {
                 element={
                   <RequirePlatformInsights>
                     <LearningInsightsPage />
+                  </RequirePlatformInsights>
+                }
+              />
+              <Route
+                path="/admin/capstones"
+                element={
+                  <RequirePlatformInsights>
+                    <AdminCapstonesReviewPage />
                   </RequirePlatformInsights>
                 }
               />

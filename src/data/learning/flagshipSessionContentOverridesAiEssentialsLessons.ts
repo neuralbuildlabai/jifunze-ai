@@ -1095,7 +1095,7 @@ const AE_ESSENTIALS_LESSON_ENTRIES: [string, FlagshipSessionContentBlock[]][] = 
       bullets: [
         'Readers can trace strong claims to sources or see explicit TBD.',
         'Tone matches power dynamics and sensitivity of the topic.',
-        'A human with a checklist signed release—not vibes.',
+        'A human with a checklist signed release—not informal sign-off.',
       ],
     },
     {
@@ -1131,7 +1131,7 @@ const AE_ESSENTIALS_LESSON_ENTRIES: [string, FlagshipSessionContentBlock[]][] = 
         'Entrepreneurs: brand voice doc prevents “generic scale-up” tone drift.',
         'Creators: corrections and dates are part of integrity—model that.',
         'Managers: templates without owners become liability factories.',
-        'Educators: teach students to annotate AI-assisted planning vs final prose.',
+        'Educators: teach students to annotate model-assisted planning versus final prose.',
       ],
     },
     {
@@ -1400,7 +1400,7 @@ const AE_ESSENTIALS_LESSON_ENTRIES: [string, FlagshipSessionContentBlock[]][] = 
       eyebrow: 'Portfolio thread',
       title: 'RACI + disclosure snippets + escalation list',
       body: [
-        'Save a one-pager: RACI for AI-assisted artifacts, disclosure snippets by channel, and a short escalation list. That is portfolio-grade evidence of responsible operations—not philosophy homework.',
+        'Save a one-pager: RACI for model-assisted deliverables, disclosure snippets by channel, and a short escalation list. That is portfolio-grade evidence of responsible operations—not philosophy homework.',
       ].join('\n\n'),
     },
     {

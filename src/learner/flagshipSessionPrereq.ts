@@ -36,13 +36,13 @@ export function sessionOpenForLearner(
 
 export function lockedForwardReason(session: FlagshipSession, opts?: { capstonePrep?: boolean }): string {
   if (opts?.capstonePrep) {
-    return 'Finish mastery checkpoints across modules to open capstone preparation.'
+    return 'Complete the practice checkpoints your course map calls for—then capstone preparation opens automatically.'
   }
   const n = session.prerequisites?.length ?? 0
   if (n === 0) return 'Start from the first session in this course.'
-  return 'Finish the prior session in order first.'
+  return 'Complete the previous session first so concepts and artifacts stay in order.'
 }
 
 export function lockedModuleQuizReason(): string {
-  return 'Pass the previous module quiz to unlock this module.'
+  return 'Pass the prior module’s short check—then the next module unlocks when your earlier sessions are done.'
 }

@@ -5,6 +5,25 @@
 
 import type { FlagshipCourseCurriculum, FlagshipCurriculumModule } from './flagshipCourseCurricula'
 import type { FlagshipDepthStage } from './flagshipCurriculumTypes'
+import { getAiEssentialsSessionPatch, type AiEssentialsSessionKind } from '../../lib/aiEssentialsCourseUiMeta'
+
+const AI_ESSENTIALS_COURSE_SLUG = 'ai-essentials'
+
+function applyAiEssentialsSessionCopy(
+  courseSlug: string,
+  moduleId: string,
+  kind: AiEssentialsSessionKind,
+  row: Omit<FlagshipSession, 'orderInCourse'>,
+): Omit<FlagshipSession, 'orderInCourse'> {
+  if (courseSlug !== AI_ESSENTIALS_COURSE_SLUG) return row
+  const patch = getAiEssentialsSessionPatch(moduleId, kind)
+  if (!patch) return row
+  return {
+    ...row,
+    title: patch.title ?? row.title,
+    summary: patch.summary ?? row.summary,
+  }
+}
 
 export type FlagshipSessionType =
   | 'lesson'
@@ -154,87 +173,95 @@ function buildSessionsForModule(courseSlug: string, module: FlagshipCurriculumMo
   const st = module.stage
 
   const lessonId = `${module.id}-lesson`
-  out.push({
-    id: lessonId,
-    courseSlug,
-    moduleId: module.id,
-    orderInModule: ++orderInModule,
-    title: lessonTitle(module),
-    type: 'lesson',
-    durationMinutes: lessonDurationBand(st),
-    effortLabel: sessionEffortLabel('lesson', st),
-    summary: lessonSummary(module),
-    objectives: module.learningGoals.length ? module.learningGoals : ['Understand the core ideas of this module before applying them.'],
-    prerequisites: prereqChain.length ? [...prereqChain] : undefined,
-  })
+  out.push(
+    applyAiEssentialsSessionCopy(courseSlug, module.id, 'lesson', {
+      id: lessonId,
+      courseSlug,
+      moduleId: module.id,
+      orderInModule: ++orderInModule,
+      title: lessonTitle(module),
+      type: 'lesson',
+      durationMinutes: lessonDurationBand(st),
+      effortLabel: sessionEffortLabel('lesson', st),
+      summary: lessonSummary(module),
+      objectives: module.learningGoals.length ? module.learningGoals : ['Understand the core ideas of this module before applying them.'],
+      prerequisites: prereqChain.length ? [...prereqChain] : undefined,
+    }),
+  )
   prereqChain.push(lessonId)
 
   if (module.practiceActivities.length > 0) {
     const practiceId = `${module.id}-practice`
-    out.push({
-      id: practiceId,
-      courseSlug,
-      moduleId: module.id,
-      orderInModule: ++orderInModule,
-      title: practiceTitle(module),
-      type: 'practice',
-      durationMinutes: Math.min(56, 24 + module.practiceActivities.length * 7),
-      effortLabel: sessionEffortLabel('practice', st),
-      summary: practiceSummary(module),
-      objectives: [
-        'Translate concepts into actions you can repeat and review.',
-        'Surface assumptions, tie them to evidence, and record what would change your mind.',
-      ],
-      activityPrompt: module.practiceActivities.map((a, i) => `${i + 1}. ${a}`).join('\n\n'),
-      outputExpectation: module.expectedOutputs?.length ? module.expectedOutputs.join(' · ') : undefined,
-      prerequisites: [...prereqChain],
-    })
+    out.push(
+      applyAiEssentialsSessionCopy(courseSlug, module.id, 'practice', {
+        id: practiceId,
+        courseSlug,
+        moduleId: module.id,
+        orderInModule: ++orderInModule,
+        title: practiceTitle(module),
+        type: 'practice',
+        durationMinutes: Math.min(56, 24 + module.practiceActivities.length * 7),
+        effortLabel: sessionEffortLabel('practice', st),
+        summary: practiceSummary(module),
+        objectives: [
+          'Translate concepts into actions you can repeat and review.',
+          'Surface assumptions, tie them to evidence, and record what would change your mind.',
+        ],
+        activityPrompt: module.practiceActivities.map((a, i) => `${i + 1}. ${a}`).join('\n\n'),
+        outputExpectation: module.expectedOutputs?.length ? module.expectedOutputs.join(' · ') : undefined,
+        prerequisites: [...prereqChain],
+      }),
+    )
     prereqChain.push(practiceId)
   }
 
   if (module.revisionCheckpoint) {
     const revisionId = `${module.id}-revision`
-    out.push({
-      id: revisionId,
-      courseSlug,
-      moduleId: module.id,
-      orderInModule: ++orderInModule,
-      title: revisionTitle(module),
-      type: 'revision',
-      durationMinutes: st === 'mastery_outputs' ? 26 : 24,
-      effortLabel: sessionEffortLabel('revision', st),
-      summary: revisionSummary(module),
-      objectives: [
-        'Restate the module’s central claims without borrowed jargon.',
-        'Expose one lingering uncertainty and how you will test it.',
-      ],
-      activityPrompt:
-        'In writing: (1) three sentences summarizing what matters most, (2) two questions you still need to answer, (3) one check you will use next time stakes rise.',
-      prerequisites: [...prereqChain],
-    })
+    out.push(
+      applyAiEssentialsSessionCopy(courseSlug, module.id, 'revision', {
+        id: revisionId,
+        courseSlug,
+        moduleId: module.id,
+        orderInModule: ++orderInModule,
+        title: revisionTitle(module),
+        type: 'revision',
+        durationMinutes: st === 'mastery_outputs' ? 26 : 24,
+        effortLabel: sessionEffortLabel('revision', st),
+        summary: revisionSummary(module),
+        objectives: [
+          'Restate the module’s central claims without borrowed jargon.',
+          'Expose one lingering uncertainty and how you will test it.',
+        ],
+        activityPrompt:
+          'In writing: (1) three sentences summarizing what matters most, (2) two questions you still need to answer, (3) one check you will use next time stakes rise.',
+        prerequisites: [...prereqChain],
+      }),
+    )
     prereqChain.push(revisionId)
   }
 
   if (module.recap) {
     const recapId = `${module.id}-recap`
-    out.push({
-      id: recapId,
-      courseSlug,
-      moduleId: module.id,
-      orderInModule: ++orderInModule,
-      title: recapTitle(module),
-      type: 'recap',
-      durationMinutes: 20,
-      effortLabel: sessionEffortLabel('recap', st),
-      summary: recapSummary(module),
-      objectives: [
-        'Compress the module into notes you will actually reopen this month.',
-        'Link this module explicitly to the next steps in your path.',
-      ],
-      activityPrompt:
-        'Draft a recap card: keywords, traps, “when to reuse”, and one dependency on another module. Save it where you review weekly.',
-      prerequisites: [...prereqChain],
-    })
+    out.push(
+      applyAiEssentialsSessionCopy(courseSlug, module.id, 'recap', {
+        id: recapId,
+        courseSlug,
+        moduleId: module.id,
+        orderInModule: ++orderInModule,
+        title: recapTitle(module),
+        type: 'recap',
+        durationMinutes: 20,
+        effortLabel: sessionEffortLabel('recap', st),
+        summary: recapSummary(module),
+        objectives: [
+          'Compress the module into notes you will actually reopen this month.',
+          'Link this module explicitly to the next steps in your path.',
+        ],
+        activityPrompt:
+          'Draft a recap card: keywords, traps, “when to reuse”, and one dependency on another module. Save it where you review weekly.',
+        prerequisites: [...prereqChain],
+      }),
+    )
     prereqChain.push(recapId)
   }
 
@@ -246,18 +273,24 @@ export const FLAGSHIP_CAPSTONE_MODULE_ID = 'capstone'
 
 function capstoneSessions(courseSlug: string, curriculum: FlagshipCourseCurriculum): Omit<FlagshipSession, 'orderInCourse'>[] {
   const prepId = `${courseSlug}-capstone-prep`
+  const prepTitle =
+    courseSlug === AI_ESSENTIALS_COURSE_SLUG
+      ? 'Capstone prep: align deliverables, filenames, and rubric'
+      : `Capstone preparation · ${curriculum.capstone.title}`
   return [
     {
       id: prepId,
       courseSlug,
       moduleId: FLAGSHIP_CAPSTONE_MODULE_ID,
       orderInModule: 1,
-      title: `Capstone preparation · ${curriculum.capstone.title}`,
+      title: prepTitle,
       type: 'capstone_prep',
       durationMinutes: 48,
       effortLabel: sessionEffortLabel('capstone_prep', 'mastery_outputs'),
       summary:
-        'Align evidence, drafts, and acceptance criteria with the capstone brief—readiness work for reviewable deliverables, not a narrative skim of the course.',
+        courseSlug === AI_ESSENTIALS_COURSE_SLUG
+          ? 'Map prior artifacts to the Module 16 brief, confirm filenames, and rehearse the in-app rubric self-check before you call the workflow complete.'
+          : 'Align evidence, drafts, and acceptance criteria with the capstone brief—readiness work for reviewable deliverables, not a narrative skim of the course.',
       objectives: [
         'Map each deliverable to evidence already in your artifacts vs. gaps to close.',
         'Define “done” with crisp acceptance criteria an external reviewer could use.',

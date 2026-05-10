@@ -121,12 +121,12 @@ const AE_M02: readonly Course1QuizQuestion[] = [
     prompt:
       'A LinkedIn post claims "GPTs are unbiased because math is neutral." Which response best matches Module 2\'s reality check?\n\nWhy: Bias enters via training data, labelers, prompt framing, deployment context, and reinforcement choices. Math being involved does not neutralise any of that.',
     choices: [
-      'Agreed—anything mathematical is inherently fair',
       'Models inherit bias from data, labels, prompts, and deployment choices; calling the pipeline "math" hides where bias actually lives',
+      'Agreed—anything mathematical is inherently fair',
       'Bias only matters for image models, not text',
       'Bias is solved as long as the model is large enough',
     ] as const,
-    correctIndex: 1,
+    correctIndex: 0,
   },
   {
     id: 'ae-m02::M02-Q02',
@@ -134,11 +134,11 @@ const AE_M02: readonly Course1QuizQuestion[] = [
       'You are about to send an AI-drafted client email. Which order best matches T–R–E–J (Task, Risk, Evidence, Judgment) before you click send?\n\nWhy: T–R–E–J is the operating habit Module 2 trains: name what you\'re doing, what could go wrong, what backs the claim, and what the human owner concludes.',
     choices: [
       'Judgment first, then Task, Risk, Evidence',
-      'Task → Risk → Evidence → Judgment, in that order',
       'Risk → Judgment → Task → Evidence',
+      'Task → Risk → Evidence → Judgment, in that order',
       'Evidence is optional if the email is short',
     ] as const,
-    correctIndex: 1,
+    correctIndex: 2,
   },
   {
     id: 'ae-m02::M02-Q03',
@@ -146,47 +146,47 @@ const AE_M02: readonly Course1QuizQuestion[] = [
       'A model summarises ten case studies, all from one consultancy\'s website. Which bias is most likely to be present?\n\nWhy: Pulling only from one source/vendor is a textbook selection bias—the sample is not representative of the underlying population of cases.',
     choices: [
       'Confirmation bias',
-      'Selection bias—the source pool is not representative',
       'Anchoring',
       'Survivorship bias of the prompt-writer',
+      'Selection bias—the source pool is not representative',
     ] as const,
-    correctIndex: 1,
+    correctIndex: 3,
   },
   {
     id: 'ae-m02::M02-Q04',
     prompt:
       'You write a memo claiming "Most teams using AI saw 30% productivity gains." What falsifier should you state up front?\n\nWhy: A falsifier names what evidence would change your conclusion; without one, the claim is unfalsifiable rhetoric.',
     choices: [
-      '"This is true unless someone disagrees"',
       '"If a controlled study with comparable teams showed under 5% sustained gains over six months, I would withdraw this claim"',
+      '"This is true unless someone disagrees"',
       '"This is true because the model wrote it"',
       'No falsifier needed—percentages are facts',
     ] as const,
-    correctIndex: 1,
+    correctIndex: 0,
   },
   {
     id: 'ae-m02::M02-Q05',
     prompt:
       'Match each task to the right depth of review on the risk ladder: (i) team off-site invitation, (ii) public investor disclosure, (iii) internal Slack joke.\n\nWhy: Module 2 trains proportionate review. Investor disclosures sit at the top; jokes sit at the bottom; team logistics sit in the middle.',
     choices: [
-      'All three deserve full legal review',
       '(i) light review, (ii) heavy verification + named reviewer, (iii) self-check only',
+      'All three deserve full legal review',
       '(i) heavy verification, (ii) self-check, (iii) full legal review',
       'No review is needed if you trust the model',
     ] as const,
-    correctIndex: 1,
+    correctIndex: 0,
   },
   {
     id: 'ae-m02::M02-Q06',
     prompt:
-      'An AI-assisted compliance report contains an error that costs the company a fine. Who is accountable, in this module\'s framing?\n\nWhy: Module 2 is explicit that human accountability does not transfer to the model. The signer/owner is responsible.',
+      'A compliance report drafted with model help contains an error that costs the company a fine. Who is accountable, in this module\'s framing?\n\nWhy: Module 2 is explicit that human accountability does not transfer to the model. The signer/owner is responsible.',
     choices: [
       'The model vendor, in all cases',
-      'The human owner who reviewed/signed off—accountability does not migrate to the model',
-      'No one—models can be wrong',
       'The intern who pasted the prompt',
+      'No one—models can be wrong',
+      'The human owner who reviewed/signed off—accountability does not migrate to the model',
     ] as const,
-    correctIndex: 1,
+    correctIndex: 3,
   },
   {
     id: 'ae-m02::M02-Q07',
@@ -194,23 +194,23 @@ const AE_M02: readonly Course1QuizQuestion[] = [
       'A model says "studies show that X" with no specific study cited. What confidence should this carry in your synthesis?\n\nWhy: "Studies show" without provenance is a known fluency-without-evidence pattern. Treat it as low-confidence until verified.',
     choices: [
       'High confidence—the model is reliable',
-      'Low confidence; flag the claim as unsourced and either find the study or downgrade the claim',
       'Medium confidence, because the wording is academic',
+      'Low confidence; flag the claim as unsourced and either find the study or downgrade the claim',
       'No confidence—delete the entire output',
     ] as const,
-    correctIndex: 1,
+    correctIndex: 2,
   },
   {
     id: 'ae-m02::M02-Q08',
     prompt:
       'A teammate sends you a fluent, polished AI-generated argument with no sources, framed as "definitive." How should you respond responsibly?\n\nWhy: Polished prose with no provenance is exactly where Module 2 trains learners to push back. The right move is request evidence, not capitulate to confidence.',
     choices: [
-      'Trust it—polish implies depth',
       'Ask for sources, request the falsifier, and treat it as a hypothesis until evidence lands',
+      'Trust it—polish implies depth',
       'Forward it to leadership unchanged',
       'Reject it without explanation',
     ] as const,
-    correctIndex: 1,
+    correctIndex: 0,
   },
 ]
 
@@ -478,7 +478,7 @@ const AE_M05: readonly Course1QuizQuestion[] = [
     prompt:
       'When comparing prompt variants, which row best belongs in a failure-signature table?\n\nWhy: The table captures observable defects so the team can see the pattern, not just an aggregate "better/worse" feeling.',
     choices: [
-      '"Vibes: B is nicer"',
+      '"Subjective read: B feels nicer"',
       '"Variant B fabricates citations on contested-fact prompts in 2/5 runs; Variant A fabricates 0/5"',
       '"B is shorter so it\'s better"',
       '"A is older, ignore"',
@@ -824,7 +824,7 @@ const AE_M09: readonly Course1QuizQuestion[] = [
   {
     id: 'ae-m09::M09-Q02',
     prompt:
-      'On an AI-assisted pull request, who is Responsible vs Accountable?\n\nWhy: Module 9 separates Responsible (does the work, including AI runs) from Accountable (signs off, owns the outcome). Both must be named, not implied.',
+      'On a model-assisted pull request, who is Responsible vs Accountable?\n\nWhy: Module 9 separates Responsible (does the work, including model runs) from Accountable (signs off, owns the outcome). Both must be named, not implied.',
     choices: [
       'Same person, always',
       'Responsible: the person running the AI step + author edits. Accountable: a named reviewer who signs off and owns the outcome.',
@@ -1184,7 +1184,7 @@ const AE_M12: readonly Course1QuizQuestion[] = [
       'A workflow diagram has every step but no owners. Module 12 says what?\n\nWhy: Without named owners, the diagram is theater. Real workflows survive because someone is accountable per step.',
     choices: [
       'Owners are optional in modern systems',
-      'A diagram without named owners is theater; assign a person (not a team) per step and record on-call/backup for AI-assisted steps',
+      'A diagram without named owners is theater; assign a person (not a team) per step and record on-call/backup for model-assisted steps',
       'Diagrams should never name owners',
       'Owners only matter for finance',
     ] as const,
@@ -1208,7 +1208,7 @@ const AE_M13: readonly Course1QuizQuestion[] = [
   {
     id: 'ae-m13::M13-Q01',
     prompt:
-      'A two-page decision memo under Module 13 must include which structure?\n\nWhy: Module 13 trains decision memos with explicit assumptions, options, tradeoffs, recommendation, falsifiers, and next information buys—not a vibe summary.',
+      'A two-page decision memo under Module 13 must include which structure?\n\nWhy: Module 13 trains decision memos with explicit assumptions, options, tradeoffs, recommendation, falsifiers, and next information buys—not a narrative-only summary.',
     choices: [
       'A long preamble and a single recommendation',
       'Assumptions, options with tradeoffs, recommendation with rationale, falsifiers (what would change the recommendation), and next information buys',
@@ -1331,7 +1331,7 @@ const AE_M14: readonly Course1QuizQuestion[] = [
   {
     id: 'ae-m14::M14-Q03',
     prompt:
-      'A responsibility map for an AI-assisted release names what?\n\nWhy: Maps name people per step (drafter, verifier, approver) and what each checks—not just stages.',
+      'A responsibility map for a model-assisted release names what?\n\nWhy: Maps name people per step (drafter, verifier, approver) and what each checks—not just stages.',
     choices: [
       'Just the stages with no people',
       'Per step: drafter, verifier (what they check), approver (what they sign off), escalation contact—as people, not roles in the abstract',
@@ -1367,7 +1367,7 @@ const AE_M14: readonly Course1QuizQuestion[] = [
   {
     id: 'ae-m14::M14-Q06',
     prompt:
-      'When is escalation the right move for an AI-assisted deliverable?\n\nWhy: Escalation triggers are explicit—novel/contested data class, deliverable affecting regulators or named customers, or first-of-kind use of a new tool. Module 14 codifies these so peers don\'t guess.',
+      'When is escalation the right move for a model-assisted deliverable?\n\nWhy: Escalation triggers are explicit—novel/contested data class, deliverable affecting regulators or named customers, or first-of-kind use of a new tool. Module 14 codifies these so peers don\'t guess.',
     choices: [
       'Whenever you feel like it',
       'On novel data classes, regulator/customer-facing impact, irreversible commitments, or first-of-kind use of a new tool—route to the named approver',

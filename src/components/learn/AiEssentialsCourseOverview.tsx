@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { LEGAL_ROUTES } from '../../training/trustCopy'
 import type { FlagshipCourse, FlagshipSchool } from '../../data/learning/flagshipCoursesCatalog'
 import type { FlagshipCourseCurriculum } from '../../data/learning/flagshipCourseCurricula'
 import {
@@ -7,34 +8,34 @@ import {
 } from '../../data/learning/flagshipCourseSessions'
 import type { FlagshipCourseProgressApi } from '../../hooks/useFlagshipCourseProgress'
 import { sessionOpenForLearner } from '../../learner/flagshipSessionPrereq'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { getAiEssentialsMilestonesReachedCount } from '../../lib/aiEssentialsProgressMilestones'
 import { MODULE_QUIZ_DRAW_COUNT, MODULE_QUIZ_MIN_CORRECT } from '../../lib/flagshipModuleQuizPools'
 import { AI_ESSENTIALS_PATHWAY_BLURBS, AI_ESSENTIALS_PORTFOLIO_SHOWCASE } from '../../lib/aiEssentialsCourseUiMeta'
-import { TrustBoundaryStrip } from '../TrustBoundaryStrip'
 import { LearnHeroAbstractFigure, LearnSectionSparkIcon } from '../visuals/JifunzeLearnVisuals'
 import { FlagshipCourseLearningPath } from './FlagshipCourseLearningPath'
 import { FlagshipSupportMaterials } from './FlagshipSupportMaterials'
 
-const COURSE_PROMISE = 'Build practical AI skills through guided lessons, practice, and a final capstone.'
+const COURSE_PROMISE =
+  'Learn how modern AI behaves, where it fails, and how to use it responsibly in real work. You will build a coherent portfolio—prompt packs, verification habits, privacy checklists, and one end-to-end workflow you can show—with human review and accountability at every step.'
 
 const WHAT_YOU_LEARN = [
-  'Use prompts with clear task, context, constraints, format, and audience.',
-  'Review AI outputs for accuracy, bias, and missing evidence.',
-  'Communicate with better tone, audience fit, and responsibility.',
-  'Use AI for study without replacing your own understanding.',
-  'Build safe workflows, decision support, and team-use guardrails.',
-  'Complete a final AI-supported workflow capstone.',
+  'Explain what models can do reliably (drafting, transforming, structuring) versus what still needs human verification, sources, and judgment.',
+  'Write prompts with explicit task, context, constraints, evidence standards, format, and audience so outputs are reviewable, not lucky.',
+  'Check outputs for accuracy gaps, missing evidence, weak reasoning, unsafe assumptions, and tone that overstates confidence.',
+  'Use models for writing, research, study, workflows, and decision support while keeping authorship, disclosure, and accountability with people.',
+  'Build reusable prompt packs, verification tables, guardrails, and tiered privacy habits that carry into team settings.',
+  'Finish Module 16 with a bounded workflow, a rubric self-check in the app, and an organized bundle you could walk a colleague through.',
+  'Understand completion: Jifunze tracks sessions, module checks, checkpoints, and in-app readiness—not a PDF certificate.',
 ]
 
 const WHAT_YOU_CREATE = [
-  'Prompt improvement pack (versions + rationale)',
-  'Verification / evidence checklist or sample',
-  'AI-assisted writing or research sample with your review visible',
-  'Workflow or SOP slice with human gates',
-  'Decision-support memo with tradeoffs and next information buys',
-  'Personal AI operating system plan (tools, data tiers, boundaries)',
-  'Final Responsible AI fluency portfolio + short reflection',
+  'Workflow map with task boundary and execution notes',
+  'Prompt pack and prompt contract tied to your use case',
+  'Verification table with claim strength and evidence notes',
+  'Privacy and safety checklist applied to your inputs',
+  'Human review, escalation, and disclosure notes on the final path',
+  'Revised final output plus a short revision log',
+  'Self-critique, one-page reflection, and organized portfolio bundle',
 ]
 
 type Props = {
@@ -85,7 +86,7 @@ export function AiEssentialsCourseOverview(props: Props) {
           : `/learn/courses/${slug}#curriculum`
 
   const milestonesReached = getAiEssentialsMilestonesReachedCount(progressPercent)
-  const quizPassLine = `${MODULE_QUIZ_DRAW_COUNT} questions · pass with at least ${MODULE_QUIZ_MIN_CORRECT} of ${MODULE_QUIZ_DRAW_COUNT} correct`
+  const quizPassLine = `Each module check draws ${MODULE_QUIZ_DRAW_COUNT} questions; you need at least ${MODULE_QUIZ_MIN_CORRECT} correct to pass`
   const sessionDone = sessions.filter((s) => completed.has(s.id)).length
 
   return (
@@ -109,7 +110,7 @@ export function AiEssentialsCourseOverview(props: Props) {
               <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-3 py-1 font-medium text-[color:var(--jf-text)] shadow-sm">
                 16 modules
               </span>
-              <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 px-3 py-1 shadow-sm">About 32–45 hours</span>
+              <span className="rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/90 px-3 py-1 shadow-sm">32–45 hours (typical)</span>
               <span className="rounded-full border border-emerald-200/70 bg-emerald-50/95 px-3 py-1 text-emerald-950/90 shadow-sm">Portfolio + capstone</span>
             </div>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -127,15 +128,16 @@ export function AiEssentialsCourseOverview(props: Props) {
                 View full course path
               </a>
             </div>
-            <TrustBoundaryStrip
-              variant="inline"
-              compact
-              strip="publicHero"
-              presentation="utility"
-              density="legalLink"
+            <p
               className="mt-8 max-w-2xl text-[13px] leading-relaxed text-[color:var(--jf-subtle)]"
-              dataTestId="ae-hero-trust"
-            />
+              data-testid="ae-hero-trust"
+            >
+              AI outputs require human review. This course teaches responsible use, not blind automation.{' '}
+              <Link to={LEGAL_ROUTES.disclaimer} className="font-medium text-[color:var(--jf-muted)] underline underline-offset-2 hover:text-[color:var(--jf-text)]">
+                Read the full disclaimer
+              </Link>
+              .
+            </p>
           </div>
           <div className="mx-auto w-full max-w-[260px] opacity-[0.97] lg:mx-0 lg:max-w-none">
             <LearnHeroAbstractFigure className="h-auto w-full drop-shadow-md" />
@@ -155,11 +157,11 @@ export function AiEssentialsCourseOverview(props: Props) {
           <span className="font-mono text-3xl font-semibold tabular-nums text-[color:var(--jf-text)]">{progressPercent}%</span>
           <span className="text-[14px] text-[color:var(--jf-muted)]">
             {milestonesReached === 0 ? (
-              <>You&apos;re just getting started.</>
+              <>You are at the beginning of a structured path—small, steady wins add up.</>
             ) : (
               <>
                 Milestone <span className="font-medium text-[color:var(--jf-text)]">{milestonesReached}</span> of 10 ·{' '}
-                <span className="font-medium text-[color:var(--jf-text)]">{sessionDone}</span> of {sessions.length} sessions done
+                <span className="font-medium text-[color:var(--jf-text)]">{sessionDone}</span> of {sessions.length} sessions complete
               </>
             )}
           </span>
@@ -186,28 +188,38 @@ export function AiEssentialsCourseOverview(props: Props) {
           </Link>
         </div>
         <details className="mt-6 border-t border-[color:var(--jf-border)] pt-4" data-testid="ae-certificate-readiness">
-          <summary className="cursor-pointer text-[13px] font-semibold text-[color:var(--jf-text)]">Completion rules</summary>
+          <summary className="cursor-pointer text-[13px] font-semibold text-[color:var(--jf-text)]">How completion works</summary>
           <ul className="mt-3 space-y-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
             <li className="flex gap-2">
-              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400/75" aria-hidden />
+              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--jf-text)]/25" aria-hidden />
               <span>
-                Module quizzes: {quizPassLine}.
+                Work through each module&apos;s sessions in order, complete the practice checkpoints, then take the module check when it appears.{' '}
+                {quizPassLine}.
               </span>
             </li>
             <li className="flex gap-2">
-              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400/75" aria-hidden />
+              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--jf-text)]/25" aria-hidden />
               <span>
-                Full completion: Module 16 plus rubric rows <span className="text-[color:var(--jf-text)]">Ready</span> or{' '}
-                <span className="text-[color:var(--jf-text)]">Strong</span>.
+                Portfolio artifacts accumulate as you go—each module names the file pattern inside the session materials. Module 16 pulls the thread
+                together into one reviewer-ready bundle.
+              </span>
+            </li>
+            <li className="flex gap-2">
+              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--jf-text)]/25" aria-hidden />
+              <span>
+                Full in-app completion means Module 16 is done and every row on the capstone readiness rubric is honestly marked{' '}
+                <span className="font-medium text-[color:var(--jf-text)]">Ready</span> or <span className="font-medium text-[color:var(--jf-text)]">Strong</span>{' '}
+                (not <span className="font-medium text-[color:var(--jf-text)]">Developing</span>). That rubric lives in the product so you can self-check before
+                you call the course finished.
               </span>
             </li>
           </ul>
-          <p className="mt-3 text-[12px] text-[color:var(--jf-subtle)]">
+          <p className="mt-3 text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">
             {certificateReady ? (
-              <span className="text-emerald-800/90">You meet the in-app readiness bar.</span>
-            ) : (
-              <>In-app readiness only—not a PDF or external credential.</>
-            )}
+              <span className="text-emerald-800/90">You currently meet the in-app readiness bar. </span>
+            ) : null}
+            Jifunze does not issue a PDF certificate from this course—readiness is tracked here only, and still requires your own professional judgment
+            off-platform.
           </p>
         </details>
       </section>
@@ -217,7 +229,7 @@ export function AiEssentialsCourseOverview(props: Props) {
           What you’ll learn
         </h2>
         <ul className="mt-4 space-y-2">
-          {WHAT_YOU_LEARN.slice(0, 4).map((line) => (
+          {WHAT_YOU_LEARN.slice(0, 5).map((line) => (
             <li key={line} className="flex gap-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
               <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--jf-text)]/35" aria-hidden />
               <span>{line}</span>
@@ -225,9 +237,9 @@ export function AiEssentialsCourseOverview(props: Props) {
           ))}
         </ul>
         <details className="mt-4 text-[13px] text-[color:var(--jf-muted)]">
-          <summary className="cursor-pointer font-semibold text-[color:var(--jf-text)]">Show full outcomes</summary>
+          <summary className="cursor-pointer font-semibold text-[color:var(--jf-text)]">Show another outcome</summary>
           <ul className="mt-3 space-y-2">
-            {WHAT_YOU_LEARN.slice(4).map((line) => (
+            {WHAT_YOU_LEARN.slice(5).map((line) => (
               <li key={line} className="flex gap-3 leading-relaxed">
                 <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--jf-text)]/35" aria-hidden />
                 <span>{line}</span>
@@ -242,7 +254,7 @@ export function AiEssentialsCourseOverview(props: Props) {
           <LearnSectionSparkIcon className="h-6 w-6 shrink-0" aria-hidden />
           Curriculum
         </h2>
-        <p className="max-w-xl text-[13px] text-[color:var(--jf-muted)]">Start with Module 1 and build your skills step by step.</p>
+        <p className="max-w-xl text-[13px] text-[color:var(--jf-muted)]">Begin at Module 1; each band deepens judgment before you reach synthesis and the capstone.</p>
         <FlagshipCourseLearningPath
           courseSlug={slug}
           curriculum={curriculum}
@@ -254,19 +266,27 @@ export function AiEssentialsCourseOverview(props: Props) {
         />
       </div>
 
-      <section className="rounded-2xl border border-orange-200/65 bg-orange-50/75 px-5 py-6 sm:px-8" aria-labelledby="ae-capstone-heading" data-testid="ae-capstone-section">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-orange-950/75">Module 16 · Capstone</p>
+      <section
+        className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-5 py-6 sm:px-8 shadow-[var(--jf-shadow-soft)]"
+        aria-labelledby="ae-capstone-heading"
+        data-testid="ae-capstone-section"
+      >
+        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:var(--jf-muted)]">Module 16 · Capstone</p>
         <h2 id="ae-capstone-heading" className="mt-2 text-xl font-semibold tracking-tight text-[color:var(--jf-text)]">
-          End-to-end AI-supported workflow
+          End-to-end workflow you can show
         </h2>
-        <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-          Bring your artifacts together—plan, verify, and reflect in one integrated project.
+        <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
+          You will run one bounded real task with visible prompts, verification passes, privacy choices, disclosure, and a short reflection. The bundle should
+          read as one story—not a pile of screenshots—with filenames aligned to the brief.
         </p>
-        <details className="mt-4 rounded-lg border border-orange-200/50 bg-white/60 px-4 py-3">
-          <summary className="cursor-pointer text-[13px] font-semibold text-[color:var(--jf-text)]">Brief, deliverables &amp; full completion</summary>
+        <details className="mt-4 rounded-lg border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)]/50 px-4 py-3">
+          <summary className="cursor-pointer text-[13px] font-semibold text-[color:var(--jf-text)]">Deliverables, rubric, and what counts as done</summary>
           <p className="mt-3 text-[13px] font-medium text-[color:var(--jf-text)]">{curriculum.capstone.title}</p>
           <p className="mt-3 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-            100% completion includes Module 16 plus every capstone rubric row Ready or Strong in the app.
+            <span className="font-medium text-[color:var(--jf-text)]">Ready</span> means the criterion is honestly met for your bundle.{' '}
+            <span className="font-medium text-[color:var(--jf-text)]">Strong</span> means a colleague could trace prompts, verification, and decisions without
+            guessing. <span className="font-medium text-[color:var(--jf-text)]">Developing</span> is an honest “not yet”—it does not count toward full completion.
+            The app does not award an external certificate; it records your progress and rubric self-check here only.
           </p>
           <p className="mt-4 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">{curriculum.capstone.description}</p>
           <ul className="mt-4 space-y-2">
@@ -291,28 +311,32 @@ export function AiEssentialsCourseOverview(props: Props) {
             </span>
           </div>
         ) : (
-          <p className="mt-4 text-[13px] text-[color:var(--jf-subtle)]">Capstone prep unlocks when earlier modules show you&apos;re ready.</p>
+          <p className="mt-4 text-[13px] text-[color:var(--jf-subtle)]">
+            Capstone preparation opens after the course map shows the checkpoints it expects—it keeps the final workflow tied to evidence, not momentum alone.
+          </p>
         )}
       </section>
 
-      <p className="text-center text-[13px] text-[color:var(--jf-muted)]">
-        You&apos;ll build a small portfolio of practical AI work—examples and filenames stay with each module when you open it.
+      <p className="text-center text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
+        Each module names its suggested filename and export pattern inside the session—your portfolio grows as you complete practice, not at the last minute.
       </p>
 
       <FlagshipSupportMaterials courseSlug={slug} curriculum={curriculum} sessions={sessions} progress={progress} collapsedByDefault minimalStrip />
 
       <details className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/40 px-5 py-4 sm:px-6">
-        <summary className="cursor-pointer text-[14px] font-semibold text-[color:var(--jf-text)]">Examples, pathways &amp; full create list</summary>
+        <summary className="cursor-pointer text-[14px] font-semibold text-[color:var(--jf-text)]">
+          Portfolio examples, pathways, and final deliverables
+        </summary>
         <div className="mt-6 space-y-8 border-t border-[color:var(--jf-border)] pt-8">
           <section aria-labelledby="ae-portfolio-showcase-heading">
             <h2 id="ae-portfolio-showcase-heading" className="text-[13px] font-semibold tracking-tight text-[color:var(--jf-text)]">
-              Portfolio examples
+              Representative portfolio pieces
             </h2>
             <ul className="mt-3 grid gap-2 sm:grid-cols-2">
               {AI_ESSENTIALS_PORTFOLIO_SHOWCASE.slice(0, 6).map((item) => (
                 <li
                   key={item.id}
-                  className="rounded-lg border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/80 px-3 py-2.5 text-[12px] leading-snug text-[color:var(--jf-muted)]"
+                  className="rounded-lg border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-3 py-2.5 text-[12px] leading-snug text-[color:var(--jf-muted)]"
                 >
                   <p className="font-semibold text-[color:var(--jf-text)]">{item.title}</p>
                   <p className="mt-1 text-[11px] leading-relaxed">{item.detail}</p>
@@ -339,12 +363,12 @@ export function AiEssentialsCourseOverview(props: Props) {
 
           <section aria-labelledby="ae-create-heading">
             <h2 id="ae-create-heading" className="text-[13px] font-semibold tracking-tight text-[color:var(--jf-text)]">
-              Full “what you’ll create” list
+              Capstone bundle ingredients
             </h2>
             <ul className="mt-3 space-y-2">
               {WHAT_YOU_CREATE.map((line) => (
                 <li key={line} className="flex gap-3 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400/60" aria-hidden />
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--jf-text)]/25" aria-hidden />
                   <span>{line}</span>
                 </li>
               ))}

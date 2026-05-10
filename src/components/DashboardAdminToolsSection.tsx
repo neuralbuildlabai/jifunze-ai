@@ -60,6 +60,12 @@ export function DashboardAdminToolsSection({ navVariant, canManageInstitutionTra
               <span className="text-[11px] text-zinc-500">Learning analytics</span>
             </Link>
           ) : null}
+          {navVariant === 'platform_admin' ? (
+            <Link to="/admin/capstones" className={adminTileClass}>
+              <span className="text-sm font-medium text-zinc-100">Capstone review</span>
+              <span className="text-[11px] text-zinc-500">Flagship submissions queue</span>
+            </Link>
+          ) : null}
           <Link to="/ideas" className={adminTileClass}>
             <span className="text-sm font-medium text-zinc-100">Ideas (internal)</span>
             <span className="text-[11px] text-zinc-500">Operator discovery workspace</span>
@@ -103,6 +109,10 @@ export function DashboardAdminToolsSection({ navVariant, canManageInstitutionTra
               <span className="text-[11px] text-zinc-500">Learning analytics</span>
             </Link>
           ) : null}
+          <Link to="/admin/capstones" className={adminTileClass}>
+            <span className="text-sm font-medium text-zinc-100">Capstone review</span>
+            <span className="text-[11px] text-zinc-500">Flagship submissions queue</span>
+          </Link>
           <Link to="/ideas" className={adminTileClass}>
             <span className="text-sm font-medium text-zinc-100">Ideas (internal)</span>
             <span className="text-[11px] text-zinc-500">Operator discovery workspace</span>

@@ -96,12 +96,12 @@ export const FLAGSHIP_CURRICULA_BASE = {
       'Module quizzes use the Course 1 bank first, with varied retakes so practice stays honest',
       'Practice sessions ask for concrete outputs; examples note how students, professionals, creators, leads, and educators apply the same ideas differently',
       'Privacy and operational safety before high-stakes research, workflow, and team modules; portfolio artifacts carry forward to Modules 15 and 16',
-      'Capstone prep aligns Module 16 bundle, disclosure, self-critique, and rubric to certificate-ready gates in the product—without claiming accreditation',
+      'Capstone prep aligns Module 16 bundle, disclosure, self-critique, and rubric to the in-app readiness bar—without claiming accreditation',
     ],
     capstone: {
       title: 'Capstone prep — end-to-end AI-supported workflow (Module 16 bundle)',
       description:
-        'Module 16 is the integration capstone: one bounded real task run end-to-end with plan, prompt set, verification, revision, privacy boundaries, reviewer-visible packaging, self-critique, disclosure, and a one-page reflection. Before marking capstone prep complete, align your bundle to the seven-criterion rubric (problem framing; prompt and workflow design; verification and review; safety and privacy; reusability; reflection; presentation quality)—each self-scored at Ready or Strong where the manuscript requires. Capstone prep in the app is where you map prior module artifacts to gaps, finalize filenames (e.g. Module16_AI_Workflow_Capstone_[YourName].pdf), and confirm certificate-readiness criteria. Jifunze does not issue PDF certificates from the app—completion means meeting the in-product readiness bar only.',
+        'Module 16 is the integration capstone: one bounded real task run end-to-end with plan, prompt set, verification, revision, privacy boundaries, reviewer-visible packaging, self-critique, disclosure, and a one-page reflection. Before marking capstone prep complete, align your bundle to the seven-criterion rubric (problem framing; prompt and workflow design; verification and review; safety and privacy; reusability; reflection; presentation quality)—each self-scored Ready or Strong where the manuscript requires. Capstone prep in the app is where you map prior module artifacts to gaps, finalize filenames (for example Module16_AI_Workflow_Capstone_[YourName].pdf), and confirm the in-app readiness bar. Jifunze does not issue PDF certificates from the app; completion is tracked here only and still depends on your professional judgment off-platform.',
       deliverables: [
         'Workflow map and execution log (prompts, outputs, human decisions)',
         'Extended prompt pack and playbook from Module 15 (reused, not rebuilt)',
@@ -1296,13 +1296,21 @@ export const FLAGSHIP_CURRICULA = {
   ...FLAGSHIP_CURRICULA_EXTENDED_2,
 } as Record<FlagshipCurriculumSlug, FlagshipCourseCurriculum>
 
-export function getFlagshipCurriculum(slug: string): FlagshipCourseCurriculum | undefined {
-  if (slug in FLAGSHIP_CURRICULA) {
-    return FLAGSHIP_CURRICULA[slug as FlagshipCurriculumSlug]
-  }
-  return undefined
+const CURRICULUM_SLUG_ALIASES: Record<string, FlagshipCurriculumSlug> = {
+  'ai-productivity-smart-workflows': 'smart-workflows-with-ai',
 }
 
-export function hasFullFlagshipCurriculum(slug: string): slug is FlagshipCurriculumSlug {
+export function getFlagshipCurriculum(slug: string): FlagshipCourseCurriculum | undefined {
+  const source = (CURRICULUM_SLUG_ALIASES[slug] ?? slug) as FlagshipCurriculumSlug
+  if (!(source in FLAGSHIP_CURRICULA)) return undefined
+  const base = FLAGSHIP_CURRICULA[source]
+  if (slug !== base.slug) {
+    return { ...base, slug }
+  }
+  return base
+}
+
+export function hasFullFlagshipCurriculum(slug: string): boolean {
+  if (slug in CURRICULUM_SLUG_ALIASES) return true
   return slug in FLAGSHIP_CURRICULA
 }

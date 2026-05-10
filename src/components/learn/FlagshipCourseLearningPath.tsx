@@ -25,6 +25,7 @@ import {
   priorModulesQuizSatisfied,
 } from '../../lib/flagshipCourseProgressDerived'
 import {
+  AI_ESSENTIALS_MODULE_LEARNER_CARD,
   AI_ESSENTIALS_MODULE_PORTFOLIO_LABEL,
   AI_ESSENTIALS_MODULE_TIME_HINT,
   AI_ESSENTIALS_STAGE_SECTION_LABEL,
@@ -137,6 +138,7 @@ function SessionRow(props: {
           className={`${rowClass} cursor-not-allowed opacity-[0.88]`}
           data-testid={`flagship-session-row-${session.id}`}
           aria-current={false}
+          title={lockExplain}
         >
           <SessionStatusDot done={done} active={false} />
           <div className="min-w-0 flex-1">
@@ -281,8 +283,8 @@ export function FlagshipCourseLearningPath(props: {
           </h2>
           <p className="mt-2 max-w-xl text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
             {layout === 'accordion'
-              ? 'Open a module to see sessions. Continue learning saves on this device.'
-              : 'Work through sessions in order, then pass the module quiz to continue. Progress saves on this device.'}
+              ? 'Expand a module to see sessions and the module check. Your place saves on this device.'
+              : 'Work through sessions in order, then pass the module check to continue. Progress saves on this device.'}
           </p>
         </>
       ) : null}
@@ -540,11 +542,11 @@ export function FlagshipCourseLearningPath(props: {
                     : isAe && sessionsOnlyDone
                       ? 'rounded-2xl border border-amber-200/70 bg-amber-50/80 p-4 sm:p-5'
                       : isAe && lockedModule
-                        ? 'rounded-2xl border border-dashed border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)]/55 p-4 sm:p-5'
+                        ? 'rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)]/80 p-4 sm:p-5'
                         : 'rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-4 sm:p-5'
                 const moduleFocus =
                   layout === 'accordion' && moduleExpanded
-                    ? 'ring-2 ring-orange-400/35 shadow-lg'
+                    ? 'ring-1 ring-[color:var(--jf-text)]/12 shadow-md'
                     : 'shadow-[var(--jf-shadow-soft)]'
                 const moduleHover =
                   layout === 'accordion' ? 'transition-[box-shadow,border-color,ring] duration-200 hover:border-stone-400/45' : ''
@@ -557,7 +559,7 @@ export function FlagshipCourseLearningPath(props: {
                   <div className="flex min-w-0 flex-1 flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="inline-flex items-center rounded-full border border-orange-200/80 bg-orange-50/95 px-2.5 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-orange-950/90">
+                        <span className="inline-flex items-center rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-2.5 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-[color:var(--jf-text)]">
                           Module {mod.order}
                         </span>
                         {fullyComplete ? (
@@ -582,7 +584,7 @@ export function FlagshipCourseLearningPath(props: {
                         )}
                       </div>
                       <p className="mt-2 text-[16px] font-semibold text-[color:var(--jf-text)]">{mod.title}</p>
-                      <p className="mt-1 line-clamp-2 text-[13px] leading-snug text-[color:var(--jf-muted)]">
+                      <p className="mt-1 line-clamp-3 text-[13px] leading-snug text-[color:var(--jf-muted)]">
                         {moduleExpanded ? mod.summary : summaryTeaser}
                       </p>
                     </div>
@@ -595,7 +597,7 @@ export function FlagshipCourseLearningPath(props: {
                   <div className="flex min-w-0 flex-1 flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="inline-flex items-center rounded-full border border-orange-200/80 bg-orange-50/95 px-2.5 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-orange-950/90">
+                        <span className="inline-flex items-center rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-2.5 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-[color:var(--jf-text)]">
                           Module {mod.order}
                         </span>
                         {fullyComplete ? (
@@ -634,26 +636,41 @@ export function FlagshipCourseLearningPath(props: {
                   </div>
                 )
                 const header = aeAccordionCard ? accordionHeaderMinimal : headerDefault
+                const learnerCard = AI_ESSENTIALS_MODULE_LEARNER_CARD[mod.id]
                 const aeModuleDetailPanel = aeAccordionCard ? (
-                  <div className="border-t border-[color:var(--jf-border)]/70 px-4 pb-3 pt-2 sm:px-5">
-                    <details className="rounded-lg border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)]/50 px-3 py-2">
-                      <summary className="cursor-pointer text-[12px] font-semibold text-[color:var(--jf-muted)]">Full module details</summary>
-                      <div className="mt-2 space-y-2 text-[12px] leading-relaxed text-[color:var(--jf-muted)]">
+                  <div className="border-t border-[color:var(--jf-border)]/70 px-4 pb-4 pt-3 sm:px-5">
+                    <details className="rounded-lg bg-[color:var(--jf-bg-page)]/40 px-1 py-1">
+                      <summary className="cursor-pointer rounded-md px-2 py-1.5 text-[12px] font-semibold text-[color:var(--jf-text)] hover:bg-[color:var(--jf-bg-page)]">
+                        What you&apos;ll do in this module
+                      </summary>
+                      <div className="mt-2 space-y-2.5 px-2 pb-2 text-[12px] leading-relaxed text-[color:var(--jf-muted)]">
                         <p>
-                          <span className="font-medium text-[color:var(--jf-text)]">Portfolio output: </span>
+                          <span className="font-medium text-[color:var(--jf-text)]">Purpose · </span>
+                          {learnerCard?.purpose ?? mod.summary}
+                        </p>
+                        <p>
+                          <span className="font-medium text-[color:var(--jf-text)]">Activities · </span>
+                          {learnerCard?.whatYouWillDo ?? 'Follow the sessions in order, then complete the module check when it appears.'}
+                        </p>
+                        <p>
+                          <span className="font-medium text-[color:var(--jf-text)]">Portfolio artifact · </span>
                           {AI_ESSENTIALS_MODULE_PORTFOLIO_LABEL[mod.id] ?? 'Artifact from practice'}
                         </p>
-                        <p className="text-[13px]">{mod.summary}</p>
-                        <details className="rounded-md border border-[color:var(--jf-border)]/90 bg-white/70 px-2.5 py-2 text-[11px] text-[color:var(--jf-subtle)]">
-                          <summary className="cursor-pointer font-semibold text-[color:var(--jf-text)]">Time &amp; quiz rules</summary>
-                          <div className="mt-2 space-y-1.5 leading-relaxed">
+                        <p>
+                          <span className="font-medium text-[color:var(--jf-text)]">Practice focus · </span>
+                          {learnerCard?.practiceFocus ?? 'Apply the module ideas to your own context with notes you could show a reviewer.'}
+                        </p>
+                        <details className="rounded-md border border-[color:var(--jf-border)]/80 bg-[color:var(--jf-surface)]/90 px-2.5 py-2 text-[11px] text-[color:var(--jf-subtle)]">
+                          <summary className="cursor-pointer font-semibold text-[color:var(--jf-text)]">Time and module check</summary>
+                          <div className="mt-2 space-y-1.5 leading-relaxed text-[color:var(--jf-muted)]">
                             <p>
-                              <span className="font-medium text-[color:var(--jf-text)]">Estimated time: </span>
+                              <span className="font-medium text-[color:var(--jf-text)]">Pacing: </span>
                               {AI_ESSENTIALS_MODULE_TIME_HINT[mod.id] ?? 'About 2–3 hours'}
                             </p>
                             <p>
-                              Quiz: {MODULE_QUIZ_DRAW_COUNT} questions, at least {MODULE_QUIZ_MIN_CORRECT} correct. Finish practice checkpoints before the quiz
-                              unlocks the next module.
+                              After sessions: short module check ({MODULE_QUIZ_DRAW_COUNT} questions, at least {MODULE_QUIZ_MIN_CORRECT} correct).
+                              Finish the practice checkpoints in this module first—they keep the check grounded in real work, then unlock forward progress
+                              with a passing score.
                             </p>
                           </div>
                         </details>
@@ -704,7 +721,7 @@ export function FlagshipCourseLearningPath(props: {
                         {sessionsOnlyDone ? (
                           isAeAccordion ? (
                             <details className="mt-4 rounded-xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)]/60 px-4 py-3">
-                              <summary className="cursor-pointer text-[13px] font-semibold text-[color:var(--jf-text)]">Module quiz</summary>
+                              <summary className="cursor-pointer text-[13px] font-semibold text-[color:var(--jf-text)]">Module check</summary>
                               <div className="mt-3">
                                 <FlagshipModuleQuizPanel
                                   module={mod}
@@ -740,7 +757,7 @@ export function FlagshipCourseLearningPath(props: {
         <div
           className={
             isAeAccordion
-              ? 'mt-12 rounded-2xl border border-orange-200/65 bg-orange-50/75 px-5 py-6 sm:px-7'
+              ? 'mt-12 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] px-5 py-6 sm:px-7 shadow-[var(--jf-shadow-soft)]'
               : 'mt-12 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-5 py-6'
           }
         >
@@ -752,13 +769,15 @@ export function FlagshipCourseLearningPath(props: {
                 Prep opens when your course work shows you&apos;re ready.
               </p>
               <details className="mt-3 rounded-lg border border-[color:var(--jf-border)] bg-white/80 px-3 py-2 text-[12px] text-[color:var(--jf-muted)]">
-                <summary className="cursor-pointer font-semibold text-[color:var(--jf-text)]">Completion rules</summary>
+                <summary className="cursor-pointer font-semibold text-[color:var(--jf-text)]">What “done” includes</summary>
                 <p className="mt-2 leading-relaxed">
-                  Includes Module 16 and the rubric self-check (Ready or Strong on each row). Use prep to align with the brief.
+                  Module 16 work plus the in-app capstone rubric self-check—each row honestly marked Ready or Strong. Use prep to line up filenames, evidence, and disclosure with the brief.
                 </p>
               </details>
               {!capstonePrepAccessible ? (
-                <p className="mt-2 text-[12px] text-[color:var(--jf-subtle)]">Finish practice checkpoints first—prep unlocks automatically.</p>
+                <p className="mt-2 text-[12px] text-[color:var(--jf-subtle)]">
+                  Finish the practice checkpoints the map expects—prep opens automatically when you are in range.
+                </p>
               ) : capstonePrepComplete ? (
                 <p className="mt-2 text-[12px] text-emerald-800/90">Prep complete—you can still refine work.</p>
               ) : (

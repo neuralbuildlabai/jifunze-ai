@@ -30,6 +30,8 @@ import { blockAllowsLearnerResponse } from '../../lib/flagshipSessionResponseBlo
 import { archiveLocalDraftsForModule } from '../../lib/learnerCourseArtifactsLocal'
 import { isWorkspaceTenantId } from '../../persistence/tenantPersistenceMode'
 import { archiveNonAcceptedArtifactsForModule } from '../../services/learning/learnerCourseArtifactsRemote'
+import { useFlagshipLessonTimer } from '../../hooks/useFlagshipLessonTimer'
+import { getPaidFlagshipCertificateConfig } from '../../lib/paidFlagshipCertificateConfig'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { LearnerHelpAssistant } from '../teaching/LearnerHelpAssistant'
@@ -48,6 +50,20 @@ import {
 import { FlagshipSessionSectionRail } from './flagshipSession/FlagshipSessionSectionRail'
 import { GuidedLessonShell } from '../learner-shell/GuidedLessonShell'
 import { PracticeLabShell } from '../learner-shell/PracticeLabShell'
+
+const TIMER_STUB_SESSION: FlagshipSession = {
+  id: '__timer_stub__',
+  courseSlug: '',
+  moduleId: 'stub',
+  orderInModule: 1,
+  orderInCourse: 1,
+  title: '',
+  type: 'lesson',
+  durationMinutes: 30,
+  effortLabel: '',
+  summary: '',
+  objectives: [],
+}
 
 function neighborSessions(sessions: FlagshipSession[], current: FlagshipSession): {
   prev?: FlagshipSession
@@ -142,7 +158,7 @@ export function FlagshipCourseSessionPage() {
     touchActiveSession(sessionId)
   }, [sessionId, slug, session, learnerReachable, touchActiveSession])
 
-  const canMarkThisChapterComplete = useMemo(() => {
+  const progressionAllowsMark = useMemo(() => {
     if (!session || !curriculum) return false
     if (progress.completed.has(session.id)) return true
     const ck = masteryCheckpointCompletionSet(progress.state)
@@ -155,6 +171,19 @@ export function FlagshipCourseSessionPage() {
       prepOk,
     )
   }, [session, curriculum, sessions, progress.completed, progress.state])
+
+  const paidTimerCourse = slug ? getPaidFlagshipCertificateConfig(slug)?.enableLessonTimer : false
+  const timerGateActive = Boolean(paidTimerCourse && user && supabase && session)
+  const timerSession = session ?? TIMER_STUB_SESSION
+  const { activeSeconds, timerSatisfied, minimumSeconds } = useFlagshipLessonTimer({
+    enabled: timerGateActive,
+    courseSlug: slug ?? '',
+    session: timerSession,
+    userId: user?.id,
+    supabase: supabase ?? undefined,
+  })
+
+  const canMarkThisChapterComplete = progressionAllowsMark && (!timerGateActive || timerSatisfied)
 
   const moduleDoneForResponses = useMemo(() => {
     if (!session || !curriculum) return false
@@ -550,6 +579,11 @@ export function FlagshipCourseSessionPage() {
               hasMasteryCheckpoint={showPracticeAssessment}
               done={done}
               canMarkThisChapterComplete={canMarkThisChapterComplete}
+              timerHint={
+                timerGateActive && progressionAllowsMark && !timerSatisfied
+                  ? `Spend a little more time reviewing this lesson before continuing. Active time with this tab visible: about ${activeSeconds}s (aim for at least ${minimumSeconds}s).`
+                  : null
+              }
               onMarkComplete={() => progress.markSessionComplete(session.id, true)}
               flagged={progress.state.flaggedForReviewSessionIds.includes(session.id)}
               onToggleFlag={(checked) => progress.toggleReviewFlag(session.id, checked)}

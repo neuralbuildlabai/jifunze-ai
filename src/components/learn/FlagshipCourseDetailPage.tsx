@@ -14,6 +14,8 @@ import { buildSessionsForCurriculum, firstSessionInCourseOrder } from '../../dat
 import { LearnHeroAbstractFigure } from '../visuals/JifunzeLearnVisuals'
 import { AiEssentialsCourseOverview } from './AiEssentialsCourseOverview'
 import { FlagshipCourseCurriculumSections } from './FlagshipCourseCurriculumSections'
+import { PaidFlagshipCertificateBanner } from './PaidFlagshipCertificateBanner'
+import { PaidHostedRiseFlagshipSection } from './PaidHostedRiseFlagshipSection'
 
 const DEPTH_LABELS = [
   { key: 'foundations', title: 'Foundations', descKey: 'foundations' as const },
@@ -142,6 +144,19 @@ export function FlagshipCourseDetailPage() {
             </div>
           </div>
         </div>
+
+        {curriculum ? (
+          <PaidFlagshipCertificateBanner
+            courseSlug={slug}
+            curriculum={curriculum}
+            sessions={sessions}
+            progressState={progress.state}
+            user={user}
+            supabase={supabase}
+          />
+        ) : null}
+
+        <PaidHostedRiseFlagshipSection courseSlug={slug} courseTitle={course.title} />
 
         {LEARNER_MONETIZATION_UI_DISABLED ? null : (
           <section

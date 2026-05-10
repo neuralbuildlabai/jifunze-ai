@@ -29,6 +29,7 @@ import {
   getFlagshipCourseDisplayProgressPercent,
   AI_ESSENTIALS_SLUG,
 } from '../src/lib/aiEssentialsProgressMilestones'
+import { AI_ESSENTIALS_MODULE_LEARNER_CARD } from '../src/lib/aiEssentialsCourseUiMeta'
 import { mergeFlagshipProgressStates } from '../src/lib/flagshipCourseProgressMerge'
 import {
   flagshipProgressRowToState,
@@ -202,11 +203,11 @@ function testRubricRemoteHydrationAndMilestoneEdgeCases() {
   const ck = new Set(fullWithRubric.completedMasteryCheckpointIds ?? [])
   assert.ok(
     isFlagshipCertificateReady(curriculum, sessions, completed, ck, fullWithRubric),
-    'certificate requires rubric + full completion',
+    'in-app readiness requires rubric + full completion',
   )
   assert.ok(
     !isFlagshipCertificateReady(curriculum, sessions, completed, ck, fullNoRubric),
-    'certificate blocked without rubric',
+    'readiness blocked without rubric',
   )
 
   const local: FlagshipCourseProgressState = {
@@ -241,6 +242,31 @@ function testRubricRemoteHydrationAndMilestoneEdgeCases() {
   )
 }
 
+function testAeLearnerMetaAndSessionTitles() {
+  const curriculum = getFlagshipCurriculum(AI_ESSENTIALS_SLUG)!
+  const titles = new Set<string>()
+  for (const m of curriculum.modules) {
+    assert.ok(!titles.has(m.title), `duplicate module title: ${m.title}`)
+    titles.add(m.title)
+    const card = AI_ESSENTIALS_MODULE_LEARNER_CARD[m.id]
+    assert.ok(card, `${m.id}: AI_ESSENTIALS_MODULE_LEARNER_CARD entry`)
+    assert.ok(card.purpose.length > 40, `${m.id}: purpose line should be substantive`)
+    assert.ok(card.whatYouWillDo.length > 40, `${m.id}: activities line should be substantive`)
+  }
+  const sessions = buildSessionsForCurriculum(curriculum)
+  for (const s of sessions) {
+    if (s.courseSlug !== AI_ESSENTIALS_SLUG || s.moduleId === 'capstone') continue
+    assert.ok(
+      !s.title.startsWith('Practice lab ·'),
+      `${s.id}: expected patched practice title, got "${s.title}"`,
+    )
+    assert.ok(
+      !s.title.startsWith('Revision checkpoint:'),
+      `${s.id}: expected patched revision title, got "${s.title}"`,
+    )
+  }
+}
+
 function testForbiddenSubstringsInKeyLearnerFiles() {
   const paths = [
     'src/data/learning/aiEssentialsCourse1Modules.ts',
@@ -262,6 +288,7 @@ function main() {
   testDisplayPercentMilestoneOne()
   testRubricRemoteHydrationAndMilestoneEdgeCases()
   testPortfolioRows()
+  testAeLearnerMetaAndSessionTitles()
   testForbiddenSubstringsInKeyLearnerFiles()
   console.log('verify-course1-ai-essentials-continuity: OK')
 }

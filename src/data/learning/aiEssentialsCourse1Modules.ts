@@ -38,7 +38,7 @@ export const AI_ESSENTIALS_FLAGSHIP_MODULES: FlagshipCurriculumModule[] = [
     title: 'Myths, Reality, Bias, and Responsible Judgment',
     stage: 'foundations',
     summary:
-      'Stress-test viral claims and prompt myths with evidence; name bias patterns in outputs; use a T–R–E–J (Task, Risk, Evidence, Judgment) review habit before you ship AI-assisted work. You leave with a myth-correction sheet and a portfolio-ready judgment artifact.',
+      'Stress-test viral claims and prompt myths with evidence; name bias patterns in outputs; use a T–R–E–J (Task, Risk, Evidence, Judgment) review habit before you publish or send. You leave with a myth-correction sheet and a judgment artifact you can scan under time pressure.',
     learningGoals: [
       'List eight common myths and the reality correction for each.',
       'Describe three bias types you can check for in model outputs.',
@@ -85,7 +85,7 @@ export const AI_ESSENTIALS_FLAGSHIP_MODULES: FlagshipCurriculumModule[] = [
   {
     id: 'ae-m04',
     order: 4,
-    title: 'Prompt Engineering — Structure, Constraints, and Output Design',
+    title: 'Structured Prompts: Constraints, Evidence Rules, and Output Shape',
     stage: 'applied_practice',
     summary:
       'Author prompts like specs: role, goal, constraints, evidence policy, output shape, refusal behavior. Critique under-spec prompts, rewrite with labeled sections, and compare outputs against a simple rubric—not likability.',
@@ -107,10 +107,10 @@ export const AI_ESSENTIALS_FLAGSHIP_MODULES: FlagshipCurriculumModule[] = [
   {
     id: 'ae-m05',
     order: 5,
-    title: 'Prompt Engineering — Iteration, Comparison, and Reviewable Workflows',
+    title: 'Iteration, Comparison, and Reviewable Prompt Workflows',
     stage: 'applied_practice',
     summary:
-      'Run hypothesis-driven prompt iterations with pairwise comparisons, regression awareness, and inspectable version notes—so improvements read like code review, not vibes.',
+      'Run hypothesis-driven prompt iterations with pairwise comparisons, regression awareness, and inspectable version notes—so improvements read like disciplined quality control, not guesswork.',
     learningGoals: [
       'Run disciplined A/B prompt tests with fixed evaluation criteria.',
       'Detect regression when a “better” prompt breaks format, safety, or faithfulness.',
@@ -198,7 +198,7 @@ export const AI_ESSENTIALS_FLAGSHIP_MODULES: FlagshipCurriculumModule[] = [
   {
     id: 'ae-m09',
     order: 9,
-    title: 'Responsible AI Use, Human Accountability, and Practical Guardrails',
+    title: 'Responsible Use, Human Accountability, and Guardrails',
     stage: 'professional_execution',
     summary:
       'Human accountability, disclosure, escalation, and proportionate risk review. Translate principles into operational habits: forbidden automation zones, labeling AI assistance, and visible review owners.',
@@ -323,7 +323,7 @@ export const AI_ESSENTIALS_FLAGSHIP_MODULES: FlagshipCurriculumModule[] = [
     ],
     practiceActivities: [
       'Team AI use agreement one-pager for a real or hypothetical team.',
-      'Responsibility map for AI-assisted steps across a workflow.',
+      'Responsibility map for model-assisted steps across a workflow.',
       'Shared prompt artifact with review-owner slots.',
     ],
     expectedOutputs: [
@@ -357,7 +357,7 @@ export const AI_ESSENTIALS_FLAGSHIP_MODULES: FlagshipCurriculumModule[] = [
   {
     id: 'ae-m16',
     order: 16,
-    title: 'Capstone — End-to-End AI-Supported Workflow',
+    title: 'Capstone: End-to-End AI-Supported Workflow',
     stage: 'mastery_outputs',
     summary:
       'Integration capstone: plan, prompt, verify, revise, protect information, and reflect on judgment—using your Module 15 toolkit and prior artifacts. Produce a reviewer-ready bundle with filenames, disclosure, self-critique, and rubric self-score; then align deliverables in capstone prep.',

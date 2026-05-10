@@ -79,9 +79,9 @@ export const FLAGSHIP_COURSES: FlagshipCourse[] = [
     exampleOutputs: ['Stakeholder-safe use stance', 'Stake-weighted verification matrix', 'Workflow + incident sketch pack'],
     featured: true,
     intro:
-      'Course 1 (AI Essentials): sixteen modules on judgment-first AI fluency—how models behave, how to prompt and iterate with evidence, how to verify outputs, how to use AI responsibly (including privacy before synthesis), and how to complete an end-to-end capstone bundle you can show.',
+      'Course 1 (AI Essentials): sixteen modules on judgment-first fluency—how models behave, how to prompt and iterate with evidence, how to verify outputs, how to handle privacy before synthesis, and how to finish an end-to-end capstone bundle another person could follow.',
     promise:
-      'Practical fluency you can show: clear prompting, disciplined verification, responsible boundaries, reusable workflows, and a portfolio-ready capstone—paced at roughly 32–45 hours for many learners (often 3–5 weeks)—without a second “legacy” AI Essentials track in the catalog.',
+      'Practical fluency you can show: clear prompting, disciplined verification, responsible boundaries, reusable workflows, and a capstone bundle you can defend—often 32–45 hours over a few weeks—with a single coherent AI Essentials track in the catalog.',
     depthStages: {
       foundations:
         'Language, limits, failure modes, and prompt engineering basics—what prompts are, how quality drives output quality, and safe iteration habits.',
@@ -99,17 +99,17 @@ export const FLAGSHIP_COURSES: FlagshipCourse[] = [
     ],
     whatYouCreate: [
       'Prompt improvement pack with versions and rationale',
-      'Verification / evidence checklist tied to your contexts',
-      'AI-assisted writing or research sample with your review visible',
+      'Verification or evidence table tied to your contexts',
+      'Writing or research sample with your review notes visible',
       'Workflow or SOP slice with clear human gates',
       'Decision-support memo with tradeoffs and next information buys',
-      'Personal AI operating system plan (tools, data tiers, boundaries)',
-      'Responsible AI fluency portfolio plus a concise final reflection',
+      'Personal operating plan (tools, data tiers, boundaries)',
+      'Responsible-use portfolio plus a concise final reflection',
     ],
     modulePathway: [
       'Foundations through mastery: sixteen ordered modules (ae-m01–ae-m16) with one catalog entry',
-      'Module quizzes: eight questions drawn, six correct to pass—aligned to each module’s focus',
-      'Mastery checkpoints on practice sessions plus capstone prep before portfolio sign-off',
+      'Module checks: eight questions drawn, six correct to pass—aligned to each module’s focus',
+      'Mastery checkpoints on practice sessions plus capstone prep before you mark the workflow complete',
     ],
   },
   {
@@ -149,6 +149,43 @@ export const FLAGSHIP_COURSES: FlagshipCourse[] = [
       'Research, writing, ops pipelines as prompt systems',
       'Libraries, automation limits, measurement',
       'Capstone: named workflow library + rollout pack',
+    ],
+  },
+  {
+    slug: 'ai-productivity-smart-workflows',
+    schoolId: 'ai_digital',
+    title: 'AI Productivity and Smart Workflows',
+    subtitle:
+      'Paid flagship track: operational AI habits, workflow design, and a reviewer-ready capstone—completion and certificates follow Jifunze Learning Hub review rules.',
+    levelRange: 'Beginner to Advanced',
+    exampleOutputs: ['Versioned workflow packages', 'Shared quality rubric + catalog sheet', 'Rollout memo with metrics + kill criteria'],
+    featured: false,
+    intro:
+      'Build dependable AI-assisted workflows with the same depth as Smart Workflows—this catalog entry uses the reviewed curriculum while enabling native capstone submission, time-on-lesson pacing, and certificate issuance only after staff review.',
+    promise:
+      'Practical AI productivity with explicit prompts, QA lanes, libraries, and capstone packaging—plus platform-native submission and certificate eligibility tied to review outcomes.',
+    depthStages: {
+      foundations: 'Workflow decomposition plus prompt anatomy—roles, constraints, evidence policy, formats—and where automation helps vs. hurts.',
+      appliedPractice:
+        'Schemas, chains, synthesis and editorial pipelines—iterate, compare prompts, score outputs against rubrics.',
+      professionalExecution: 'Operational prompts, ownership, versioning, libraries—others can run the workflow.',
+      masteryOutputs: 'A documented workflow library with prompt packs, rubrics, revision hooks, and rollout discipline.',
+    },
+    learningOutcomes: [
+      'Design repeatable workflows whose AI steps use explicit prompt specs, checkpoints, and human gates.',
+      'Build prompt critique rubrics and reusable templates; compare weak vs strong prompts with evidence.',
+      'Operationalize tools and semi-automation with prompt libraries, owners, and accountability—not vibe automation.',
+    ],
+    whatYouCreate: [
+      'Workflow library (3–5 reusable patterns)',
+      'Quality rubric tied to stakeholder expectations',
+      'Rollout notes for teammates or clients',
+    ],
+    modulePathway: [
+      'Workflow interfaces + operational prompting',
+      'Prompt engineering: anatomy, versioning, critique',
+      'Structured outputs and multi-step prompt chains',
+      'Capstone submission + Jifunze Learning Hub certificate review',
     ],
   },
   {
