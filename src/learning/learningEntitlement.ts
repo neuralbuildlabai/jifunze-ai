@@ -65,7 +65,8 @@ export function evaluateLessonReadAccess(args: {
 
   const strictReady = billingCapable && !summaryLoading && !summaryError
 
-  if (strictReady && summary) {
+  // Degraded summaries intentionally skip strict Stripe-backed denial so tier / public fallbacks still work.
+  if (strictReady && summary && !summary.entitlementsDegraded) {
     return premiumEntitled(summary, moduleKey, extendedLibraryKey) ? { kind: 'allow' } : { kind: 'deny', reason: 'premium' }
   }
 

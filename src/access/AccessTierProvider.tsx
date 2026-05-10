@@ -64,7 +64,10 @@ export function AccessTierProvider({ children }: { children: ReactNode }) {
       return
     }
     if (!workspaceShellReady) {
-      setTierLoading(true)
+      // Do not spin `tierLoading` forever while the workspace shell resolves; catalog and public routes
+      // should still resolve a conservative tier from email/env fallbacks.
+      applyFallbackTier()
+      setTierLoading(false)
       return
     }
 
