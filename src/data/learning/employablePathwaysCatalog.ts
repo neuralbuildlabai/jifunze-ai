@@ -99,7 +99,7 @@ export const EMPLOYABLE_PATHWAYS: EmployablePathway[] = [
     estimatedDuration: '10–16 weeks part-time.',
     schoolId: 'ai_digital',
     learnerGoals: ['Workflow speed', 'Verification habits', 'Responsible use'],
-    includedCourseSlugs: ['ai-essentials', 'smart-workflows-with-ai'],
+    includedCourseSlugs: ['ai-essentials', 'ai-powered-workflows-and-productivity'],
     plannedCourseSlugs: ['ai-office-productivity'],
     skillsGained: [
       'Prompt specs with evaluation criteria',

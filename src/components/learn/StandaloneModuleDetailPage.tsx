@@ -114,7 +114,7 @@ function ModuleQuizDevManualScore({
           className={`inline-flex min-h-[2.5rem] items-center justify-center rounded-full px-5 text-sm font-semibold text-white shadow-sm transition hover:brightness-105 ${ORANGE_GRADIENT}`}
           onClick={onSaveQuiz}
         >
-          Save dev score
+          Save score
         </button>
       </div>
       {savedQuiz ? (

@@ -7,7 +7,7 @@ export const FLAGSHIP_OPENING_LESSON_SUPPLEMENT: Record<string, string> = {
   'ai-essentials':
     'Welcome. This module starts with how AI behaves today—often fluent, sometimes wrong—and why human judgment stays non‑negotiable. You will read outputs as hypotheses you can test, not as facts. You will name common failure modes (fabrication, omission, overconfidence, missing caveats), see why thin prompts invite thin reasoning, and practice sorting work by risk so you know when verification is mandatory. The written responses you save here become evidence you can carry into later modules and your portfolio.',
 
-  'smart-workflows-with-ai':
+  'ai-powered-workflows-and-productivity':
     'You will practice professional prompt engineering inside real workflows—anatomy (role, context, constraints, format), multi-step prompting, critique and versioning, reusable templates and prompt libraries tied to QA lanes—so AI work is repeatable, comparable, and owned like other engineering assets.',
 
   'data-and-decisions':

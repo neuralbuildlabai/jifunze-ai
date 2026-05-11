@@ -113,9 +113,9 @@ export const FLAGSHIP_COURSES: FlagshipCourse[] = [
     ],
   },
   {
-    slug: 'smart-workflows-with-ai',
+    slug: 'ai-powered-workflows-and-productivity',
     schoolId: 'ai_digital',
-    title: 'Smart Workflows with AI',
+    title: 'AI-Powered Workflows and Productivity',
     subtitle:
       'Move from chats to owned systems: specs, QA lanes, libraries, and rollout discipline someone else could run.',
     levelRange: 'Beginner to Advanced',

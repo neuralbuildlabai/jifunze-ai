@@ -11,7 +11,7 @@ const outPath = join(root, '../src/data/learning/flagshipSessionContentOverrides
 
 const courses = [
   ['ai-essentials', 'ae'],
-  ['smart-workflows-with-ai', 'sw'],
+  ['ai-powered-workflows-and-productivity', 'sw'],
   ['data-and-decisions', 'dd'],
   ['web-and-software-foundations', 'wf'],
   ['digital-safety', 'ds'],

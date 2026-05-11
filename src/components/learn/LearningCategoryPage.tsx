@@ -28,9 +28,6 @@ export function LearningCategoryPage() {
               <Link className="text-xs font-medium text-[color:var(--jf-brand)] hover:text-[color:var(--jf-brand-hover)]" to="/learn">
                 Catalog
               </Link>
-              <Link className="text-xs font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to={LEGAL_ROUTES.paths}>
-                Pathways
-              </Link>
               {LEARNER_MONETIZATION_UI_DISABLED ? null : (
                 <Link className="text-xs font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to={LEGAL_ROUTES.pricing}>
                   Plans

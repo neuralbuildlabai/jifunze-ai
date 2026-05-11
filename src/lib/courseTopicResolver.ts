@@ -68,7 +68,7 @@ const SYNONYMS: Record<string, string[]> = {
     'introduction to ai',
     'ai fundamentals for work',
   ],
-  'smart-workflows-with-ai': [
+  'ai-powered-workflows-and-productivity': [
     'workflow prompting',
     'prompt templates',
     'prompt library',
@@ -204,8 +204,8 @@ export function resolveTopicToCourses(topicRaw: string): CourseResolution | null
   const uniqSynonymSlugs = [...new Set(synonymHits.map((h) => h.slug))]
   if (uniqSynonymSlugs.length >= 2) {
     const ordered =
-      uniqSynonymSlugs.includes('ai-essentials') && uniqSynonymSlugs.includes('smart-workflows-with-ai')
-        ? ['ai-essentials', 'smart-workflows-with-ai'].filter((s) => uniqSynonymSlugs.includes(s))
+      uniqSynonymSlugs.includes('ai-essentials') && uniqSynonymSlugs.includes('ai-powered-workflows-and-productivity')
+        ? ['ai-essentials', 'ai-powered-workflows-and-productivity'].filter((s) => uniqSynonymSlugs.includes(s))
         : uniqSynonymSlugs
     const primarySlug = ordered[0]!
     const secondary = ordered.slice(1)

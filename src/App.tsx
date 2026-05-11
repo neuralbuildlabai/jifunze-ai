@@ -60,7 +60,6 @@ import { LearningCategoryPage } from './components/learn/LearningCategoryPage'
 import { AiAtWorkChatgptFreeStarterPage } from './components/learn/AiAtWorkChatgptFreeStarterPage'
 import { SmartWorkflowsWithAiFreeStarterPage } from './components/learn/SmartWorkflowsWithAiFreeStarterPage'
 import { LearningDiscoveryHubPage } from './components/learn/LearningDiscoveryHubPage'
-import { LearningSchoolCatalogPage } from './components/learn/LearningSchoolCatalogPage'
 import { AdminCapstonesReviewPage } from './components/admin/AdminCapstonesReviewPage'
 import { FlagshipCapstoneSubmissionPage } from './components/learn/FlagshipCapstoneSubmissionPage'
 import { FlagshipCourseDetailPage } from './components/learn/FlagshipCourseDetailPage'
@@ -176,7 +175,8 @@ export default function App() {
         <Route path="/learn" element={<LearningDiscoveryHubPage />} />
         <Route path="/learn/free/ai-at-work-chatgpt" element={<AiAtWorkChatgptFreeStarterPage />} />
         <Route path="/learn/free/smart-workflows-with-ai" element={<SmartWorkflowsWithAiFreeStarterPage />} />
-        <Route path="/learn/school/:schoolId" element={<LearningSchoolCatalogPage />} />
+        {/* Schools surface is not published yet; redirect any deep link to the catalog. */}
+        <Route path="/learn/school/:schoolId" element={<Navigate to="/learn" replace />} />
         <Route path="/learn/category/:slug" element={<LearningCategoryPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />

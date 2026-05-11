@@ -7728,7 +7728,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m01-practice": [
+  "ai-powered-workflows-and-productivity::sw-m01-practice": [
     {
       id: "sw-m01-practice-lt-intro",
       type: "intro",
@@ -7760,7 +7760,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m01-revision": [
+  "ai-powered-workflows-and-productivity::sw-m01-revision": [
     {
       id: "sw-m01-revision-lt-intro",
       type: "intro",
@@ -7791,7 +7791,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m02-lesson": [
+  "ai-powered-workflows-and-productivity::sw-m02-lesson": [
     {
       id: "sw-m02-lesson-lt-intro",
       type: "intro",
@@ -7827,7 +7827,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m02-practice": [
+  "ai-powered-workflows-and-productivity::sw-m02-practice": [
     {
       id: "sw-m02-practice-lt-intro",
       type: "intro",
@@ -7859,7 +7859,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m03-lesson": [
+  "ai-powered-workflows-and-productivity::sw-m03-lesson": [
     {
       id: "sw-m03-lesson-lt-intro",
       type: "intro",
@@ -7895,7 +7895,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m03-practice": [
+  "ai-powered-workflows-and-productivity::sw-m03-practice": [
     {
       id: "sw-m03-practice-lt-intro",
       type: "intro",
@@ -7927,7 +7927,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m04-lesson": [
+  "ai-powered-workflows-and-productivity::sw-m04-lesson": [
     {
       id: "sw-m04-lesson-lt-intro",
       type: "intro",
@@ -7963,7 +7963,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m04-practice": [
+  "ai-powered-workflows-and-productivity::sw-m04-practice": [
     {
       id: "sw-m04-practice-lt-intro",
       type: "intro",
@@ -7995,7 +7995,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m06-lesson": [
+  "ai-powered-workflows-and-productivity::sw-m06-lesson": [
     {
       id: "sw-m06-lesson-lt-intro",
       type: "intro",
@@ -8031,7 +8031,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m07-practice": [
+  "ai-powered-workflows-and-productivity::sw-m07-practice": [
     {
       id: "sw-m07-practice-lt-intro",
       type: "intro",
@@ -8063,7 +8063,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m08-lesson": [
+  "ai-powered-workflows-and-productivity::sw-m08-lesson": [
     {
       id: "sw-m08-lesson-lt-intro",
       type: "intro",
@@ -8099,7 +8099,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m08-practice": [
+  "ai-powered-workflows-and-productivity::sw-m08-practice": [
     {
       id: "sw-m08-practice-lt-intro",
       type: "intro",
@@ -8131,7 +8131,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m08-revision": [
+  "ai-powered-workflows-and-productivity::sw-m08-revision": [
     {
       id: "sw-m08-revision-lt-intro",
       type: "intro",
@@ -8162,7 +8162,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m09-lesson": [
+  "ai-powered-workflows-and-productivity::sw-m09-lesson": [
     {
       id: "sw-m09-lesson-lt-intro",
       type: "intro",
@@ -8198,7 +8198,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m09-practice": [
+  "ai-powered-workflows-and-productivity::sw-m09-practice": [
     {
       id: "sw-m09-practice-lt-intro",
       type: "intro",
@@ -8230,7 +8230,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m10-lesson": [
+  "ai-powered-workflows-and-productivity::sw-m10-lesson": [
     {
       id: "sw-m10-lesson-lt-intro",
       type: "intro",
@@ -8266,7 +8266,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m10-practice": [
+  "ai-powered-workflows-and-productivity::sw-m10-practice": [
     {
       id: "sw-m10-practice-lt-intro",
       type: "intro",
@@ -8298,7 +8298,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m11-lesson": [
+  "ai-powered-workflows-and-productivity::sw-m11-lesson": [
     {
       id: "sw-m11-lesson-lt-intro",
       type: "intro",
@@ -8334,7 +8334,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m11-practice": [
+  "ai-powered-workflows-and-productivity::sw-m11-practice": [
     {
       id: "sw-m11-practice-lt-intro",
       type: "intro",
@@ -8366,7 +8366,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m11-recap": [
+  "ai-powered-workflows-and-productivity::sw-m11-recap": [
     {
       id: "sw-m11-recap-lt-intro",
       type: "intro",
@@ -8397,7 +8397,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m11-revision": [
+  "ai-powered-workflows-and-productivity::sw-m11-revision": [
     {
       id: "sw-m11-revision-lt-intro",
       type: "intro",

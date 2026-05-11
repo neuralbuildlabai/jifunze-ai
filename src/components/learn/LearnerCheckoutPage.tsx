@@ -143,8 +143,8 @@ export function LearnerCheckoutPage() {
           <>
             <p className="mt-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
               {liveBilling
-                ? 'Live Stripe billing is configured for subscriptions, but this page still uses a local demo for flagship cart simulation—use Plans & billing for real checkout.'
-                : 'Development mode: access below is simulated and saved to this browser only.'}
+                ? 'Live billing is configured for subscriptions. Use Plans & billing for real checkout — the form below is a preview.'
+                : 'Preview mode: access below is saved to this browser only.'}
             </p>
 
             {mode === 'single' && course ? (
@@ -153,7 +153,7 @@ export function LearnerCheckoutPage() {
                 <p className="mt-2 text-lg font-semibold text-[color:var(--jf-text)]">{course.title}</p>
                 <p className="mt-4 font-mono text-2xl tabular-nums text-[color:var(--jf-text)]">
                   ${singleTotal.toFixed(2)}{' '}
-                  <span className="text-[13px] font-sans font-normal text-[color:var(--jf-muted)]">USD (dev simulation)</span>
+                  <span className="text-[13px] font-sans font-normal text-[color:var(--jf-muted)]">USD (preview)</span>
                 </p>
                 {eligibleDiscount ? (
                   <p className="mt-2 text-[13px] text-emerald-800/90">Readiness Challenge discount applied (5% on this course).</p>
@@ -182,7 +182,7 @@ export function LearnerCheckoutPage() {
                 <p className="mt-2 text-lg font-semibold text-[color:var(--jf-text)]">All flagship courses</p>
                 <p className="mt-4 font-mono text-2xl tabular-nums text-[color:var(--jf-text)]">
                   ${MOCK_ALL_ACCESS_PRICE_USD}{' '}
-                  <span className="text-[13px] font-sans font-normal text-[color:var(--jf-muted)]">/ month (dev simulation)</span>
+                  <span className="text-[13px] font-sans font-normal text-[color:var(--jf-muted)]">/ month (preview)</span>
                 </p>
                 <ul className="mt-6 space-y-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
                   <li>· Enroll and enter every flagship course.</li>

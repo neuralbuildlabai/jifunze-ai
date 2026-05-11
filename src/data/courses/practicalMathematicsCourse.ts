@@ -2,8 +2,8 @@
  * Practical Mathematics for Life, Work, and Business — standalone Jifunze course.
  *
  * This course is independent of the existing flagship catalog. It does not share progression keys,
- * curriculum types, or capstone rubric ids with `ai-essentials`, `smart-workflows-with-ai`, or any
- * other flagship course.
+ * curriculum types, or capstone rubric ids with `ai-essentials`, `ai-powered-workflows-and-productivity`,
+ * or any other flagship course.
  *
  * Source-of-truth export: `practicalMathematicsCourse`. Consumers that need to render in the existing
  * flagship discovery UI should use the catalog adapter (`standaloneCoursesCatalog.ts`) which maps
@@ -36,7 +36,7 @@ export const practicalMathematicsCourse: PracticalMathematicsCourse = {
   internalKey: PRACTICAL_MATH_INTERNAL_KEY,
   isolation: {
     type: 'standalone',
-    doesNotAffect: ['ai-essentials', 'smart-workflows-with-ai'],
+    doesNotAffect: ['ai-essentials', 'ai-powered-workflows-and-productivity'],
   },
   title: 'Practical Mathematics for Life, Work, and Business',
   accessLabel: 'Free',

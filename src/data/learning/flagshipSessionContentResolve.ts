@@ -170,7 +170,9 @@ export function getFlagshipSessionContentBlocks(
   curriculum: FlagshipCourseCurriculum | undefined,
 ): FlagshipSessionContentBlock[] {
   const overrideCourseSlug =
-    session.courseSlug === 'ai-productivity-smart-workflows' ? 'smart-workflows-with-ai' : session.courseSlug
+    session.courseSlug === 'ai-productivity-smart-workflows'
+      ? 'ai-powered-workflows-and-productivity'
+      : session.courseSlug
   const key = flagshipSessionContentOverrideKey(overrideCourseSlug, session.id)
   const override = FLAGSHIP_SESSION_CONTENT_OVERRIDES[key]
   const generated = generateFlagshipSessionBlocks(session, curriculum)

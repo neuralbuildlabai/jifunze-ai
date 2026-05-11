@@ -201,8 +201,8 @@ test.describe('Practical Mathematics — public discovery (standalone)', () => {
     await expect(page.getByRole('heading', { name: /^AI Essentials$/ })).toBeVisible({ timeout: 20_000 })
   })
 
-  test('Smart Workflows flagship course detail still renders', async ({ page }) => {
-    await page.goto('/learn/courses/smart-workflows-with-ai')
-    await expect(page.getByRole('heading', { name: /Smart Workflows with AI/i })).toBeVisible({ timeout: 20_000 })
+  test('AI-Powered Workflows flagship course detail still renders', async ({ page }) => {
+    await page.goto('/learn/courses/ai-powered-workflows-and-productivity')
+    await expect(page.getByRole('heading', { name: /AI-Powered Workflows and Productivity/i })).toBeVisible({ timeout: 20_000 })
   })
 })

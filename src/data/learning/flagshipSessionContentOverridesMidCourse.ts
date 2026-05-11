@@ -1313,7 +1313,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_MIDCOURSE: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m05-lesson": [
+  "ai-powered-workflows-and-productivity::sw-m05-lesson": [
     {
       id: "sw-m05-lesson-ov-intro",
       type: "intro",
@@ -1349,7 +1349,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_MIDCOURSE: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m06-practice": [
+  "ai-powered-workflows-and-productivity::sw-m06-practice": [
     {
       id: "sw-m06-practice-ov-intro",
       type: "intro",
@@ -1382,7 +1382,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_MIDCOURSE: Partial<
     }
   ],
 
-  "smart-workflows-with-ai::sw-m07-lesson": [
+  "ai-powered-workflows-and-productivity::sw-m07-lesson": [
     {
       id: "sw-m07-lesson-ov-intro",
       type: "intro",

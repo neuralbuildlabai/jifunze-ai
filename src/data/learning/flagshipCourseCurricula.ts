@@ -66,7 +66,7 @@ export function curriculumPracticeAndRevisionTotals(curriculum: FlagshipCourseCu
 /** All 15 flagship courses ship with full deep blueprints */
 export const FLAGSHIP_CURRICULUM_SLUGS = [
   'ai-essentials',
-  'smart-workflows-with-ai',
+  'ai-powered-workflows-and-productivity',
   'data-and-decisions',
   'web-and-software-foundations',
   'digital-safety',
@@ -115,8 +115,8 @@ export const FLAGSHIP_CURRICULA_BASE = {
     modules: AI_ESSENTIALS_FLAGSHIP_MODULES,
   },
 
-  'smart-workflows-with-ai': {
-    slug: 'smart-workflows-with-ai',
+  'ai-powered-workflows-and-productivity': {
+    slug: 'ai-powered-workflows-and-productivity',
     estimatedDurationLabel: 'Roughly 55–80 hours of study and practice',
     depthLabel:
       'Professional prompt engineering embedded in workflow systems: anatomy and templates, iterative refinement and critique, multi-step chains, evaluation rubrics, libraries and versioning—under QA lanes and operational accountability (someone else could run it).',
@@ -1297,7 +1297,8 @@ export const FLAGSHIP_CURRICULA = {
 } as Record<FlagshipCurriculumSlug, FlagshipCourseCurriculum>
 
 const CURRICULUM_SLUG_ALIASES: Record<string, FlagshipCurriculumSlug> = {
-  'ai-productivity-smart-workflows': 'smart-workflows-with-ai',
+  // Paid-tier flagship reuses the renamed AI-Powered Workflows curriculum.
+  'ai-productivity-smart-workflows': 'ai-powered-workflows-and-productivity',
 }
 
 export function getFlagshipCurriculum(slug: string): FlagshipCourseCurriculum | undefined {

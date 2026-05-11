@@ -139,7 +139,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_SCHOOLS134: Partial<
   ],
 
   // --- Smart Workflows with AI ---
-  'smart-workflows-with-ai::sw-m01-lesson': [
+  'ai-powered-workflows-and-productivity::sw-m01-lesson': [
     {
       id: 'sw-m01-lesson-ov-intro',
       type: 'intro',
@@ -174,7 +174,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_SCHOOLS134: Partial<
     },
   ],
 
-  'smart-workflows-with-ai::sw-m02-lesson': [
+  'ai-powered-workflows-and-productivity::sw-m02-lesson': [
     {
       id: 'sw-m02-lesson-ov-intro',
       type: 'intro',
@@ -207,7 +207,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_SCHOOLS134: Partial<
     },
   ],
 
-  'smart-workflows-with-ai::sw-m05-practice': [
+  'ai-powered-workflows-and-productivity::sw-m05-practice': [
     {
       id: 'sw-m05-practice-ov-intro',
       type: 'intro',
@@ -234,7 +234,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_SCHOOLS134: Partial<
     },
   ],
 
-  'smart-workflows-with-ai::sw-m04-revision': [
+  'ai-powered-workflows-and-productivity::sw-m04-revision': [
     {
       id: 'sw-m04-revision-ov-intro',
       type: 'intro',
@@ -263,7 +263,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_SCHOOLS134: Partial<
     },
   ],
 
-  'smart-workflows-with-ai::smart-workflows-with-ai-capstone-prep': [
+  'ai-powered-workflows-and-productivity::smart-workflows-with-ai-capstone-prep': [
     {
       id: 'sw-cap-prep-ov-intro',
       type: 'intro',

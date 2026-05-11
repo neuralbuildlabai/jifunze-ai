@@ -161,13 +161,13 @@ export function PaidHostedRiseFlagshipSection({ courseSlug, courseTitle }: Props
 
       <section
         className="rounded-2xl border border-dashed border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/80 px-5 py-5 sm:px-6"
-        aria-labelledby="interactive-rise-heading"
+        aria-labelledby="interactive-course-heading"
       >
-        <h2 id="interactive-rise-heading" className="text-sm font-semibold text-[color:var(--jf-text)]">
-          Interactive course
+        <h2 id="interactive-course-heading" className="text-sm font-semibold text-[color:var(--jf-text)]">
+          Interactive course player
         </h2>
         <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-          The full Rise experience opens in a new tab—return here anytime for sessions, checks, and capstone submission.
+          The full course player opens in a new tab—return here anytime for sessions, checks, and capstone submission.
         </p>
         <a
           href={risePath}
@@ -175,7 +175,7 @@ export function PaidHostedRiseFlagshipSection({ courseSlug, courseTitle }: Props
           rel="noopener noreferrer"
           className="mt-4 inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] bg-white px-5 text-[13px] font-semibold text-[color:var(--jf-text)] shadow-sm transition hover:bg-stone-50"
         >
-          Launch Course
+          Open the course
         </a>
       </section>
     </div>
