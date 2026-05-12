@@ -682,7 +682,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
       type: "key_points",
       title: "Carry-forward pack",
       bullets: [
-        "Keyword claim: Articulate outcome, mechanism, proof, pricing posture together.",
+        "Keyword claim: Present outcome, mechanism, proof, and pricing posture together.",
         "Failure mode to watch: Turn insight into something purchasable—explicit mechanism, proof assets, delivery limits stated upfront.…",
         "Reuse rule: when to apply vs rethink this module",
       ],
@@ -4649,7 +4649,7 @@ export const FLAGSHIP_SESSION_CONTENT_OVERRIDES_COMPLETION: Partial<
       title: "Carry-forward pack",
       bullets: [
         "Keyword claim: Stress-test positioning against named competitors—not generic uniqueness.",
-        "Failure mode to watch: Articulate category context, differentiated promise, and proof doctrine—explicitly naming what you will not claim.…",
+        "Failure mode to watch: Describe category context, differentiated promise, and proof doctrine—explicitly naming what you will not claim.…",
         "Reuse rule: when to apply vs rethink this module",
       ],
     },

@@ -1,7 +1,7 @@
 import type { ExtendedPublicLibraryKey } from './extendedPublicLibraryConfigs'
 
 /**
- * Soft, distinguished palettes for the five monetized standalone courses.
+ * Soft, distinguished palettes for monetized standalone course surfaces.
  * Colors are restrained—used mainly for accents, strips, and cards—not full-page floods.
  */
 export type StandaloneCoursePalette = {
@@ -14,21 +14,12 @@ export type StandaloneCoursePalette = {
 }
 
 export const STANDALONE_COURSE_PALETTES: Record<
-  | 'course_chatgpt_everyday'
   | 'course_prompt_engineering_models'
   | 'course_gemini_workspace'
   | 'course_claude_writing'
   | 'course_agentic_ai_real_work',
   StandaloneCoursePalette
 > = {
-  /** Learn ChatGPT for Everyday Work — calm green / graphite */
-  course_chatgpt_everyday: {
-    shellAccent:
-      'bg-[radial-gradient(ellipse_110%_60%_at_50%_-10%,rgba(74,222,128,0.09),transparent_52%),linear-gradient(180deg,_rgb(15,23,42)_0%,_rgb(12,18,24)_48%,_rgb(10,14,18)_100%)]',
-    discoveryCardClass:
-      'rounded-2xl border border-emerald-400/16 bg-gradient-to-br from-emerald-500/[0.07] via-[rgba(15,23,42,0.72)] to-[rgba(12,14,18,0.92)] shadow-[0_22px_70px_rgba(0,0,0,0.38)] ring-1 ring-emerald-300/10',
-    badgeClass: 'border-emerald-400/22 bg-emerald-500/[0.11] text-emerald-50/95',
-  },
   /** Prompt Engineering Across ChatGPT, Claude, and Gemini — deep indigo / slate */
   course_prompt_engineering_models: {
     shellAccent:

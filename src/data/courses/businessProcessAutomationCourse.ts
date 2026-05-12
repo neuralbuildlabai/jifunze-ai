@@ -199,7 +199,7 @@ export const businessProcessAutomationCourse: PracticalMathematicsCourse = {
     suggestedNextCourses: [
       {
         title: 'Business Analytics for Decision-Making',
-        href: '/learn/courses/business-analytics-decision-making',
+        href: '/learn/free/business-analytics-decision-making',
         subtitle: 'Apply data analysis to business performance diagnosis and decision-making',
       },
       {

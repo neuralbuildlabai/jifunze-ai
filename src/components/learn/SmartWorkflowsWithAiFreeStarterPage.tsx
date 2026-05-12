@@ -11,7 +11,7 @@ import { ORANGE_GRADIENT } from './discoveryHubSections'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
 
-/** Free Starter Workshop — hosted lesson player; completion is tracked locally on this device until account sync is available. */
+/** Free microlearning workshop — embedded interactive player; completion is tracked locally on this device until account sync is available. */
 export function SmartWorkflowsWithAiFreeStarterPage() {
   const course = SMART_WORKFLOWS_WITH_AI_FREE_STARTER
   const [complete, setComplete] = useState(() => isRisePilotCourseLearnerComplete(course.progressInternalKey))
@@ -86,7 +86,7 @@ export function SmartWorkflowsWithAiFreeStarterPage() {
               data-testid="free-starter-smart-workflows-start"
               onClick={scrollToWorkshop}
             >
-              Open interactive workshop
+              Start course
             </button>
             <Link
               to="/learn"
@@ -97,7 +97,7 @@ export function SmartWorkflowsWithAiFreeStarterPage() {
           </div>
 
           <p className="mt-6 rounded-xl border border-amber-200/80 bg-amber-50/90 p-4 text-[13px] leading-relaxed text-amber-950/90">
-            This <span className="font-semibold">free starter workshop</span> is a practical, outcome-based introduction on Jifunze.ai—designed
+            This <span className="font-semibold">free microlearning workshop</span> is a practical, outcome-based introduction on Jifunze.ai—designed
             to help you build reusable workflow habits before moving on to deeper courses.
           </p>
         </section>
@@ -133,7 +133,7 @@ export function SmartWorkflowsWithAiFreeStarterPage() {
             <div>
               <h2 className="text-xl font-semibold text-[color:var(--jf-text)]">Your workshop</h2>
               <p className="mt-1 max-w-prose text-[13px] text-[color:var(--jf-muted)]">
-                Use the lesson area below, or open in a new tab if you prefer a full window.
+                Learn with a guided Jifunze.ai interactive course. Use the player below, or open the course in a new window if you prefer.
               </p>
             </div>
             <a
@@ -143,7 +143,7 @@ export function SmartWorkflowsWithAiFreeStarterPage() {
               className="text-[13px] font-semibold text-orange-700 underline-offset-2 hover:text-orange-800 hover:underline"
               data-testid="free-starter-smart-workflows-open-tab"
             >
-              Open in new tab
+              Open course
             </a>
           </div>
 

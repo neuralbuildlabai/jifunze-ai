@@ -118,12 +118,11 @@ export function WorkspaceLibraryPage() {
           <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-200/70">Standalone courses</p>
           <h2 className="mt-2 text-xl font-semibold text-white sm:text-2xl">Deep curricula built as real products</h2>
           <p className="mt-3 max-w-3xl text-[13px] leading-relaxed text-zinc-400">
-            Five complete courses—structured modules, substantive lesson spines, practice checkpoints, and embedded learner help. Intended to
+            Four complete courses—structured modules, substantive lesson spines, practice checkpoints, and embedded learner help. Intended to
             become purchasable standalone SKUs or subscription inclusions later; materials access varies by tier (never outcome guarantees).
           </p>
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {[
-              EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_chatgpt_everyday,
               EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_prompt_engineering_models,
               EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_gemini_workspace,
               EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_claude_writing,

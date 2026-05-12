@@ -780,7 +780,7 @@ export const FLAGSHIP_ASSESSMENT_COMPLETION_PRESTAMPED: Partial<Record<string, F
       kind: 'reflection_confirm',
       id: "bb-m03::a2",
       prompt: "Applied evidence · bb-m03",
-      attestation: "I linked “Offer design: outcome, mechanism, proof, capacity check” to one artifact or scenario I can show, and stated one falsifier tied to Articulate outcome, mechanism, proof, pricing posture together.",
+      attestation: "I linked “Offer design: outcome, mechanism, proof, capacity check” to one artifact or scenario I can show, and stated one falsifier tied to presenting outcome, mechanism, proof, and pricing posture together.",
     },
   ],
   "bb-m04": [
@@ -980,7 +980,7 @@ export const FLAGSHIP_ASSESSMENT_COMPLETION_PRESTAMPED: Partial<Record<string, F
       kind: 'reflection_confirm',
       id: "mf-m07::a2",
       prompt: "Applied evidence · mf-m07",
-      attestation: "I linked “Negotiating money: packages, trade space, calm process” to one artifact or scenario I can show, and stated one falsifier tied to Articulate BATNA and trade packages simply.",
+      attestation: "I linked “Negotiating money: packages, trade space, calm process” to one artifact or scenario I can show, and stated one falsifier tied to stating BATNA and trade packages simply.",
     },
   ],
   "mf-m10": [

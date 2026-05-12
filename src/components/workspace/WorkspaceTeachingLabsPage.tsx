@@ -34,8 +34,6 @@ function libraryTitle(id: TeachingLibraryId): string {
       return 'Monitoring, Observability, and Incident Response'
     case 'content_publishing':
       return 'Content Creation and Knowledge Publishing'
-    case 'course_chatgpt_everyday':
-      return 'Learn ChatGPT for Everyday Work (standalone course)'
     case 'course_prompt_engineering_models':
       return 'Prompt Engineering Across ChatGPT, Claude, and Gemini (standalone course)'
     case 'course_gemini_workspace':

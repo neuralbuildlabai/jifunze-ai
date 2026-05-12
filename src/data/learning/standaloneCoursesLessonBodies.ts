@@ -11,7 +11,6 @@ type DepthArgs = {
 }
 
 function courseShortFromSlug(slug: string): string | null {
-  if (slug.startsWith('lcew-')) return 'Learn ChatGPT for Everyday Work'
   if (slug.startsWith('pem-')) return 'Prompt Engineering Across ChatGPT, Claude, and Gemini'
   if (slug.startsWith('gpw-')) return 'Gemini for Productivity and Google Workspace'
   if (slug.startsWith('clw-')) return 'Claude for Writing, Research, and Deep Thinking'

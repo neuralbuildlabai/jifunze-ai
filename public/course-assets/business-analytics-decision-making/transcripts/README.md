@@ -1,5 +1,3 @@
 # Business Analytics Decision-Making — transcripts
 
-Optional downloadable transcripts (`.txt`, `.vtt`) can live here. In-app copy for future slide-level narration will come from `businessAnalyticsDecisionMakingNarration.ts` when `slideNarrations` is populated.
-
-Do not mark narration `ready` until matching audio files exist under `../audio/`.
+Optional downloadable transcripts (`.txt`, `.vtt`) can live here for companion materials. The **live learner experience** for this topic is the interactive microlearning course at **`/learn/free/business-analytics-decision-making`**.

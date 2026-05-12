@@ -21,13 +21,6 @@ export {
 } from './practicalMathematicsCourse'
 
 export {
-  businessAnalyticsDecisionMakingCourse,
-  BUSINESS_ANALYTICS_DECISION_MAKING_SLUG,
-  BUSINESS_ANALYTICS_DECISION_MAKING_INTERNAL_KEY,
-} from './businessAnalyticsDecisionMakingCourse'
-
-
-export {
   businessProcessAutomationCourse,
   BUSINESS_PROCESS_AUTOMATION_SLUG,
   BUSINESS_PROCESS_AUTOMATION_INTERNAL_KEY,
@@ -44,25 +37,6 @@ export {
   type BusinessProcessAutomationSlideEntry,
   type BusinessProcessAutomationSlideManifest,
 } from './businessProcessAutomationSlides'
-
-export {
-  BUSINESS_ANALYTICS_MODULE_SLUGS,
-  BUSINESS_ANALYTICS_DECK_DOWNLOAD_URL,
-  businessAnalyticsDecisionMakingSlideManifest,
-  getBaSlidesForLesson,
-  getBaSlidesForModule,
-  type BaModuleSlug,
-  type BusinessAnalyticsSlideEntry,
-  type BusinessAnalyticsSlideManifest,
-  type SlideAssetStatus,
-} from './businessAnalyticsDecisionMakingSlides'
-
-export {
-  BA_EXPECTED_MODULE_AUDIO_FILENAMES,
-  businessAnalyticsDecisionMakingNarrationManifest,
-  getBaAudioSrcWhenReady,
-  getBaModuleNarrationAudioSrc,
-} from './businessAnalyticsDecisionMakingNarration'
 
 export { narrationAudioSrcWhenReady } from './narrationHelpers'
 

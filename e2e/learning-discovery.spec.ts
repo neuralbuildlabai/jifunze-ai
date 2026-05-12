@@ -32,9 +32,10 @@ test.describe('Learning discovery (public)', () => {
     await expect(page.getByText(/full courses provide deeper guided practice/i)).toBeVisible()
   })
 
-  test('/learn lists microlearning starters and hosted lesson paths', async ({ page }) => {
+  test('/learn lists microlearning starters and embedded course players', async ({ page }) => {
     await page.goto('/learn')
     await expect(page.getByTestId('discovery-microlearning-smart-workflows-with-ai')).toBeVisible()
+    await expect(page.getByTestId('discovery-microlearning-business-analytics-decision-making')).toBeVisible()
     await expect(page.getByTestId('discovery-microlearning-ai-at-work-chatgpt')).toBeVisible()
 
     await page.goto('/learn/free/ai-at-work-chatgpt')
@@ -48,21 +49,27 @@ test.describe('Learning discovery (public)', () => {
     const frameSw = page.locator('iframe[title="Smart Workflows with AI — interactive workshop"]')
     await expect(frameSw).toBeVisible()
     await expect(frameSw).toHaveAttribute('src', /\/course-assets\/rise\/smart-workflows-with-ai\/content\/index\.html$/)
+
+    await page.goto('/learn/free/business-analytics-decision-making')
+    await expect(page.getByTestId('free-starter-business-analytics-decision-making-page')).toBeVisible({ timeout: 20_000 })
+    const frameBa = page.locator('iframe[title="Business Analytics for Decision-Making — interactive course"]')
+    await expect(frameBa).toBeVisible()
+    await expect(frameBa).toHaveAttribute('src', /\/course-assets\/rise\/business-analytics-decision-making\/content\/index\.html$/)
   })
 
-  test('/learn microlearning section order: Smart Workflows then AI at Work', async ({ page }) => {
+  test('/learn microlearning section order: Smart Workflows, Business Analytics, AI at Work', async ({ page }) => {
     await page.goto('/learn')
     const section = page.getByTestId('discovery-section-free-microlearning')
     const cards = section.locator('[data-testid^="discovery-microlearning-"]')
     await expect(cards.nth(0)).toHaveAttribute('data-testid', 'discovery-microlearning-smart-workflows-with-ai')
-    await expect(cards.nth(1)).toHaveAttribute('data-testid', 'discovery-microlearning-ai-at-work-chatgpt')
+    await expect(cards.nth(1)).toHaveAttribute('data-testid', 'discovery-microlearning-business-analytics-decision-making')
+    await expect(cards.nth(2)).toHaveAttribute('data-testid', 'discovery-microlearning-ai-at-work-chatgpt')
   })
 
-  test('/learn lists three standalone full courses under Free Full Courses', async ({ page }) => {
+  test('/learn lists two standalone full courses under Free Full Courses', async ({ page }) => {
     await page.goto('/learn')
     await expect(page.getByTestId('discovery-full-course-practical-mathematics-life-work-business')).toBeVisible()
     await expect(page.getByTestId('discovery-full-course-business-process-automation-for-work')).toBeVisible()
-    await expect(page.getByTestId('discovery-full-course-business-analytics-decision-making')).toBeVisible()
   })
 
   test('/learn discovery copy avoids internal tooling terms', async ({ page }) => {

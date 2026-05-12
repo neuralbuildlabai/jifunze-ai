@@ -438,7 +438,7 @@ export const FLAGSHIP_CURRICULA_BASE = {
         title: 'Positioning spine: promise, wedge, refusal to pretend',
         stage: 'foundations',
         summary:
-          'Articulate category context, differentiated promise, and proof doctrine—explicitly naming what you will not claim.',
+          'Describe category context, differentiated promise, and proof doctrine—explicitly naming what you will not claim.',
         learningGoals: [
           'Stress-test positioning against named competitors—not generic uniqueness.',
           'Expose trade-offs customers actually feel.',
@@ -679,7 +679,7 @@ export const FLAGSHIP_CURRICULA_BASE = {
         summary:
           'Turn insight into something purchasable—explicit mechanism, proof assets, delivery limits stated upfront.',
         learningGoals: [
-          'Articulate outcome, mechanism, proof, pricing posture together.',
+          'Present outcome, mechanism, proof, and pricing posture together.',
           'Expose delivery capacity constraints early.',
           'Stress-test promise vs. ops reality.',
         ],

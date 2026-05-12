@@ -13,7 +13,6 @@ export type TeachingLibraryId =
   | 'monitoring'
   | 'content_publishing'
   /** Standalone Jifunze course products (future purchasable / bundleable) */
-  | 'course_chatgpt_everyday'
   | 'course_prompt_engineering_models'
   | 'course_gemini_workspace'
   | 'course_claude_writing'

@@ -1,7 +1,7 @@
 /**
- * Free starter microlearning entries (hosted player under /public; routes under /learn/free/...).
+ * Free microlearning catalog entries (interactive player under /public/course-assets; routes under /learn/free/...).
  *
- * INTERNAL (not for learner UI): packaging/source notes live on `internalProductionMeta` only.
+ * INTERNAL (not for learner UI): packaging notes live on `internalProductionMeta` only — never render those fields in learner surfaces.
  */
 
 export type InternalProductionMeta = {
@@ -31,8 +31,10 @@ export type FreeStarterRiseCourseEntry = {
   /** Shown on completion panel — device-local sync messaging only; no vendor terms. */
   learnerCompletionNote: string
   publicRoute: string
-  /** Site path to hosted lesson player — internal wiring only. */
+  /** Site path to lesson player — internal wiring only (not shown as a raw URL to learners). */
   lessonPlayerSrc: string
+  /** Used for learning-area counts on `/learn` (must match `AVAILABLE_PUBLIC_LEARNING_AREAS`). */
+  learningCatalogAreaId: 'ai_productivity' | 'data_decisions'
   descriptionShort: string
   descriptionLong: string
   learningOutcomes: readonly string[]
@@ -47,7 +49,7 @@ export const AI_AT_WORK_CHATGPT_FREE_STARTER: FreeStarterRiseCourseEntry = {
   shortTitle: 'AI at Work',
   subtitle:
     'Learn how to use ChatGPT safely and productively for everyday work, school, and business tasks. This beginner-friendly course covers AI limits, better prompting, output review, safe use, practical examples, and a simple AI Work Starter Kit.',
-  label: 'Free Starter Course',
+  label: 'Free microlearning course',
   status: 'pilot',
   level: 'Beginner',
   durationLabel: '45–60 minutes',
@@ -55,17 +57,18 @@ export const AI_AT_WORK_CHATGPT_FREE_STARTER: FreeStarterRiseCourseEntry = {
   category: 'AI & Productivity',
   learnerDisplayFormat: 'Guided interactive course',
   internalProductionMeta: {
-    source: 'Articulate Rise export',
-    deliveryEngine: 'rise',
+    source: 'Structured HTML export bundle',
+    deliveryEngine: 'embedded_iframe',
   },
   learnerCompletionNote:
     'You can mark completion when you are finished. On this device, your completion may show here before account-wide sync is available.',
   publicRoute: '/learn/free/ai-at-work-chatgpt',
-  lessonPlayerSrc: '/course-assets/rise/ai-at-work-chatgpt/content/index.html',
+  lessonPlayerSrc: '/course-assets/interactive/ai-at-work-chatgpt/content/index.html',
+  learningCatalogAreaId: 'ai_productivity',
   descriptionShort:
-    'Learn how to use ChatGPT safely and productively for everyday work, school, and business tasks.',
+    'Learn with a guided Jifunze.ai interactive course. Build safe ChatGPT habits for everyday work, school, and business tasks.',
   descriptionLong:
-    'AI at Work is a beginner-friendly Free Starter Course that teaches learners how to use ChatGPT and similar AI tools safely, clearly, and productively. Learners explore what AI can and cannot do, how to write stronger prompts, how to review AI-generated output, how to avoid unsafe use of sensitive information, and how to apply AI to everyday work, study, and business tasks.\n\nBy the end of the course, learners will have built a simple AI Work Starter Kit with safe-use rules, reusable prompts, an output review checklist, and one before-and-after example of an AI-assisted task.',
+    'Learn with a guided Jifunze.ai interactive course. AI at Work is a beginner-friendly path that teaches learners how to use ChatGPT and similar AI tools safely, clearly, and productively. Learners explore what AI can and cannot do, how to write stronger prompts, how to review AI-generated output, how to avoid unsafe use of sensitive information, and how to apply AI to everyday work, study, and business tasks.\n\nBy the end of the course, learners will have built a simple AI Work Starter Kit with safe-use rules, reusable prompts, an output review checklist, and one before-and-after example of an AI-assisted task.',
   learningOutcomes: [
     'Describe what generative AI tools like ChatGPT can and cannot do.',
     'Apply a practical formula to write clearer AI prompts.',
@@ -90,11 +93,11 @@ export const SMART_WORKFLOWS_WITH_AI_FREE_STARTER: FreeStarterRiseCourseEntry = 
   slug: 'smart-workflows-with-ai',
   progressInternalKey: 'rise_pilot_smart_workflows_with_ai',
   progressSessionStartedMarker: 'rise-smart-workflows-with-ai::session-started',
-  title: 'Smart Workflows with AI: Save Time, Organize Work, and Improve Repeated Tasks',
+  title: 'Smart Workflows with AI',
   shortTitle: 'Smart Workflows with AI',
   subtitle:
     'Learn how to identify repetitive work, map a workflow, decide where AI can safely help, write reusable prompts, review AI output, and build a practical Smart Workflow Plan.',
-  label: 'Free Starter Workshop',
+  label: 'Free microlearning course',
   status: 'pilot',
   level: 'Beginner to Early Intermediate',
   durationLabel: '75–120 minutes',
@@ -102,17 +105,18 @@ export const SMART_WORKFLOWS_WITH_AI_FREE_STARTER: FreeStarterRiseCourseEntry = 
   category: 'AI & Productivity',
   learnerDisplayFormat: 'Guided interactive workshop',
   internalProductionMeta: {
-    source: 'Articulate Rise export',
-    deliveryEngine: 'rise',
+    source: 'Structured HTML export bundle',
+    deliveryEngine: 'embedded_iframe',
   },
   learnerCompletionNote:
     'You can mark completion when you are finished. On this device, your completion may show here before account-wide sync is available.',
   publicRoute: '/learn/free/smart-workflows-with-ai',
-  lessonPlayerSrc: '/course-assets/rise/smart-workflows-with-ai/content/index.html',
+  lessonPlayerSrc: '/course-assets/interactive/smart-workflows-with-ai/content/index.html',
+  learningCatalogAreaId: 'ai_productivity',
   descriptionShort:
-    'Learn how to identify repetitive work, map a workflow, decide where AI can safely help, write reusable prompts, review AI output, and build a practical Smart Workflow Plan.',
+    'Learn with a guided Jifunze.ai interactive course. Identify repetitive work, map steps, and build a practical Smart Workflow Plan with clear review gates.',
   descriptionLong:
-    'Smart Workflows with AI is a practical Free Starter Workshop that helps learners improve repeated or messy work using AI responsibly. Learners explore how to identify workflow opportunities, map current steps, choose appropriate AI roles, write reusable workflow prompts, review AI-generated output, manage privacy and risk, and create a simple 7-day rollout plan.\n\nBy the end of the course, learners will have a Smart Workflow Plan that includes AI-supported steps, human review points, reusable prompts, success measures, risk controls, and an implementation plan.',
+    'Learn with a guided Jifunze.ai interactive course. Smart Workflows with AI helps learners improve repeated or messy work using AI responsibly. Learners explore how to identify workflow opportunities, map current steps, choose appropriate AI roles, write reusable workflow prompts, review AI-generated output, manage privacy and risk, and create a simple 7-day rollout plan.\n\nBy the end of the course, learners will have a Smart Workflow Plan that includes AI-supported steps, human review points, reusable prompts, success measures, risk controls, and an implementation plan.',
   learningOutcomes: [
     'Identify repetitive or messy work that is a good candidate for a smarter workflow.',
     'Map an existing workflow into clear steps before adding AI.',
@@ -135,9 +139,56 @@ export const SMART_WORKFLOWS_WITH_AI_FREE_STARTER: FreeStarterRiseCourseEntry = 
   ],
 }
 
-/** Catalog display order: Smart Workflows first, then AI at Work. */
+export const BUSINESS_ANALYTICS_DECISION_MAKING_FREE_STARTER: FreeStarterRiseCourseEntry = {
+  slug: 'business-analytics-decision-making',
+  progressInternalKey: 'rise_pilot_business_analytics_decision_making',
+  progressSessionStartedMarker: 'rise-business-analytics-decision-making::session-started',
+  title: 'Business Analytics for Decision-Making',
+  shortTitle: 'Business Analytics',
+  subtitle:
+    'Turn performance signals into clearer decisions: metrics that matter, honest chart reading, and recommendations you can explain—without pretending spreadsheets replace judgment.',
+  label: 'Free microlearning course',
+  status: 'pilot',
+  level: 'Beginner to early intermediate',
+  durationLabel: '45–75 minutes',
+  priceLabel: 'Free',
+  category: 'Data & Decisions',
+  learnerDisplayFormat: 'Guided interactive course',
+  internalProductionMeta: {
+    source: 'Structured HTML export bundle',
+    deliveryEngine: 'embedded_iframe',
+  },
+  learnerCompletionNote:
+    'You can mark completion when you are finished. On this device, your completion may show here before account-wide sync is available.',
+  publicRoute: '/learn/free/business-analytics-decision-making',
+  lessonPlayerSrc: '/course-assets/interactive/business-analytics-decision-making/content/index.html',
+  learningCatalogAreaId: 'data_decisions',
+  descriptionShort:
+    'Learn with a guided Jifunze.ai interactive course. Practice reading metrics, spotting misleading charts, and turning analysis into a clear recommendation.',
+  descriptionLong:
+    'Learn with a guided Jifunze.ai interactive course. Business Analytics for Decision-Making is a practical starter that helps learners translate charts and KPI-style summaries into accountable decisions. You will practice defining metrics with guardrails, comparing performance over time, diagnosing drops and outliers with humility, and packaging a concise recommendation that names assumptions and next checks.\n\nBy the end, you should be able to walk a manager through what the data does and does not justify—without over-claiming precision you do not have.',
+  learningOutcomes: [
+    'Separate raw counts, KPIs, insights, and recommendations in everyday business language.',
+    'Read trend and comparison charts with common misread traps in mind.',
+    'Diagnose a performance change using more than one supporting metric.',
+    'Name assumptions, limitations, and the next data you would want before acting.',
+    'Draft a short decision memo outline stakeholders can follow.',
+  ],
+  lessonsIncluded: [
+    'Welcome: how this course builds decision judgment',
+    'From data points to decisions (without magical thinking)',
+    'KPIs, segments, and comparisons that hold up under questions',
+    'Spotting noise, outliers, and “looks good” vanity traps',
+    'Turning analysis into a recommendation someone can challenge productively',
+    'Practice scenario: performance shift with tradeoffs',
+    'Wrap-up: your personal analytics review checklist',
+  ],
+}
+
+/** Catalog display order: Smart Workflows, Business Analytics, AI at Work. */
 export const FREE_STARTER_RISE_COURSES: readonly FreeStarterRiseCourseEntry[] = [
   SMART_WORKFLOWS_WITH_AI_FREE_STARTER,
+  BUSINESS_ANALYTICS_DECISION_MAKING_FREE_STARTER,
   AI_AT_WORK_CHATGPT_FREE_STARTER,
 ]
 

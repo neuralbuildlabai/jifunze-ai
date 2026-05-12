@@ -127,11 +127,9 @@ function slugLibraryMap(): Map<string, TeachingLibraryId> {
   }
   for (const tree of STANDALONE_COURSE_CURRICULA) {
     for (const cat of tree) {
-      const lib: TeachingLibraryId = cat.id.startsWith('lcew-')
-        ? 'course_chatgpt_everyday'
-        : cat.id.startsWith('pem-')
-          ? 'course_prompt_engineering_models'
-          : cat.id.startsWith('gpw-')
+      const lib: TeachingLibraryId = cat.id.startsWith('pem-')
+        ? 'course_prompt_engineering_models'
+        : cat.id.startsWith('gpw-')
             ? 'course_gemini_workspace'
             : cat.id.startsWith('clw-')
               ? 'course_claude_writing'
@@ -187,7 +185,6 @@ function main() {
     'cloud_devops',
     'monitoring',
     'content_publishing',
-    'course_chatgpt_everyday',
     'course_prompt_engineering_models',
     'course_gemini_workspace',
     'course_claude_writing',
@@ -222,7 +219,6 @@ function main() {
     ['cloud_devops', 'Cloud/DevOps'],
     ['monitoring', 'Observability'],
     ['content_publishing', 'Content'],
-    ['course_chatgpt_everyday', 'Course · ChatGPT everyday'],
     ['course_prompt_engineering_models', 'Course · Prompt engineering'],
     ['course_gemini_workspace', 'Course · Gemini Workspace'],
     ['course_claude_writing', 'Course · Claude writing & research'],
@@ -247,7 +243,6 @@ function main() {
     (byLibrary.get('monitoring') ?? 0) +
     (byLibrary.get('content_publishing') ?? 0)
   const courseAtoms =
-    (byLibrary.get('course_chatgpt_everyday') ?? 0) +
     (byLibrary.get('course_prompt_engineering_models') ?? 0) +
     (byLibrary.get('course_gemini_workspace') ?? 0) +
     (byLibrary.get('course_claude_writing') ?? 0) +
@@ -282,9 +277,7 @@ function main() {
                     ? MONITORING_OBSERVABILITY_LIBRARY_SPEC.categories.reduce((acc, cat) => acc + cat.lessons.length, 0)
                     : id === 'content_publishing'
                       ? CONTENT_CREATION_PUBLISHING_LIBRARY_SPEC.categories.reduce((acc, cat) => acc + cat.lessons.length, 0)
-                      : id === 'course_chatgpt_everyday'
-                        ? [...slugLib.entries()].filter(([, l]) => l === 'course_chatgpt_everyday').length
-                        : id === 'course_prompt_engineering_models'
+                      : id === 'course_prompt_engineering_models'
                           ? [...slugLib.entries()].filter(([, l]) => l === 'course_prompt_engineering_models').length
                           : id === 'course_gemini_workspace'
                             ? [...slugLib.entries()].filter(([, l]) => l === 'course_gemini_workspace').length

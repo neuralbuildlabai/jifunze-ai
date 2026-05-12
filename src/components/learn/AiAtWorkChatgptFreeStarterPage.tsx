@@ -11,7 +11,7 @@ import { ORANGE_GRADIENT } from './discoveryHubSections'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
 
-/** Free Starter Course — hosted lesson player; completion is tracked locally on this device until account sync is available. */
+/** Free microlearning course — embedded interactive player; completion is tracked locally on this device until account sync is available. */
 export function AiAtWorkChatgptFreeStarterPage() {
   const course = AI_AT_WORK_CHATGPT_FREE_STARTER
   const [complete, setComplete] = useState(() => isRisePilotCourseLearnerComplete(course.progressInternalKey))
@@ -86,7 +86,7 @@ export function AiAtWorkChatgptFreeStarterPage() {
               data-testid="free-starter-ai-at-work-start"
               onClick={scrollToCourse}
             >
-              Open interactive course
+              Start course
             </button>
             <Link
               to="/learn"
@@ -97,7 +97,7 @@ export function AiAtWorkChatgptFreeStarterPage() {
           </div>
 
           <p className="mt-6 rounded-xl border border-amber-200/80 bg-amber-50/90 p-4 text-[13px] leading-relaxed text-amber-950/90">
-            Work through the lesson area on this page on Jifunze.ai. For the best experience, use an up-to-date desktop browser.
+            Work through the interactive course on this page on Jifunze.ai. For the best experience, use an up-to-date desktop browser.
           </p>
         </section>
 
@@ -132,7 +132,7 @@ export function AiAtWorkChatgptFreeStarterPage() {
             <div>
               <h2 className="text-xl font-semibold text-[color:var(--jf-text)]">Your course</h2>
               <p className="mt-1 text-[13px] text-[color:var(--jf-muted)]">
-                Use the lesson area below, or open in a new tab if you prefer a full window.
+                Learn with a guided Jifunze.ai interactive course. Use the player below, or open the course in a new window if you prefer.
               </p>
             </div>
             <a
@@ -142,7 +142,7 @@ export function AiAtWorkChatgptFreeStarterPage() {
               className="text-[13px] font-semibold text-orange-700 underline-offset-2 hover:text-orange-800 hover:underline"
               data-testid="free-starter-ai-at-work-open-tab"
             >
-              Open in new tab
+              Open course
             </a>
           </div>
 

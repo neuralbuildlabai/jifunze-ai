@@ -4,7 +4,6 @@ import type { TeachingConcept } from './teachingTypes'
 import type { TeachingLibraryId } from './teachingTypes'
 
 function teachingLibraryForCategoryId(categoryId: string): TeachingLibraryId {
-  if (categoryId.startsWith('lcew-')) return 'course_chatgpt_everyday'
   if (categoryId.startsWith('pem-')) return 'course_prompt_engineering_models'
   if (categoryId.startsWith('gpw-')) return 'course_gemini_workspace'
   if (categoryId.startsWith('clw-')) return 'course_claude_writing'

@@ -20,8 +20,8 @@ export type PaidFlagshipCertificateCourseConfig = {
   /** When true, session pages enforce minimum on-tab active seconds before “Mark chapter complete”. */
   enableLessonTimer: boolean
   /**
-   * Static Rise web export served from `public/` (path from site root, ending in `content/index.html`).
-   * Omit when the course has no hosted Rise bundle on this app.
+   * Static interactive lesson export served from `public/` (path from site root, ending in `content/index.html`).
+   * Omit when the course has no hosted lesson bundle on this app.
    */
   hostedRiseIndexPath?: string
 }
@@ -37,7 +37,7 @@ const AI_PRODUCTIVITY_SMART_WORKFLOWS: PaidFlagshipCertificateCourseConfig = {
   finalKnowledgeCheckSessionIds: ['ai-productivity-smart-workflows-capstone-prep'],
   capstoneSubmissionEnabled: true,
   enableLessonTimer: true,
-  hostedRiseIndexPath: '/course-assets/rise/ai-productivity-smart-workflows/content/index.html',
+  hostedRiseIndexPath: '/course-assets/interactive/ai-productivity-smart-workflows/content/index.html',
 }
 
 const BY_SLUG: Record<string, PaidFlagshipCertificateCourseConfig> = {

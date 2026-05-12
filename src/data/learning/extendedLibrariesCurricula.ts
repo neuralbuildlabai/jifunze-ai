@@ -8,8 +8,9 @@ import {
 } from './extendedLibrariesSpecs'
 import { compileExtendedLibrary } from './libraryCompiler'
 import {
+  AGENTIC_AI_REAL_WORK_PUBLIC_BASE_PATH,
+  CLAUDE_WRITING_RESEARCH_PUBLIC_BASE_PATH,
   GEMINI_WORKSPACE_PRODUCTIVITY_PUBLIC_BASE_PATH,
-  LEARN_CHATGPT_EVERYDAY_PUBLIC_BASE_PATH,
   PROMPT_ENGINEERING_MODELS_PUBLIC_BASE_PATH,
   STANDALONE_CATEGORY_LIBRARY_TITLE,
   STANDALONE_COURSE_CURRICULA,
@@ -146,9 +147,10 @@ export function extendedLessonPublicHref(slug: string): string | null {
   const placement = getExtendedCatalogPlacement(slug)
   if (!placement) return null
   const id = placement.category.id
-  if (id.startsWith('lcew-')) return `${LEARN_CHATGPT_EVERYDAY_PUBLIC_BASE_PATH}/${slug}`
   if (id.startsWith('pem-')) return `${PROMPT_ENGINEERING_MODELS_PUBLIC_BASE_PATH}/${slug}`
   if (id.startsWith('gpw-')) return `${GEMINI_WORKSPACE_PRODUCTIVITY_PUBLIC_BASE_PATH}/${slug}`
+  if (id.startsWith('clw-')) return `${CLAUDE_WRITING_RESEARCH_PUBLIC_BASE_PATH}/${slug}`
+  if (id.startsWith('aar-')) return `${AGENTIC_AI_REAL_WORK_PUBLIC_BASE_PATH}/${slug}`
   const networkingIds = new Set(NETWORKING_LIBRARY_CURRICULUM.map((c) => c.id))
   const cyberIds = new Set(CYBERSECURITY_LIBRARY_CURRICULUM.map((c) => c.id))
   const cloudIds = new Set(CLOUD_DEVOPS_LIBRARY_CURRICULUM.map((c) => c.id))

@@ -13,78 +13,8 @@ function stages(lib: TeachingLibraryId, base: Omit<LibraryCurriculumQuality, 'li
 /** Compact depth maps for standalone course products — assistive scaffolding only (no mastery guarantees). */
 export const STANDALONE_COURSE_QUALITY_LAYERS: Pick<
   Record<TeachingLibraryId, LibraryCurriculumQuality>,
-  | 'course_chatgpt_everyday'
-  | 'course_prompt_engineering_models'
-  | 'course_gemini_workspace'
-  | 'course_claude_writing'
-  | 'course_agentic_ai_real_work'
+  'course_prompt_engineering_models' | 'course_gemini_workspace' | 'course_claude_writing' | 'course_agentic_ai_real_work'
 > = {
-  course_chatgpt_everyday: stages('course_chatgpt_everyday', {
-    headline: 'Learn ChatGPT for Everyday Work — disciplined drafting, verification, and workplace workflows',
-    targetCapability:
-      ' prompt clearly, review outputs by risk, build repeatable habits, and avoid magical thinking—without outsourcing accountability.',
-    freeToPaidSkillShape: {
-      publicStarter:
-        'Public preview modules establish mental models + early prompting habits with full lesson spine available in structured readers.',
-      signedInContinuity:
-        'Signed-in modules expand everyday workflows across writing, summaries, planning, and productivity patterns—still instructional materials.',
-      deeperMaterials:
-        'Premium-depth modules emphasize advanced workflow design, sustained practice, and higher-stakes review discipline—expanded access, not guarantees.',
-    },
-    competencyStages: [
-      {
-        id: 'entry',
-        label: 'Accurate mental models',
-        summary: 'Understand ChatGPT-style tools as assistants that require verification.',
-        prerequisites: [],
-        youShouldNowBeAbleTo: ['Separate fluency from factual reliability', 'Name realistic failure modes'],
-        goodUnderstandingLooksLike: ['You classify tasks by consequence before choosing tools'],
-        commonFailureModes: ['Trusting tone', 'Skipping review because it sounds finished'],
-      },
-      {
-        id: 'intermediate',
-        label: 'Prompt + review loops',
-        summary: 'Iterate prompts like specs; tier verification by stakes.',
-        prerequisites: ['entry'],
-        youShouldNowBeAbleTo: ['Debug vague prompts into constraints', 'Design review gates'],
-        goodUnderstandingLooksLike: ['Verification depth matches consequence'],
-        commonFailureModes: ['Grammar-only edits on substantive claims'],
-      },
-      {
-        id: 'capstone',
-        label: 'Applied workflow packet',
-        summary: 'Produce a repeatable workflow sketch with explicit verification + escalation.',
-        prerequisites: ['intermediate'],
-        youShouldNowBeAbleTo: ['Ship peer-readable artifacts with bounded claims'],
-        goodUnderstandingLooksLike: ['Unknowns are labeled; owners are explicit'],
-        commonFailureModes: ['Automation without checkpoints'],
-      },
-    ],
-    scenarioAssessment: {
-      summary:
-        'Rewrite drills, approve/revise templates, stakeholder update scenarios, verification ladders, escalation messages—risk-tiered.',
-      formats: ['Rewrite weak prompts', 'Risk-tier memo', 'Publish gate checklist', 'Compare two drafts for epistemic hygiene'],
-      anchors: ['Everyday drafting', 'Planning + synthesis caution', 'Responsible automation boundaries'],
-      bridges: [...SHARED_SCENARIO_BRIDGES, 'Learner help grounded in KB + lesson slugs'],
-    },
-    capstone: {
-      title: 'Everyday Work Review Protocol + Prompt Spec Pack',
-      description:
-        'A practical packet: prompt specs for recurring tasks, a review ladder by risk, and two worked examples with explicit unknowns.',
-      portfolioArtifacts: ['Prompt spec sheet', 'Review ladder', 'Two annotated drafts'],
-      accessShaping:
-        'Preview modules are shareable; deeper modules expand scenarios—future standalone purchase / bundle hooks are packaging decisions, not outcome promises.',
-    },
-    humanSkillsThreads: ['Professional skepticism', 'Clear constraints', 'Stakeholder-safe communication'],
-    ethicsDataLiteracyThreads: ['Privacy discipline', 'Hallucination literacy', 'Responsible drafting habits'],
-    freshness: {
-      risingTopics: ['Enterprise controls', 'Browser/app integrations', 'Evaluation norms'],
-      toolAndPlatformClusters: ['Major chat assistants', 'Workspace tooling patterns'],
-      updatePrinciples:
-        'Refresh UI/product examples cautiously—keep verification workflows stable and vendor-neutral where possible.',
-    },
-  }),
-
   course_prompt_engineering_models: stages('course_prompt_engineering_models', {
     headline: 'Prompt Engineering Across ChatGPT, Claude, and Gemini — specs, debugging, and workflow discipline',
     targetCapability:

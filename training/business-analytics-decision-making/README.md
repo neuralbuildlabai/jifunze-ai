@@ -1,6 +1,6 @@
 # Business Analytics for Decision-Making
 
-Professional micro-course assets for Jifunze.ai (`/learn/business-analytics-decision-making`).
+Professional micro-course assets for Jifunze.ai. The live interactive learner experience is published at **`/learn/free/business-analytics-decision-making`**.
 
 ## Contents
 

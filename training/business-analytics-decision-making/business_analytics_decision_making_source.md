@@ -110,7 +110,7 @@ Use these tables in class to practice **alignment**: when did operational pain a
 **Passing:** 75% (9 or more correct of 12).  
 **Principle:** Interpretation and decision discipline, not memorization.
 
-The live interactive version ships in the app (`Module 6` quiz). Question stems and correct answers match `src/data/courses/businessAnalyticsDecisionMakingModules.ts` (`QUIZ_MODULE6`).
+The live interactive version is the free microlearning course at **`/learn/free/business-analytics-decision-making`**. The in-course quiz is delivered inside that experience; this document remains the author reference for stems and learning intent.
 
 ### Quick reference (do not ship answer key to learners as a shortcut)
 

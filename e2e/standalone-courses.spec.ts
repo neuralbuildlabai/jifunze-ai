@@ -6,24 +6,19 @@ import {
   CLAUDE_WRITING_RESEARCH_LANDING_PATH,
   CLAUDE_WRITING_RESEARCH_PUBLIC_BASE_PATH,
   GEMINI_WORKSPACE_PRODUCTIVITY_LANDING_PATH,
-  LEARN_CHATGPT_EVERYDAY_LANDING_PATH,
-  LEARN_CHATGPT_EVERYDAY_PUBLIC_BASE_PATH,
   PROMPT_ENGINEERING_MODELS_LANDING_PATH,
 } from '../src/data/learning/standaloneCoursesCatalog'
 
 test.describe('Standalone courses (public)', () => {
-  test('ChatGPT everyday course landing + curriculum renders', async ({ page }) => {
-    await page.goto(LEARN_CHATGPT_EVERYDAY_LANDING_PATH)
-    await expect(page.getByRole('heading', { name: /Learn ChatGPT for Everyday Work/i })).toBeVisible({
-      timeout: 20_000,
-    })
-    await expect(page.getByRole('link', { name: /Open full curriculum map/i })).toBeVisible()
+  test('legacy Learn ChatGPT everyday-work URLs redirect to AI at Work microlearning', async ({ page }) => {
+    await page.goto('/courses/learn-chatgpt-everyday-work')
+    await expect(page).toHaveURL(/\/learn\/free\/ai-at-work-chatgpt$/)
 
-    await page.goto(`${LEARN_CHATGPT_EVERYDAY_PUBLIC_BASE_PATH}`)
-    await expect(page.getByText(/Deep-learning reader map/i)).toBeVisible({ timeout: 20_000 })
+    await page.goto('/courses/learn-chatgpt-everyday-work/learn')
+    await expect(page).toHaveURL(/\/learn\/free\/ai-at-work-chatgpt$/)
 
-    await page.goto(`${LEARN_CHATGPT_EVERYDAY_PUBLIC_BASE_PATH}/lcew-m01-mental-models-what-chatgpt-is-in-plain-workplace-terms`)
-    await expect(page.getByRole('heading', { name: /Concept teaching/i })).toBeVisible({ timeout: 20_000 })
+    await page.goto('/courses/learn-chatgpt-everyday-work/learn/lcew-m01-mental-models-what-chatgpt-is-in-plain-workplace-terms')
+    await expect(page).toHaveURL(/\/learn\/free\/ai-at-work-chatgpt$/)
   })
 
   test('Prompt engineering course landing renders', async ({ page }) => {

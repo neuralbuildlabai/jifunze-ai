@@ -12,7 +12,7 @@ const AI_PRODUCTIVITY_SUBTITLE =
   'Build practical AI habits for planning, writing, research, data, workflows, automation, meetings, support, and responsible review.'
 
 const PATH_STEPS = [
-  'Launch the course',
+  'Start course',
   'Complete the learning sections and checks',
   'Prepare your capstone portfolio',
   'Submit your final capstone',
@@ -59,7 +59,7 @@ export function PaidHostedRiseFlagshipSection({ courseSlug, courseTitle }: Props
             className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
             data-testid="paid-rise-launch-course"
           >
-            Launch Course
+            Start course
           </a>
           <Link
             to={capstoneHref}

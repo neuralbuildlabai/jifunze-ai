@@ -5,8 +5,8 @@ import {
 import type { PracticalMathProgressState } from '../data/courses/practicalMathematicsProgression'
 
 /**
- * Minimal completion tracking for hosted Rise pilots — reuses the standalone localStorage blob
- * (`STANDALONE_COURSES_PROGRESS_V2_KEY`) with course-specific keys. Not SCORM; learner-declared only.
+ * Minimal completion tracking for hosted interactive microlearning pilots — reuses the standalone localStorage blob
+ * (`STANDALONE_COURSES_PROGRESS_V2_KEY`) with course-specific keys. Completion is learner-declared on this device.
  */
 
 export function markRisePilotCourseSessionStarted(

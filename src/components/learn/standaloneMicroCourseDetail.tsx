@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import {
-  BUSINESS_ANALYTICS_DECISION_MAKING_SLUG,
   BUSINESS_PROCESS_AUTOMATION_SLUG,
   getStandaloneCertificatePath,
   getStandaloneFirstLessonPath,
@@ -11,7 +10,6 @@ import { ORANGE_GRADIENT } from './discoveryHubSections'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'
 import { SlidePreviewGrid } from './StandaloneVisualBlocks'
-import { BusinessAnalyticsNarratedCourseOverview } from './BusinessAnalyticsNarratedCourseOverview'
 import { BpaNarratedCourseOverview } from './BpaNarratedCourseOverview'
 
 /**
@@ -24,10 +22,6 @@ export function StandaloneMicroCourseDetailView({ entry }: { entry: StandaloneCa
 
   if (entry.slug === BUSINESS_PROCESS_AUTOMATION_SLUG) {
     return <BpaNarratedCourseOverview entry={entry} />
-  }
-
-  if (entry.slug === BUSINESS_ANALYTICS_DECISION_MAKING_SLUG) {
-    return <BusinessAnalyticsNarratedCourseOverview entry={entry} />
   }
 
   const startHref =

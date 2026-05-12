@@ -45,15 +45,16 @@ export const LEARNING_DISCOVERY_CATEGORIES: LearningDiscoveryCategory[] = [
     eyebrow: 'ChatGPT',
     title: 'ChatGPT for everyday professional work',
     intro:
-      'Start from a flagship standalone course plus the broader AI Foundations reader map—structured practice with verification discipline, not magical fluency.',
+      'Start with the free interactive AI at Work starter on Jifunze, then deepen with structured readers and libraries—verification-first habits, not magical fluency.',
     learnMoreAbout:
       'This browse lane orients you toward workplace-real habits: separating fluency from facts, packaging context safely, and reviewing outputs before they leave your hands.',
     subscriptionNote:
       'Monthly and Annual plans are framed to include curated standalone courses alongside library materials when your subscription tier supports full access—buy a single course if you only need one.',
-    featuredCourses: [{ libraryKey: 'course_chatgpt_everyday', badge: 'Standalone course' }],
+    featuredCourses: [],
     supportingPaths: [
       { label: 'AI at Work — Free Starter (interactive)', href: '/learn/free/ai-at-work-chatgpt' },
       { label: 'Smart Workflows with AI — Free Starter Workshop', href: '/learn/free/smart-workflows-with-ai' },
+      { label: 'Business Analytics for Decision-Making — Free Starter (interactive)', href: '/learn/free/business-analytics-decision-making' },
       { label: 'AI Foundations library (starter map)', href: PUBLIC_AI_FOUNDATIONS_BASE_PATH },
       { label: 'Everyday Chatbots library', href: '/library/everyday-chatbots' },
       { label: 'Browse all categories', href: '/learn' },
@@ -171,6 +172,7 @@ export const LEARNING_DISCOVERY_CATEGORIES: LearningDiscoveryCategory[] = [
     featuredCourses: [{ libraryKey: 'course_agentic_ai_real_work', badge: 'New · standalone course' }],
     supportingPaths: [
       { label: 'Smart Workflows with AI — Free Starter Workshop', href: '/learn/free/smart-workflows-with-ai' },
+      { label: 'Business Analytics for Decision-Making — Free Starter (interactive)', href: '/learn/free/business-analytics-decision-making' },
       { label: 'Cloud & DevOps library', href: EXTENDED_PUBLIC_LIBRARY_CONFIGS.cloud_devops.publicBasePath },
       { label: 'Monitoring & observability library', href: EXTENDED_PUBLIC_LIBRARY_CONFIGS.monitoring.publicBasePath },
     ],
@@ -201,6 +203,7 @@ export const LEARNING_DISCOVERY_CATEGORIES: LearningDiscoveryCategory[] = [
     supportingPaths: [
       { label: 'AI Foundations library', href: PUBLIC_AI_FOUNDATIONS_BASE_PATH },
       { label: 'Machine Learning Foundations library', href: PUBLIC_ML_LIBRARY_BASE_PATH },
+      { label: 'Business Analytics for Decision-Making — Free Starter (interactive)', href: '/learn/free/business-analytics-decision-making' },
       { label: 'Networking & infrastructure library', href: NETWORKING_PUBLIC_BASE_PATH },
     ],
     faq: [

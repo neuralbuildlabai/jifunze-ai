@@ -14,9 +14,12 @@ const CARD_SHELL =
 
 function MicrolearningCard({ course }: { course: MicrolearningCatalogItem }) {
   const isWorkshop = course.slug === 'smart-workflows-with-ai'
+  const isBusinessAnalyticsMicro = course.slug === 'business-analytics-decision-making'
   const banner = isWorkshop
     ? 'from-violet-600 via-fuchsia-600 to-indigo-900'
-    : 'from-sky-600 via-cyan-600 to-indigo-900'
+    : isBusinessAnalyticsMicro
+      ? 'from-emerald-600 via-teal-600 to-slate-900'
+      : 'from-sky-600 via-cyan-600 to-indigo-900'
   const levelDuration =
     course.level && course.durationLabel ? `${course.level} · ${course.durationLabel}` : course.level ?? course.durationLabel ?? ''
   return (
@@ -155,7 +158,7 @@ export function AvailableNowSection() {
               Short starter courses and workshops you can complete quickly while building useful skills.
             </p>
           </div>
-          <div className="mt-12 grid gap-8 sm:grid-cols-2">
+          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {micro.map((c) => (
               <MicrolearningCard key={c.slug} course={c} />
             ))}

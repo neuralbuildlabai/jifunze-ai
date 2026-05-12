@@ -5,11 +5,11 @@
  * Internal ops metadata must never be rendered in learner UI.
  */
 
-import { BUSINESS_ANALYTICS_DECISION_MAKING_SLUG } from '../courses/businessAnalyticsDecisionMakingIds'
 import { BUSINESS_PROCESS_AUTOMATION_SLUG } from '../courses/businessProcessAutomationConstants'
 import { PRACTICAL_MATH_SLUG } from '../courses/practicalMathematicsCourseConstants'
 import {
   AI_AT_WORK_CHATGPT_FREE_STARTER,
+  BUSINESS_ANALYTICS_DECISION_MAKING_FREE_STARTER,
   FREE_STARTER_RISE_COURSES,
   SMART_WORKFLOWS_WITH_AI_FREE_STARTER,
   type FreeStarterRiseCourseEntry,
@@ -83,14 +83,6 @@ export const AVAILABLE_PUBLIC_STANDALONE_COURSES: readonly StandaloneCourseListi
     learningAreaId: 'business_operations',
     futureMonetizationCandidate: true,
   },
-  {
-    slug: BUSINESS_ANALYTICS_DECISION_MAKING_SLUG,
-    title: 'Business Analytics for Decision-Making',
-    listingKind: 'standalone_course',
-    route: `/learn/${BUSINESS_ANALYTICS_DECISION_MAKING_SLUG}`,
-    learningAreaId: 'data_decisions',
-    futureMonetizationCandidate: true,
-  },
 ]
 
 export const AVAILABLE_PUBLIC_LEARNING_AREAS: readonly LearningAreaDefinition[] = [
@@ -119,6 +111,7 @@ export const AVAILABLE_PUBLIC_LEARNING_AREAS: readonly LearningAreaDefinition[] 
 
 const MICRO_DESCRIPTION_OVERRIDES: Record<string, string> = {
   [SMART_WORKFLOWS_WITH_AI_FREE_STARTER.slug]: SMART_WORKFLOWS_WITH_AI_FREE_STARTER.descriptionShort,
+  [BUSINESS_ANALYTICS_DECISION_MAKING_FREE_STARTER.slug]: BUSINESS_ANALYTICS_DECISION_MAKING_FREE_STARTER.descriptionShort,
   [AI_AT_WORK_CHATGPT_FREE_STARTER.slug]: AI_AT_WORK_CHATGPT_FREE_STARTER.descriptionShort,
 }
 
@@ -127,14 +120,11 @@ const FULL_COURSE_DESCRIPTIONS: Record<string, string> = {
     'Build practical math confidence for everyday decisions, work, budgeting, and business use.',
   [BUSINESS_PROCESS_AUTOMATION_SLUG]:
     'Learn how to analyze repeated work, document business processes, and plan practical automation improvements.',
-  [BUSINESS_ANALYTICS_DECISION_MAKING_SLUG]:
-    'Learn how to use data, metrics, and simple analysis to support better business decisions.',
 }
 
 function microlearningFromEntry(entry: FreeStarterRiseCourseEntry): MicrolearningCatalogItem {
   const descriptionLearner = MICRO_DESCRIPTION_OVERRIDES[entry.slug] ?? entry.descriptionShort
-  const ctaLabel =
-    entry.slug === SMART_WORKFLOWS_WITH_AI_FREE_STARTER.slug ? 'Start workshop' : 'Start course'
+  const ctaLabel = 'Start course'
   return {
     slug: entry.slug,
     title: entry.title,
@@ -143,7 +133,7 @@ function microlearningFromEntry(entry: FreeStarterRiseCourseEntry): Microlearnin
     publicLabel: entry.label,
     access: 'free',
     courseType: 'microlearning',
-    learningAreaId: 'ai_productivity',
+    learningAreaId: entry.learningCatalogAreaId,
     level: entry.level,
     durationLabel: entry.durationLabel,
     descriptionLearner,
@@ -177,20 +167,12 @@ export function getFullCourseCatalogItems(): readonly FullCourseCatalogItem[] {
   return AVAILABLE_PUBLIC_STANDALONE_COURSES.map(fullCourseFromListing)
 }
 
-/** Homepage preview: Smart Workflows, AI at Work, Practical Mathematics — in that order. */
+/** Homepage preview: the three free microlearning offerings. */
 export function getHomepageAvailablePreviewItems(): readonly (
   | MicrolearningCatalogItem
   | FullCourseCatalogItem
 )[] {
-  const micro = getMicrolearningCatalogItems()
-  const smart = micro.find((m) => m.slug === SMART_WORKFLOWS_WITH_AI_FREE_STARTER.slug)
-  const aiAtWork = micro.find((m) => m.slug === AI_AT_WORK_CHATGPT_FREE_STARTER.slug)
-  const math = getFullCourseCatalogItems().find((c) => c.slug === PRACTICAL_MATH_SLUG)
-  const out: (MicrolearningCatalogItem | FullCourseCatalogItem)[] = []
-  if (smart) out.push(smart)
-  if (aiAtWork) out.push(aiAtWork)
-  if (math) out.push(math)
-  return out
+  return getMicrolearningCatalogItems()
 }
 
 export function countCoursesInLearningArea(areaId: string): number {

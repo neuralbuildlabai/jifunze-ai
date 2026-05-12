@@ -149,7 +149,7 @@ export const FLAGSHIP_CURRICULA_EXTENDED_2: Record<string, FlagshipCourseCurricu
         summary:
           'Prepare money conversations—salary, vendors, partners—with objectives, alternatives, and respectful firmness.',
         learningGoals: [
-          'Articulate BATNA and trade packages simply.',
+          'State BATNA and trade packages simply.',
           'Separate relationship care from clarity on numbers.',
           'Use silence and agenda control ethically.',
         ],

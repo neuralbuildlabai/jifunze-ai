@@ -26,19 +26,12 @@ export type StandaloneCourseDiscoveryMeta = {
 }
 
 export const STANDALONE_COURSE_DISCOVERY_META: Record<
-  | 'course_chatgpt_everyday'
   | 'course_prompt_engineering_models'
   | 'course_gemini_workspace'
   | 'course_claude_writing'
   | 'course_agentic_ai_real_work',
   StandaloneCourseDiscoveryMeta
 > = {
-  course_chatgpt_everyday: {
-    libraryKey: 'course_chatgpt_everyday',
-    pitch: 'beginner',
-    audience: 'Knowledge workers adopting ChatGPT-style assistants day-to-day.',
-    badges: ['standalone_course', 'included_in_subscription', 'featured', 'popular', 'beginner_friendly'],
-  },
   course_prompt_engineering_models: {
     libraryKey: 'course_prompt_engineering_models',
     pitch: 'practical',
@@ -68,12 +61,11 @@ export const STANDALONE_COURSE_DISCOVERY_META: Record<
 export const DISCOVERY_EDITORS_PICKS: ExtendedPublicLibraryKey[] = ['course_prompt_engineering_models', 'course_claude_writing']
 
 export const DISCOVERY_TRENDING_EDITORIAL: ExtendedPublicLibraryKey[] = [
-  'course_chatgpt_everyday',
   'course_gemini_workspace',
   'course_agentic_ai_real_work',
 ]
 
-export const DISCOVERY_BEGINNER_FRIENDLY: ExtendedPublicLibraryKey[] = ['course_chatgpt_everyday', 'course_gemini_workspace']
+export const DISCOVERY_BEGINNER_FRIENDLY: ExtendedPublicLibraryKey[] = ['course_gemini_workspace']
 
 export const DISCOVERY_PRACTICAL_DEEPER: ExtendedPublicLibraryKey[] = [
   'course_prompt_engineering_models',

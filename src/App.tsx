@@ -59,6 +59,7 @@ import { PublicStandaloneCourseLandingPage } from './components/courses/PublicSt
 import { LearningCategoryPage } from './components/learn/LearningCategoryPage'
 import { AiAtWorkChatgptFreeStarterPage } from './components/learn/AiAtWorkChatgptFreeStarterPage'
 import { SmartWorkflowsWithAiFreeStarterPage } from './components/learn/SmartWorkflowsWithAiFreeStarterPage'
+import { BusinessAnalyticsDecisionMakingFreeStarterPage } from './components/learn/BusinessAnalyticsDecisionMakingFreeStarterPage'
 import { LearningDiscoveryHubPage } from './components/learn/LearningDiscoveryHubPage'
 import { AdminCapstonesReviewPage } from './components/admin/AdminCapstonesReviewPage'
 import { FlagshipCapstoneSubmissionPage } from './components/learn/FlagshipCapstoneSubmissionPage'
@@ -77,8 +78,6 @@ import {
   CLAUDE_WRITING_RESEARCH_PUBLIC_BASE_PATH,
   GEMINI_WORKSPACE_PRODUCTIVITY_LANDING_PATH,
   GEMINI_WORKSPACE_PRODUCTIVITY_PUBLIC_BASE_PATH,
-  LEARN_CHATGPT_EVERYDAY_LANDING_PATH,
-  LEARN_CHATGPT_EVERYDAY_PUBLIC_BASE_PATH,
   PROMPT_ENGINEERING_MODELS_LANDING_PATH,
   PROMPT_ENGINEERING_MODELS_PUBLIC_BASE_PATH,
 } from './data/learning/standaloneCoursesCatalog'
@@ -175,6 +174,15 @@ export default function App() {
         <Route path="/learn" element={<LearningDiscoveryHubPage />} />
         <Route path="/learn/free/ai-at-work-chatgpt" element={<AiAtWorkChatgptFreeStarterPage />} />
         <Route path="/learn/free/smart-workflows-with-ai" element={<SmartWorkflowsWithAiFreeStarterPage />} />
+        <Route path="/learn/free/business-analytics-decision-making" element={<BusinessAnalyticsDecisionMakingFreeStarterPage />} />
+        <Route
+          path="/learn/business-analytics-native-modules"
+          element={<Navigate to="/learn/free/business-analytics-decision-making" replace />}
+        />
+        <Route
+          path="/learn/business-analytics-decision-making"
+          element={<Navigate to="/learn/free/business-analytics-decision-making" replace />}
+        />
         {/* Schools surface is not published yet; redirect any deep link to the catalog. */}
         <Route path="/learn/school/:schoolId" element={<Navigate to="/learn" replace />} />
         <Route path="/learn/category/:slug" element={<LearningCategoryPage />} />
@@ -255,16 +263,16 @@ export default function App() {
         />
 
         <Route
-          path={LEARN_CHATGPT_EVERYDAY_LANDING_PATH}
-          element={<PublicStandaloneCourseLandingPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_chatgpt_everyday} />}
+          path="/courses/learn-chatgpt-everyday-work"
+          element={<Navigate to="/learn/free/ai-at-work-chatgpt" replace />}
         />
         <Route
-          path={LEARN_CHATGPT_EVERYDAY_PUBLIC_BASE_PATH}
-          element={<PublicExtendedCatalogLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_chatgpt_everyday} />}
+          path="/courses/learn-chatgpt-everyday-work/learn"
+          element={<Navigate to="/learn/free/ai-at-work-chatgpt" replace />}
         />
         <Route
-          path={`${LEARN_CHATGPT_EVERYDAY_PUBLIC_BASE_PATH}/:lessonSlug`}
-          element={<PublicExtendedCatalogLessonPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_chatgpt_everyday} />}
+          path="/courses/learn-chatgpt-everyday-work/learn/:lessonSlug"
+          element={<Navigate to="/learn/free/ai-at-work-chatgpt" replace />}
         />
 
         <Route
@@ -353,10 +361,6 @@ export default function App() {
               <Route
                 path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.content_publishing.workspacePath}
                 element={<WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.content_publishing} />}
-              />
-              <Route
-                path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_chatgpt_everyday.workspacePath}
-                element={<WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_chatgpt_everyday} />}
               />
               <Route
                 path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_prompt_engineering_models.workspacePath}

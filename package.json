@@ -22,7 +22,6 @@
     "verify:course1-ai-essentials": "tsx scripts/verify-course1-ai-essentials-continuity.ts",
     "verify:practical-math": "tsx scripts/verify-practical-mathematics-continuity.ts",
     "verify:business-process-automation": "tsx scripts/verify-business-process-automation-course.ts",
-    "verify:business-analytics": "tsx scripts/verify-business-analytics-decision-making-course.ts",
     "verify:ai-productivity-smart-workflows": "tsx scripts/verify-ai-productivity-smart-workflows-production.ts",
     "verify:hosted-rise-dist": "tsx scripts/verify-hosted-rise-dist.ts",
     "verify:course-slide-player": "tsx scripts/verify-course-slide-player.ts",

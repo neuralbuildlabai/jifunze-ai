@@ -1,6 +1,6 @@
 # Business Analytics Decision-Making — audio
 
-Place generated narration MP3 files here after production. Do not commit placeholder MP3s.
+Optional narration MP3 files for companion downloads may live here after production. Do not commit placeholder MP3s.
 
 ## Expected module filenames
 
@@ -13,10 +13,4 @@ Place generated narration MP3 files here after production. Do not commit placeho
 
 Paths resolve as `/course-assets/business-analytics-decision-making/audio/<filename>`.
 
-## When audio is ready
-
-1. Add the MP3 files under this directory.
-2. In `src/data/courses/businessAnalyticsDecisionMakingNarration.ts`, set `status` to `'ready'` only after every referenced file exists and plays in the browser.
-3. Run `npm run verify:business-analytics`.
-
-Keep `status` as `'planned'` until then so the UI shows a small “Voiceover coming soon” badge and does not attach broken `<audio src>` URLs.
+The **live learner experience** for this topic is the interactive microlearning course at **`/learn/free/business-analytics-decision-making`**.

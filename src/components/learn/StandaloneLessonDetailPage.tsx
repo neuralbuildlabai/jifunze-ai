@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import {
-  BUSINESS_ANALYTICS_DECISION_MAKING_SLUG,
   BUSINESS_PROCESS_AUTOMATION_SLUG,
   findStandaloneCourseBySlug,
   findStandaloneLesson,
@@ -9,21 +8,12 @@ import {
   getStandaloneLessonSlug,
 } from '../../data/courses'
 import {
-  businessAnalyticsDecisionMakingNarrationManifest,
-  getBaAudioSrcWhenReady,
-  getBaModuleNarrationAudioSrc,
-} from '../../data/courses/businessAnalyticsDecisionMakingNarration'
-import {
-  businessAnalyticsDecisionMakingSlideManifest,
-  getBaSlidesForLesson,
-} from '../../data/courses/businessAnalyticsDecisionMakingSlides'
-import { businessProcessAutomationSlideManifest, getBpaSlidesForLesson } from '../../data/courses/businessProcessAutomationSlides'
-import {
   businessProcessAutomationNarrationManifest,
   getBpaAudioSrcWhenReady,
   getBpaModuleNarrationAudioSrc,
   getBpaSlideTranscriptsForSlides,
 } from '../../data/courses/businessProcessAutomationNarration'
+import { businessProcessAutomationSlideManifest, getBpaSlidesForLesson } from '../../data/courses/businessProcessAutomationSlides'
 import { lessonKey } from '../../data/courses/practicalMathematicsProgression'
 import type { StandaloneCatalogEntry } from '../../data/courses/standaloneCoursesCatalog'
 import type { StandaloneCourseLesson, StandaloneCourseModule } from '../../data/courses/practicalMathematicsCourseTypes'
@@ -61,7 +51,6 @@ function StandaloneLessonDetailLoaded({ entry, module, lesson, nav }: Standalone
   const done = progress.completedLessonKeys.has(lessonKey(module, lesson.lessonNumber))
   const slug = getStandaloneLessonSlug(lesson)
   const isBpa = entry.slug === BUSINESS_PROCESS_AUTOMATION_SLUG
-  const isBaDm = entry.slug === BUSINESS_ANALYTICS_DECISION_MAKING_SLUG
 
   const bpaLessonSlides = useMemo(
     () => (isBpa ? getBpaSlidesForLesson(module.slug, lesson.lessonNumber) : []),
@@ -77,21 +66,6 @@ function StandaloneLessonDetailLoaded({ entry, module, lesson, nav }: Standalone
           )
         : undefined,
     [isBpa, module.slug],
-  )
-
-  const baLessonSlides = useMemo(
-    () => (isBaDm ? getBaSlidesForLesson(module.slug, lesson.lessonNumber) : []),
-    [isBaDm, module.slug, lesson.lessonNumber],
-  )
-  const baLessonAudioSrc = useMemo(
-    () =>
-      isBaDm
-        ? getBaAudioSrcWhenReady(
-            businessAnalyticsDecisionMakingNarrationManifest.status,
-            getBaModuleNarrationAudioSrc(module.slug),
-          )
-        : undefined,
-    [isBaDm, module.slug],
   )
 
   if (isBpa) {
@@ -184,186 +158,6 @@ function StandaloneLessonDetailLoaded({ entry, module, lesson, nav }: Standalone
                         ? bpaCheck.content
                         : 'bullets' in bpaCheck && Array.isArray(bpaCheck.bullets)
                           ? bpaCheck.bullets.join('\n\n')
-                          : undefined
-                    }
-                  />
-                </div>
-              </div>
-            ) : null}
-
-            <div className="flex flex-wrap gap-3">
-              <button
-                type="button"
-                className={`inline-flex min-h-[2.5rem] items-center justify-center rounded-full px-6 text-sm font-semibold text-white shadow-md transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60 ${ORANGE_GRADIENT}`}
-                disabled={done}
-                onClick={() => markLessonComplete(module, lesson.lessonNumber)}
-                data-testid="standalone-lesson-mark-complete"
-              >
-                {done ? 'Marked as studied' : 'Mark lesson as studied'}
-              </button>
-              {nav.nextLessonPath ? (
-                <Link
-                  to={nav.nextLessonPath}
-                  className="inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-stone-300 bg-white px-5 text-sm font-semibold text-stone-800 shadow-sm transition hover:bg-stone-50"
-                  data-testid="standalone-lesson-next"
-                >
-                  Continue →
-                </Link>
-              ) : (
-                <Link
-                  to={nav.modulePath}
-                  className="inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-stone-300 bg-white px-5 text-sm font-semibold text-stone-800 shadow-sm transition hover:bg-stone-50"
-                  data-testid="standalone-lesson-next"
-                >
-                  Back to module →
-                </Link>
-              )}
-            </div>
-
-            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[color:var(--jf-border)] pt-6">
-              {nav.prevLessonPath ? (
-                <Link
-                  to={nav.prevLessonPath}
-                  className="text-sm font-medium text-stone-600 hover:text-stone-900"
-                  data-testid="standalone-lesson-prev"
-                >
-                  ← Previous lesson
-                </Link>
-              ) : (
-                <Link to={nav.modulePath} className="text-sm font-medium text-stone-600 hover:text-stone-900" data-testid="standalone-lesson-prev">
-                  ← Module
-                </Link>
-              )}
-              <Link to={nav.modulePath} className="text-sm text-stone-500 hover:text-stone-800" data-testid="standalone-lesson-back-module">
-                All lessons in this module
-              </Link>
-            </div>
-          </article>
-
-          {module.safetyNote ? (
-            <aside
-              className="rounded-lg border-l-[3px] border-amber-400 bg-amber-50/85 px-4 py-3 text-[12px] leading-snug text-amber-950"
-              data-testid={`standalone-lesson-safety-${module.slug}`}
-            >
-              <span className="font-semibold text-amber-950">Safety: </span>
-              {module.safetyNote}
-            </aside>
-          ) : null}
-        </div>
-      </div>
-    )
-  }
-
-  if (isBaDm) {
-    const baKey = pickBpaKeyIdeaBlock(lesson.blocks)
-    const baCheck = pickBpaCheckpointBlock(lesson.blocks)
-    const baSlidesReady = businessAnalyticsDecisionMakingSlideManifest.assetStatus === 'ready' && baLessonSlides.length > 0
-
-    return (
-      <div
-        className="jf-learn-warm min-h-screen w-full bg-[var(--jf-bg-page)] px-4 py-8 text-[color:var(--jf-text)] sm:px-6 sm:py-10"
-        data-testid={`standalone-lesson-detail-${module.slug}-${slug}`}
-      >
-        <div className="mx-auto w-full max-w-4xl space-y-8">
-          <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[color:var(--jf-border)] pb-5">
-            <JifunzeBrandLogo to="/" size="md" variant="compact" surface="light" />
-            <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
-              <Link className="text-xs font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to="/learn">
-                Catalog
-              </Link>
-              <Link className="text-xs font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to={nav.coursePath}>
-                Course overview
-              </Link>
-              <SignedInPublicLearningActions />
-            </div>
-          </header>
-
-          <nav className="text-[12px] text-[color:var(--jf-muted)]" aria-label="Breadcrumb">
-            <Link to="/learn" className="hover:text-[color:var(--jf-text)]">
-              Learn
-            </Link>
-            <span className="mx-1.5">/</span>
-            <Link to={nav.coursePath} className="hover:text-[color:var(--jf-text)]">
-              {source.title}
-            </Link>
-            <span className="mx-1.5">/</span>
-            <Link to={nav.modulePath} className="hover:text-[color:var(--jf-text)]">
-              Module {module.moduleNumber}
-            </Link>
-            <span className="mx-1.5">/</span>
-            <span className="text-[color:var(--jf-text)]">Lesson {lesson.lessonNumber}</span>
-          </nav>
-
-          <article data-testid="standalone-lesson-content" className="space-y-6">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-stone-500">Lesson {lesson.lessonNumber}</p>
-              <h1 className="mt-1 text-2xl font-semibold tracking-tight text-[color:var(--jf-text)] sm:text-3xl">{lesson.title}</h1>
-              <p className="mt-2 text-[13px] text-stone-500">{lesson.estimatedMinutes} min</p>
-            </div>
-
-            {baSlidesReady ? (
-              <div data-testid={`standalone-ba-slide-player-lesson-${slug}`}>
-                <JifunzeSlidePlayer
-                  title="Lesson slides"
-                  subtitle="Slides first. Use the key takeaway and checkpoint below when you pause."
-                  slides={baLessonSlides}
-                  slideCounterTotal={businessAnalyticsDecisionMakingSlideManifest.totalSlides}
-                  deckDownloadUrl={businessAnalyticsDecisionMakingSlideManifest.deckDownloadUrl}
-                  showDownload
-                  audioSrc={baLessonAudioSrc}
-                  narrationStatus={businessAnalyticsDecisionMakingNarrationManifest.status}
-                  showTranscript={false}
-                />
-              </div>
-            ) : (
-              <section
-                className="rounded-2xl border border-stone-200/90 bg-stone-50/50 p-5 sm:p-6"
-                data-testid={`standalone-ba-lesson-slide-planned-${slug}`}
-              >
-                <h2 className="text-[15px] font-semibold text-stone-900">Training deck</h2>
-                <p className="mt-2 text-[14px] leading-relaxed text-stone-600">
-                  In-browser slides for this lesson are not published yet. Follow along in the PowerPoint deck, then return here for your checkpoint.
-                </p>
-                <div className="mt-4">
-                  <a
-                    href={businessAnalyticsDecisionMakingSlideManifest.deckDownloadUrl}
-                    download
-                    className="inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-stone-300 bg-white px-5 text-sm font-semibold text-orange-900 shadow-sm transition hover:bg-orange-50/80"
-                  >
-                    Download slide deck
-                  </a>
-                </div>
-                <p className="mt-3 text-[12px] text-stone-500">Voiceover is planned; audio controls appear when narration is marked ready.</p>
-              </section>
-            )}
-
-            {baKey ? (
-              <div className="rounded-xl border border-stone-200/90 bg-white p-5 shadow-sm">
-                <h2 className="text-[15px] font-semibold text-stone-900">Key takeaway</h2>
-                <div className="mt-2">
-                  <BpaLessonParagraphs
-                    text={
-                      'content' in baKey && typeof baKey.content === 'string'
-                        ? baKey.content
-                        : 'bullets' in baKey && Array.isArray(baKey.bullets)
-                          ? baKey.bullets.join('\n\n')
-                          : undefined
-                    }
-                  />
-                </div>
-              </div>
-            ) : null}
-
-            {baCheck ? (
-              <div className="rounded-xl border border-orange-100/90 bg-orange-50/50 p-5 shadow-sm">
-                <h2 className="text-[15px] font-semibold text-stone-900">Checkpoint</h2>
-                <div className="mt-2">
-                  <BpaLessonParagraphs
-                    text={
-                      'content' in baCheck && typeof baCheck.content === 'string'
-                        ? baCheck.content
-                        : 'bullets' in baCheck && Array.isArray(baCheck.bullets)
-                          ? baCheck.bullets.join('\n\n')
                           : undefined
                     }
                   />

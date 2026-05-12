@@ -9,7 +9,6 @@
  * progression, capstone rubrics, or pathway integration.
  */
 
-import { businessAnalyticsDecisionMakingCourse } from './businessAnalyticsDecisionMakingCourse'
 import { businessProcessAutomationCourse } from './businessProcessAutomationCourse'
 import { practicalMathematicsCourse } from './practicalMathematicsCourse'
 import type {
@@ -54,20 +53,6 @@ const PRACTICAL_MATH_CATALOG_ENTRY: StandaloneCatalogEntry = {
   source: practicalMathematicsCourse,
 }
 
-const BUSINESS_ANALYTICS_CATALOG_ENTRY: StandaloneCatalogEntry = {
-  slug: businessAnalyticsDecisionMakingCourse.slug,
-  internalKey: businessAnalyticsDecisionMakingCourse.internalKey,
-  title: 'Business Analytics for Decision-Making',
-  subtitle: businessAnalyticsDecisionMakingCourse.microWorkshopDetail?.cardSubtitle ?? businessAnalyticsDecisionMakingCourse.description,
-  level: businessAnalyticsDecisionMakingCourse.level,
-  estimatedHours: businessAnalyticsDecisionMakingCourse.estimatedHours,
-  accessLabel: businessAnalyticsDecisionMakingCourse.accessLabel,
-  school: businessAnalyticsDecisionMakingCourse.school,
-  publicRoute: `/learn/${businessAnalyticsDecisionMakingCourse.slug}`,
-  durationLabel: '61 min total',
-  source: businessAnalyticsDecisionMakingCourse,
-}
-
 const BUSINESS_PROCESS_AUTOMATION_CATALOG_ENTRY: StandaloneCatalogEntry = {
   slug: businessProcessAutomationCourse.slug,
   internalKey: businessProcessAutomationCourse.internalKey,
@@ -83,7 +68,6 @@ const BUSINESS_PROCESS_AUTOMATION_CATALOG_ENTRY: StandaloneCatalogEntry = {
 }
 
 export const STANDALONE_LEARNER_CATALOG: readonly StandaloneCatalogEntry[] = [
-  BUSINESS_ANALYTICS_CATALOG_ENTRY,
   BUSINESS_PROCESS_AUTOMATION_CATALOG_ENTRY,
   PRACTICAL_MATH_CATALOG_ENTRY,
 ]

@@ -21,9 +21,6 @@ import {
   GEMINI_WORKSPACE_PRODUCTIVITY_CURRICULUM,
   GEMINI_WORKSPACE_PRODUCTIVITY_LANDING_PATH,
   GEMINI_WORKSPACE_PRODUCTIVITY_PUBLIC_BASE_PATH,
-  LEARN_CHATGPT_EVERYDAY_CURRICULUM,
-  LEARN_CHATGPT_EVERYDAY_LANDING_PATH,
-  LEARN_CHATGPT_EVERYDAY_PUBLIC_BASE_PATH,
   PROMPT_ENGINEERING_MODELS_CURRICULUM,
   PROMPT_ENGINEERING_MODELS_LANDING_PATH,
   PROMPT_ENGINEERING_MODELS_PUBLIC_BASE_PATH,
@@ -43,7 +40,6 @@ export type ExtendedPublicLibraryKey =
   | 'monitoring'
   | 'content_publishing'
   /** Standalone course products (future purchasable SKUs / subscription bundle hooks) */
-  | 'course_chatgpt_everyday'
   | 'course_prompt_engineering_models'
   | 'course_gemini_workspace'
   | 'course_claude_writing'
@@ -127,22 +123,6 @@ export const EXTENDED_PUBLIC_LIBRARY_CONFIGS: Record<ExtendedPublicLibraryKey, E
     subtitle: 'Make knowledge usable in public formats—clarity, review, and sustainable systems.',
     description:
       'Foundations through content systems for learners and creators. Publishing assistance is not audience growth guarantees—review for accuracy, rights, and policy fit.',
-  },
-  course_chatgpt_everyday: {
-    key: 'course_chatgpt_everyday',
-    landingPath: LEARN_CHATGPT_EVERYDAY_LANDING_PATH,
-    publicBasePath: LEARN_CHATGPT_EVERYDAY_PUBLIC_BASE_PATH,
-    workspacePath: '/library/course/chatgpt-everyday',
-    browseLabel: 'Course · Browse lessons',
-    accent: 'sky',
-    curriculum: LEARN_CHATGPT_EVERYDAY_CURRICULUM,
-    catalogEyebrow: 'Standalone course · Learn ChatGPT for Everyday Work',
-    embeddedLearnerHelp: true,
-    title: 'Learn ChatGPT for Everyday Work',
-    subtitle:
-      'A complete, workplace-real course: mental models, prompting, verification, writing, planning, and sustainable habits—assistive materials, not outcome guarantees.',
-    description:
-      'Structured as six serious modules with practice checkpoints in every lesson. Designed as a future standalone purchase or subscription inclusion—pricing is a packaging decision; mastery and professional outcomes are never guaranteed.',
   },
   course_prompt_engineering_models: {
     key: 'course_prompt_engineering_models',

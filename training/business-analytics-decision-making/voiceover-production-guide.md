@@ -30,14 +30,12 @@ The app resolves public URLs as `/course-assets/business-analytics-decision-maki
 ## 5. Flipping narration from planned to ready
 
 1. Confirm every file exists on disk and plays in Chrome, Safari, or Firefox.
-2. Open `src/data/courses/businessAnalyticsDecisionMakingNarration.ts`.
+2. If you maintain a separate slide-native build, keep narration manifests alongside that codebase. The public learner experience for this topic is the interactive microlearning course at **`/learn/free/business-analytics-decision-making`**.
 3. Set `status` to `'ready'` **only** after verification.
-4. Run `npm run verify:business-analytics` — it asserts non-empty files when status is `ready`.
 
 ## 6. Validation commands
 
 ```bash
-npm run verify:business-analytics
 npm run verify:course-slide-player
 npm run verify:business-process-automation
 npm run lint

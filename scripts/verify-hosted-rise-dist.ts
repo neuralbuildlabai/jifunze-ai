@@ -1,5 +1,5 @@
 /**
- * Ensures hosted Rise entry HTML is present in dist/ after `npm run build`.
+ * Ensures hosted interactive lesson entry HTML is present in dist/ after `npm run build`.
  * Run: `npm run verify:hosted-rise-dist`
  */
 import assert from 'node:assert/strict'
@@ -10,9 +10,10 @@ import { fileURLToPath } from 'node:url'
 const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 
 const PATHS = [
-  'dist/course-assets/rise/smart-workflows-with-ai/content/index.html',
-  'dist/course-assets/rise/ai-at-work-chatgpt/content/index.html',
-  'dist/course-assets/rise/ai-productivity-smart-workflows/content/index.html',
+  'dist/course-assets/interactive/smart-workflows-with-ai/content/index.html',
+  'dist/course-assets/interactive/business-analytics-decision-making/content/index.html',
+  'dist/course-assets/interactive/ai-at-work-chatgpt/content/index.html',
+  'dist/course-assets/interactive/ai-productivity-smart-workflows/content/index.html',
 ] as const
 
 function main() {

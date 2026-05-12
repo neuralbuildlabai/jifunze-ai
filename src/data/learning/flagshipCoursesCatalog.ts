@@ -494,7 +494,7 @@ export const FLAGSHIP_COURSES: FlagshipCourse[] = [
       masteryOutputs: 'A cohesive narrative and toolkit you revise over time.',
     },
     learningOutcomes: [
-      'Articulate value with specificity.',
+      'Express value with specificity.',
       'Prepare evidence that matches what employers or clients verify.',
       'Navigate interviews and negotiations calmly.',
     ],
