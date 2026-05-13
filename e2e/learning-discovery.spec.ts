@@ -37,39 +37,53 @@ test.describe('Learning discovery (public)', () => {
     await expect(page.getByTestId('discovery-microlearning-smart-workflows-with-ai')).toBeVisible()
     await expect(page.getByTestId('discovery-microlearning-business-analytics-decision-making')).toBeVisible()
     await expect(page.getByTestId('discovery-microlearning-ai-at-work-chatgpt')).toBeVisible()
+    await expect(page.getByTestId('discovery-microlearning-5-day-mental-wellbeing-reset')).toBeVisible()
 
     await page.goto('/learn/free/ai-at-work-chatgpt')
     await expect(page.getByTestId('free-starter-ai-at-work-chatgpt-page')).toBeVisible({ timeout: 20_000 })
     const frameAi = page.locator('iframe[title="AI at Work — interactive lesson"]')
     await expect(frameAi).toBeVisible()
-    await expect(frameAi).toHaveAttribute('src', /\/course-assets\/rise\/ai-at-work-chatgpt\/content\/index\.html$/)
+    await expect(frameAi).toHaveAttribute('src', /\/course-assets\/interactive\/ai-at-work-chatgpt\/content\/index\.html$/)
 
     await page.goto('/learn/free/smart-workflows-with-ai')
     await expect(page.getByTestId('free-starter-smart-workflows-with-ai-page')).toBeVisible({ timeout: 20_000 })
     const frameSw = page.locator('iframe[title="Smart Workflows with AI — interactive workshop"]')
     await expect(frameSw).toBeVisible()
-    await expect(frameSw).toHaveAttribute('src', /\/course-assets\/rise\/smart-workflows-with-ai\/content\/index\.html$/)
+    await expect(frameSw).toHaveAttribute('src', /\/course-assets\/interactive\/smart-workflows-with-ai\/content\/index\.html$/)
 
     await page.goto('/learn/free/business-analytics-decision-making')
     await expect(page.getByTestId('free-starter-business-analytics-decision-making-page')).toBeVisible({ timeout: 20_000 })
     const frameBa = page.locator('iframe[title="Business Analytics for Decision-Making — interactive course"]')
     await expect(frameBa).toBeVisible()
-    await expect(frameBa).toHaveAttribute('src', /\/course-assets\/rise\/business-analytics-decision-making\/content\/index\.html$/)
+    await expect(frameBa).toHaveAttribute('src', /\/course-assets\/interactive\/business-analytics-decision-making\/content\/index\.html$/)
+
+    await page.goto('/learn/free/5-day-mental-wellbeing-reset')
+    await expect(page.getByTestId('free-starter-5-day-mental-wellbeing-reset-page')).toBeVisible({ timeout: 20_000 })
+    const frameWb = page.locator('iframe[title="5-Day Mental Wellbeing Reset — interactive challenge"]')
+    await expect(frameWb).toBeVisible()
+    await expect(frameWb).toHaveAttribute('src', /\/course-assets\/interactive\/5-day-mental-wellbeing-reset\/content\/index\.html$/)
   })
 
-  test('/learn microlearning section order: Smart Workflows, Business Analytics, AI at Work', async ({ page }) => {
+  test('/learn microlearning section order: Smart Workflows, Business Analytics, AI at Work, 5-Day Mental Wellbeing Reset', async ({ page }) => {
     await page.goto('/learn')
     const section = page.getByTestId('discovery-section-free-microlearning')
     const cards = section.locator('[data-testid^="discovery-microlearning-"]')
     await expect(cards.nth(0)).toHaveAttribute('data-testid', 'discovery-microlearning-smart-workflows-with-ai')
     await expect(cards.nth(1)).toHaveAttribute('data-testid', 'discovery-microlearning-business-analytics-decision-making')
     await expect(cards.nth(2)).toHaveAttribute('data-testid', 'discovery-microlearning-ai-at-work-chatgpt')
+    await expect(cards.nth(3)).toHaveAttribute('data-testid', 'discovery-microlearning-5-day-mental-wellbeing-reset')
   })
 
-  test('/learn lists two standalone full courses under Free Full Courses', async ({ page }) => {
+  test('/learn lists one standalone full course under Free Full Courses', async ({ page }) => {
     await page.goto('/learn')
     await expect(page.getByTestId('discovery-full-course-practical-mathematics-life-work-business')).toBeVisible()
-    await expect(page.getByTestId('discovery-full-course-business-process-automation-for-work')).toBeVisible()
+    await expect(page.getByTestId('discovery-full-course-business-process-automation-for-work')).toHaveCount(0)
+  })
+
+  test('legacy Business Process Automation route redirects to Business Analytics free starter', async ({ page }) => {
+    await page.goto('/learn/business-process-automation-for-work')
+    await expect(page).toHaveURL(/\/learn\/free\/business-analytics-decision-making$/)
+    await expect(page.getByTestId('free-starter-business-analytics-decision-making-page')).toBeVisible({ timeout: 20_000 })
   })
 
   test('/learn discovery copy avoids internal tooling terms', async ({ page }) => {
