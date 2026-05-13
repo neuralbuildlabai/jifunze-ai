@@ -34,6 +34,7 @@ export function PublicStandaloneCourseLandingPage({ config }: { config: Extended
       eyebrow="Standalone Jifunze course"
       browseHref={curriculumHref}
       browseLabel={config.browseLabel}
+      secondaryNav={{ href: '/learn', label: 'Learning catalog' }}
       title={config.title}
       description={config.description}
       shellClassName={palette?.shellAccent}

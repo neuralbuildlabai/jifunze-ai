@@ -60,6 +60,7 @@ import { LearningCategoryPage } from './components/learn/LearningCategoryPage'
 import { AiAtWorkChatgptFreeStarterPage } from './components/learn/AiAtWorkChatgptFreeStarterPage'
 import { SmartWorkflowsWithAiFreeStarterPage } from './components/learn/SmartWorkflowsWithAiFreeStarterPage'
 import { BusinessAnalyticsDecisionMakingFreeStarterPage } from './components/learn/BusinessAnalyticsDecisionMakingFreeStarterPage'
+import { MentalWellbeingResetFreeStarterPage } from './components/learn/MentalWellbeingResetFreeStarterPage'
 import { LearningDiscoveryHubPage } from './components/learn/LearningDiscoveryHubPage'
 import { AdminCapstonesReviewPage } from './components/admin/AdminCapstonesReviewPage'
 import { FlagshipCapstoneSubmissionPage } from './components/learn/FlagshipCapstoneSubmissionPage'
@@ -175,12 +176,27 @@ export default function App() {
         <Route path="/learn/free/ai-at-work-chatgpt" element={<AiAtWorkChatgptFreeStarterPage />} />
         <Route path="/learn/free/smart-workflows-with-ai" element={<SmartWorkflowsWithAiFreeStarterPage />} />
         <Route path="/learn/free/business-analytics-decision-making" element={<BusinessAnalyticsDecisionMakingFreeStarterPage />} />
+        <Route path="/learn/free/5-day-mental-wellbeing-reset" element={<MentalWellbeingResetFreeStarterPage />} />
+        {/* Canonical Business Analytics free workshop; legacy /learn/business-analytics-* → here */}
         <Route
           path="/learn/business-analytics-native-modules"
           element={<Navigate to="/learn/free/business-analytics-decision-making" replace />}
         />
         <Route
           path="/learn/business-analytics-decision-making"
+          element={<Navigate to="/learn/free/business-analytics-decision-making" replace />}
+        />
+        {/* Deprecated: Business Process Automation for Work — consolidated into Business Analytics free starter (see docs/JIFUNZE_COURSE_PRODUCT_LADDER.md). */}
+        <Route
+          path="/learn/courses/business-process-automation-for-work"
+          element={<Navigate to="/learn/free/business-analytics-decision-making" replace />}
+        />
+        <Route
+          path="/learn/business-process-automation-for-work/*"
+          element={<Navigate to="/learn/free/business-analytics-decision-making" replace />}
+        />
+        <Route
+          path="/learn/business-process-automation-for-work"
           element={<Navigate to="/learn/free/business-analytics-decision-making" replace />}
         />
         {/* Schools surface is not published yet; redirect any deep link to the catalog. */}
@@ -193,10 +209,6 @@ export default function App() {
         <Route path="/" element={<HomeEntryPage />} />
         <Route path="/learn/courses/:slug/capstone" element={<FlagshipCapstoneSubmissionPage />} />
         <Route path="/learn/courses/:slug/session/:sessionId" element={<FlagshipCourseSessionPage />} />
-        <Route
-          path="/learn/courses/business-process-automation-for-work"
-          element={<Navigate to="/learn/business-process-automation-for-work" replace />}
-        />
         <Route path="/learn/courses/:slug" element={<FlagshipCourseDetailPage />} />
         <Route path="/learn/checkout" element={<LearnerCheckoutPage />} />
         <Route path="/learn/readiness/:slug" element={<ReadinessChallengePage />} />

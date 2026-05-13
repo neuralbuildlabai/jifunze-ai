@@ -4,6 +4,40 @@
  * INTERNAL (not for learner UI): packaging notes live on `internalProductionMeta` only — never render those fields in learner surfaces.
  */
 
+import {
+  AI_AT_WORK_MICROLEARNING_HERO_DESCRIPTION,
+  AI_AT_WORK_MICROLEARNING_LESSON_FLOW,
+  AI_AT_WORK_MICROLEARNING_OUTCOMES,
+} from './aiAtWorkMicrolearningPageCopy'
+import {
+  BUSINESS_ANALYTICS_MICROLEARNING_HERO_DESCRIPTION,
+  BUSINESS_ANALYTICS_MICROLEARNING_LESSON_FLOW,
+  BUSINESS_ANALYTICS_MICROLEARNING_OUTCOMES,
+} from './businessAnalyticsMicrolearningPageCopy'
+import {
+  MENTAL_WELLBEING_RESET_MICROLEARNING_HERO_DESCRIPTION,
+  MENTAL_WELLBEING_RESET_MICROLEARNING_LESSON_FLOW,
+  MENTAL_WELLBEING_RESET_MICROLEARNING_OUTCOMES,
+} from './mentalWellbeingResetMicrolearningPageCopy'
+import {
+  SMART_WORKFLOWS_MICROLEARNING_HERO_DESCRIPTION,
+  SMART_WORKFLOWS_MICROLEARNING_LESSON_FLOW,
+  SMART_WORKFLOWS_MICROLEARNING_OUTCOMES,
+} from './smartWorkflowsMicrolearningPageCopy'
+
+/** Single hero access pill text (avoid repeating “Free” in metadata rows and labels). */
+export const FREE_STARTER_HERO_ACCESS_BADGE = 'Free' as const
+
+/** Completion panel intro — device-local only; no account-sync phrasing. */
+export const FREE_STARTER_COMPLETION_INTRO =
+  'When you are finished, mark complete below. Your progress is saved in this browser.'
+
+export const FREE_STARTER_COMPLETION_THANKS =
+  'Thanks — we saved your completion in this browser.'
+
+export const FREE_STARTER_BODY_PROSE =
+  'text-[15px] leading-[1.65] text-[color:var(--jf-muted)] [word-spacing:normal] [letter-spacing:normal] [font-variant:normal] antialiased'
+
 export type InternalProductionMeta = {
   /** Authoring/source record for ops — never render in learner-facing components. */
   source: string
@@ -34,7 +68,7 @@ export type FreeStarterRiseCourseEntry = {
   /** Site path to lesson player — internal wiring only (not shown as a raw URL to learners). */
   lessonPlayerSrc: string
   /** Used for learning-area counts on `/learn` (must match `AVAILABLE_PUBLIC_LEARNING_AREAS`). */
-  learningCatalogAreaId: 'ai_productivity' | 'data_decisions'
+  learningCatalogAreaId: 'ai_productivity' | 'data_decisions' | 'wellbeing'
   descriptionShort: string
   descriptionLong: string
   learningOutcomes: readonly string[]
@@ -47,9 +81,8 @@ export const AI_AT_WORK_CHATGPT_FREE_STARTER: FreeStarterRiseCourseEntry = {
   progressSessionStartedMarker: 'rise-ai-at-work-chatgpt::session-started',
   title: 'AI at Work: Use ChatGPT Safely, Clearly, and Productively',
   shortTitle: 'AI at Work',
-  subtitle:
-    'Learn how to use ChatGPT safely and productively for everyday work, school, and business tasks. This beginner-friendly course covers AI limits, better prompting, output review, safe use, practical examples, and a simple AI Work Starter Kit.',
-  label: 'Free microlearning course',
+  subtitle: AI_AT_WORK_MICROLEARNING_HERO_DESCRIPTION,
+  label: 'Microlearning',
   status: 'pilot',
   level: 'Beginner',
   durationLabel: '45–60 minutes',
@@ -58,35 +91,17 @@ export const AI_AT_WORK_CHATGPT_FREE_STARTER: FreeStarterRiseCourseEntry = {
   learnerDisplayFormat: 'Guided interactive course',
   internalProductionMeta: {
     source: 'Structured HTML export bundle',
-    deliveryEngine: 'embedded_iframe',
+    deliveryEngine: 'embedded_html',
   },
-  learnerCompletionNote:
-    'You can mark completion when you are finished. On this device, your completion may show here before account-wide sync is available.',
+  learnerCompletionNote: FREE_STARTER_COMPLETION_INTRO,
   publicRoute: '/learn/free/ai-at-work-chatgpt',
   lessonPlayerSrc: '/course-assets/interactive/ai-at-work-chatgpt/content/index.html',
   learningCatalogAreaId: 'ai_productivity',
-  descriptionShort:
-    'Learn with a guided Jifunze.ai interactive course. Build safe ChatGPT habits for everyday work, school, and business tasks.',
+  descriptionShort: AI_AT_WORK_MICROLEARNING_HERO_DESCRIPTION,
   descriptionLong:
-    'Learn with a guided Jifunze.ai interactive course. AI at Work is a beginner-friendly path that teaches learners how to use ChatGPT and similar AI tools safely, clearly, and productively. Learners explore what AI can and cannot do, how to write stronger prompts, how to review AI-generated output, how to avoid unsafe use of sensitive information, and how to apply AI to everyday work, study, and business tasks.\n\nBy the end of the course, learners will have built a simple AI Work Starter Kit with safe-use rules, reusable prompts, an output review checklist, and one before-and-after example of an AI-assisted task.',
-  learningOutcomes: [
-    'Describe what generative AI tools like ChatGPT can and cannot do.',
-    'Apply a practical formula to write clearer AI prompts.',
-    'Review AI-generated output for accuracy, tone, privacy risk, bias, and usefulness.',
-    'Identify sensitive or unsafe information that should not be entered into general AI tools.',
-    'Use AI for practical tasks such as emails, summaries, checklists, planning, and idea development.',
-    'Build a personal AI Work Starter Kit with reusable prompts and safe-use rules.',
-    'Make responsible decisions in real-world AI use scenarios.',
-  ],
-  lessonsIncluded: [
-    'Welcome: How This Course Works',
-    'What AI Can and Cannot Do',
-    'How to Write Better Prompts',
-    'Checking AI Output Before You Use It',
-    'Everyday AI Use Cases',
-    'Build Your AI Work Starter Kit',
-    'Final Quiz: Safe and Practical AI Use',
-  ],
+    'You get a calm, practical path through ChatGPT basics: what it can help with, how to ask for better results, how to check answers before you rely on them, and how to keep sensitive information out of the wrong places. You finish with a small starter kit you can reuse at work or school.',
+  learningOutcomes: AI_AT_WORK_MICROLEARNING_OUTCOMES,
+  lessonsIncluded: AI_AT_WORK_MICROLEARNING_LESSON_FLOW,
 }
 
 export const SMART_WORKFLOWS_WITH_AI_FREE_STARTER: FreeStarterRiseCourseEntry = {
@@ -95,48 +110,27 @@ export const SMART_WORKFLOWS_WITH_AI_FREE_STARTER: FreeStarterRiseCourseEntry = 
   progressSessionStartedMarker: 'rise-smart-workflows-with-ai::session-started',
   title: 'Smart Workflows with AI',
   shortTitle: 'Smart Workflows with AI',
-  subtitle:
-    'Learn how to identify repetitive work, map a workflow, decide where AI can safely help, write reusable prompts, review AI output, and build a practical Smart Workflow Plan.',
-  label: 'Free microlearning course',
+  subtitle: SMART_WORKFLOWS_MICROLEARNING_HERO_DESCRIPTION,
+  label: 'Microlearning workshop',
   status: 'pilot',
-  level: 'Beginner to Early Intermediate',
+  level: 'Beginner to early intermediate',
   durationLabel: '75–120 minutes',
   priceLabel: 'Free',
   category: 'AI & Productivity',
-  learnerDisplayFormat: 'Guided interactive workshop',
+  learnerDisplayFormat: 'Guided workshop',
   internalProductionMeta: {
     source: 'Structured HTML export bundle',
-    deliveryEngine: 'embedded_iframe',
+    deliveryEngine: 'embedded_html',
   },
-  learnerCompletionNote:
-    'You can mark completion when you are finished. On this device, your completion may show here before account-wide sync is available.',
+  learnerCompletionNote: FREE_STARTER_COMPLETION_INTRO,
   publicRoute: '/learn/free/smart-workflows-with-ai',
   lessonPlayerSrc: '/course-assets/interactive/smart-workflows-with-ai/content/index.html',
   learningCatalogAreaId: 'ai_productivity',
-  descriptionShort:
-    'Learn with a guided Jifunze.ai interactive course. Identify repetitive work, map steps, and build a practical Smart Workflow Plan with clear review gates.',
+  descriptionShort: SMART_WORKFLOWS_MICROLEARNING_HERO_DESCRIPTION,
   descriptionLong:
-    'Learn with a guided Jifunze.ai interactive course. Smart Workflows with AI helps learners improve repeated or messy work using AI responsibly. Learners explore how to identify workflow opportunities, map current steps, choose appropriate AI roles, write reusable workflow prompts, review AI-generated output, manage privacy and risk, and create a simple 7-day rollout plan.\n\nBy the end of the course, learners will have a Smart Workflow Plan that includes AI-supported steps, human review points, reusable prompts, success measures, risk controls, and an implementation plan.',
-  learningOutcomes: [
-    'Identify repetitive or messy work that is a good candidate for a smarter workflow.',
-    'Map an existing workflow into clear steps before adding AI.',
-    'Decide where AI can assist safely and where humans must stay in control.',
-    'Write reusable prompts aligned to specific workflow steps.',
-    'Review AI-generated output before it enters real workflows.',
-    'Apply practical privacy and risk controls appropriate to the setting.',
-    'Draft a Smart Workflow Plan with rollout steps, measures, and safeguards.',
-  ],
-  lessonsIncluded: [
-    'What Makes a Workflow “Smart”?',
-    'Find Repetitive Work: The 5R Workflow Scan',
-    'Map the Workflow Before Adding AI',
-    'Decide Where AI Belongs in the Workflow',
-    'Write Prompts for Workflow Steps',
-    'Review AI Output Before It Enters the Workflow',
-    'Build the Smart Workflow Plan',
-    'Put the Workflow Into Practice',
-    'Final Quiz: Smart Workflow Skills Check',
-  ],
+    'You work through one repeated task end to end: choose it, map it, decide where AI fits, add review and safety checks, and leave with a short plan you can try immediately.',
+  learningOutcomes: SMART_WORKFLOWS_MICROLEARNING_OUTCOMES,
+  lessonsIncluded: SMART_WORKFLOWS_MICROLEARNING_LESSON_FLOW,
 }
 
 export const BUSINESS_ANALYTICS_DECISION_MAKING_FREE_STARTER: FreeStarterRiseCourseEntry = {
@@ -145,9 +139,8 @@ export const BUSINESS_ANALYTICS_DECISION_MAKING_FREE_STARTER: FreeStarterRiseCou
   progressSessionStartedMarker: 'rise-business-analytics-decision-making::session-started',
   title: 'Business Analytics for Decision-Making',
   shortTitle: 'Business Analytics',
-  subtitle:
-    'Turn performance signals into clearer decisions: metrics that matter, honest chart reading, and recommendations you can explain—without pretending spreadsheets replace judgment.',
-  label: 'Free microlearning course',
+  subtitle: BUSINESS_ANALYTICS_MICROLEARNING_HERO_DESCRIPTION,
+  label: 'Microlearning',
   status: 'pilot',
   level: 'Beginner to early intermediate',
   durationLabel: '45–75 minutes',
@@ -156,40 +149,56 @@ export const BUSINESS_ANALYTICS_DECISION_MAKING_FREE_STARTER: FreeStarterRiseCou
   learnerDisplayFormat: 'Guided interactive course',
   internalProductionMeta: {
     source: 'Structured HTML export bundle',
-    deliveryEngine: 'embedded_iframe',
+    deliveryEngine: 'embedded_html',
   },
-  learnerCompletionNote:
-    'You can mark completion when you are finished. On this device, your completion may show here before account-wide sync is available.',
+  learnerCompletionNote: FREE_STARTER_COMPLETION_INTRO,
   publicRoute: '/learn/free/business-analytics-decision-making',
   lessonPlayerSrc: '/course-assets/interactive/business-analytics-decision-making/content/index.html',
   learningCatalogAreaId: 'data_decisions',
-  descriptionShort:
-    'Learn with a guided Jifunze.ai interactive course. Practice reading metrics, spotting misleading charts, and turning analysis into a clear recommendation.',
+  descriptionShort: BUSINESS_ANALYTICS_MICROLEARNING_HERO_DESCRIPTION,
   descriptionLong:
-    'Learn with a guided Jifunze.ai interactive course. Business Analytics for Decision-Making is a practical starter that helps learners translate charts and KPI-style summaries into accountable decisions. You will practice defining metrics with guardrails, comparing performance over time, diagnosing drops and outliers with humility, and packaging a concise recommendation that names assumptions and next checks.\n\nBy the end, you should be able to walk a manager through what the data does and does not justify—without over-claiming precision you do not have.',
-  learningOutcomes: [
-    'Separate raw counts, KPIs, insights, and recommendations in everyday business language.',
-    'Read trend and comparison charts with common misread traps in mind.',
-    'Diagnose a performance change using more than one supporting metric.',
-    'Name assumptions, limitations, and the next data you would want before acting.',
-    'Draft a short decision memo outline stakeholders can follow.',
-  ],
-  lessonsIncluded: [
-    'Welcome: how this course builds decision judgment',
-    'From data points to decisions (without magical thinking)',
-    'KPIs, segments, and comparisons that hold up under questions',
-    'Spotting noise, outliers, and “looks good” vanity traps',
-    'Turning analysis into a recommendation someone can challenge productively',
-    'Practice scenario: performance shift with tradeoffs',
-    'Wrap-up: your personal analytics review checklist',
-  ],
+    'You practice reading numbers and charts the way real decisions get made: naming what you know, what you do not, and what you would recommend next—without overclaiming.',
+  learningOutcomes: BUSINESS_ANALYTICS_MICROLEARNING_OUTCOMES,
+  lessonsIncluded: BUSINESS_ANALYTICS_MICROLEARNING_LESSON_FLOW,
 }
 
-/** Catalog display order: Smart Workflows, Business Analytics, AI at Work. */
+export const MENTAL_WELLBEING_RESET_FREE_STARTER: FreeStarterRiseCourseEntry = {
+  slug: '5-day-mental-wellbeing-reset',
+  progressInternalKey: 'rise_pilot_5_day_mental_wellbeing_reset',
+  progressSessionStartedMarker: 'rise-5-day-mental-wellbeing-reset::session-started',
+  title: '5-Day Mental Wellbeing Reset',
+  /** Use the full title learner-facing — never shorten to "5-Day Wellbeing Reset" or similar. */
+  shortTitle: '5-Day Mental Wellbeing Reset',
+  subtitle: MENTAL_WELLBEING_RESET_MICROLEARNING_HERO_DESCRIPTION,
+  label: 'Wellbeing challenge',
+  status: 'pilot',
+  level: 'Beginner',
+  durationLabel: '60–90 minutes',
+  priceLabel: 'Free',
+  category: 'Wellbeing',
+  learnerDisplayFormat: 'Monday–Friday challenge',
+  internalProductionMeta: {
+    source: 'Structured HTML export bundle',
+    deliveryEngine: 'embedded_html',
+  },
+  learnerCompletionNote: FREE_STARTER_COMPLETION_INTRO,
+  publicRoute: '/learn/free/5-day-mental-wellbeing-reset',
+  lessonPlayerSrc: '/course-assets/interactive/5-day-mental-wellbeing-reset/content/index.html',
+  learningCatalogAreaId: 'wellbeing',
+  descriptionShort:
+    'Practice grounding, reframing, positive emotion, body awareness, and balance through a simple 5-day mental wellbeing reset.',
+  descriptionLong:
+    'Take five short days to reset healthier weekly habits. Each weekday gives you one simple, practical exercise — grounding, reframing, noticing positive emotion, caring for the body–mind link, and creating balance — and Friday closes with a short reflection you can carry forward.',
+  learningOutcomes: MENTAL_WELLBEING_RESET_MICROLEARNING_OUTCOMES,
+  lessonsIncluded: MENTAL_WELLBEING_RESET_MICROLEARNING_LESSON_FLOW,
+}
+
+/** Catalog display order: Smart Workflows, Business Analytics, AI at Work, 5-Day Mental Wellbeing Reset. */
 export const FREE_STARTER_RISE_COURSES: readonly FreeStarterRiseCourseEntry[] = [
   SMART_WORKFLOWS_WITH_AI_FREE_STARTER,
   BUSINESS_ANALYTICS_DECISION_MAKING_FREE_STARTER,
   AI_AT_WORK_CHATGPT_FREE_STARTER,
+  MENTAL_WELLBEING_RESET_FREE_STARTER,
 ]
 
 export function findFreeStarterRiseCourseBySlug(slug: string): FreeStarterRiseCourseEntry | undefined {

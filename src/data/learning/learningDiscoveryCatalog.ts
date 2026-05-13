@@ -53,8 +53,8 @@ export const LEARNING_DISCOVERY_CATEGORIES: LearningDiscoveryCategory[] = [
     featuredCourses: [],
     supportingPaths: [
       { label: 'AI at Work — Free Starter (interactive)', href: '/learn/free/ai-at-work-chatgpt' },
-      { label: 'Smart Workflows with AI — Free Starter Workshop', href: '/learn/free/smart-workflows-with-ai' },
-      { label: 'Business Analytics for Decision-Making — Free Starter (interactive)', href: '/learn/free/business-analytics-decision-making' },
+      { label: 'Smart Workflows with AI — short workshop', href: '/learn/free/smart-workflows-with-ai' },
+      { label: 'Business Analytics for Decision-Making — short workshop', href: '/learn/free/business-analytics-decision-making' },
       { label: 'AI Foundations library (starter map)', href: PUBLIC_AI_FOUNDATIONS_BASE_PATH },
       { label: 'Everyday Chatbots library', href: '/library/everyday-chatbots' },
       { label: 'Browse all categories', href: '/learn' },
@@ -171,8 +171,8 @@ export const LEARNING_DISCOVERY_CATEGORIES: LearningDiscoveryCategory[] = [
       'Full access is framed to include this curriculum alongside other standalone courses when entitled; purchasing a single course may be better when you want depth in one lane only.',
     featuredCourses: [{ libraryKey: 'course_agentic_ai_real_work', badge: 'New · standalone course' }],
     supportingPaths: [
-      { label: 'Smart Workflows with AI — Free Starter Workshop', href: '/learn/free/smart-workflows-with-ai' },
-      { label: 'Business Analytics for Decision-Making — Free Starter (interactive)', href: '/learn/free/business-analytics-decision-making' },
+      { label: 'Smart Workflows with AI — short workshop', href: '/learn/free/smart-workflows-with-ai' },
+      { label: 'Business Analytics for Decision-Making — short workshop', href: '/learn/free/business-analytics-decision-making' },
       { label: 'Cloud & DevOps library', href: EXTENDED_PUBLIC_LIBRARY_CONFIGS.cloud_devops.publicBasePath },
       { label: 'Monitoring & observability library', href: EXTENDED_PUBLIC_LIBRARY_CONFIGS.monitoring.publicBasePath },
     ],
@@ -203,7 +203,7 @@ export const LEARNING_DISCOVERY_CATEGORIES: LearningDiscoveryCategory[] = [
     supportingPaths: [
       { label: 'AI Foundations library', href: PUBLIC_AI_FOUNDATIONS_BASE_PATH },
       { label: 'Machine Learning Foundations library', href: PUBLIC_ML_LIBRARY_BASE_PATH },
-      { label: 'Business Analytics for Decision-Making — Free Starter (interactive)', href: '/learn/free/business-analytics-decision-making' },
+      { label: 'Business Analytics for Decision-Making — short workshop', href: '/learn/free/business-analytics-decision-making' },
       { label: 'Networking & infrastructure library', href: NETWORKING_PUBLIC_BASE_PATH },
     ],
     faq: [

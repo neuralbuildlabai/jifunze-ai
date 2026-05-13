@@ -117,14 +117,14 @@ export const FLAGSHIP_COURSES: FlagshipCourse[] = [
     schoolId: 'ai_digital',
     title: 'AI-Powered Workflows and Productivity',
     subtitle:
-      'Move from chats to owned systems: specs, QA lanes, libraries, and rollout discipline someone else could run.',
+      'Native Jifunze mastery track: long-form sessions, checkpoints, practice artifacts, and a capstone—beyond a short free workshop or a hosted-only bundle.',
     levelRange: 'Beginner to Advanced',
     exampleOutputs: ['Versioned workflow packages', 'Shared quality rubric + catalog sheet', 'Rollout memo with metrics + kill criteria'],
     featured: true,
     intro:
-      'Move from one-off chats to dependable systems—and treat prompt engineering as operational craft: structured prompts, libraries, critique, and workflow-sized prompt sequences under QA.',
+      'The in-platform depth path for operational AI and prompt systems: structured sessions, module checkpoints, practice outputs, and a capstone you build inside Jifunze. It complements the free Smart Workflows starter (fast orientation) and the paid AI Productivity hosted track (guided interactive + reviewed certificate)—this entry is for native mastery and owned workflow libraries.',
     promise:
-      'Professional prompt engineering embedded in workflows: explicit prompt anatomy, iteration and comparison, reusable templates and libraries, multi-step prompting, evaluation rubrics—not isolated theory.',
+      'Own workflow-sized prompting end to end: explicit anatomy, versioning, critique rubrics, multi-step chains, libraries, rollout discipline, and a capstone bundle another person could run—without mistaking a short starter workshop or the paid hosted track for this depth.',
     depthStages: {
       foundations: 'Workflow decomposition plus prompt anatomy—roles, constraints, evidence policy, formats—and where automation helps vs. hurts.',
       appliedPractice:
@@ -156,14 +156,14 @@ export const FLAGSHIP_COURSES: FlagshipCourse[] = [
     schoolId: 'ai_digital',
     title: 'AI Productivity and Smart Workflows',
     subtitle:
-      'Paid flagship track: operational AI habits, workflow design, and a reviewer-ready capstone—completion and certificates follow Jifunze Learning Hub review rules.',
+      'Paid Learning Hub track: guided interactive lessons, native module checks where they apply, capstone submission, and staff-reviewed certificate rules when you finish all requirements.',
     levelRange: 'Beginner to Advanced',
     exampleOutputs: ['Versioned workflow packages', 'Shared quality rubric + catalog sheet', 'Rollout memo with metrics + kill criteria'],
     featured: false,
     intro:
-      'Build dependable AI-assisted workflows with the same depth as Smart Workflows—this catalog entry uses the reviewed curriculum while enabling native capstone submission, time-on-lesson pacing, and certificate issuance only after staff review.',
+      'Structured guided learning for repeatable AI-supported productivity systems: hosted interactive lessons you work through end to end, plus native capstone submission and certificate eligibility that follow Jifunze Learning Hub review—not automatic issuance when the player ends. Use the free Smart Workflows workshop first when you want a fast orientation on the same ladder.',
     promise:
-      'Practical AI productivity with explicit prompts, QA lanes, libraries, and capstone packaging—plus platform-native submission and certificate eligibility tied to review outcomes.',
+      'Operational AI habits with explicit prompts, QA lanes, libraries, and reviewer-ready packaging—paired with the hosted lesson path and formal completion rules that distinguish this paid SKU from the free starter and from the native-only mastery track.',
     depthStages: {
       foundations: 'Workflow decomposition plus prompt anatomy—roles, constraints, evidence policy, formats—and where automation helps vs. hurts.',
       appliedPractice:

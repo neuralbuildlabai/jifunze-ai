@@ -179,7 +179,7 @@ export function FlagshipCourseCurriculumSections(props: {
         ) : (
           <p className="mt-4 rounded-xl border border-emerald-200/70 bg-emerald-50/85 px-4 py-3 text-[13px] leading-relaxed text-emerald-950/95">
             {progress.capstonePrepComplete
-              ? 'Capstone preparation marked complete—keep refining deliverables until they meet your bar.'
+              ? 'Capstone preparation is complete—keep refining deliverables until they meet your bar.'
               : 'Capstone preparation is ready. Use the prep session in your learning path to align deliverables before calling the project done.'}
           </p>
         )}

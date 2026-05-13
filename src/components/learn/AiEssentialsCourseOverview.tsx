@@ -307,7 +307,7 @@ export function AiEssentialsCourseOverview(props: Props) {
               {capstonePrepComplete ? 'Review capstone prep' : 'Open capstone prep'}
             </Link>
             <span className="text-[12px] text-emerald-800/90">
-              Capstone prep is open{capstonePrepComplete ? ' (marked complete).' : '.'}
+              Capstone prep is open{capstonePrepComplete ? ' (complete).' : '.'}
             </span>
           </div>
         ) : (

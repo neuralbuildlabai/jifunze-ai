@@ -16,6 +16,7 @@ import { AiEssentialsCourseOverview } from './AiEssentialsCourseOverview'
 import { FlagshipCourseCurriculumSections } from './FlagshipCourseCurriculumSections'
 import { PaidFlagshipCertificateBanner } from './PaidFlagshipCertificateBanner'
 import { PaidHostedRiseFlagshipSection } from './PaidHostedRiseFlagshipSection'
+import { FlagshipDetailAccessPill } from './premiumCourseShell/FlagshipDetailAccessPill'
 
 const DEPTH_LABELS = [
   { key: 'foundations', title: 'Foundations', descKey: 'foundations' as const },
@@ -127,9 +128,8 @@ export function FlagshipCourseDetailPage() {
                       <span className="font-semibold text-[color:var(--jf-text)]">{curriculum.modules.length}</span> modules
                     </span>
                   ) : null}
+                  <FlagshipDetailAccessPill purchaseGateEnabled={purchaseGateEnabled} hasCourseAccess={hasCourseAccess} />
                 </div>
-
-                <p className="mt-6 text-[15px] leading-[1.7] text-[color:var(--jf-text)]">{course.intro}</p>
 
                 <TrustBoundaryStrip
                   variant="inline"
@@ -150,7 +150,7 @@ export function FlagshipCourseDetailPage() {
 
         {isHostedRiseCompactCourse ? (
           <>
-            <PaidHostedRiseFlagshipSection courseSlug={slug} courseTitle={course.title} />
+            <PaidHostedRiseFlagshipSection courseSlug={slug} courseTitle={course.title} courseIntro={course.intro} />
             {curriculum ? (
               <PaidFlagshipCertificateBanner
                 courseSlug={slug}
@@ -175,7 +175,7 @@ export function FlagshipCourseDetailPage() {
                 supabase={supabase}
               />
             ) : null}
-            <PaidHostedRiseFlagshipSection courseSlug={slug} courseTitle={course.title} />
+            <PaidHostedRiseFlagshipSection courseSlug={slug} courseTitle={course.title} courseIntro={course.intro} />
           </>
         )}
 
@@ -219,7 +219,9 @@ export function FlagshipCourseDetailPage() {
               </Link>
             </div>
             {purchaseGateEnabled && hasCourseAccess ? (
-              <p className="mt-4 text-[12px] leading-relaxed text-emerald-800/90">You have access to this course on this browser—your full path stays below with clear locked and open states.</p>
+              <p className="mt-4 text-[12px] leading-relaxed text-emerald-800/90">
+                You have access to this course—your full path stays below with clear locked and open states.
+              </p>
             ) : purchaseGateEnabled && !hasCourseAccess ? (
               <p className="mt-4 text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">Preview the structure below; checkout unlocks interactive sessions.</p>
             ) : import.meta.env.DEV ? (
@@ -237,7 +239,8 @@ export function FlagshipCourseDetailPage() {
         {!isHostedRiseCompactCourse ? (
           <section className="mt-14 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 shadow-[var(--jf-shadow-soft)] ring-1 ring-stone-900/[0.04] sm:p-8">
             <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">Course promise</h2>
-            <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--jf-muted)]">{course.promise}</p>
+            <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--jf-muted)]">{course.intro}</p>
+            <p className="mt-4 text-[15px] leading-relaxed text-[color:var(--jf-text)]">{course.promise}</p>
             <p className="mt-4 text-[13px] leading-relaxed text-[color:var(--jf-subtle)]">
               This path is built for retained capability—layered progression, serious practice, and outputs you can reuse—not a shallow overview.
             </p>

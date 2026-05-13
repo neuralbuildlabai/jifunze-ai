@@ -72,6 +72,7 @@ export function PublicExtendedCatalogLessonPage({ config }: { config: ExtendedPu
       eyebrow={eyebrowText}
       browseHref={config.publicBasePath}
       browseLabel={config.browseLabel}
+      secondaryNav={{ href: '/learn', label: 'Learning catalog' }}
       title={lesson.title}
       description={lesson.summary}
     >

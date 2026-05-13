@@ -5,12 +5,12 @@
  * Internal ops metadata must never be rendered in learner UI.
  */
 
-import { BUSINESS_PROCESS_AUTOMATION_SLUG } from '../courses/businessProcessAutomationConstants'
 import { PRACTICAL_MATH_SLUG } from '../courses/practicalMathematicsCourseConstants'
 import {
   AI_AT_WORK_CHATGPT_FREE_STARTER,
   BUSINESS_ANALYTICS_DECISION_MAKING_FREE_STARTER,
   FREE_STARTER_RISE_COURSES,
+  MENTAL_WELLBEING_RESET_FREE_STARTER,
   SMART_WORKFLOWS_WITH_AI_FREE_STARTER,
   type FreeStarterRiseCourseEntry,
 } from './freeStarterRiseCoursesCatalog'
@@ -44,6 +44,8 @@ export type MicrolearningCatalogItem = {
   learningAreaId: string
   level?: string
   durationLabel?: string
+  /** When set, the card renders this exact meta line instead of `level · durationLabel`. */
+  metaRow?: string
   descriptionLearner: string
   ctaLabel: string
   isAvailable: true
@@ -75,27 +77,13 @@ export const AVAILABLE_PUBLIC_STANDALONE_COURSES: readonly StandaloneCourseListi
     learningAreaId: 'mathematics',
     futureMonetizationCandidate: true,
   },
-  {
-    slug: BUSINESS_PROCESS_AUTOMATION_SLUG,
-    title: 'Business Process Automation for Work',
-    listingKind: 'standalone_course',
-    route: `/learn/${BUSINESS_PROCESS_AUTOMATION_SLUG}`,
-    learningAreaId: 'business_operations',
-    futureMonetizationCandidate: true,
-  },
 ]
 
 export const AVAILABLE_PUBLIC_LEARNING_AREAS: readonly LearningAreaDefinition[] = [
   {
     id: 'ai_productivity',
     title: 'AI & Productivity',
-    description:
-      'Use AI responsibly for everyday tasks—prompting, checking outputs, and practical workflows.',
-  },
-  {
-    id: 'business_operations',
-    title: 'Business & Operations',
-    description: 'Document processes, reduce repeated work, and plan improvements you can apply at work.',
+    description: 'Short workshops and practical AI habits you can start today.',
   },
   {
     id: 'mathematics',
@@ -105,7 +93,13 @@ export const AVAILABLE_PUBLIC_LEARNING_AREAS: readonly LearningAreaDefinition[] 
   {
     id: 'data_decisions',
     title: 'Data & Decisions',
-    description: 'Use metrics and simple analysis to support clearer, evidence-informed decisions.',
+    description: 'Read charts and metrics with a clearer, more honest eye.',
+  },
+  {
+    id: 'wellbeing',
+    title: 'Wellbeing',
+    description:
+      'Simple, practical courses for stress management, balance, healthy habits, and personal wellbeing.',
   },
 ]
 
@@ -113,18 +107,32 @@ const MICRO_DESCRIPTION_OVERRIDES: Record<string, string> = {
   [SMART_WORKFLOWS_WITH_AI_FREE_STARTER.slug]: SMART_WORKFLOWS_WITH_AI_FREE_STARTER.descriptionShort,
   [BUSINESS_ANALYTICS_DECISION_MAKING_FREE_STARTER.slug]: BUSINESS_ANALYTICS_DECISION_MAKING_FREE_STARTER.descriptionShort,
   [AI_AT_WORK_CHATGPT_FREE_STARTER.slug]: AI_AT_WORK_CHATGPT_FREE_STARTER.descriptionShort,
+  [MENTAL_WELLBEING_RESET_FREE_STARTER.slug]: MENTAL_WELLBEING_RESET_FREE_STARTER.descriptionShort,
+}
+
+/**
+ * Per-slug card overrides. Allows a single course to render its own meta line and CTA
+ * (e.g. the wellbeing reset's spec-required `Free · Beginner · 60–90 minutes · Monday–Friday challenge`)
+ * without changing the existing microlearning cards.
+ */
+const MICRO_META_OVERRIDES: Record<string, string> = {
+  [MENTAL_WELLBEING_RESET_FREE_STARTER.slug]:
+    'Free · Beginner · 60–90 minutes · Monday–Friday challenge',
+}
+
+const MICRO_CTA_OVERRIDES: Record<string, string> = {
+  [MENTAL_WELLBEING_RESET_FREE_STARTER.slug]: 'Start Free Course',
 }
 
 const FULL_COURSE_DESCRIPTIONS: Record<string, string> = {
   [PRACTICAL_MATH_SLUG]:
     'Build practical math confidence for everyday decisions, work, budgeting, and business use.',
-  [BUSINESS_PROCESS_AUTOMATION_SLUG]:
-    'Learn how to analyze repeated work, document business processes, and plan practical automation improvements.',
 }
 
 function microlearningFromEntry(entry: FreeStarterRiseCourseEntry): MicrolearningCatalogItem {
   const descriptionLearner = MICRO_DESCRIPTION_OVERRIDES[entry.slug] ?? entry.descriptionShort
-  const ctaLabel = 'Start course'
+  const ctaLabel = MICRO_CTA_OVERRIDES[entry.slug] ?? 'Start course'
+  const metaRow = MICRO_META_OVERRIDES[entry.slug]
   return {
     slug: entry.slug,
     title: entry.title,
@@ -136,6 +144,7 @@ function microlearningFromEntry(entry: FreeStarterRiseCourseEntry): Microlearnin
     learningAreaId: entry.learningCatalogAreaId,
     level: entry.level,
     durationLabel: entry.durationLabel,
+    metaRow,
     descriptionLearner,
     ctaLabel,
     isAvailable: true,
@@ -199,5 +208,5 @@ export function getLearningAreasSummary(): readonly LearningAreaSummaryRow[] {
     title: a.title,
     count: countCoursesInLearningArea(a.id),
     blurb: a.description,
-  }))
+  })).filter((row) => row.count > 0)
 }

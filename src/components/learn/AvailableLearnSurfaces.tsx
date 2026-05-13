@@ -15,13 +15,19 @@ const CARD_SHELL =
 function MicrolearningCard({ course }: { course: MicrolearningCatalogItem }) {
   const isWorkshop = course.slug === 'smart-workflows-with-ai'
   const isBusinessAnalyticsMicro = course.slug === 'business-analytics-decision-making'
+  const isWellbeingReset = course.slug === '5-day-mental-wellbeing-reset'
   const banner = isWorkshop
     ? 'from-violet-600 via-fuchsia-600 to-indigo-900'
     : isBusinessAnalyticsMicro
       ? 'from-emerald-600 via-teal-600 to-slate-900'
-      : 'from-sky-600 via-cyan-600 to-indigo-900'
-  const levelDuration =
-    course.level && course.durationLabel ? `${course.level} · ${course.durationLabel}` : course.level ?? course.durationLabel ?? ''
+      : isWellbeingReset
+        ? 'from-teal-500 via-emerald-500 to-sky-700'
+        : 'from-sky-600 via-cyan-600 to-indigo-900'
+  const fallbackLevelDuration =
+    course.level && course.durationLabel
+      ? `${course.level} · ${course.durationLabel}`
+      : course.level ?? course.durationLabel ?? ''
+  const metaLine = course.metaRow ?? fallbackLevelDuration
   return (
     <article className={CARD_SHELL} data-testid={`discovery-microlearning-${course.slug}`}>
       <Link to={course.route} className="relative block aspect-[16/10] overflow-hidden">
@@ -36,7 +42,7 @@ function MicrolearningCard({ course }: { course: MicrolearningCatalogItem }) {
             {course.shortTitle}
           </Link>
         </h3>
-        {levelDuration ? <p className="mt-2 text-[13px] leading-relaxed text-zinc-600">{levelDuration}</p> : null}
+        {metaLine ? <p className="mt-2 text-[13px] leading-relaxed text-zinc-600">{metaLine}</p> : null}
         <p className="mt-3 text-[12px] leading-relaxed text-zinc-500">{course.descriptionLearner}</p>
         <div className="mt-auto pt-6">
           <Link

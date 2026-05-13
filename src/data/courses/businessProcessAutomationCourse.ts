@@ -88,7 +88,7 @@ export const businessProcessAutomationCourse: PracticalMathematicsCourse = {
 
   microWorkshopDetail: {
     cardSubtitle:
-      'Analyze a manual workflow, score automation opportunities, calculate time and cost impact, manage implementation risk, and recommend a practical 30-day automation plan.',
+      'Short professional course: analyze a manual workflow, score automation opportunities, calculate time and cost impact, manage implementation risk, and recommend a practical 30-day automation plan.',
     cardMeta: '57 min · Beginner–Intermediate · Professional micro-course · Certificate',
     cardTags: ['Business process automation', 'workflow analysis', 'operations', 'productivity'],
     whoThisIsFor: [

@@ -12,7 +12,7 @@ Standalone professional micro-course / skill booster.
 
 ## Status
 
-Course is live in the standalone learner catalog. Learner-facing configuration is implemented in `src/data/courses/businessProcessAutomationCourse.ts`. Route: `/learn/business-process-automation-for-work`.
+**Archived from the public learner catalog (2026-05).** Content overlapped with the Business Analytics lane; public URLs redirect to `/learn/free/business-analytics-decision-making`. Courseware and `verify:business-process-automation` remain for asset continuity. Configuration: `src/data/courses/businessProcessAutomationCourse.ts`.
 
 ## Primary deck asset
 

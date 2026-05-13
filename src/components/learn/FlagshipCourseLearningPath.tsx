@@ -801,7 +801,7 @@ export function FlagshipCourseLearningPath(props: {
                   : !capstoneUnlocked
                     ? `Complete the remaining ${remainingBeforeCapstone} sessions across modules to reach capstone preparation.`
                     : !capstonePrepAccessible
-                      ? 'All sessions are marked complete—finish mastery checkpoints on each module’s practice session so capstone prep reflects defensible readiness.'
+                      ? 'All sessions are finished—complete mastery checkpoints on each module’s practice session so capstone prep reflects defensible readiness.'
                       : capstonePrepComplete
                         ? 'You marked capstone preparation complete—keep iterating on deliverables until they meet your own bar.'
                         : 'Walk through the prep session to align deliverables with the brief before you call the capstone finished.'}

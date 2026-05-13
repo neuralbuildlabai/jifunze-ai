@@ -66,7 +66,7 @@ export function FlagshipSessionPlayerHeader(props: {
           Chapter {chapterN} of {chaptersInModule} · {flagshipSessionEffortDisplay(session)}
           <span className="text-[color:var(--jf-subtle)]">
             {' '}
-            · {chaptersDone}/{chaptersInModule} done{sessionDone ? ' · this chapter complete' : ''}
+            · {chaptersDone}/{chaptersInModule} done{sessionDone ? ' · this chapter finished' : ''}
           </span>
         </p>
       </div>
@@ -85,8 +85,8 @@ export function FlagshipSessionPlayerHeader(props: {
             Chapter {chapterN} of {chaptersInModule} in this module · {flagshipSessionEffortDisplay(session)}
           </p>
           <p className="text-[11px] text-[color:var(--jf-subtle)]">
-            Module progress: {chaptersDone}/{chaptersInModule} chapters completed
-            {sessionDone ? ' · This chapter is marked complete' : ''}
+            Module progress: {chaptersDone}/{chaptersInModule} chapters finished
+            {sessionDone ? ' · You finished this chapter' : ''}
           </p>
         </div>
         <span className="inline-flex w-fit shrink-0 rounded-full border border-[color:var(--jf-border)] bg-orange-50/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--jf-text)]">

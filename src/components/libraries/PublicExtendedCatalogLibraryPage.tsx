@@ -75,6 +75,7 @@ export function PublicExtendedCatalogLibraryPage({ config }: { config: ExtendedP
       eyebrow={config.catalogEyebrow ?? 'Extended curriculum library'}
       browseHref={config.publicBasePath}
       browseLabel={config.browseLabel}
+      secondaryNav={{ href: '/learn', label: 'Learning catalog' }}
       title={config.title}
       description={config.description}
     >

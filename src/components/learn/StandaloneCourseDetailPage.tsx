@@ -13,19 +13,19 @@ import { StandaloneMicroCourseDetailView } from './standaloneMicroCourseDetail'
 
 const COURSE_SUCCESS_CHECKLIST = [
   'Complete all 16 modules in order',
-  'Study every lesson (mark as studied on each lesson page)',
+  'Study every lesson and use “Lesson complete” on each lesson page when you are ready to move on',
   'Pass each module quiz at 75% or higher',
   'Keep your overall quiz score at 75% or higher',
   'Finish the practice labs',
   'Review safety and scope notes where they apply',
-  'Complete the Module 16 capstone artifact and mark it complete on the Module 16 page',
+  'Finish the Module 16 capstone artifact and confirm it on the Module 16 page when you are ready',
   'Unlock the printable Certificate of Completion (free)',
   'Reflect where a licensed professional should verify your numbers before you act',
 ] as const
 
 const FINAL_COMPLETION_REMINDERS = [
   'Meet the 75% pass threshold on every module quiz before moving on.',
-  'Finish the Module 16 capstone and use “Mark capstone complete” on that module when your artifact is ready.',
+  'Finish the Module 16 capstone and confirm completion on that module when your artifact is ready.',
   'Name assumptions, limits, and what you would still verify with a qualified professional.',
 ] as const
 
@@ -65,7 +65,7 @@ export function StandaloneCourseDetailPage() {
               Catalog
             </Link>
             <Link className="text-xs font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to="/learn#available-now">
-              Catalog
+              More courses
             </Link>
             <SignedInPublicLearningActions />
           </div>
@@ -135,7 +135,7 @@ export function StandaloneCourseDetailPage() {
               <span className="font-medium text-stone-700">Certificate of Completion</span> — free to print when all lessons
               are studied, every module quiz passes at <span className="font-medium text-stone-700">75% or higher</span>, your
               overall quiz average is <span className="font-medium text-stone-700">75% or higher</span>, and the Module 16
-              capstone is marked complete.
+              capstone requirements are confirmed on the Module 16 page.
             </li>
           </ul>
           <p className="mt-4 text-[14px] text-[color:var(--jf-text)]">

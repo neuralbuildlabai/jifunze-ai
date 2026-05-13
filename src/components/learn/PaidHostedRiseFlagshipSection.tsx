@@ -6,23 +6,25 @@ import { LEGAL_ROUTES } from '../../training/trustCopy'
 type Props = {
   courseSlug: string
   courseTitle: string
+  /** Optional catalog intro — shown once under the subtitle (not repeated in hero elsewhere). */
+  courseIntro?: string
 }
 
 const AI_PRODUCTIVITY_SUBTITLE =
-  'Build practical AI habits for planning, writing, research, data, workflows, automation, meetings, support, and responsible review.'
+  'Structured guided path for repeatable AI-supported productivity systems—hosted interactive lessons plus native capstone submission and staff-reviewed certificate rules in the Learning Hub.'
 
 const PATH_STEPS = [
-  'Start course',
-  'Complete the learning sections and checks',
+  'Open the guided interactive lessons and work through each section',
+  'Pass the module checks and pacing requirements',
   'Prepare your capstone portfolio',
-  'Submit your final capstone',
+  'Submit your final capstone for review',
   'Certificate unlocks after review and pass',
 ] as const
 
-export function PaidHostedRiseFlagshipSection({ courseSlug, courseTitle }: Props) {
+export function PaidHostedRiseFlagshipSection({ courseSlug, courseTitle, courseIntro }: Props) {
   const cfg = getPaidFlagshipCertificateConfig(courseSlug)
-  const risePath = cfg?.hostedRiseIndexPath
-  if (!cfg || !risePath) return null
+  const hostedInteractivePath = cfg?.hostedRiseIndexPath
+  if (!cfg || !hostedInteractivePath) return null
 
   const capstoneHref = `/learn/courses/${courseSlug}/capstone`
 
@@ -42,24 +44,39 @@ export function PaidHostedRiseFlagshipSection({ courseSlug, courseTitle }: Props
           {courseTitle}
         </h1>
         <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[color:var(--jf-muted)]">{AI_PRODUCTIVITY_SUBTITLE}</p>
+        {courseIntro ? (
+          <p className="mt-4 max-w-2xl text-[14px] leading-relaxed text-[color:var(--jf-text)]/90">{courseIntro}</p>
+        ) : null}
 
-        <p className="mt-4 text-[12px] leading-snug text-[color:var(--jf-subtle)]">
-          Paid flagship course · {cfg.provider} · Certificate valid for {cfg.certificateValidityYears} years
+        <p
+          className="mt-4 text-[12px] leading-snug text-[color:var(--jf-subtle)]"
+          data-testid="paid-hosted-flagship-access"
+        >
+          Paid flagship · {cfg.provider} · Certificate valid {cfg.certificateValidityYears} years from issue
         </p>
 
         <p className="mt-4 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-          Certificate unlocks after required checks are complete and the final capstone is reviewed and passed.
+          Your certificate is available only after required checks, capstone submission, and a passing staff review—not automatically on completion.
         </p>
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <a
-            href={risePath}
+            href={hostedInteractivePath}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
             data-testid="paid-rise-launch-course"
           >
             Start course
+          </a>
+          <a
+            href={hostedInteractivePath}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-6 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-stone-100/90"
+            data-testid="paid-rise-open-new-tab"
+          >
+            Open in new window
           </a>
           <Link
             to={capstoneHref}
@@ -78,11 +95,22 @@ export function PaidHostedRiseFlagshipSection({ courseSlug, courseTitle }: Props
         <h2 id="your-path-heading" className="text-[15px] font-semibold tracking-tight text-[color:var(--jf-text)]">
           Your path
         </h2>
-        <ol className="mt-4 list-decimal space-y-2.5 pl-5 text-[14px] leading-snug text-[color:var(--jf-muted)]">
-          {PATH_STEPS.map((step) => (
-            <li key={step}>{step}</li>
+        <div className="mt-5 space-y-2.5">
+          {PATH_STEPS.map((step, i) => (
+            <div
+              key={step}
+              className="flex gap-3 rounded-xl border border-stone-200/80 bg-[color:var(--jf-bg-page)] px-3.5 py-3 sm:gap-4 sm:px-4"
+            >
+              <span
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--jf-brand)] text-xs font-bold text-white"
+                aria-hidden
+              >
+                {i + 1}
+              </span>
+              <p className="min-w-0 flex-1 text-[14px] font-medium leading-snug text-[color:var(--jf-text)]">{step}</p>
+            </div>
           ))}
-        </ol>
+        </div>
       </section>
 
       <section
@@ -97,14 +125,14 @@ export function PaidHostedRiseFlagshipSection({ courseSlug, courseTitle }: Props
             <span className="text-[color:var(--jf-text)]/50" aria-hidden>
               ·
             </span>
-            <span>Complete the course learning sections</span>
+            <span>Complete the guided learning sections in the interactive course</span>
           </li>
           <li className="flex gap-2">
             <span className="text-[color:var(--jf-text)]/50" aria-hidden>
               ·
             </span>
             <span>
-              Pass required checks: {cfg.moduleQuizMinCorrect} of {MODULE_QUIZ_DRAW_COUNT} correct
+              Pass required checks: {cfg.moduleQuizMinCorrect} of {MODULE_QUIZ_DRAW_COUNT} correct where quizzes apply
             </span>
           </li>
           <li className="flex gap-2">
@@ -121,7 +149,7 @@ export function PaidHostedRiseFlagshipSection({ courseSlug, courseTitle }: Props
           </li>
         </ul>
         <p className="mt-4 text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">
-          Certificates are issued by {cfg.provider} and are valid for {cfg.certificateValidityYears} years from the issue date.
+          Certificates are issued by {cfg.provider} and remain valid for {cfg.certificateValidityYears} years from the issue date.
         </p>
       </section>
 
@@ -133,7 +161,7 @@ export function PaidHostedRiseFlagshipSection({ courseSlug, courseTitle }: Props
           Final capstone
         </h2>
         <p className="mt-3 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
-          Your capstone proves that you can apply the course skills in a realistic work, study, business, or community scenario.
+          Your capstone shows how you apply the course in a realistic work, study, business, or community scenario.
         </p>
         <p className="mt-4 text-[13px] font-medium text-[color:var(--jf-text)]">Before submitting, include:</p>
         <ul className="mt-2 space-y-1.5 text-[14px] leading-snug text-[color:var(--jf-muted)]">
@@ -157,26 +185,6 @@ export function PaidHostedRiseFlagshipSection({ courseSlug, courseTitle }: Props
         <p className="mt-4 text-[12px] leading-relaxed text-[color:var(--jf-subtle)]">
           Your certificate is awarded only after your capstone is reviewed and passed.
         </p>
-      </section>
-
-      <section
-        className="rounded-2xl border border-dashed border-[color:var(--jf-border)] bg-[color:var(--jf-surface)]/80 px-5 py-5 sm:px-6"
-        aria-labelledby="interactive-course-heading"
-      >
-        <h2 id="interactive-course-heading" className="text-sm font-semibold text-[color:var(--jf-text)]">
-          Interactive course player
-        </h2>
-        <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--jf-muted)]">
-          The full course player opens in a new tab—return here anytime for sessions, checks, and capstone submission.
-        </p>
-        <a
-          href={risePath}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-4 inline-flex min-h-[2.5rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] bg-white px-5 text-[13px] font-semibold text-[color:var(--jf-text)] shadow-sm transition hover:bg-stone-50"
-        >
-          Open the course
-        </a>
       </section>
     </div>
   )
