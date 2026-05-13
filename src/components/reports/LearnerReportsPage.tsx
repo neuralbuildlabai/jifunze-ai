@@ -157,7 +157,12 @@ export function LearnerReportsPage() {
         }
       }
 
-      setRows(out)
+      const filtered = out.filter(
+        (r) =>
+          r.progressPct > 0 || r.sessionDone > 0 || r.modulesDone > 0 || r.quizModulesPassed > 0,
+      )
+
+      setRows(filtered)
       setSelectedPathwayHint(pathwayHint)
       setLoading(false)
     })()
@@ -168,11 +173,12 @@ export function LearnerReportsPage() {
 
   return (
     <WorkspaceRouteReady>
-      <LearnerPageShell
-        title="Reports"
-        purpose="Course progress, checkpoints, and your next session—aligned with how progress is saved on your account."
-        wide
-      >
+      <div data-testid="learner-reports-page">
+        <LearnerPageShell
+          title="Reports"
+          purpose="Course progress, checkpoints, and your next session—aligned with how progress is saved on your account."
+          wide
+        >
         {!loading && selectedPathwayHint ? (
           <div
             className="rounded-xl border border-stone-200/90 bg-white px-4 py-4 text-[13px] text-stone-700 shadow-sm"
@@ -199,44 +205,47 @@ export function LearnerReportsPage() {
         {loading ? (
           <p className="text-sm text-stone-600">Loading your progress…</p>
         ) : rows.length === 0 ? (
-          <p className="text-sm text-stone-600">
-            No courses in your catalog yet. Open the{' '}
-            <Link className="font-medium text-orange-700 hover:underline" to={LEGAL_ROUTES.learn}>
-              catalog
+          <p className="text-sm text-stone-600" data-testid="reports-empty-state">
+            No flagship course progress yet. When you open a course from the catalog, it will appear here with sessions, modules, and
+            checkpoints.
+            <Link className="ml-1 font-medium text-orange-700 hover:underline" to={LEGAL_ROUTES.learn}>
+              Browse catalog
             </Link>
             .
           </p>
         ) : (
-          <div className="overflow-x-auto rounded-xl border border-stone-200/90 bg-white shadow-sm">
-            <table className="min-w-[560px] w-full text-left text-[13px] text-stone-700">
-              <thead>
-                <tr className="border-b border-stone-200/90 text-[11px] uppercase tracking-wide text-stone-500">
-                  <th className="px-4 py-3 font-medium">Course</th>
-                  <th className="px-4 py-3 font-medium">Sessions</th>
-                  <th className="px-4 py-3 font-medium">Modules</th>
-                  <th className="px-4 py-3 font-medium">Checkpoints</th>
-                  <th className="px-4 py-3 font-medium">Next</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((r) => (
-                  <tr key={r.slug} className="border-b border-stone-100 last:border-0">
-                    <td className="px-4 py-3">
-                      <Link className="font-medium text-zinc-900 hover:underline" to={`/learn/courses/${r.slug}`}>
-                        {r.title}
-                      </Link>
-                      <p className="text-[11px] text-stone-500">{r.schoolLabel}</p>
-                    </td>
-                    <td className="px-4 py-3 tabular-nums">
+          <div className="grid gap-4 sm:grid-cols-2" data-testid="reports-course-cards">
+            {rows.map((r) => (
+              <article
+                key={r.slug}
+                className="rounded-xl border border-stone-200/90 bg-white p-4 text-[13px] text-stone-700 shadow-sm sm:p-5"
+              >
+                <Link className="font-medium text-zinc-900 hover:underline" to={`/learn/courses/${r.slug}`}>
+                  {r.title}
+                </Link>
+                <p className="text-[11px] text-stone-500">{r.schoolLabel}</p>
+                <dl className="mt-3 space-y-1.5 text-[12px]">
+                  <div className="flex justify-between gap-3">
+                    <dt className="text-stone-500">Sessions</dt>
+                    <dd className="tabular-nums text-zinc-900">
                       {r.sessionDone}/{r.sessionTotal} ({r.progressPct}%)
-                    </td>
-                    <td className="px-4 py-3 tabular-nums">
+                    </dd>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <dt className="text-stone-500">Modules</dt>
+                    <dd className="tabular-nums text-zinc-900">
                       {r.modulesDone}/{r.modulesTotal}
-                    </td>
-                    <td className="px-4 py-3 tabular-nums text-stone-600">
+                    </dd>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <dt className="text-stone-500">Checkpoints</dt>
+                    <dd className="tabular-nums text-stone-700">
                       {r.quizModulesTotal ? `${r.quizModulesPassed}/${r.quizModulesTotal} passed` : '—'}
-                    </td>
-                    <td className="px-4 py-3">
+                    </dd>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <dt className="text-stone-500">Next step</dt>
+                    <dd className="text-right">
                       {r.nextHref && r.nextLabel ? (
                         <Link className="font-medium text-orange-700 hover:underline" to={r.nextHref}>
                           {r.nextLabel}
@@ -246,14 +255,15 @@ export function LearnerReportsPage() {
                       ) : (
                         <span className="text-stone-500">—</span>
                       )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </dd>
+                  </div>
+                </dl>
+              </article>
+            ))}
           </div>
         )}
-      </LearnerPageShell>
+        </LearnerPageShell>
+      </div>
     </WorkspaceRouteReady>
   )
 }

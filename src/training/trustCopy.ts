@@ -8,6 +8,8 @@ export const LEGAL_ROUTES = {
   disclaimer: '/disclaimer',
   terms: '/terms',
   privacy: '/privacy',
+  support: '/support',
+  contact: '/contact',
   refunds: '/refunds',
   pricing: '/pricing',
   paths: '/paths',

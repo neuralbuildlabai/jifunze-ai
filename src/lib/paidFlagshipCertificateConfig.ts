@@ -23,7 +23,7 @@ export type PaidFlagshipCertificateCourseConfig = {
    * Static interactive lesson export served from `public/` (path from site root, ending in `content/index.html`).
    * Omit when the course has no hosted lesson bundle on this app.
    */
-  hostedRiseIndexPath?: string
+  hostedInteractiveIndexPath?: string
 }
 
 const AI_PRODUCTIVITY_SMART_WORKFLOWS: PaidFlagshipCertificateCourseConfig = {
@@ -37,7 +37,7 @@ const AI_PRODUCTIVITY_SMART_WORKFLOWS: PaidFlagshipCertificateCourseConfig = {
   finalKnowledgeCheckSessionIds: ['ai-productivity-smart-workflows-capstone-prep'],
   capstoneSubmissionEnabled: true,
   enableLessonTimer: true,
-  hostedRiseIndexPath: '/course-assets/interactive/ai-productivity-smart-workflows/content/index.html',
+  hostedInteractiveIndexPath: '/course-assets/interactive/ai-productivity-smart-workflows/content/index.html',
 }
 
 const BY_SLUG: Record<string, PaidFlagshipCertificateCourseConfig> = {

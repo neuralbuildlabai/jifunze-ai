@@ -148,7 +148,7 @@ export function SignedInHomePage() {
   }
 
   if (isLearnerNav) {
-    return <Navigate to="/my-learning" replace />
+    return <Navigate to="/dashboard" replace />
   }
 
   return (

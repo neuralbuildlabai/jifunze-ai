@@ -1,37 +1,13 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { getFlagshipCourseBySlug } from '../data/learning/flagshipCoursesCatalog'
-import { getFlagshipCurriculum } from '../data/learning/flagshipCourseCurricula'
-import { buildSessionsForCurriculum } from '../data/learning/flagshipCourseSessions'
+import { isSupabaseConfigured } from '../config/supabaseEnv'
 import { FLAGSHIP_PROGRESS_EVENT } from '../lib/flagshipCourseLocalProgress'
-import { getFlagshipCourseDisplayProgressPercent } from '../lib/aiEssentialsProgressMilestones'
 import {
-  capstonePrepAccessible,
-  completionSet,
-  findNextFlagshipResumeSession,
-  isCapstonePrepComplete,
-  isCapstoneUnlocked,
-  masteryCheckpointCompletionSet,
-  needsAttentionSessions,
-  nextResumeLabel,
-} from '../lib/flagshipCourseProgressDerived'
-import { masteryEvidenceProgress } from '../lib/flagshipAssessmentCatalog'
-import { flagshipReadinessCompact } from '../lib/flagshipReadinessSignals'
-import { modulesPendingMasteryCheckpoints } from '../lib/flagshipMasteryCheckpoint'
-import {
-  fetchFlagshipProgressRowsForUser,
-  flagshipProgressRowToState,
-  type FlagshipCourseProgressRow,
-} from '../services/learning/flagshipCourseProgressRemote'
-
-function rowHasLearningActivity(row: FlagshipCourseProgressRow): boolean {
-  return (
-    (row.completed_session_ids?.length ?? 0) > 0 ||
-    Boolean(row.last_active_session_id) ||
-    Boolean(row.started_at)
-  )
-}
+  LEARNER_PROGRESS_HUB_EVENT,
+  loadLearnerUnifiedActiveCourses,
+  type LearnerUnifiedActiveCourse,
+} from '../lib/learnerProgressHub'
 
 export type SignedInContinueLearningItem = {
   slug: string
@@ -42,6 +18,18 @@ export type SignedInContinueLearningItem = {
   resumeCta: string
   updatedAt: string
   guidanceHint?: string
+}
+
+function mapUnifiedToItem(c: LearnerUnifiedActiveCourse): SignedInContinueLearningItem {
+  return {
+    slug: c.slug,
+    title: c.title,
+    progressPercent: c.progressPercent,
+    nextLabel: c.nextLabel ?? 'Continue',
+    resumeHref: c.resumeHref,
+    resumeCta: c.resumeCta,
+    updatedAt: c.lastActivityAt ?? c.lastOpenedAt ?? new Date(0).toISOString(),
+  }
 }
 
 export function SignedInContinueLearning(props: {
@@ -55,59 +43,15 @@ export function SignedInContinueLearning(props: {
   const [ready, setReady] = useState(false)
 
   const load = useCallback(async () => {
-    if (!supabase || !userId) {
+    if (!supabase || !userId || !isSupabaseConfigured()) {
       setItems([])
       setReady(true)
       return
     }
 
     try {
-      const rows = await fetchFlagshipProgressRowsForUser(supabase, userId, 28)
-      const enriched: SignedInContinueLearningItem[] = []
-
-      for (const row of rows) {
-        if (!rowHasLearningActivity(row)) continue
-        const slug = row.course_slug
-        const course = getFlagshipCourseBySlug(slug)
-        const curriculum = getFlagshipCurriculum(slug)
-        if (!course || !curriculum) continue
-
-        const sessions = buildSessionsForCurriculum(curriculum)
-        const state = flagshipProgressRowToState(row)
-        const completed = completionSet(state)
-        const ck = masteryCheckpointCompletionSet(state)
-        const pendingMastery = modulesPendingMasteryCheckpoints(curriculum, sessions, completed, ck)
-        const needsAtt = needsAttentionSessions(sessions, completed)
-        const capUnlocked = isCapstoneUnlocked(sessions, completed)
-        const prepAccessible = capstonePrepAccessible(curriculum, sessions, completed, ck)
-        const prepDone = isCapstonePrepComplete(sessions, completed)
-        const mcProg = masteryEvidenceProgress(curriculum.modules, ck)
-        const readiness = flagshipReadinessCompact({
-          pendingMasteryModuleTitle: pendingMastery[0]?.title,
-          needsAttentionCount: needsAtt.length,
-          capstoneUnlocked: capUnlocked,
-          capstonePrepAccessible: prepAccessible,
-          capstonePrepComplete: prepDone,
-          masteryDone: mcProg.done,
-          masteryTotal: mcProg.total,
-        })
-        const next = findNextFlagshipResumeSession(curriculum, sessions, completed, ck, state)
-        const pct = getFlagshipCourseDisplayProgressPercent(slug, curriculum, sessions, state)
-        const resumeHref = next ? `/learn/courses/${slug}/session/${next.id}` : `/learn/courses/${slug}`
-        const resumeCta = next ? 'Resume learning' : 'Explore course'
-        const guidanceHint = readiness.detailHint ?? readiness.compactLabel ?? undefined
-        enriched.push({
-          slug,
-          title: course.title,
-          progressPercent: pct,
-          nextLabel: nextResumeLabel(next),
-          resumeHref,
-          resumeCta,
-          updatedAt: row.updated_at,
-          guidanceHint,
-        })
-      }
-
+      const unified = await loadLearnerUnifiedActiveCourses(supabase, userId)
+      const enriched = unified.slice(0, 8).map(mapUnifiedToItem)
       enriched.sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt))
       setItems(enriched.slice(0, 5))
     } catch {
@@ -128,7 +72,11 @@ export function SignedInContinueLearning(props: {
     }
     if (typeof window === 'undefined') return
     window.addEventListener(FLAGSHIP_PROGRESS_EVENT, handler)
-    return () => window.removeEventListener(FLAGSHIP_PROGRESS_EVENT, handler)
+    window.addEventListener(LEARNER_PROGRESS_HUB_EVENT, handler as EventListener)
+    return () => {
+      window.removeEventListener(FLAGSHIP_PROGRESS_EVENT, handler)
+      window.removeEventListener(LEARNER_PROGRESS_HUB_EVENT, handler as EventListener)
+    }
   }, [load])
 
   if (!supabase || !userId || !ready || items.length === 0) {
@@ -150,7 +98,6 @@ export function SignedInContinueLearning(props: {
   const titleClass = warm ? 'truncate text-[14px] font-semibold text-zinc-900' : 'truncate text-[14px] font-semibold text-zinc-100'
   const nextMuted = warm ? 'text-stone-600' : 'text-zinc-500/95'
   const nextEm = warm ? 'text-stone-800' : 'text-zinc-300/95'
-  const hintClass = warm ? 'mt-2 text-[11px] leading-relaxed text-stone-500' : 'mt-2 text-[11px] leading-relaxed text-zinc-600/95'
   const trackBg = warm ? 'mt-3 h-1.5 max-w-xs overflow-hidden rounded-full bg-stone-200/80' : 'mt-3 h-1.5 max-w-xs overflow-hidden rounded-full bg-white/[0.06]'
   const fillClass = warm
     ? 'h-full rounded-full bg-gradient-to-r from-orange-500 to-rose-500 transition-[width] duration-300'
@@ -171,7 +118,7 @@ export function SignedInContinueLearning(props: {
           <h2 id="signed-in-continue-learning-heading" className={headingClass}>
             Continue learning
           </h2>
-          <p className={subClass}>Pick up where you left off across your flagship courses.</p>
+          <p className={subClass}>Pick up where you left off across the courses you have started.</p>
         </div>
         <Link to="/learn" className={catalogLinkClass}>
           Browse catalog →
@@ -184,9 +131,8 @@ export function SignedInContinueLearning(props: {
             <div className="min-w-0 flex-1">
               <p className={titleClass}>{item.title}</p>
               <p className={`mt-1 text-[12px] leading-relaxed ${nextMuted}`}>
-                Recommended next: <span className={nextEm}>{item.nextLabel}</span>
+                Next step: <span className={nextEm}>{item.nextLabel}</span>
               </p>
-              {item.guidanceHint ? <p className={hintClass}>{item.guidanceHint}</p> : null}
               <div className={trackBg} role="progressbar" aria-valuenow={item.progressPercent} aria-valuemin={0} aria-valuemax={100} aria-label={`${item.title} progress`}>
                 <div className={fillClass} style={{ width: `${item.progressPercent}%` }} />
               </div>

@@ -1,7 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
 
 /**
- * Requires a **production build** with `VITE_FORCE_PRO_TOOLS` / `VITE_FORCE_PLATFORM_TOOLS`
+ * Requires a **production build** with `VITE_PLAYWRIGHT_BUILD` (admin shell in no-Supabase CI),
+ * plus `VITE_FORCE_PRO_TOOLS` / `VITE_FORCE_PLATFORM_TOOLS` for tier-gate assertions
  * (see `npm run test:e2e:access-forced`). Serves `dist/` via `vite preview`.
  */
 export default defineConfig({

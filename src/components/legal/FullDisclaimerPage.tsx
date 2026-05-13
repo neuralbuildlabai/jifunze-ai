@@ -1,6 +1,7 @@
 import { LegalPageShell } from './LegalPageShell'
 import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES, TRUST_COPY } from '../../training/trustCopy'
+import { MENTAL_WELLBEING_RESET_DISCLAIMER } from '../../data/learning/mentalWellbeingResetMicrolearningPageCopy'
 import { Link } from 'react-router-dom'
 
 /**
@@ -34,6 +35,16 @@ export function FullDisclaimerPage() {
           </Link>
           , which contain additional rules and limitations for accounts, data, subscriptions, and acceptable use.
         </p>
+      </section>
+
+      <section className="mt-8 space-y-3">
+        <h2 className="text-base font-semibold text-zinc-100">Wellbeing and educational courses</h2>
+        <p className="text-sm leading-relaxed text-zinc-300">
+          Jifunze.ai courses are designed for learning and skill-building. Wellbeing-style content supports everyday habits and
+          reflection — it is <strong>not</strong> medical advice, therapy, diagnosis, or emergency support. When you need clinical care or
+          are in crisis, contact a qualified professional or your local emergency services.
+        </p>
+        <p className="text-sm leading-relaxed text-zinc-400">{MENTAL_WELLBEING_RESET_DISCLAIMER}</p>
       </section>
 
       <section className="mt-8 space-y-3">

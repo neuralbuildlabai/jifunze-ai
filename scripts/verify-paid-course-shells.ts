@@ -12,7 +12,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const SOURCES = [
   'src/components/learn/FlagshipCourseDetailPage.tsx',
   'src/components/learn/premiumCourseShell/FlagshipDetailAccessPill.tsx',
-  'src/components/learn/PaidHostedRiseFlagshipSection.tsx',
+  'src/components/learn/PaidHostedInteractiveFlagshipSection.tsx',
   'src/components/learn/PaidFlagshipCertificateBanner.tsx',
   'src/components/learn/AiEssentialsCourseOverview.tsx',
   'src/components/learn/flagshipSession/FlagshipSessionPlayerSurfaces.tsx',
@@ -54,9 +54,9 @@ function main() {
     'course.intro must not appear in hero block before trust strip (avoid subtitle + intro repetition in hero)',
   )
 
-  const hosted = read('src/components/learn/PaidHostedRiseFlagshipSection.tsx')
+  const hosted = read('src/components/learn/PaidHostedInteractiveFlagshipSection.tsx')
   assert.ok(hosted.includes('data-testid="paid-hosted-flagship-access"'), 'paid hosted access line test id')
-  assert.ok(hosted.includes('data-testid="paid-rise-open-new-tab"'), 'paid hosted secondary open link')
+  assert.ok(hosted.includes('data-testid="paid-interactive-open-new-tab"'), 'paid hosted secondary open link')
 
   console.log('verify-paid-course-shells: ok')
 }

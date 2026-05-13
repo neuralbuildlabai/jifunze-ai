@@ -59,9 +59,27 @@ test.describe('Learning discovery (public)', () => {
 
     await page.goto('/learn/free/5-day-mental-wellbeing-reset')
     await expect(page.getByTestId('free-starter-5-day-mental-wellbeing-reset-page')).toBeVisible({ timeout: 20_000 })
-    const frameWb = page.locator('iframe[title="5-Day Mental Wellbeing Reset — interactive challenge"]')
+    const frameWb = page.locator('iframe[title="5-Day Mental Wellbeing Reset — challenge"]')
     await expect(frameWb).toBeVisible()
     await expect(frameWb).toHaveAttribute('src', /\/course-assets\/interactive\/5-day-mental-wellbeing-reset\/content\/index\.html$/)
+  })
+
+  test('5-Day Mental Wellbeing Reset: no large outcomes heading; footer legal links present', async ({ page }) => {
+    await page.goto('/learn/free/5-day-mental-wellbeing-reset')
+    const root = page.getByTestId('free-starter-5-day-mental-wellbeing-reset-page')
+    await expect(root).toBeVisible({ timeout: 20_000 })
+    await expect(page.getByRole('heading', { level: 2, name: /^What you will be able to do$/i })).toHaveCount(0)
+    await expect(page.getByRole('heading', { level: 2, name: /^Five-day rhythm$/i })).toBeVisible()
+    const footer = page.getByTestId('learner-catalog-footer-bar')
+    await expect(footer.getByRole('link', { name: /^privacy$/i })).toBeVisible()
+    await expect(footer.getByRole('link', { name: /^terms$/i })).toBeVisible()
+    await expect(footer.getByRole('link', { name: /^disclaimer$/i })).toBeVisible()
+    await expect(footer.getByRole('link', { name: /^support$/i })).toBeVisible()
+    await expect(footer.getByRole('link', { name: /^contact$/i })).toBeVisible()
+    const txt = (await root.innerText()).toLowerCase()
+    expect(txt).not.toMatch(/\brise\b/)
+    expect(txt).not.toContain('articulate')
+    expect(txt).not.toContain('scorm')
   })
 
   test('/learn microlearning section order: Smart Workflows, Business Analytics, AI at Work, 5-Day Mental Wellbeing Reset', async ({ page }) => {

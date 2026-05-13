@@ -74,7 +74,7 @@ for (const listing of AVAILABLE_PUBLIC_STANDALONE_COURSES) {
 /** All flagship metadata routes (deep links; not on main /learn allowlist today) */
 for (const c of FLAGSHIP_COURSES) {
   const paid = getPaidFlagshipCertificateConfig(c.slug)
-  const embed = paid?.hostedRiseIndexPath ?? '—'
+  const embed = paid?.hostedInteractiveIndexPath ?? '—'
   const inPublicFlagshipGrid = isFlagshipSlugInLearnerPublicCatalog(c.slug)
   const status: Status = inPublicFlagshipGrid ? 'A' : 'B'
   let cleanup = 'Deep-link only until allowlisted on /learn; keep copy premium and consistent with checkout.'

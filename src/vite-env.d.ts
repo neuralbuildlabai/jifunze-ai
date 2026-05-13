@@ -37,6 +37,14 @@ interface ImportMetaEnv {
    */
   readonly VITE_E2E_BILLING_INVOKE_MOCK?: string
   /**
+   * When `true` with no Supabase URL, unlocks `/admin/*` for Playwright `test:e2e:access-forced` only.
+   * Must stay unset in production — never combine with live Supabase keys.
+   */
+  readonly VITE_PLAYWRIGHT_BUILD?: string
+  readonly VITE_FORCE_PLATFORM_TOOLS?: string
+  readonly VITE_FORCE_PRO_TOOLS?: string
+  readonly VITE_BUILD_SHA?: string
+  /**
    * `true` | `false` only (other values ignored → dev default off, prod default on).
    * Dev: omit/`false` = full public app; `true` = test maintenance locally.
    * Prod build: omit/`true` = gated; `false` = explicit public-open bundle.

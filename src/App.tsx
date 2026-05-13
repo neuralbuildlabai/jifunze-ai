@@ -17,6 +17,8 @@ import { PublicPausedSubscriptionPage } from './components/legal/PublicPausedSub
 import { PublicPricingPage } from './components/legal/PublicPricingPage'
 import { RefundPolicyPage } from './components/legal/RefundPolicyPage'
 import { TermsOfServicePage } from './components/legal/TermsOfServicePage'
+import { LearnerSupportPage } from './components/legal/LearnerSupportPage'
+import { LearnerContactPage } from './components/legal/LearnerContactPage'
 import { ForgotPasswordPage } from './components/auth/ForgotPasswordPage'
 import { RequireDisclaimerAcknowledged } from './components/auth/RequireDisclaimerAcknowledged'
 import { RequireEmailVerified } from './components/auth/RequireEmailVerified'
@@ -83,6 +85,7 @@ import {
   PROMPT_ENGINEERING_MODELS_PUBLIC_BASE_PATH,
 } from './data/learning/standaloneCoursesCatalog'
 import {
+  RequireAdminAccess,
   RequireInstitutionOperatorSurface,
   RequirePlatformInsights,
   RequireSuperAdminSurface,
@@ -97,6 +100,18 @@ import { PUBLIC_AI_FOUNDATIONS_BASE_PATH } from './data/publicStarterLibraries/a
 import { LEGAL_ROUTES } from './training/trustCopy'
 import { MaintenancePublicGate } from './components/maintenance/MaintenancePublicGate'
 import { NotFoundPage } from './components/NotFoundPage'
+import { AdminShell } from './components/admin/platform/AdminShell'
+import { AdminDashboardPage } from './components/admin/platform/AdminDashboardPage'
+import { AdminLearnersPage } from './components/admin/platform/AdminLearnersPage'
+import { AdminLearnerDetailPage } from './components/admin/platform/AdminLearnerDetailPage'
+import { AdminCoursesPage, AdminCourseDetailPage } from './components/admin/platform/AdminCoursesPages'
+import { AdminEnrollmentsPage } from './components/admin/platform/AdminEnrollmentsPage'
+import { AdminProgressPage } from './components/admin/platform/AdminProgressPage'
+import { AdminCertificatesPage } from './components/admin/platform/AdminCertificatesPage'
+import { AdminReportsPage } from './components/admin/platform/AdminReportsPage'
+import { AdminSupportPage } from './components/admin/platform/AdminSupportPage'
+import { AdminSettingsPage } from './components/admin/platform/AdminSettingsPage'
+import { AdminHealthPage } from './components/admin/platform/AdminHealthPage'
 
 function RedirectLegacyLibrariesAiFoundationsToCanonical() {
   return <Navigate to={PUBLIC_AI_FOUNDATIONS_BASE_PATH} replace />
@@ -165,6 +180,8 @@ export default function App() {
         <Route path="/disclaimer" element={<FullDisclaimerPage />} />
         <Route path="/terms" element={<TermsOfServicePage />} />
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
+        <Route path="/support" element={<LearnerSupportPage />} />
+        <Route path="/contact" element={<LearnerContactPage />} />
         <Route path="/refunds" element={<RefundPolicyPage />} />
         <Route path="/pricing" element={<PublicPricingPage />} />
         {LEARNER_MONETIZATION_UI_DISABLED ? (
@@ -482,6 +499,27 @@ export default function App() {
                 </RequireSuperAdminSurface>
               }
             />
+            <Route
+              element={
+                <RequireAdminAccess>
+                  <AdminShell />
+                </RequireAdminAccess>
+              }
+            >
+              <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+              <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+              <Route path="/admin/learners" element={<AdminLearnersPage />} />
+              <Route path="/admin/learners/:userId" element={<AdminLearnerDetailPage />} />
+              <Route path="/admin/courses" element={<AdminCoursesPage />} />
+              <Route path="/admin/courses/:courseSlug" element={<AdminCourseDetailPage />} />
+              <Route path="/admin/enrollments" element={<AdminEnrollmentsPage />} />
+              <Route path="/admin/progress" element={<AdminProgressPage />} />
+              <Route path="/admin/certificates" element={<AdminCertificatesPage />} />
+              <Route path="/admin/reports" element={<AdminReportsPage />} />
+              <Route path="/admin/support" element={<AdminSupportPage />} />
+              <Route path="/admin/settings" element={<AdminSettingsPage />} />
+              <Route path="/admin/health" element={<AdminHealthPage />} />
+            </Route>
           </Route>
         </Route>
       </Route>

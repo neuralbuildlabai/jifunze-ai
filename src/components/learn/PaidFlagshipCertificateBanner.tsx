@@ -38,7 +38,7 @@ function InnerPaidFlagshipCertificateBanner(props: {
           setEligibleDetail(null)
           setMsg(
             r.blockers[0] ??
-              (cfg.hostedRiseIndexPath
+              (cfg.hostedInteractiveIndexPath
                 ? 'Not eligible yet—finish the steps above, then submit and pass your capstone review.'
                 : 'Certificate locked. Complete all required modules, pass required checks, submit the capstone, and pass the capstone review.'),
           )
@@ -50,7 +50,7 @@ function InnerPaidFlagshipCertificateBanner(props: {
     return () => {
       cancelled = true
     }
-  }, [courseSlug, curriculum, sessions, progressState, user, supabase, cfg.hostedRiseIndexPath])
+  }, [courseSlug, curriculum, sessions, progressState, user, supabase, cfg.hostedInteractiveIndexPath])
 
   return (
     <section
@@ -77,7 +77,7 @@ function InnerPaidFlagshipCertificateBanner(props: {
       ) : (
         <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--jf-muted)]">
           {msg ??
-            (cfg.hostedRiseIndexPath
+            (cfg.hostedInteractiveIndexPath
               ? 'Not eligible yet—finish the steps above, then submit and pass your capstone review.'
               : 'Certificate locked. Complete all required modules, pass required checks, submit the capstone, and pass the capstone review.')}
         </p>

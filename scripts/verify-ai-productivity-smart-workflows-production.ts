@@ -30,15 +30,15 @@ function testCatalogAndPaidConfig() {
   assert.equal(cfg.capstoneSubmissionEnabled, true)
   assert.equal(cfg.capstoneRequired, true)
   assert.ok(
-    cfg.hostedRiseIndexPath?.startsWith('/course-assets/interactive/'),
+    cfg.hostedInteractiveIndexPath?.startsWith('/course-assets/interactive/'),
     'Hosted lesson launch URL is under /course-assets/interactive/',
   )
-  assert.ok(cfg.hostedRiseIndexPath?.endsWith('/content/index.html'), 'Hosted lesson URL ends with content/index.html')
+  assert.ok(cfg.hostedInteractiveIndexPath?.endsWith('/content/index.html'), 'Hosted lesson URL ends with content/index.html')
 }
 
 function testHostedRiseOnDisk() {
   const cfg = getPaidFlagshipCertificateConfig(SLUG)!
-  const rel = cfg.hostedRiseIndexPath!.replace(/^\//, '')
+  const rel = cfg.hostedInteractiveIndexPath!.replace(/^\//, '')
   const indexPath = join(REPO_ROOT, 'public', rel)
   assert.ok(existsSync(indexPath), `Hosted lesson index exists: ${indexPath}`)
 
@@ -55,11 +55,11 @@ function testHostedRiseOnDisk() {
 function testUiWiring() {
   const detailPage = readFileSync(join(REPO_ROOT, 'src/components/learn/FlagshipCourseDetailPage.tsx'), 'utf8')
   assert.ok(
-    detailPage.includes('PaidHostedRiseFlagshipSection'),
+    detailPage.includes('PaidHostedInteractiveFlagshipSection'),
     'FlagshipCourseDetailPage imports hosted interactive-lesson section',
   )
 
-  const riseSection = readFileSync(join(REPO_ROOT, 'src/components/learn/PaidHostedRiseFlagshipSection.tsx'), 'utf8')
+  const riseSection = readFileSync(join(REPO_ROOT, 'src/components/learn/PaidHostedInteractiveFlagshipSection.tsx'), 'utf8')
   assert.ok(riseSection.includes('/learn/courses/${courseSlug}/capstone'), 'Hosted lesson section links capstone by slug')
   assert.ok(riseSection.includes('Submit Final Capstone'), 'Hosted lesson section capstone CTA label')
   assert.ok(

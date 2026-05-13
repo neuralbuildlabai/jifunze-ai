@@ -15,7 +15,7 @@ import { LearnHeroAbstractFigure } from '../visuals/JifunzeLearnVisuals'
 import { AiEssentialsCourseOverview } from './AiEssentialsCourseOverview'
 import { FlagshipCourseCurriculumSections } from './FlagshipCourseCurriculumSections'
 import { PaidFlagshipCertificateBanner } from './PaidFlagshipCertificateBanner'
-import { PaidHostedRiseFlagshipSection } from './PaidHostedRiseFlagshipSection'
+import { PaidHostedInteractiveFlagshipSection } from './PaidHostedInteractiveFlagshipSection'
 import { FlagshipDetailAccessPill } from './premiumCourseShell/FlagshipDetailAccessPill'
 
 const DEPTH_LABELS = [
@@ -47,7 +47,7 @@ export function FlagshipCourseDetailPage() {
 
   const school = FLAGSHIP_SCHOOLS[course.schoolId]
   const firstLaunchSession = firstSessionInCourseOrder(sessions)
-  const isHostedRiseCompactCourse = slug === 'ai-productivity-smart-workflows'
+  const isHostedInteractiveCompactCourse = slug === 'ai-productivity-smart-workflows'
 
   return (
     <div className="jf-learn-warm min-h-screen w-full bg-[var(--jf-bg-page)] text-[color:var(--jf-text)]">
@@ -107,7 +107,7 @@ export function FlagshipCourseDetailPage() {
           />
         ) : (
           <>
-        {!isHostedRiseCompactCourse ? (
+        {!isHostedInteractiveCompactCourse ? (
           <div className="jf-learn-section-blush overflow-hidden rounded-2xl border border-[color:var(--jf-border)] shadow-[var(--jf-shadow-soft)]">
             <div className="grid gap-8 px-5 py-8 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,230px)] lg:items-start lg:gap-10">
               <div className="min-w-0">
@@ -148,9 +148,9 @@ export function FlagshipCourseDetailPage() {
           </div>
         ) : null}
 
-        {isHostedRiseCompactCourse ? (
+        {isHostedInteractiveCompactCourse ? (
           <>
-            <PaidHostedRiseFlagshipSection courseSlug={slug} courseTitle={course.title} courseIntro={course.intro} />
+            <PaidHostedInteractiveFlagshipSection courseSlug={slug} courseTitle={course.title} courseIntro={course.intro} />
             {curriculum ? (
               <PaidFlagshipCertificateBanner
                 courseSlug={slug}
@@ -175,7 +175,7 @@ export function FlagshipCourseDetailPage() {
                 supabase={supabase}
               />
             ) : null}
-            <PaidHostedRiseFlagshipSection courseSlug={slug} courseTitle={course.title} courseIntro={course.intro} />
+            <PaidHostedInteractiveFlagshipSection courseSlug={slug} courseTitle={course.title} courseIntro={course.intro} />
           </>
         )}
 
@@ -236,7 +236,7 @@ export function FlagshipCourseDetailPage() {
           </section>
         )}
 
-        {!isHostedRiseCompactCourse ? (
+        {!isHostedInteractiveCompactCourse ? (
           <section className="mt-14 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 shadow-[var(--jf-shadow-soft)] ring-1 ring-stone-900/[0.04] sm:p-8">
             <h2 className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">Course promise</h2>
             <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--jf-muted)]">{course.intro}</p>
@@ -306,7 +306,7 @@ export function FlagshipCourseDetailPage() {
           </>
         )}
 
-        {!isHostedRiseCompactCourse ? (
+        {!isHostedInteractiveCompactCourse ? (
           <section className="mt-14" aria-labelledby="outcomes-heading">
             <h2 id="outcomes-heading" className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
               Learning outcomes
@@ -322,7 +322,7 @@ export function FlagshipCourseDetailPage() {
           </section>
         ) : null}
 
-        {!isHostedRiseCompactCourse ? (
+        {!isHostedInteractiveCompactCourse ? (
           <section className="mt-14 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 sm:p-8" aria-labelledby="create-heading">
             <h2 id="create-heading" className="text-lg font-semibold tracking-tight text-[color:var(--jf-text)]">
               What you will create
@@ -341,7 +341,7 @@ export function FlagshipCourseDetailPage() {
           </section>
         ) : null}
 
-        {!isHostedRiseCompactCourse ? (
+        {!isHostedInteractiveCompactCourse ? (
           <section className="mt-14 flex flex-col gap-4 rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface-elevated)] px-6 py-8 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-[15px] font-semibold text-[color:var(--jf-text)]">

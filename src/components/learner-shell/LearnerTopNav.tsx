@@ -3,7 +3,7 @@ import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { learnerShellTokens } from './learnerShellTokens'
 
 /**
- * Signed-in learner navigation — catalog-first, no duplicate dashboard, no standalone pathways page.
+ * Signed-in learner navigation — catalog, learning home, dashboard; profile actions live in {@link LearnerProfileMenu}.
  */
 export function LearnerTopNav({ className = '' }: { className?: string }) {
   return (
@@ -13,13 +13,6 @@ export function LearnerTopNav({ className = '' }: { className?: string }) {
       data-testid="workspace-nav-primary"
     >
       <NavLink
-        to="/my-learning"
-        className={({ isActive }) => `${learnerShellTokens.navLink} ${isActive ? learnerShellTokens.navLinkActive : ''}`}
-        data-testid="learner-nav-my-learning"
-      >
-        My Learning
-      </NavLink>
-      <NavLink
         to={LEGAL_ROUTES.learn}
         className={({ isActive }) => `${learnerShellTokens.navLink} ${isActive ? learnerShellTokens.navLinkActive : ''}`}
         data-testid="learner-nav-catalog"
@@ -27,19 +20,18 @@ export function LearnerTopNav({ className = '' }: { className?: string }) {
         Catalog
       </NavLink>
       <NavLink
-        to="/reports"
+        to="/my-learning"
         className={({ isActive }) => `${learnerShellTokens.navLink} ${isActive ? learnerShellTokens.navLinkActive : ''}`}
-        data-testid="learner-nav-reports"
+        data-testid="learner-nav-my-learning"
       >
-        Reports
+        My Learning
       </NavLink>
       <NavLink
-        end
-        to="/account"
+        to="/dashboard"
         className={({ isActive }) => `${learnerShellTokens.navLink} ${isActive ? learnerShellTokens.navLinkActive : ''}`}
-        data-testid="learner-nav-account"
+        data-testid="learner-nav-dashboard"
       >
-        Account
+        Dashboard
       </NavLink>
     </nav>
   )

@@ -21,15 +21,15 @@ const PATH_STEPS = [
   'Certificate unlocks after review and pass',
 ] as const
 
-export function PaidHostedRiseFlagshipSection({ courseSlug, courseTitle, courseIntro }: Props) {
+export function PaidHostedInteractiveFlagshipSection({ courseSlug, courseTitle, courseIntro }: Props) {
   const cfg = getPaidFlagshipCertificateConfig(courseSlug)
-  const hostedInteractivePath = cfg?.hostedRiseIndexPath
+  const hostedInteractivePath = cfg?.hostedInteractiveIndexPath
   if (!cfg || !hostedInteractivePath) return null
 
   const capstoneHref = `/learn/courses/${courseSlug}/capstone`
 
   return (
-    <div className="mt-6 space-y-6" data-testid="paid-hosted-rise-flagship-section">
+    <div className="mt-6 space-y-6" data-testid="paid-hosted-interactive-flagship-section">
       <div className="rounded-2xl border border-[color:var(--jf-border)] bg-[color:var(--jf-surface)] p-6 shadow-[var(--jf-shadow-soft)] ring-1 ring-stone-900/[0.04] sm:p-8">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Link
@@ -65,7 +65,7 @@ export function PaidHostedRiseFlagshipSection({ courseSlug, courseTitle, courseI
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-[var(--jf-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--jf-shadow-soft)] transition hover:bg-[var(--jf-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-            data-testid="paid-rise-launch-course"
+            data-testid="paid-interactive-launch-course"
           >
             Start course
           </a>
@@ -74,14 +74,14 @@ export function PaidHostedRiseFlagshipSection({ courseSlug, courseTitle, courseI
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-6 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-stone-100/90"
-            data-testid="paid-rise-open-new-tab"
+            data-testid="paid-interactive-open-new-tab"
           >
             Open in new window
           </a>
           <Link
             to={capstoneHref}
             className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-[color:var(--jf-border)] bg-[color:var(--jf-bg-page)] px-6 py-2.5 text-sm font-semibold text-[color:var(--jf-text)] transition hover:bg-stone-100/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
-            data-testid="paid-rise-submit-capstone"
+            data-testid="paid-interactive-submit-capstone"
           >
             Submit Final Capstone
           </Link>

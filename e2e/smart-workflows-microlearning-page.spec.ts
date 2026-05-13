@@ -10,7 +10,7 @@ test.describe('Smart Workflows microlearning detail page', () => {
     await applyPublicE2eMaintenanceBypass(page)
   })
 
-  test('premium layout: single Free, no vendor/sync clutter, lessons and player', async ({ page }) => {
+  test('compact starter layout: single Free badge, outline, embed, no duplicate primary CTAs', async ({ page }) => {
     await page.goto('/learn/free/smart-workflows-with-ai')
     const root = page.getByTestId('free-starter-smart-workflows-with-ai-page')
     await expect(root).toBeVisible({ timeout: 20_000 })
@@ -22,14 +22,13 @@ test.describe('Smart Workflows microlearning detail page', () => {
     expect(shellText).not.toMatch(/\barticulate\b/i)
     expect(shellText).not.toContain('account-wide')
     expect(shellText).not.toContain('sync is available')
-    expect(shellText).not.toContain('marked complete')
-    expect(shellText).not.toContain('mark complete')
     expect(shellText).not.toContain('learn with a guided jifunze.ai interactive course')
+    expect(shellText).not.toMatch(/\brise\b/)
+    expect(shellText).not.toContain('scorm')
 
     await expect(page.getByRole('heading', { level: 1, name: 'Smart Workflows with AI' })).toBeVisible()
-    await expect(page.getByRole('heading', { level: 2, name: 'What you will be able to do' })).toBeVisible()
-    await expect(page.getByRole('heading', { level: 2, name: 'Workshop flow' })).toBeVisible()
-    await expect(page.getByRole('heading', { level: 2, name: 'Start learning' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 2, name: /^What you will be able to do$/i })).toHaveCount(0)
+    await expect(page.getByRole('heading', { level: 2, name: /^Course outline$/i })).toBeVisible()
 
     for (const title of SMART_WORKFLOWS_MICROLEARNING_LESSON_FLOW) {
       await expect(root.getByText(title, { exact: true })).toBeVisible()
@@ -39,9 +38,10 @@ test.describe('Smart Workflows microlearning detail page', () => {
     await expect(frame).toBeVisible()
     await expect(frame).toHaveAttribute('src', /\/course-assets\/interactive\/smart-workflows-with-ai\/content\/index\.html$/)
 
-    await expect(page.getByTestId('free-starter-smart-workflows-start')).toHaveText('Start workshop')
+    await expect(page.getByTestId('free-starter-smart-workflows-start')).toBeVisible()
     await expect(page.getByTestId('free-starter-smart-workflows-open-tab')).toHaveText('Open in new window')
 
     await expect(page.getByRole('link', { name: /free courses/i })).toHaveCount(0)
+    await expect(page.getByTestId('learner-catalog-footer-bar').getByRole('link', { name: /^privacy$/i })).toBeVisible()
   })
 })

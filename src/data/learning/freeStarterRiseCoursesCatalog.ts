@@ -32,8 +32,7 @@ export const FREE_STARTER_HERO_ACCESS_BADGE = 'Free' as const
 export const FREE_STARTER_COMPLETION_INTRO =
   'When you are finished, mark complete below. Your progress is saved in this browser.'
 
-export const FREE_STARTER_COMPLETION_THANKS =
-  'Thanks — we saved your completion in this browser.'
+export const FREE_STARTER_COMPLETION_THANKS = 'Thanks — your completion is saved.'
 
 export const FREE_STARTER_BODY_PROSE =
   'text-[15px] leading-[1.65] text-[color:var(--jf-muted)] [word-spacing:normal] [letter-spacing:normal] [font-variant:normal] antialiased'

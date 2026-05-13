@@ -8,7 +8,7 @@
 export const MENTAL_WELLBEING_RESET_MICROLEARNING_HERO_BADGE = 'Free' as const
 
 export const MENTAL_WELLBEING_RESET_MICROLEARNING_HERO_DESCRIPTION =
-  'Build calm, clarity, and healthier weekly habits through a simple Monday–Friday mental wellbeing challenge. Each day gives you one practical exercise you can use immediately.' as const
+  'A simple Monday–Friday wellbeing challenge with one practical reset exercise each day.' as const
 
 export const MENTAL_WELLBEING_RESET_MICROLEARNING_METADATA_ROW =
   'Free · Beginner · 60–90 minutes · Monday–Friday challenge' as const
@@ -31,12 +31,18 @@ export const MENTAL_WELLBEING_RESET_MICROLEARNING_LESSON_FLOW: readonly string[]
   'Wednesday — Day 3: Foster Positive Emotions',
   'Thursday — Day 4: Honor the Body–Mind Connection',
   'Friday — Day 5: Create Balance',
-  'Reflection and Resources: Carry the Practice Forward',
+  'Reflection — Carry the Practice Forward',
+]
+
+/** Short practices surfaced on the course page (max three). */
+export const MENTAL_WELLBEING_RESET_YOU_WILL_PRACTICE: readonly string[] = [
+  'Grounding and steadiness in busy moments.',
+  'Reframing thoughts without forcing positivity.',
+  'Small habits that support balance through the week.',
 ]
 
 /**
- * Educational/personal-wellbeing disclaimer. Shown clearly on the learner page so
- * expectations are honest before launch. Avoid clinical, medical, or therapy framing.
+ * Educational/personal-wellbeing disclaimer. Centralized on /disclaimer; keep course pages calm.
  */
 export const MENTAL_WELLBEING_RESET_DISCLAIMER =
   'This course is for educational and personal wellbeing support only. It does not provide medical advice, diagnosis, therapy, counseling, or treatment. If you feel unsafe, at risk of harming yourself or someone else, or unable to cope, seek immediate support from emergency services, a qualified professional, or a crisis support line in your country.' as const

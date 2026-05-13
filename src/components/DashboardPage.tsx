@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom'
+import { LearnerDashboardPage } from './learning/LearnerDashboardPage'
 import { useAppAccess } from '../access/useAppAccess'
 import { humanAccessTierLabel } from '../access/appAccess'
 import { useAuth } from '../auth/AuthContext'
@@ -12,7 +12,7 @@ const cardClass =
   'rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 shadow-[0_12px_40px_rgba(0,0,0,0.2)] ring-1 ring-white/[0.04]'
 
 /**
- * Role-specific dashboard for operators (super-admin, institution, platform). Learners are redirected to `/my-learning`.
+ * Role-specific dashboard for operators (super-admin, institution, platform). Learners see the learner dashboard.
  */
 export function DashboardPage() {
   const {
@@ -68,7 +68,7 @@ export function DashboardPage() {
   }
 
   if (navVariant === 'learner') {
-    return <Navigate to="/my-learning" replace />
+    return <LearnerDashboardPage />
   }
 
   const email = user?.email ?? '—'

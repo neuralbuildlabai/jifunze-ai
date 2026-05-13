@@ -6,6 +6,7 @@ import { WorkspaceGeneratorProvider } from '../../workspace/WorkspaceGeneratorCo
 import { LearnerHelpAssistant } from '../teaching/LearnerHelpAssistant'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { LearnerTopNav } from '../learner-shell/LearnerTopNav'
+import { LearnerProfileMenu } from '../learner-shell/LearnerProfileMenu'
 import { learnerShellTokens } from '../learner-shell/learnerShellTokens'
 import { WorkspaceNav } from './WorkspaceNav'
 
@@ -33,17 +34,7 @@ export function WorkspaceShell() {
               </div>
               <div className="flex min-w-0 flex-col items-stretch gap-3 sm:items-end">
                 <div className="flex flex-wrap items-center justify-end gap-2">
-                  {isSupabaseConfigured() && user ? (
-                    <button
-                      type="button"
-                      disabled={signOutPending}
-                      onClick={() => void signOut()}
-                      className="inline-flex min-h-[2.25rem] shrink-0 items-center justify-center rounded-full border border-stone-300/90 bg-white px-3 text-xs font-semibold text-zinc-800 transition hover:border-stone-400 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-50"
-                      data-testid="workspace-shell-sign-out"
-                    >
-                      {signOutPending ? 'Signing out…' : 'Sign out'}
-                    </button>
-                  ) : null}
+                  {isSupabaseConfigured() && user ? <LearnerProfileMenu /> : null}
                 </div>
                 <LearnerTopNav className="justify-start sm:justify-end" />
               </div>

@@ -21,8 +21,8 @@ export function TrustLegalFooterLinks(props: Props) {
       data-testid="trust-legal-footer-links"
       className={`flex flex-wrap items-center justify-center gap-x-3 gap-y-1 ${textSize} leading-snug text-zinc-500 ${className}`.trim()}
     >
-      <Link to={LEGAL_ROUTES.disclaimer} className="text-zinc-400 underline-offset-2 hover:text-zinc-100 hover:underline">
-        Disclaimer
+      <Link to={LEGAL_ROUTES.privacy} className="text-zinc-400 underline-offset-2 hover:text-zinc-100 hover:underline">
+        Privacy
       </Link>
       <span className="text-zinc-600" aria-hidden>
         ·
@@ -33,8 +33,20 @@ export function TrustLegalFooterLinks(props: Props) {
       <span className="text-zinc-600" aria-hidden>
         ·
       </span>
-      <Link to={LEGAL_ROUTES.privacy} className="text-zinc-400 underline-offset-2 hover:text-zinc-100 hover:underline">
-        Privacy
+      <Link to={LEGAL_ROUTES.disclaimer} className="text-zinc-400 underline-offset-2 hover:text-zinc-100 hover:underline">
+        Disclaimer
+      </Link>
+      <span className="text-zinc-600" aria-hidden>
+        ·
+      </span>
+      <Link to={LEGAL_ROUTES.support} className="text-zinc-400 underline-offset-2 hover:text-zinc-100 hover:underline">
+        Support
+      </Link>
+      <span className="text-zinc-600" aria-hidden>
+        ·
+      </span>
+      <Link to={LEGAL_ROUTES.contact} className="text-zinc-400 underline-offset-2 hover:text-zinc-100 hover:underline">
+        Contact
       </Link>
       <span className="text-zinc-600" aria-hidden>
         ·
