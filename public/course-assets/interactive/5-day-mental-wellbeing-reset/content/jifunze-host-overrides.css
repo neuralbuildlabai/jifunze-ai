@@ -1,0 +1,8 @@
+/**
+ * Jifunze.ai host overrides for the embedded workshop player.
+ * Keep rules minimal — only typography and layout comfort; do not hide functional UI.
+ */
+#app {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
