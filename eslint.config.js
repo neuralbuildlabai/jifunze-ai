@@ -6,7 +6,11 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', 'supabase/functions', 'public/course-assets/interactive/**']),
+  globalIgnores([
+    'dist',
+    'supabase/functions',
+    'public/course-assets/interactive/**',
+  ]),
   {
     files: ['scripts/**/*.ts', 'e2e/**/*.ts'],
     extends: [js.configs.recommended, tseslint.configs.recommended],

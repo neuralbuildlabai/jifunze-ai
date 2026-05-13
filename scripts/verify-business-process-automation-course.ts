@@ -1,8 +1,7 @@
 /**
- * Continuity checks for the Business Process Automation for Work standalone course.
- * Asserts: slug, internalKey, 5 modules, 12 quiz questions, dataset values, learner practice,
- * certificate config, catalog presence, no slug collisions with flagship courses,
- * slide PNG assets, slide manifest, and slide player wiring.
+ * Continuity checks for Business Process Automation for Work **courseware** (archived from public catalog).
+ * Public `/learn/.../business-process-automation-for-work` URLs redirect to the Business Analytics free starter.
+ * This script still validates modules, slides, narration wiring, and that BPA is **not** promoted as a separate public course.
  *
  * Run: `npm run verify:business-process-automation`
  * No Supabase or network access required.
@@ -25,6 +24,7 @@ import {
 } from '../src/data/courses'
 import { businessProcessAutomationNarrationManifest } from '../src/data/courses/businessProcessAutomationNarration'
 import { FLAGSHIP_CURRICULUM_SLUGS } from '../src/data/learning/flagshipCourseCurricula'
+import { getFullCourseCatalogItems } from '../src/data/learning/availablePublicLearnCatalog'
 
 function testCourseShellAndIdentity() {
   assert.equal(businessProcessAutomationCourse.slug, BUSINESS_PROCESS_AUTOMATION_SLUG, 'slug constant matches export')
@@ -250,12 +250,21 @@ function testCertificateConfig() {
 }
 
 function testCatalogPresence() {
-  const entry = STANDALONE_LEARNER_CATALOG.find((c) => c.slug === BUSINESS_PROCESS_AUTOMATION_SLUG)
-  assert.ok(entry, 'course is present in STANDALONE_LEARNER_CATALOG')
-  assert.equal(entry!.internalKey, BUSINESS_PROCESS_AUTOMATION_INTERNAL_KEY, 'catalog entry internalKey matches constant')
-  assert.ok(entry!.publicRoute.includes('business-process-automation-for-work'), 'catalog publicRoute includes slug')
-  assert.ok(entry!.title.length > 0, 'catalog entry has a title')
-  assert.ok(entry!.subtitle.length > 0, 'catalog entry has a subtitle')
+  assert.ok(
+    !STANDALONE_LEARNER_CATALOG.some((c) => c.slug === BUSINESS_PROCESS_AUTOMATION_SLUG),
+    'BPA must not be in STANDALONE_LEARNER_CATALOG — public URLs redirect to Business Analytics starter',
+  )
+  const full = getFullCourseCatalogItems()
+  assert.ok(
+    !full.some((c) => c.slug === BUSINESS_PROCESS_AUTOMATION_SLUG),
+    'BPA must not appear on /learn full-course cards',
+  )
+  const app = readFileSync(join(REPO_ROOT, 'src/App.tsx'), 'utf8')
+  assert.ok(
+    app.includes('/learn/business-process-automation-for-work') &&
+      app.includes('/learn/free/business-analytics-decision-making'),
+    'App.tsx wires BPA deprecation redirect toward Business Analytics free starter',
+  )
 }
 
 function testNoFlagshipSlugCollisions() {
@@ -445,7 +454,7 @@ function main() {
   testNarrationManifestAndVoiceoverDocs()
   console.log('verify-business-process-automation-course: OK — all checks passed')
   console.log(
-    'Manual UX check (browser): /learn/business-process-automation-for-work — narrated-course overview with slide player first; modules show player + compact lessons; narration is planned until MP3s exist under public/course-assets/.../audio/.',
+    'Public note: /learn/business-process-automation-for-work redirects to /learn/free/business-analytics-decision-making (BPA consolidated; course assets remain for archival verify).',
   )
 }
 

@@ -63,8 +63,8 @@ function testUiWiring() {
   assert.ok(riseSection.includes('/learn/courses/${courseSlug}/capstone'), 'Hosted lesson section links capstone by slug')
   assert.ok(riseSection.includes('Submit Final Capstone'), 'Hosted lesson section capstone CTA label')
   assert.ok(
-    riseSection.includes('Certificate unlocks after required checks are complete'),
-    'Launch card certificate note',
+    riseSection.includes('Your certificate is available only after required checks'),
+    'Launch card certificate eligibility note',
   )
   assert.ok(riseSection.includes('Your certificate is awarded only after your capstone is reviewed and passed'), 'Capstone card certificate note')
 
