@@ -79,6 +79,12 @@ test.describe('Access gates (forced pro/platform via build flags)', () => {
     await expect(page.getByTestId('admin-system-accounts-table')).toHaveCount(0)
   })
 
+  test('admin dashboard shows role badge and identity strip', async ({ page }) => {
+    await page.goto('/admin/dashboard')
+    await expect(page.getByTestId('admin-shell-role-badge')).toBeVisible({ timeout: 20_000 })
+    await expect(page.getByTestId('admin-shell-identity')).toBeVisible()
+  })
+
   test('admin shell mobile menu toggle is present on narrow viewports', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 800 })
     await page.goto('/admin/dashboard')

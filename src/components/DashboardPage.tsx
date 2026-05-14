@@ -1,6 +1,9 @@
+import { Navigate } from 'react-router-dom'
 import { LearnerDashboardPage } from './learning/LearnerDashboardPage'
 import { useAuth } from '../auth/AuthContext'
 import { isSupabaseConfigured } from '../config/supabaseEnv'
+import { useAdminAccess } from './admin/useAdminAccess'
+import { ADMIN_DEFAULT_SIGNED_IN_PATH } from '../lib/signedInDefaultRoute'
 
 /**
  * Signed-in learner home — progress, continue learning, and next steps (warm shell via {@link LearnerAppShell}).
@@ -16,6 +19,17 @@ export function DashboardPage() {
     signOutPending,
     retryWorkspaceBootstrap,
   } = useAuth()
+  const { canAccessAdmin, tierLoading, playwrightAdminShellBypass } = useAdminAccess()
+
+  if (
+    isSupabaseConfigured() &&
+    user &&
+    canAccessAdmin &&
+    !tierLoading &&
+    !playwrightAdminShellBypass
+  ) {
+    return <Navigate to={ADMIN_DEFAULT_SIGNED_IN_PATH} replace />
+  }
 
   const setupNeedsRecovery =
     isSupabaseConfigured() && Boolean(user) && !workspaceTenantResolved && authError != null

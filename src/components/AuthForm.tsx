@@ -5,7 +5,7 @@ import { authFailureMessage } from '../auth/authErrorMessage'
 import { useAuth } from '../auth/AuthContext'
 import { isSupabaseConfigured } from '../config/supabaseEnv'
 import { passwordPolicyErrorMessage, passwordPolicyHint } from '../auth/passwordPolicy'
-import { safeReturnUrl } from '../lib/safeReturnUrl'
+import { resolvePostAuthNavigatePath } from '../lib/signedInDefaultRoute'
 import { LEGAL_ROUTES, TRUST_COPY } from '../training/trustCopy'
 
 type AuthFormProps = {
@@ -60,7 +60,7 @@ export function AuthForm({ initialMode = 'signin', appearance = 'default' }: Aut
     }
     setBusy(true)
     try {
-      const postAuth = safeReturnUrl(searchParams.get('returnUrl')) ?? '/dashboard'
+      const postAuth = resolvePostAuthNavigatePath(email.trim(), searchParams.get('returnUrl'))
       if (mode === 'signin') {
         await signIn(email, password)
         navigate(postAuth, { replace: true })

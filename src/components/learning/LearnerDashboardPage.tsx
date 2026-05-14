@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../../auth/AuthContext'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
 import { learnerDisplayFirstName } from '../../lib/learnerProfileDisplay'
+import { useProfileDisplay } from '../../profile/useProfileDisplay'
 import {
   getLearnerLastActivity,
   getLearnerProgressSummary,
@@ -19,12 +20,13 @@ const card =
 
 export function LearnerDashboardPage() {
   const { user, supabase } = useAuth()
+  const { profileRow } = useProfileDisplay()
   const [courses, setCourses] = useState<LearnerUnifiedActiveCourse[]>([])
   const [summary, setSummary] = useState<{ activeCount: number; avgProgress: number; completedCount: number } | null>(null)
   const [lastActive, setLastActive] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
-  const firstName = useMemo(() => learnerDisplayFirstName(user), [user])
+  const firstName = useMemo(() => learnerDisplayFirstName(user, profileRow), [user, profileRow])
 
   const load = useCallback(async () => {
     if (!user?.id || !supabase || !isSupabaseConfigured()) {

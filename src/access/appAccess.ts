@@ -28,6 +28,11 @@ function parseEmailList(raw: string | undefined): Set<string> {
   )
 }
 
+function viteEnv(key: string): string | undefined {
+  const env = typeof import.meta !== 'undefined' ? import.meta.env : undefined
+  return (env as Record<string, string | undefined> | undefined)?.[key]
+}
+
 function tierRank(t: AccessTier): number {
   switch (t) {
     case 'member':
@@ -52,14 +57,10 @@ export function resolveAccessTier(userEmail: string | null | undefined): AccessT
   if (email === CANONICAL_SUPER_ADMIN_EMAIL.trim().toLowerCase()) return 'super_admin'
   if (email === CANONICAL_PLATFORM_ADMIN_EMAIL.trim().toLowerCase()) return 'platform_admin'
 
-  const superAdmins = parseEmailList(import.meta.env.VITE_SUPER_ADMIN_EMAILS as string | undefined)
-  const platformAdmins = parseEmailList(
-    import.meta.env.VITE_PLATFORM_ADMIN_EMAILS as string | undefined,
-  )
-  const workspaceAdmins = parseEmailList(
-    import.meta.env.VITE_WORKSPACE_ADMIN_EMAILS as string | undefined,
-  )
-  const proUsers = parseEmailList(import.meta.env.VITE_PRO_USER_EMAILS as string | undefined)
+  const superAdmins = parseEmailList(viteEnv('VITE_SUPER_ADMIN_EMAILS'))
+  const platformAdmins = parseEmailList(viteEnv('VITE_PLATFORM_ADMIN_EMAILS'))
+  const workspaceAdmins = parseEmailList(viteEnv('VITE_WORKSPACE_ADMIN_EMAILS'))
+  const proUsers = parseEmailList(viteEnv('VITE_PRO_USER_EMAILS'))
 
   if (superAdmins.has(email)) return 'super_admin'
   if (platformAdmins.has(email)) return 'platform_admin'

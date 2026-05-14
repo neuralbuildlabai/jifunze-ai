@@ -1,25 +1,30 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { User } from '@supabase/supabase-js'
 import { useAuth } from '../../auth/AuthContext'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
 import { passwordPolicyHint } from '../../auth/passwordPolicy'
+import { useProfileDisplay } from '../../profile/useProfileDisplay'
 import { learnerShellTokens } from './learnerShellTokens'
 
 function readMeta(user: User | null | undefined) {
   const m = (user?.user_metadata ?? {}) as Record<string, unknown>
+  const str = (k: string) => (typeof m[k] === 'string' ? (m[k] as string) : '')
   return {
-    first_name: typeof m.first_name === 'string' ? m.first_name : '',
-    last_name: typeof m.last_name === 'string' ? m.last_name : '',
-    phone: typeof m.phone === 'string' ? m.phone : '',
+    first_name: str('first_name').trim(),
+    last_name: str('last_name').trim(),
+    display_name: str('display_name').trim(),
+    phone: str('phone').trim(),
   }
 }
 
 export function LearnerAccountSettingsForm() {
   const { user, supabase } = useAuth()
+  const { profileRow, refreshProfileDisplay } = useProfileDisplay()
   const initial = useMemo(() => readMeta(user), [user])
   const [firstName, setFirstName] = useState(initial.first_name)
   const [lastName, setLastName] = useState(initial.last_name)
+  const [displayName, setDisplayName] = useState(initial.display_name)
   const [phone, setPhone] = useState(initial.phone)
   const [password, setPassword] = useState('')
   const [password2, setPassword2] = useState('')
@@ -27,28 +32,55 @@ export function LearnerAccountSettingsForm() {
   const [err, setErr] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
+  useEffect(() => {
+    const m = readMeta(user)
+    setFirstName((profileRow?.first_name?.trim() || m.first_name) ?? '')
+    setLastName((profileRow?.last_name?.trim() || m.last_name) ?? '')
+    setDisplayName((profileRow?.display_name?.trim() || m.display_name) ?? '')
+    setPhone(m.phone)
+  }, [user, profileRow?.first_name, profileRow?.last_name, profileRow?.display_name])
+
   const onSaveProfile = useCallback(async () => {
     if (!supabase || !user || !isSupabaseConfigured()) return
     setBusy(true)
     setErr(null)
     setMsg(null)
     try {
-      const { error } = await supabase.auth.updateUser({
+      const fn = firstName.trim()
+      const ln = lastName.trim()
+      const dn = displayName.trim()
+      const { error: authErr } = await supabase.auth.updateUser({
         data: {
-          first_name: firstName.trim(),
-          last_name: lastName.trim(),
+          first_name: fn || null,
+          last_name: ln || null,
+          display_name: dn || null,
           phone: phone.trim() || null,
         },
       })
-      if (error) throw error
+      if (authErr) throw authErr
+
+      const { error: profErr } = await supabase
+        .from('profiles')
+        .update({
+          first_name: fn || null,
+          last_name: ln || null,
+          display_name: dn || null,
+        })
+        .eq('id', user.id)
+
+      if (profErr) {
+        console.warn('[account] profiles display columns update:', profErr.message)
+      }
+
       await supabase.auth.refreshSession()
+      await refreshProfileDisplay()
       setMsg('Profile saved.')
     } catch (e: unknown) {
       setErr(e instanceof Error ? e.message : 'Could not save profile.')
     } finally {
       setBusy(false)
     }
-  }, [supabase, user, firstName, lastName, phone])
+  }, [supabase, user, firstName, lastName, displayName, phone, refreshProfileDisplay])
 
   const onChangePassword = useCallback(async () => {
     if (!supabase || !user || !isSupabaseConfigured()) return
@@ -91,6 +123,7 @@ export function LearnerAccountSettingsForm() {
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             autoComplete="given-name"
+            data-testid="learner-account-first-name"
           />
         </label>
         <label className="block text-sm">
@@ -100,6 +133,17 @@ export function LearnerAccountSettingsForm() {
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             autoComplete="family-name"
+            data-testid="learner-account-last-name"
+          />
+        </label>
+        <label className="block text-sm">
+          <span className="text-stone-600">Display name (optional)</span>
+          <input
+            className="mt-1 w-full rounded-lg border border-stone-200/90 bg-white px-3 py-2 text-sm text-zinc-900"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+            placeholder="Shown in greetings when set"
+            data-testid="learner-account-display-name"
           />
         </label>
         <label className="block text-sm">
@@ -124,6 +168,7 @@ export function LearnerAccountSettingsForm() {
           disabled={busy}
           onClick={() => void onSaveProfile()}
           className={learnerShellTokens.primaryButton}
+          data-testid="learner-account-save-profile"
         >
           Save profile
         </button>

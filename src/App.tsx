@@ -9,6 +9,8 @@ import { LearnerDeviceLimitModal } from './components/learn/LearnerDeviceLimitMo
 import { LearnerCheckoutPage } from './components/learn/LearnerCheckoutPage'
 import { ReadinessChallengePage } from './components/learn/ReadinessChallengePage'
 import { AccessTierProvider } from './access/AccessTierProvider'
+import { useAppAccess } from './access/useAppAccess'
+import { resolveAccessTier } from './access/appAccess'
 import { LearningAccessProvider } from './learning/LearningAccessContext'
 import { AuthProvider, useAuth } from './auth/AuthContext'
 import { FullDisclaimerPage } from './components/legal/FullDisclaimerPage'
@@ -85,6 +87,10 @@ import { AdminReportsPage } from './components/admin/platform/AdminReportsPage'
 import { AdminSupportPage } from './components/admin/platform/AdminSupportPage'
 import { AdminSettingsPage } from './components/admin/platform/AdminSettingsPage'
 import { AdminHealthPage } from './components/admin/platform/AdminHealthPage'
+import { ProfileDisplayProvider } from './profile/ProfileDisplayProvider'
+import { isAdminTier } from './lib/admin/adminAccess'
+import { ADMIN_DEFAULT_SIGNED_IN_PATH, LEARNER_DEFAULT_SIGNED_IN_PATH } from './lib/signedInDefaultRoute'
+import { isSupabaseConfigured } from './config/supabaseEnv'
 
 function RedirectLegacyLibrariesAiFoundationsToCanonical() {
   return <Navigate to={PUBLIC_AI_FOUNDATIONS_BASE_PATH} replace />
@@ -108,6 +114,8 @@ function AppChrome({ env }: { env: EnvCheckResult }) {
 
 function HomeEntryPage() {
   const location = useLocation()
+  const { user } = useAuth()
+  const { tier, tierLoading } = useAppAccess()
   const legacyAuthRedirect = useMemo(() => {
     const search = new URLSearchParams(location.search)
     if (search.get('auth') === 'signup' || search.get('signup') === '1') return LEGAL_ROUTES.authSignUp
@@ -115,8 +123,27 @@ function HomeEntryPage() {
     return null
   }, [location.search])
 
+  const emailTier = useMemo(() => resolveAccessTier(user?.email), [user?.email])
+
   if (legacyAuthRedirect) {
     return <Navigate to={legacyAuthRedirect} replace />
+  }
+
+  if (user && isSupabaseConfigured()) {
+    if (isAdminTier(emailTier)) {
+      return <Navigate to={ADMIN_DEFAULT_SIGNED_IN_PATH} replace />
+    }
+    if (tierLoading) {
+      return (
+        <div className="flex min-h-[40vh] w-full items-center justify-center bg-[var(--jf-bg-page)] px-4 text-sm text-stone-600">
+          Preparing your account…
+        </div>
+      )
+    }
+    if (isAdminTier(tier)) {
+      return <Navigate to={ADMIN_DEFAULT_SIGNED_IN_PATH} replace />
+    }
+    return <Navigate to={LEARNER_DEFAULT_SIGNED_IN_PATH} replace />
   }
 
   return <Navigate to="/learn" replace />
@@ -137,8 +164,10 @@ export default function App() {
           <AuthProvider>
             <LearningAccessProvider>
               <AccessTierProvider>
-                <AppChrome env={env} />
-                <MaintenancePublicGate />
+                <ProfileDisplayProvider>
+                  <AppChrome env={env} />
+                  <MaintenancePublicGate />
+                </ProfileDisplayProvider>
               </AccessTierProvider>
             </LearningAccessProvider>
           </AuthProvider>

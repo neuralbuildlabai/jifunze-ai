@@ -1,21 +1,25 @@
 import { useMemo, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../../../auth/AuthContext'
-import { learnerDisplayFirstName, learnerProfileInitials } from '../../../lib/learnerProfileDisplay'
+import {
+  learnerPrimaryDisplayLabel,
+  learnerProfileInitials,
+} from '../../../lib/learnerProfileDisplay'
 import { adminEnvironmentLabel, getAdminAppEnvironment } from '../../../lib/admin/adminEnv'
 import { useAdminAccess } from '../useAdminAccess'
+import { useProfileDisplay } from '../../../profile/useProfileDisplay'
 
 const nav = [
   { to: '/admin/dashboard', label: 'Dashboard' },
+  { to: '/admin/health', label: 'Health' },
   { to: '/admin/learners', label: 'Learners' },
   { to: '/admin/courses', label: 'Courses' },
-  { to: '/admin/capstones', label: 'Capstones' },
   { to: '/admin/enrollments', label: 'Enrollments' },
   { to: '/admin/progress', label: 'Progress' },
   { to: '/admin/certificates', label: 'Certificates' },
   { to: '/admin/reports', label: 'Reports' },
   { to: '/admin/support', label: 'Support' },
-  { to: '/admin/health', label: 'Health' },
+  { to: '/admin/capstones', label: 'Capstones' },
   { to: '/admin/settings', label: 'Settings' },
 ] as const
 
@@ -32,18 +36,19 @@ function envBadgeClass(): string {
 
 export function AdminShell() {
   const { user, signOut, signOutPending } = useAuth()
-  const { isSuperAdmin } = useAdminAccess()
+  const { isSuperAdmin, isPlatformAdmin } = useAdminAccess()
+  const { profileRow } = useProfileDisplay()
   const location = useLocation()
   const [menuOpen, setMenuOpen] = useState(false)
 
-  const first = useMemo(() => learnerDisplayFirstName(user), [user])
-  const initials = useMemo(() => learnerProfileInitials(user), [user])
+  const displayLabel = useMemo(() => learnerPrimaryDisplayLabel(user, profileRow), [user, profileRow])
+  const initials = useMemo(() => learnerProfileInitials(user, profileRow), [user, profileRow])
 
   return (
     <div className="min-h-screen w-full bg-zinc-50 text-zinc-900">
       <div className="flex min-h-screen">
         <aside
-          className={`fixed inset-y-0 left-0 z-40 w-64 transform border-r border-zinc-200 bg-white shadow-sm transition-transform duration-200 lg:static lg:translate-x-0 ${
+          className={`fixed inset-y-0 left-0 z-40 flex w-64 min-h-screen flex-col transform border-r border-zinc-200 bg-white shadow-sm transition-transform duration-200 lg:static lg:translate-x-0 ${
             menuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
           }`}
           aria-label="Admin navigation"
@@ -53,7 +58,59 @@ export function AdminShell() {
               Jifunze Admin
             </Link>
           </div>
-          <nav className="flex flex-col gap-0.5 p-2">
+
+          <div
+            className="space-y-3 border-b border-zinc-100 px-4 py-4"
+            data-testid="admin-shell-identity"
+          >
+            <div className="flex items-start gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-xs font-bold text-white">
+                {initials}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold text-zinc-900">{displayLabel}</p>
+                <p className="truncate text-[11px] text-zinc-500">{user?.email}</p>
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <span
+                    data-testid="admin-shell-role-badge"
+                    className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                      isSuperAdmin
+                        ? 'border-violet-300 bg-violet-50 text-violet-900'
+                        : 'border-sky-300 bg-sky-50 text-sky-900'
+                    }`}
+                  >
+                    {isSuperAdmin ? 'Super Admin' : isPlatformAdmin ? 'Platform Admin' : 'Admin'}
+                  </span>
+                  <span className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold ${envBadgeClass()}`}>
+                    {adminEnvironmentLabel()}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col gap-1.5 text-sm">
+              <Link
+                to="/dashboard"
+                className="font-medium text-violet-800 underline-offset-2 hover:underline"
+                data-testid="admin-shell-learner-view"
+                onClick={() => setMenuOpen(false)}
+              >
+                Learner view
+              </Link>
+              <Link to="/account" className="text-zinc-600 underline-offset-2 hover:text-zinc-900 hover:underline" onClick={() => setMenuOpen(false)}>
+                Account
+              </Link>
+              <button
+                type="button"
+                disabled={signOutPending}
+                onClick={() => void signOut()}
+                className="text-left text-zinc-600 underline-offset-2 hover:text-zinc-900 hover:underline disabled:opacity-50"
+              >
+                Sign out
+              </button>
+            </div>
+          </div>
+
+          <nav className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto p-2">
             {nav.map((item) => (
               <NavLink
                 key={item.to}
@@ -69,8 +126,8 @@ export function AdminShell() {
               </NavLink>
             ))}
           </nav>
-          <div className="absolute bottom-0 left-0 right-0 border-t border-zinc-100 p-3 text-[11px] leading-snug text-zinc-500 lg:static lg:border-t-0 lg:px-4 lg:pb-4 lg:pt-2">
-            {isSuperAdmin ? 'Signed in as super admin.' : 'Signed in as platform admin.'} Destructive controls stay super-admin only.
+          <div className="shrink-0 border-t border-zinc-100 p-3 text-[11px] leading-snug text-zinc-500 lg:px-4 lg:pb-4 lg:pt-3">
+            Destructive database controls are super-admin only.
           </div>
         </aside>
 
@@ -112,34 +169,9 @@ export function AdminShell() {
                 title="Use the Learners page for full search and filters."
               />
             </div>
-            <span className={`inline-flex shrink-0 rounded-full border px-2.5 py-1 text-[11px] font-semibold ${envBadgeClass()}`}>
+            <span className={`inline-flex shrink-0 rounded-full border px-2.5 py-1 text-[11px] font-semibold lg:hidden ${envBadgeClass()}`}>
               {adminEnvironmentLabel()}
             </span>
-            <div className="relative flex shrink-0 items-center gap-2">
-              <div className="hidden text-right sm:block">
-                <p className="text-xs font-medium text-zinc-500">{first}</p>
-                <p className="max-w-[10rem] truncate text-[11px] text-zinc-400">{user?.email}</p>
-              </div>
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-900 text-xs font-bold text-white">
-                {initials}
-              </div>
-              <div className="relative flex flex-col items-end gap-1 text-sm">
-                <Link to="/account" className="text-zinc-600 underline-offset-2 hover:text-zinc-900 hover:underline">
-                  Account
-                </Link>
-                <Link to="/dashboard" className="text-zinc-600 underline-offset-2 hover:text-zinc-900 hover:underline">
-                  Learner dashboard
-                </Link>
-                <button
-                  type="button"
-                  disabled={signOutPending}
-                  onClick={() => void signOut()}
-                  className="text-left text-zinc-600 underline-offset-2 hover:text-zinc-900 hover:underline disabled:opacity-50"
-                >
-                  Sign out
-                </button>
-              </div>
-            </div>
           </header>
           <main className="flex-1 px-4 py-8 lg:px-8">
             <Outlet />

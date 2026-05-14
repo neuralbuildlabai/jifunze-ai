@@ -4,10 +4,12 @@ import { useAuth } from '../../auth/AuthContext'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
 import { learnerDisplayFirstName, learnerProfileInitials } from '../../lib/learnerProfileDisplay'
 import { useAdminAccess } from '../admin/useAdminAccess'
+import { useProfileDisplay } from '../../profile/useProfileDisplay'
 
 export function LearnerProfileMenu() {
   const { user, signOut, signOutPending } = useAuth()
-  const { canAccessAdmin } = useAdminAccess()
+  const { canAccessAdmin, isSuperAdmin } = useAdminAccess()
+  const { profileRow } = useProfileDisplay()
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
 
@@ -22,8 +24,8 @@ export function LearnerProfileMenu() {
 
   if (!isSupabaseConfigured() || !user) return null
 
-  const first = learnerDisplayFirstName(user)
-  const initials = learnerProfileInitials(user)
+  const first = learnerDisplayFirstName(user, profileRow)
+  const initials = learnerProfileInitials(user, profileRow)
 
   return (
     <div className="relative" ref={rootRef} data-testid="learner-profile-menu">
@@ -48,8 +50,42 @@ export function LearnerProfileMenu() {
       {open ? (
         <div
           role="menu"
-          className="absolute right-0 z-50 mt-2 max-h-[min(70vh,22rem)] w-[min(calc(100vw-1.25rem),17.5rem)] overflow-y-auto overscroll-contain rounded-xl border border-stone-200/90 bg-white py-1.5 shadow-lg shadow-stone-900/10 sm:min-w-[12.5rem] sm:max-w-none"
+          className="absolute right-0 z-50 mt-2 max-h-[min(70vh,28rem)] w-[min(calc(100vw-1.25rem),18rem)] overflow-y-auto overscroll-contain rounded-xl border border-stone-200/90 bg-white py-1.5 shadow-lg shadow-stone-900/10 sm:min-w-[13rem] sm:max-w-none"
         >
+          {canAccessAdmin ? (
+            <>
+              <p className="px-4 pb-1 pt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-400">Admin</p>
+              <Link
+                role="menuitem"
+                to="/admin/dashboard"
+                className="block px-4 py-2 text-sm font-medium text-violet-900 hover:bg-violet-50"
+                onClick={() => setOpen(false)}
+                data-testid="learner-profile-admin-console"
+              >
+                Admin console
+              </Link>
+              <Link
+                role="menuitem"
+                to="/admin/health"
+                className="block px-4 py-2 text-sm text-zinc-800 hover:bg-stone-50"
+                onClick={() => setOpen(false)}
+                data-testid="learner-profile-admin-health"
+              >
+                Admin health
+              </Link>
+              <Link
+                role="menuitem"
+                to="/admin/settings"
+                className="block px-4 py-2 text-sm text-zinc-800 hover:bg-stone-50"
+                onClick={() => setOpen(false)}
+                data-testid="learner-profile-admin-settings"
+              >
+                {isSuperAdmin ? 'System settings' : 'Admin settings'}
+              </Link>
+              <div className="my-1 border-t border-stone-200/80" />
+              <p className="px-4 pb-1 pt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-400">Learner</p>
+            </>
+          ) : null}
           <Link
             role="menuitem"
             to="/dashboard"
@@ -74,17 +110,6 @@ export function LearnerProfileMenu() {
           >
             Account settings
           </Link>
-          {canAccessAdmin ? (
-            <Link
-              role="menuitem"
-              to="/admin/dashboard"
-              className="block px-4 py-2 text-sm text-zinc-800 hover:bg-stone-50"
-              onClick={() => setOpen(false)}
-              data-testid="learner-nav-admin-console"
-            >
-              Admin console
-            </Link>
-          ) : null}
           <Link
             role="menuitem"
             to="/account#password"
@@ -93,14 +118,16 @@ export function LearnerProfileMenu() {
           >
             Change password
           </Link>
-          <Link
-            role="menuitem"
-            to="/forgot-password"
-            className="block px-4 py-2 text-sm text-zinc-800 hover:bg-stone-50"
-            onClick={() => setOpen(false)}
-          >
-            Forgot password
-          </Link>
+          {!canAccessAdmin ? (
+            <Link
+              role="menuitem"
+              to="/forgot-password"
+              className="block px-4 py-2 text-sm text-zinc-800 hover:bg-stone-50"
+              onClick={() => setOpen(false)}
+            >
+              Forgot password
+            </Link>
+          ) : null}
           <div className="my-1 border-t border-stone-200/80" />
           <button
             role="menuitem"

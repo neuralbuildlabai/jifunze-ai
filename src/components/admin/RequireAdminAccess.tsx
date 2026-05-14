@@ -36,7 +36,7 @@ export function RequireAdminAccess({ children }: { children: ReactNode }) {
   }
 
   if (!canAccessAdmin) {
-    return <Navigate to="/my-learning" replace />
+    return <Navigate to="/dashboard" replace />
   }
 
   return <>{children}</>

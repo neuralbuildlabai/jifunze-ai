@@ -36,6 +36,7 @@
     "test:practical-math-progression": "tsx scripts/test-practical-mathematics-progression.ts",
     "test:learner-progress": "tsx scripts/test-learner-progress-helpers.ts",
     "test:admin-health": "tsx scripts/test-admin-health-helpers.ts",
+    "test:role-routing": "tsx scripts/test-role-default-routes.ts",
     "verify:readiness-adaptive": "tsx scripts/verify-readiness-adaptive.ts",
     "validate:training": "tsx scripts/validate-training-artifacts.ts",
     "audit:flagship-depth": "tsx scripts/audit-flagship-override-depth.ts",

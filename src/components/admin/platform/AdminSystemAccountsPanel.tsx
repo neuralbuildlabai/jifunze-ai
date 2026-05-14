@@ -211,6 +211,11 @@ function AccountRow({ r }: { r: SystemAccountRow }) {
       <td className="px-3 py-2">
         <p className="font-medium text-zinc-900">{r.display_name || '—'}</p>
         <p className="text-xs text-zinc-500">{r.email ?? '—'}</p>
+        {r.warnings.includes('profile_name_missing_canonical_operator') ? (
+          <p className="mt-1 text-[11px] font-medium text-amber-900">
+            Profile name missing — add first/last name in Account settings or admin profile management.
+          </p>
+        ) : null}
         <div className="mt-1 flex flex-wrap gap-1">
           {badges.map((b) => (
             <span key={b.label} className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${b.cls}`}>
