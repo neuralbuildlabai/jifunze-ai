@@ -23,30 +23,11 @@ import { ForgotPasswordPage } from './components/auth/ForgotPasswordPage'
 import { RequireDisclaimerAcknowledged } from './components/auth/RequireDisclaimerAcknowledged'
 import { RequireEmailVerified } from './components/auth/RequireEmailVerified'
 import { ResetPasswordPage } from './components/auth/ResetPasswordPage'
-import { LearningInsightsPage } from './components/LearningInsightsPage'
-import { WorkspaceIdeasPage } from './components/workspace/WorkspaceIdeasPage'
 import { LearnerAccountPage } from './components/workspace/LearnerAccountPage'
-import { WorkspaceSettingsOrAccountPage } from './components/workspace/WorkspaceSettingsPage'
 import { WorkspaceSubscriptionPage } from './components/workspace/WorkspaceSubscriptionPage'
-import { WorkspaceAiLibraryPage } from './components/workspace/WorkspaceAiLibraryPage'
-import { WorkspaceChatbotLibraryPage } from './components/workspace/WorkspaceChatbotLibraryPage'
-import { WorkspaceMlLibraryPage } from './components/workspace/WorkspaceMlLibraryPage'
-import { WorkspaceLibraryPage } from './components/workspace/WorkspaceLibraryPage'
-import { SignedInSurfacesOutlet } from './components/signed-in/SignedInSurfacesOutlet'
-import { WorkspaceStudioPage } from './components/workspace/WorkspaceStudioPage'
 import { DashboardPage } from './components/DashboardPage'
-import { TrainingLessonPage } from './components/training/TrainingLessonPage'
-import { TrainingPlanCreatePage } from './components/training/TrainingPlanCreatePage'
-import { TrainingPlanDetailPage } from './components/training/TrainingPlanDetailPage'
-import { TeamAssignmentsPage } from './components/team/TeamAssignmentsPage'
-import { TeamMembersPage } from './components/team/TeamMembersPage'
-import { TrendInsightsPage } from './components/trends/TrendInsightsPage'
 import { LearnerReportsPage } from './components/reports/LearnerReportsPage'
-import { TeamLearningReportsPage } from './components/reports/TeamLearningReportsPage'
-import { TrainingPlansPage } from './components/training/TrainingPlansPage'
-import { TrainingQuizPage } from './components/training/TrainingQuizPage'
-import { SignedInHomePage } from './components/SignedInHomePage'
-import { PublicHomePage } from './components/landing/PublicHomePage'
+import { LearnerAppShell } from './components/learner-shell/LearnerAppShell'
 import { PublicAiFoundationsLessonPage } from './components/libraries/PublicAiFoundationsLessonPage'
 import { PublicAiFoundationsLibraryPage } from './components/libraries/PublicAiFoundationsLibraryPage'
 import { PublicAiTeachingLabsPage } from './components/libraries/PublicAiTeachingLabsPage'
@@ -56,7 +37,6 @@ import { PublicMlLessonPage } from './components/libraries/PublicMlLessonPage'
 import { PublicMlLibraryPage } from './components/libraries/PublicMlLibraryPage'
 import { PublicExtendedCatalogLessonPage } from './components/libraries/PublicExtendedCatalogLessonPage'
 import { PublicExtendedCatalogLibraryPage } from './components/libraries/PublicExtendedCatalogLibraryPage'
-import { WorkspaceExtendedLibraryPage } from './components/workspace/WorkspaceExtendedLibraryPage'
 import { PublicStandaloneCourseLandingPage } from './components/courses/PublicStandaloneCourseLandingPage'
 import { LearningCategoryPage } from './components/learn/LearningCategoryPage'
 import { AiAtWorkChatgptFreeStarterPage } from './components/learn/AiAtWorkChatgptFreeStarterPage'
@@ -84,16 +64,8 @@ import {
   PROMPT_ENGINEERING_MODELS_LANDING_PATH,
   PROMPT_ENGINEERING_MODELS_PUBLIC_BASE_PATH,
 } from './data/learning/standaloneCoursesCatalog'
-import {
-  RequireAdminAccess,
-  RequireInstitutionOperatorSurface,
-  RequireInternalWorkspaceLibrary,
-  RequirePlatformInsights,
-  RequireSuperAdminSurface,
-  RequireTrainingPlanAdminSurface,
-} from './components/access/RequireAccess'
-import { PlatformSurfacePage } from './components/PlatformSurfacePage'
-import { PublicGeneratePage } from './components/PublicGeneratePage'
+import { RequireAdminAccess } from './components/access/RequireAccess'
+import { LegacyPlatformRedirect } from './components/routing/LegacyPlatformRedirect'
 import { SystemStatusBanner } from './components/SystemStatusBanner'
 import { logEnvValidationFailure, validateStartupEnv } from './lib/envCheck'
 import type { EnvCheckResult } from './lib/envCheck'
@@ -135,7 +107,6 @@ function AppChrome({ env }: { env: EnvCheckResult }) {
 }
 
 function HomeEntryPage() {
-  const { user } = useAuth()
   const location = useLocation()
   const legacyAuthRedirect = useMemo(() => {
     const search = new URLSearchParams(location.search)
@@ -144,15 +115,11 @@ function HomeEntryPage() {
     return null
   }, [location.search])
 
-  if (user) {
-    return <SignedInHomePage />
-  }
-
   if (legacyAuthRedirect) {
     return <Navigate to={legacyAuthRedirect} replace />
   }
 
-  return <PublicHomePage />
+  return <Navigate to="/learn" replace />
 }
 
 export default function App() {
@@ -177,7 +144,7 @@ export default function App() {
           </AuthProvider>
         }
       >
-        <Route path="/generate" element={<PublicGeneratePage />} />
+        <Route path="/generate" element={<Navigate to="/learn" replace />} />
         <Route path="/disclaimer" element={<FullDisclaimerPage />} />
         <Route path="/terms" element={<TermsOfServicePage />} />
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
@@ -362,215 +329,35 @@ export default function App() {
           path="/libraries/ai-foundations/:lessonSlug"
           element={<RedirectLegacyLibrariesAiFoundationsLessonToCanonical />}
         />
+        <Route path="/platform" element={<LegacyPlatformRedirect />} />
+        <Route path="/trends" element={<Navigate to="/learn" replace />} />
+        <Route path="/ideas" element={<Navigate to="/learn" replace />} />
+        <Route path="/studio" element={<Navigate to="/learn" replace />} />
+        <Route path="/insights" element={<Navigate to="/learn" replace />} />
+        <Route path="/training" element={<Navigate to="/learn" replace />} />
+        <Route path="/training/*" element={<Navigate to="/learn" replace />} />
+        <Route path="/team/*" element={<Navigate to="/learn" replace />} />
+        <Route path="/library" element={<Navigate to="/learn" replace />} />
+        <Route path="/library/ai" element={<Navigate to="/learn" replace />} />
+        <Route path="/library/ml" element={<Navigate to="/learn" replace />} />
+        <Route path="/library/chatbots" element={<Navigate to="/learn" replace />} />
+        {Object.values(EXTENDED_PUBLIC_LIBRARY_CONFIGS).map((cfg) => (
+          <Route key={cfg.workspacePath} path={cfg.workspacePath} element={<Navigate to="/learn" replace />} />
+        ))}
         <Route element={<RequireEmailVerified />}>
           <Route element={<RequireDisclaimerAcknowledged />}>
-            <Route element={<SignedInSurfacesOutlet />}>
+            <Route element={<LearnerAppShell />}>
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/reports" element={<LearnerReportsPage />} />
               <Route path="/my-learning" element={<MyLearningPage />} />
-              <Route
-                path="/library"
-                element={
-                  <RequireInternalWorkspaceLibrary>
-                    <WorkspaceLibraryPage />
-                  </RequireInternalWorkspaceLibrary>
-                }
-              />
-              <Route
-                path="/library/ai"
-                element={
-                  <RequireInternalWorkspaceLibrary>
-                    <WorkspaceAiLibraryPage />
-                  </RequireInternalWorkspaceLibrary>
-                }
-              />
-              <Route
-                path="/library/ml"
-                element={
-                  <RequireInternalWorkspaceLibrary>
-                    <WorkspaceMlLibraryPage />
-                  </RequireInternalWorkspaceLibrary>
-                }
-              />
-              <Route
-                path="/library/chatbots"
-                element={
-                  <RequireInternalWorkspaceLibrary>
-                    <WorkspaceChatbotLibraryPage />
-                  </RequireInternalWorkspaceLibrary>
-                }
-              />
-              <Route
-                path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.networking.workspacePath}
-                element={
-                  <RequireInternalWorkspaceLibrary>
-                    <WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.networking} />
-                  </RequireInternalWorkspaceLibrary>
-                }
-              />
-              <Route
-                path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.cybersecurity.workspacePath}
-                element={
-                  <RequireInternalWorkspaceLibrary>
-                    <WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.cybersecurity} />
-                  </RequireInternalWorkspaceLibrary>
-                }
-              />
-              <Route
-                path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.cloud_devops.workspacePath}
-                element={
-                  <RequireInternalWorkspaceLibrary>
-                    <WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.cloud_devops} />
-                  </RequireInternalWorkspaceLibrary>
-                }
-              />
-              <Route
-                path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.monitoring.workspacePath}
-                element={
-                  <RequireInternalWorkspaceLibrary>
-                    <WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.monitoring} />
-                  </RequireInternalWorkspaceLibrary>
-                }
-              />
-              <Route
-                path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.content_publishing.workspacePath}
-                element={
-                  <RequireInternalWorkspaceLibrary>
-                    <WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.content_publishing} />
-                  </RequireInternalWorkspaceLibrary>
-                }
-              />
-              <Route
-                path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_prompt_engineering_models.workspacePath}
-                element={
-                  <RequireInternalWorkspaceLibrary>
-                    <WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_prompt_engineering_models} />
-                  </RequireInternalWorkspaceLibrary>
-                }
-              />
-              <Route
-                path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_gemini_workspace.workspacePath}
-                element={
-                  <RequireInternalWorkspaceLibrary>
-                    <WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_gemini_workspace} />
-                  </RequireInternalWorkspaceLibrary>
-                }
-              />
-              <Route
-                path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_claude_writing.workspacePath}
-                element={
-                  <RequireInternalWorkspaceLibrary>
-                    <WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_claude_writing} />
-                  </RequireInternalWorkspaceLibrary>
-                }
-              />
-              <Route
-                path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_agentic_ai_real_work.workspacePath}
-                element={
-                  <RequireInternalWorkspaceLibrary>
-                    <WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_agentic_ai_real_work} />
-                  </RequireInternalWorkspaceLibrary>
-                }
-              />
               <Route path="/learning/labs" element={<Navigate to="/learn" replace />} />
-              <Route
-                path="/team/members"
-                element={
-                  <RequireInstitutionOperatorSurface>
-                    <TeamMembersPage />
-                  </RequireInstitutionOperatorSurface>
-                }
-              />
-              <Route
-                path="/team/assignments"
-                element={
-                  <RequireInstitutionOperatorSurface>
-                    <TeamAssignmentsPage />
-                  </RequireInstitutionOperatorSurface>
-                }
-              />
-              <Route
-                path="/team/learning-reports"
-                element={
-                  <RequireInstitutionOperatorSurface>
-                    <TeamLearningReportsPage />
-                  </RequireInstitutionOperatorSurface>
-                }
-              />
-              <Route
-                path="/training"
-                element={
-                  <RequireTrainingPlanAdminSurface>
-                    <TrainingPlansPage />
-                  </RequireTrainingPlanAdminSurface>
-                }
-              />
-              <Route
-                path="/training/new"
-                element={
-                  <RequireTrainingPlanAdminSurface>
-                    <TrainingPlanCreatePage />
-                  </RequireTrainingPlanAdminSurface>
-                }
-              />
-              <Route path="/training/:planId" element={<TrainingPlanDetailPage />} />
-              <Route path="/training/:planId/lessons/:lessonId" element={<TrainingLessonPage />} />
-              <Route path="/training/:planId/quizzes/:quizId" element={<TrainingQuizPage />} />
-              <Route
-                path="/trends"
-                element={
-                  <RequireInstitutionOperatorSurface>
-                    <TrendInsightsPage />
-                  </RequireInstitutionOperatorSurface>
-                }
-              />
-              <Route
-                path="/ideas"
-                element={
-                  <RequireInstitutionOperatorSurface>
-                    <WorkspaceIdeasPage />
-                  </RequireInstitutionOperatorSurface>
-                }
-              />
-              <Route
-                path="/studio"
-                element={
-                  <RequireInstitutionOperatorSurface>
-                    <WorkspaceStudioPage />
-                  </RequireInstitutionOperatorSurface>
-                }
-              />
               <Route path="/lab" element={<Navigate to="/learn" replace />} />
-              <Route
-                path="/insights"
-                element={
-                  <RequirePlatformInsights>
-                    <LearningInsightsPage />
-                  </RequirePlatformInsights>
-                }
-              />
-              <Route
-                path="/admin/capstones"
-                element={
-                  <RequirePlatformInsights>
-                    <AdminCapstonesReviewPage />
-                  </RequirePlatformInsights>
-                }
-              />
               <Route path="/account" element={<LearnerAccountPage />} />
-              <Route path="/settings" element={<WorkspaceSettingsOrAccountPage />} />
+              <Route path="/settings" element={<Navigate to="/account" replace />} />
               {!LEARNER_MONETIZATION_UI_DISABLED ? (
                 <Route path="/settings/subscription" element={<WorkspaceSubscriptionPage />} />
               ) : null}
             </Route>
-            <Route
-              path="/platform"
-              element={
-                <RequireSuperAdminSurface>
-                  <PlatformSurfacePage />
-                </RequireSuperAdminSurface>
-              }
-            />
             <Route
               element={
                 <RequireAdminAccess>
@@ -591,6 +378,7 @@ export default function App() {
               <Route path="/admin/support" element={<AdminSupportPage />} />
               <Route path="/admin/settings" element={<AdminSettingsPage />} />
               <Route path="/admin/health" element={<AdminHealthPage />} />
+              <Route path="/admin/capstones" element={<AdminCapstonesReviewPage />} />
             </Route>
           </Route>
         </Route>

@@ -16,7 +16,7 @@ function attachDiagnostics(page: Page, critical: string[]) {
 test.describe('Live authenticated UAT (real Supabase)', () => {
   test.skip(!hasSmokeCreds, 'Set SMOKE_EMAIL and SMOKE_PASSWORD (e.g. .env.smoke.local from uatProvisionSmokeUser)')
 
-  test('full session: sign in → bootstrap → pages → generate → sign out', async ({ page, context, baseURL }) => {
+  test('full session: sign in → learn catalog → learner dashboard → sign out', async ({ page, context, baseURL }) => {
     const critical: string[] = []
     attachDiagnostics(page, critical)
 
@@ -33,46 +33,20 @@ test.describe('Live authenticated UAT (real Supabase)', () => {
 
     await expect(page.getByRole('button', { name: /sign out/i })).toBeVisible({ timeout: 120_000 })
 
-    await page.reload({ waitUntil: 'domcontentloaded' })
-    await expect(page.getByRole('button', { name: /sign out/i })).toBeVisible({ timeout: 60_000 })
+    await page.goto(`${baseURL}/learn`, { waitUntil: 'domcontentloaded' })
+    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 60_000 })
+
+    await page.goto(`${baseURL}/dashboard`, { waitUntil: 'domcontentloaded' })
+    await expect(page.getByTestId('learner-dashboard-home')).toBeVisible({ timeout: 60_000 })
 
     await page.goto(`${baseURL}/ideas`, { waitUntil: 'domcontentloaded' })
-    await expect(page.getByRole('heading', { level: 1, name: /^ideas$/i })).toBeVisible({ timeout: 60_000 })
-
-    await page.goto(`${baseURL}/studio`, { waitUntil: 'domcontentloaded' })
-    await expect(page.getByRole('heading', { level: 1, name: /^studio$/i })).toBeVisible({ timeout: 60_000 })
-
-    await page.goto(`${baseURL}/settings`, { waitUntil: 'domcontentloaded' })
-    await expect(page.getByRole('heading', { level: 1, name: /^settings$/i })).toBeVisible({ timeout: 60_000 })
-
-    await page.goto(`${baseURL}/lab`, { waitUntil: 'domcontentloaded' })
-    await expect
-      .poll(() => new URL(page.url()).pathname)
-      .toMatch(/^\/(lab|settings)$/)
+    await expect(page).toHaveURL(/\/learn$/, { timeout: 60_000 })
 
     await page.goto(`${baseURL}/platform`, { waitUntil: 'domcontentloaded' })
-    await expect
-      .poll(() => new URL(page.url()).pathname)
-      .toMatch(/^\/(platform)?$/)
-
-    await page.goto(`${baseURL}/`, { waitUntil: 'domcontentloaded' })
-    await expect(page.getByRole('heading', { name: /create your first post/i })).toBeVisible({ timeout: 60_000 })
-
-    await page.getByPlaceholder(/e\.g\. launching a new skincare product/i).fill('UAT live verification — short topic line')
-    await page.locator('#signed-in-create').getByRole('button', { name: /^generate$/i }).click()
-
-    await expect(page.getByText(/^Hashtags$/i).first()).toBeVisible({ timeout: 120_000 })
-
-    const copyBtn = page.getByRole('button', { name: /copy result/i })
-    if (await copyBtn.isVisible().catch(() => false)) {
-      await copyBtn.click()
-    }
+    await expect(page).toHaveURL(/\/(learn|dashboard|admin\/health)$/, { timeout: 60_000 })
 
     await page.getByRole('button', { name: /sign out/i }).click()
     await expect(page.getByRole('button', { name: /sign out/i })).toHaveCount(0, { timeout: 30_000 })
-    await expect(
-      page.getByRole('heading', { name: /turn one idea into a ready-to-post caption/i }),
-    ).toBeVisible({ timeout: 30_000 })
 
     expect(critical, `Hard failures:\n${critical.join('\n')}`).toEqual([])
   })

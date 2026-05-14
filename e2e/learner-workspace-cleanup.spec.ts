@@ -17,7 +17,7 @@ test.describe('Learner workspace cleanup (demo / no Supabase env)', () => {
     await expect(nav.getByRole('link', { name: /^my learning$/i })).toBeVisible()
     await expect(nav.getByRole('link', { name: /^catalog$/i })).toBeVisible()
     await expect(nav.getByRole('link', { name: /^dashboard$/i })).toBeVisible()
-    await expect(nav.getByRole('link', { name: /^reports$/i })).toHaveCount(0)
+    await expect(nav.getByRole('link', { name: /^progress$/i })).toBeVisible()
     await expect(nav.getByRole('link', { name: /^account$/i })).toHaveCount(0)
     await expect(nav.getByRole('link', { name: /^pathways$/i })).toHaveCount(0)
     await expect(nav.getByRole('link', { name: /^settings$/i })).toHaveCount(0)

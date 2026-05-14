@@ -7,6 +7,24 @@ test.describe('Learning discovery (public)', () => {
     await applyPublicE2eMaintenanceBypass(page)
   })
 
+  test('/ redirects to public learn catalog', async ({ page }) => {
+    await page.goto('/')
+    await expect(page).toHaveURL(/\/learn$/, { timeout: 15_000 })
+    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
+  })
+
+  test('/learn page body avoids retired workspace/studio product terms', async ({ page }) => {
+    await page.goto('/learn')
+    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
+    const txt = (await page.locator('body').innerText()).toLowerCase()
+    expect(txt).not.toContain('jifunze ai studio')
+    expect(txt).not.toContain('growth intelligence')
+    expect(txt).not.toContain('platform ops')
+    expect(txt).not.toContain('learner insights')
+    expect(txt).not.toContain('trend insights')
+    expect(txt).not.toContain('create your first post')
+  })
+
   test('/paths redirects to /learn with available-now anchor', async ({ page }) => {
     await page.goto('/paths')
     await expect(page).toHaveURL(/\/learn#available-now$/)

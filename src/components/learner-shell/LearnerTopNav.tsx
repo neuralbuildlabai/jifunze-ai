@@ -3,7 +3,7 @@ import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { learnerShellTokens } from './learnerShellTokens'
 
 /**
- * Signed-in learner navigation — catalog, learning home, dashboard; profile actions live in {@link LearnerProfileMenu}.
+ * Signed-in learner navigation — dashboard, catalog, learning home, and progress (profile in {@link LearnerProfileMenu}).
  */
 export function LearnerTopNav({ className = '' }: { className?: string }) {
   return (
@@ -12,6 +12,13 @@ export function LearnerTopNav({ className = '' }: { className?: string }) {
       aria-label="Learning"
       data-testid="learner-nav-primary"
     >
+      <NavLink
+        to="/dashboard"
+        className={({ isActive }) => `${learnerShellTokens.navLink} ${isActive ? learnerShellTokens.navLinkActive : ''}`}
+        data-testid="learner-nav-dashboard"
+      >
+        Dashboard
+      </NavLink>
       <NavLink
         to={LEGAL_ROUTES.learn}
         className={({ isActive }) => `${learnerShellTokens.navLink} ${isActive ? learnerShellTokens.navLinkActive : ''}`}
@@ -27,11 +34,11 @@ export function LearnerTopNav({ className = '' }: { className?: string }) {
         My Learning
       </NavLink>
       <NavLink
-        to="/dashboard"
+        to="/reports"
         className={({ isActive }) => `${learnerShellTokens.navLink} ${isActive ? learnerShellTokens.navLinkActive : ''}`}
-        data-testid="learner-nav-dashboard"
+        data-testid="learner-nav-progress"
       >
-        Dashboard
+        Progress
       </NavLink>
     </nav>
   )

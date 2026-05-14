@@ -9,6 +9,7 @@ const nav = [
   { to: '/admin/dashboard', label: 'Dashboard' },
   { to: '/admin/learners', label: 'Learners' },
   { to: '/admin/courses', label: 'Courses' },
+  { to: '/admin/capstones', label: 'Capstones' },
   { to: '/admin/enrollments', label: 'Enrollments' },
   { to: '/admin/progress', label: 'Progress' },
   { to: '/admin/certificates', label: 'Certificates' },

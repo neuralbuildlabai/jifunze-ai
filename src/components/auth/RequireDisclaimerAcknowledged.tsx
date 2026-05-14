@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom'
 /**
  * Wraps the **signed-in workspace** route tree. Public marketing pages are outside this gate so
  * the disclaimer is not repeated on every guest view—acknowledgment is requested when users enter
- * the product surface (see `SignedInHomePage` / modal on first visit).
+ * the product surface (see disclaimer modal on first visit).
  */
 import { useDisclaimerAcknowledgment } from '../../auth/useDisclaimerAcknowledgment'
 import { useAuth } from '../../auth/AuthContext'

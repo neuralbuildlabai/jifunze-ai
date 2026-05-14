@@ -15,9 +15,9 @@ test.describe('Access gates (forced pro/platform via build flags)', () => {
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
   })
 
-  test('platform surface redirects to dashboard without super-admin session', async ({ page }) => {
+  test('legacy /platform redirects to admin health when Playwright admin shell is active', async ({ page }) => {
     await page.goto('/platform')
-    await expect(page).toHaveURL(/\/dashboard$/, { timeout: 20_000 })
+    await expect(page).toHaveURL(/\/admin\/health$/, { timeout: 20_000 })
   })
 
   test('admin dashboard loads in Playwright-tagged no-Supabase bundle (no auth)', async ({ page }) => {
