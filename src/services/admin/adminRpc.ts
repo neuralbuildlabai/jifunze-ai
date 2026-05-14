@@ -189,6 +189,38 @@ export async function rpcAdminOperationsHealthSnapshot(
   return { data: (data as Record<string, unknown>) ?? null, error: null }
 }
 
+export async function rpcAdminStorageHealthSummary(
+  supabase: SupabaseClient,
+): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
+  const { data, error } = await supabase.rpc('admin_get_storage_health_summary')
+  if (error) return { data: null, error: error.message }
+  return { data: (data as Record<string, unknown>) ?? null, error: null }
+}
+
+export async function rpcAdminSchemaHealth(
+  supabase: SupabaseClient,
+): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
+  const { data, error } = await supabase.rpc('admin_get_schema_health')
+  if (error) return { data: null, error: error.message }
+  return { data: (data as Record<string, unknown>) ?? null, error: null }
+}
+
+export async function rpcAdminProgressIntegrityHealth(
+  supabase: SupabaseClient,
+): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
+  const { data, error } = await supabase.rpc('admin_get_progress_integrity_health')
+  if (error) return { data: null, error: error.message }
+  return { data: (data as Record<string, unknown>) ?? null, error: null }
+}
+
+export async function rpcAdminCertificateHealthStats(
+  supabase: SupabaseClient,
+): Promise<{ data: Record<string, unknown> | null; error: string | null }> {
+  const { data, error } = await supabase.rpc('admin_get_certificate_health_stats')
+  if (error) return { data: null, error: error.message }
+  return { data: (data as Record<string, unknown>) ?? null, error: null }
+}
+
 export async function rpcAdminRoleHealth(
   supabase: SupabaseClient,
 ): Promise<{ data: Record<string, unknown> | null; error: string | null }> {

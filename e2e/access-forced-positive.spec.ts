@@ -53,6 +53,32 @@ test.describe('Access gates (forced pro/platform via build flags)', () => {
     await expect(page.getByTestId('admin-health-overview-snapshot')).toBeVisible()
   })
 
+  test('admin health page shows prioritized board and copy control', async ({ page }) => {
+    await page.goto('/admin/health')
+    await expect(page.getByTestId('admin-health-grouped-board')).toBeVisible({ timeout: 20_000 })
+    await expect(page.getByTestId('admin-health-copy-summary')).toBeVisible()
+    await expect(page.getByTestId('admin-health-last-checked')).toBeVisible()
+  })
+
+  test('admin health page body does not echo JWT or Stripe secret patterns', async ({ page }) => {
+    await page.goto('/admin/health')
+    const text = await page.locator('body').innerText()
+    expect(text).not.toMatch(/sk_live_[a-z0-9]{8,}/i)
+    expect(text).not.toMatch(/eyJ[a-zA-Z0-9_-]{12,}\.[a-zA-Z0-9_-]{8,}\.[a-zA-Z0-9_-]{8,}/)
+  })
+
+  test('admin health auth tab shows canonical admin accounts guidance', async ({ page }) => {
+    await page.goto('/admin/health')
+    await page.getByRole('button', { name: 'Auth' }).click()
+    await expect(page.getByText('Canonical admin accounts')).toBeVisible()
+  })
+
+  test('admin settings shows read-only system accounts for non-super session', async ({ page }) => {
+    await page.goto('/admin/settings')
+    await expect(page.getByTestId('admin-system-accounts-readonly')).toBeVisible({ timeout: 20_000 })
+    await expect(page.getByTestId('admin-system-accounts-table')).toHaveCount(0)
+  })
+
   test('admin shell mobile menu toggle is present on narrow viewports', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 800 })
     await page.goto('/admin/dashboard')

@@ -2,7 +2,8 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
 import { getLearnerCertificates } from '../../lib/learnerProgressHub'
 import { rpcAdminDatabaseHealth, rpcAdminLargestTables } from '../../services/admin/adminRpc'
-import { adminBuildLabel, adminEnvironmentLabel, type AdminHealthCheck, type AdminHealthStatus } from './adminEnv'
+import { isBillingCheckoutEnabled } from '../billingEnv'
+import { adminBuildLabel, adminEnvironmentLabel, getAdminAppEnvironment, type AdminHealthCheck, type AdminHealthStatus } from './adminEnv'
 
 export type AdminEnvironmentHealth = {
   overall: AdminHealthStatus
@@ -185,17 +186,50 @@ export function getCertificateHealthSummary(): AdminHealthCheck[] {
 
 export function getIntegrationHealthSummary(): AdminHealthCheck[] {
   const ts = new Date().toISOString()
+  const deploy = getAdminAppEnvironment()
+  const vercelRuntime =
+    import.meta.env.VERCEL === '1' || import.meta.env.VERCEL === 'true' || Boolean(String(import.meta.env.VERCEL ?? '').trim())
+  const knowledgeConfigured = Boolean(
+    String((import.meta.env as { VITE_TRAINING_KNOWLEDGE_URL?: string }).VITE_TRAINING_KNOWLEDGE_URL ?? '').trim(),
+  )
   return [
     {
       status: isSupabaseConfigured() ? 'healthy' : 'unknown',
       label: 'Supabase',
-      description: isSupabaseConfigured() ? 'URL and anon key are present (values not shown).' : 'Not configured.',
+      description: isSupabaseConfigured() ? 'Client URL and anon key flags are present (values never shown).' : 'Not configured.',
+      lastCheckedAt: ts,
+    },
+    {
+      status: vercelRuntime ? 'healthy' : 'info',
+      label: 'Vercel',
+      description: vercelRuntime
+        ? 'Running under Vercel (`VERCEL` flag seen at build/runtime).'
+        : `No Vercel marker — likely local or static host. Deploy label: ${deploy}.`,
+      lastCheckedAt: ts,
+    },
+    {
+      status: isBillingCheckoutEnabled() ? 'healthy' : 'info',
+      label: 'Payments (Stripe surfaces)',
+      description: isBillingCheckoutEnabled()
+        ? 'VITE_BILLING_CHECKOUT_ENABLED is on — checkout UI may call Edge Functions.'
+        : 'Billing checkout flag off or unset — live payments not exposed from this bundle.',
+      remediation: 'Never log or paste Stripe secrets; configure only in Supabase / Vercel dashboards.',
+      lastCheckedAt: ts,
+    },
+    {
+      status: knowledgeConfigured ? 'healthy' : 'unknown',
+      label: 'Training knowledge URL',
+      description: knowledgeConfigured
+        ? 'VITE_TRAINING_KNOWLEDGE_URL is set (URL value not shown).'
+        : 'Not configured — knowledge ingestion may be offline.',
       lastCheckedAt: ts,
     },
     {
       status: 'unknown',
-      label: 'Email / payments',
-      description: 'Operational status for transactional email and payments is not queried from this UI.',
+      label: 'Transactional email provider',
+      description:
+        'No dedicated boolean env is defined in this repo for Resend/SendGrid. Treat as unknown unless you add an explicit non-secret flag.',
+      remediation: 'Add a `VITE_EMAIL_PROVIDER_CONFIGURED=true` style flag if you want UI-only presence checks.',
       lastCheckedAt: ts,
     },
   ]

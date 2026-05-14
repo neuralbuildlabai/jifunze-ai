@@ -98,7 +98,11 @@ export function AdminSystemAccountsPanel(props: { readOnlyMessage?: string | nul
     : []
 
   if (props.readOnlyMessage) {
-    return <p className="mt-3 text-sm text-zinc-600">{props.readOnlyMessage}</p>
+    return (
+      <p className="mt-3 text-sm text-zinc-600" data-testid="admin-system-accounts-readonly">
+        {props.readOnlyMessage}
+      </p>
+    )
   }
 
   return (

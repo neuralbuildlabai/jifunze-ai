@@ -55,6 +55,8 @@ interface ImportMetaEnv {
    * Leave unset in production public builds so the bypass cannot be activated.
    */
   readonly VITE_MAINTENANCE_BYPASS_TOKEN?: string
+  /** Injected on Vercel builds. */
+  readonly VERCEL?: string
 }
 
 interface ImportMeta {
