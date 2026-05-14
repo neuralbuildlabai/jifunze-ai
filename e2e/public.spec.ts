@@ -6,42 +6,35 @@ test.describe('Public surfaces', () => {
   test.beforeEach(async ({ page }) => {
     await applyPublicE2eMaintenanceBypass(page)
   })
-  test('homepage loads and exposes primary CTAs (demo E2E runs without Supabase env)', async ({
-    page,
-  }) => {
-    await gotoPublicHomeAnonymous(page)
-    await expect(page.getByRole('heading', { level: 1, name: /available courses.*workshops/i })).toBeVisible({
-      timeout: 15_000,
-    })
-    const heroPrimary = page.getByTestId('landing-hero-primary-cta')
-    await expect(heroPrimary).toBeVisible()
-    await expect(heroPrimary).toHaveAttribute('href', /\/learn#available-now$/)
-    await expect(page.getByTestId('home-nav-courses')).toBeVisible()
+
+  test('root and catalog load for anonymous visitors (demo E2E without Supabase env)', async ({ page }) => {
+    await page.goto('/')
+    await expect(page).toHaveURL(/\/learn$/, { timeout: 15_000 })
+    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
+    await expect(page.getByRole('heading', { level: 1, name: /available courses.*workshops/i })).toBeVisible()
+    await expect(page.getByTestId('learn-hero-browse-available')).toBeVisible()
+    await expect(page.getByTestId('learn-nav-available-now')).toBeVisible()
     await expect(page.locator('header').getByRole('link', { name: /^training$/i })).toHaveCount(0)
-    await expect(page.getByTestId('landing-cta-trust-line')).toBeVisible()
-    await expect(page.getByTestId('landing-cta-trust-line')).toContainText('Read disclaimer')
+    await expect(page.getByTestId('landing-hero-primary-cta')).toHaveCount(0)
     await expect(page.getByTestId('home-generate-trust-boundary')).toHaveCount(0)
-    await expect(page.getByTestId('trust-legal-footer-links')).toBeVisible()
-    await expect(page.getByTestId('public-home-marketplace')).toBeVisible()
-    await expect(page.getByTestId('public-home-available-preview')).toBeVisible()
+    await expect(page.getByTestId('public-home-marketplace')).toHaveCount(0)
+    await expect(page.getByTestId('public-home-available-preview')).toHaveCount(0)
   })
 
-  test('/generate remains a direct-only public route (unpromoted from homepage)', async ({ page }) => {
-    await page.goto('/generate')
-    await expect(page.getByTestId('public-generate-unpromoted-notice')).toBeVisible()
-    await expect(page.getByRole('heading', { name: /start from context you can verify/i })).toBeVisible()
-    await expect(page.getByTestId('public-generate-trust-boundary')).toBeVisible()
-    await expect(page.getByTestId('public-generate-trust-boundary')).toContainText('Review for accuracy before posting')
-    await expect(page.getByTestId('trust-legal-footer-links')).toBeVisible()
-    await expect(page.getByPlaceholder(/what is the post about/i)).toBeVisible()
-    await expect(page.getByRole('button', { name: /try preview/i })).toBeVisible()
-    await expect(page.getByRole('link', { name: /^sign in$/i }).first()).toBeVisible()
+  test('/learn exposes legal/support links in discovery footer', async ({ page }) => {
+    await gotoPublicHomeAnonymous(page)
+    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
+    const footer = page.locator('footer#contact-public')
+    await expect(footer.getByRole('link', { name: /^Disclaimer$/i })).toBeVisible()
+    await expect(footer.getByRole('link', { name: /^Terms$/i })).toBeVisible()
+    await expect(footer.getByRole('link', { name: /^Privacy$/i })).toBeVisible()
   })
 
-  test('direct /generate route works without auth', async ({ page }) => {
+  test('/generate redirects to public learn catalog', async ({ page }) => {
     const res = await page.goto('/generate')
     expect(res?.ok()).toBeTruthy()
-    await expect(page).toHaveURL(/\/generate$/)
+    await expect(page).toHaveURL(/\/learn$/)
+    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
   })
 
   test('full disclaimer page loads without auth', async ({ page }) => {
@@ -68,9 +61,9 @@ test.describe('Public surfaces', () => {
     await expect(page.getByText(/no automated charges occur/i).first()).toBeVisible()
   })
 
-  test('full disclaimer link from landing navigates to /disclaimer', async ({ page }) => {
+  test('full disclaimer link from /learn discovery footer navigates to /disclaimer', async ({ page }) => {
     await gotoPublicHomeAnonymous(page)
-    await page.getByTestId('landing-cta-trust-line').getByRole('link', { name: /read disclaimer/i }).click()
+    await page.locator('footer#contact-public').getByRole('link', { name: /^Disclaimer$/i }).click()
     await expect(page).toHaveURL(/\/disclaimer$/)
     await expect(page.getByRole('heading', { name: /product disclaimer/i })).toBeVisible()
   })
