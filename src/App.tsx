@@ -32,7 +32,7 @@ import { WorkspaceAiLibraryPage } from './components/workspace/WorkspaceAiLibrar
 import { WorkspaceChatbotLibraryPage } from './components/workspace/WorkspaceChatbotLibraryPage'
 import { WorkspaceMlLibraryPage } from './components/workspace/WorkspaceMlLibraryPage'
 import { WorkspaceLibraryPage } from './components/workspace/WorkspaceLibraryPage'
-import { WorkspaceShell } from './components/workspace/WorkspaceShell'
+import { SignedInSurfacesOutlet } from './components/signed-in/SignedInSurfacesOutlet'
 import { WorkspaceStudioPage } from './components/workspace/WorkspaceStudioPage'
 import { DashboardPage } from './components/DashboardPage'
 import { TrainingLessonPage } from './components/training/TrainingLessonPage'
@@ -87,6 +87,7 @@ import {
 import {
   RequireAdminAccess,
   RequireInstitutionOperatorSurface,
+  RequireInternalWorkspaceLibrary,
   RequirePlatformInsights,
   RequireSuperAdminSurface,
   RequireTrainingPlanAdminSurface,
@@ -363,49 +364,113 @@ export default function App() {
         />
         <Route element={<RequireEmailVerified />}>
           <Route element={<RequireDisclaimerAcknowledged />}>
-            <Route element={<WorkspaceShell />}>
+            <Route element={<SignedInSurfacesOutlet />}>
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/reports" element={<LearnerReportsPage />} />
               <Route path="/my-learning" element={<MyLearningPage />} />
-              <Route path="/library" element={<WorkspaceLibraryPage />} />
-              <Route path="/library/ai" element={<WorkspaceAiLibraryPage />} />
-              <Route path="/library/ml" element={<WorkspaceMlLibraryPage />} />
-              <Route path="/library/chatbots" element={<WorkspaceChatbotLibraryPage />} />
+              <Route
+                path="/library"
+                element={
+                  <RequireInternalWorkspaceLibrary>
+                    <WorkspaceLibraryPage />
+                  </RequireInternalWorkspaceLibrary>
+                }
+              />
+              <Route
+                path="/library/ai"
+                element={
+                  <RequireInternalWorkspaceLibrary>
+                    <WorkspaceAiLibraryPage />
+                  </RequireInternalWorkspaceLibrary>
+                }
+              />
+              <Route
+                path="/library/ml"
+                element={
+                  <RequireInternalWorkspaceLibrary>
+                    <WorkspaceMlLibraryPage />
+                  </RequireInternalWorkspaceLibrary>
+                }
+              />
+              <Route
+                path="/library/chatbots"
+                element={
+                  <RequireInternalWorkspaceLibrary>
+                    <WorkspaceChatbotLibraryPage />
+                  </RequireInternalWorkspaceLibrary>
+                }
+              />
               <Route
                 path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.networking.workspacePath}
-                element={<WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.networking} />}
+                element={
+                  <RequireInternalWorkspaceLibrary>
+                    <WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.networking} />
+                  </RequireInternalWorkspaceLibrary>
+                }
               />
               <Route
                 path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.cybersecurity.workspacePath}
-                element={<WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.cybersecurity} />}
+                element={
+                  <RequireInternalWorkspaceLibrary>
+                    <WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.cybersecurity} />
+                  </RequireInternalWorkspaceLibrary>
+                }
               />
               <Route
                 path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.cloud_devops.workspacePath}
-                element={<WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.cloud_devops} />}
+                element={
+                  <RequireInternalWorkspaceLibrary>
+                    <WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.cloud_devops} />
+                  </RequireInternalWorkspaceLibrary>
+                }
               />
               <Route
                 path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.monitoring.workspacePath}
-                element={<WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.monitoring} />}
+                element={
+                  <RequireInternalWorkspaceLibrary>
+                    <WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.monitoring} />
+                  </RequireInternalWorkspaceLibrary>
+                }
               />
               <Route
                 path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.content_publishing.workspacePath}
-                element={<WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.content_publishing} />}
+                element={
+                  <RequireInternalWorkspaceLibrary>
+                    <WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.content_publishing} />
+                  </RequireInternalWorkspaceLibrary>
+                }
               />
               <Route
                 path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_prompt_engineering_models.workspacePath}
-                element={<WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_prompt_engineering_models} />}
+                element={
+                  <RequireInternalWorkspaceLibrary>
+                    <WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_prompt_engineering_models} />
+                  </RequireInternalWorkspaceLibrary>
+                }
               />
               <Route
                 path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_gemini_workspace.workspacePath}
-                element={<WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_gemini_workspace} />}
+                element={
+                  <RequireInternalWorkspaceLibrary>
+                    <WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_gemini_workspace} />
+                  </RequireInternalWorkspaceLibrary>
+                }
               />
               <Route
                 path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_claude_writing.workspacePath}
-                element={<WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_claude_writing} />}
+                element={
+                  <RequireInternalWorkspaceLibrary>
+                    <WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_claude_writing} />
+                  </RequireInternalWorkspaceLibrary>
+                }
               />
               <Route
                 path={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_agentic_ai_real_work.workspacePath}
-                element={<WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_agentic_ai_real_work} />}
+                element={
+                  <RequireInternalWorkspaceLibrary>
+                    <WorkspaceExtendedLibraryPage config={EXTENDED_PUBLIC_LIBRARY_CONFIGS.course_agentic_ai_real_work} />
+                  </RequireInternalWorkspaceLibrary>
+                }
               />
               <Route path="/learning/labs" element={<Navigate to="/learn" replace />} />
               <Route
@@ -416,7 +481,14 @@ export default function App() {
                   </RequireInstitutionOperatorSurface>
                 }
               />
-              <Route path="/team/assignments" element={<TeamAssignmentsPage />} />
+              <Route
+                path="/team/assignments"
+                element={
+                  <RequireInstitutionOperatorSurface>
+                    <TeamAssignmentsPage />
+                  </RequireInstitutionOperatorSurface>
+                }
+              />
               <Route
                 path="/team/learning-reports"
                 element={

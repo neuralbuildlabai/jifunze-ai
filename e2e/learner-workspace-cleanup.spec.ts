@@ -13,7 +13,7 @@ test.describe('Learner workspace cleanup (demo / no Supabase env)', () => {
   test('learner primary nav shows Catalog, My Learning, Dashboard (no operator tools)', async ({ page }) => {
     await page.goto('/my-learning')
     await expect(page.getByRole('heading', { name: /^my learning$/i })).toBeVisible({ timeout: 20_000 })
-    const nav = page.getByTestId('workspace-nav-primary')
+    const nav = page.getByTestId('learner-nav-primary')
     await expect(nav.getByRole('link', { name: /^my learning$/i })).toBeVisible()
     await expect(nav.getByRole('link', { name: /^catalog$/i })).toBeVisible()
     await expect(nav.getByRole('link', { name: /^dashboard$/i })).toBeVisible()

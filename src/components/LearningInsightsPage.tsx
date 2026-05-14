@@ -1,5 +1,4 @@
 import { Link, Navigate } from 'react-router-dom'
-import { WorkspaceNav } from './workspace/WorkspaceNav'
 import { useAuth } from '../auth/AuthContext'
 import { isSupabaseConfigured } from '../config/supabaseEnv'
 import { EmptyWorkspaceCreateBrand } from './EmptyWorkspaceCreateBrand'
@@ -106,7 +105,6 @@ export function LearningInsightsPage() {
               </button>
             </div>
           </div>
-          <WorkspaceNav className="w-full justify-start" />
         </header>
 
         <p className="text-sm leading-relaxed text-zinc-400">

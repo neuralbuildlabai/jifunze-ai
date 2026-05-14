@@ -30,7 +30,7 @@ import {
   flagshipProgressRowToState,
 } from '../../services/learning/flagshipCourseProgressRemote'
 import { useSelectedPathway } from '../../hooks/useSelectedPathway'
-import { WorkspaceRouteReady } from '../workspace/WorkspaceRouteReady'
+import { LearnerRouteReady } from '../learner-shell/LearnerRouteReady'
 import { LearnerPageShell } from '../learner-shell/LearnerPageShell'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 
@@ -172,7 +172,7 @@ export function LearnerReportsPage() {
   }, [user, supabase, catalogAllowSlugs, selectedPathwaySlug])
 
   return (
-    <WorkspaceRouteReady>
+    <LearnerRouteReady>
       <div data-testid="learner-reports-page">
         <LearnerPageShell
           title="Reports"
@@ -264,6 +264,6 @@ export function LearnerReportsPage() {
         )}
         </LearnerPageShell>
       </div>
-    </WorkspaceRouteReady>
+    </LearnerRouteReady>
   )
 }

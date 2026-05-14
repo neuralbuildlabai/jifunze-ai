@@ -4,7 +4,7 @@ import { isSupabaseConfigured } from '../../config/supabaseEnv'
 import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { TrustLegalFooterLinks } from '../TrustLegalFooterLinks'
-import { WorkspaceRouteReady } from './WorkspaceRouteReady'
+import { LearnerRouteReady } from '../learner-shell/LearnerRouteReady'
 import { LearnerPageShell } from '../learner-shell/LearnerPageShell'
 import { LearnerAccountSettingsForm } from '../learner-shell/LearnerAccountSettingsForm'
 
@@ -15,7 +15,7 @@ export function LearnerAccountPage() {
   const { user, signOut, signOutPending } = useAuth()
 
   return (
-    <WorkspaceRouteReady>
+    <LearnerRouteReady>
       <LearnerPageShell title="Account" purpose="Update your profile, password, and sign-in preferences.">
         <LearnerAccountSettingsForm />
 
@@ -52,6 +52,6 @@ export function LearnerAccountPage() {
           <TrustLegalFooterLinks variant="compact" className="mt-3 justify-start text-stone-500 [&_a]:text-stone-600 [&_a]:hover:text-stone-900" />
         </div>
       </LearnerPageShell>
-    </WorkspaceRouteReady>
+    </LearnerRouteReady>
   )
 }

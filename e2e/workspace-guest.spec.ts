@@ -61,11 +61,14 @@ test.describe('Workspace routes (demo / no Supabase env)', () => {
     ).toBeVisible()
   })
 
-  test('team assignments route loads (demo guest)', async ({ page }) => {
+  test('member guest hitting team assignments is redirected away (operator-only)', async ({ page }) => {
     await page.goto('/team/assignments')
-    await expect(page.getByRole('heading', { name: /training assignments/i })).toBeVisible({
-      timeout: 15_000,
-    })
+    await expect(page).toHaveURL(/\/(my-learning|dashboard)$/, { timeout: 15_000 })
+    await expect(page.getByRole('heading', { name: /training assignments/i })).not.toBeVisible()
+    await expect(page.getByTestId('learner-nav-primary')).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: /^my learning$/i }).or(page.getByRole('heading', { name: /^dashboard$/i })),
+    ).toBeVisible()
   })
 
   test('member guest hitting trends is redirected to My Learning (operator-only)', async ({ page }) => {

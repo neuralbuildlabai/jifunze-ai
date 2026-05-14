@@ -1,7 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
 import { useAppAccess } from '../../access/useAppAccess'
-import { LearnerTopNav } from '../learner-shell/LearnerTopNav'
 
 const linkClass =
   'rounded-lg px-2.5 py-1.5 text-[11px] font-medium text-zinc-400 transition-colors hover:text-zinc-100'
@@ -78,15 +77,11 @@ function SuperAdminNav() {
 }
 
 /**
- * Role-specific workspace navigation — learners see learning surfaces only;
- * platform + institution admins share operational IA; super-admins see platform controls.
+ * Role-specific operator workspace navigation — institution, platform, and super-admin variants.
+ * Learner navigation lives in {@link LearnerTopNav} inside {@link LearnerAppShell}.
  */
 export function WorkspaceNav({ className = '' }: { className?: string }) {
   const { navVariant } = useAppAccess()
-
-  if (navVariant === 'learner') {
-    return <LearnerTopNav className={className} />
-  }
 
   return (
     <nav

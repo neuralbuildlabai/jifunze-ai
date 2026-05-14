@@ -10,7 +10,7 @@ import {
   type LearnerUnifiedActiveCourse,
 } from '../../lib/learnerProgressHub'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
-import { WorkspaceRouteReady } from '../workspace/WorkspaceRouteReady'
+import { LearnerRouteReady } from '../learner-shell/LearnerRouteReady'
 import { LearnerPageShell } from '../learner-shell/LearnerPageShell'
 import { learnerShellTokens } from '../learner-shell/learnerShellTokens'
 
@@ -60,7 +60,7 @@ export function LearnerDashboardPage() {
   const recent = courses[0]
 
   return (
-    <WorkspaceRouteReady>
+    <LearnerRouteReady>
       <div data-testid="learner-dashboard-home">
         <LearnerPageShell
           title="Dashboard"
@@ -189,6 +189,6 @@ export function LearnerDashboardPage() {
           )}
         </LearnerPageShell>
       </div>
-    </WorkspaceRouteReady>
+    </LearnerRouteReady>
   )
 }

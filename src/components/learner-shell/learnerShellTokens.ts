@@ -1,6 +1,6 @@
 /**
  * Learner workspace shell — warm / light chrome aligned with `/learn` and the public homepage.
- * Used only when `navVariant === 'learner'` inside {@link WorkspaceShell}.
+ * Used by {@link LearnerAppShell} and learner-styled surfaces aligned with `/learn`.
  */
 export const learnerShellTokens = {
   workspaceBg:

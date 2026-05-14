@@ -3,7 +3,7 @@ import { useAuth } from '../../auth/AuthContext'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
 
 /**
- * Signed-in shortcuts on public catalog / course surfaces (outside {@link WorkspaceShell}).
+ * Signed-in shortcuts on public catalog / course surfaces (outside the signed-in learner / workspace layouts).
  */
 export function SignedInPublicLearningActions({ className = '' }: { className?: string }) {
   const { user, signOut, signOutPending } = useAuth()

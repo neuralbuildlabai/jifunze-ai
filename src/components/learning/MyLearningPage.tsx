@@ -172,7 +172,7 @@ export function MyLearningPage() {
           </Link>
         </div>
         {!workspaceShellReady ? (
-          <p className="mt-3 text-sm text-zinc-400">Loading workspace…</p>
+          <p className="mt-3 text-sm text-zinc-400">Loading assignments…</p>
         ) : assignError ? (
           <p className="mt-3 text-sm text-rose-300/90">{assignError.message}</p>
         ) : assignLoading ? (

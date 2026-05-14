@@ -35,7 +35,7 @@ export function DashboardPage() {
     return (
       <div className="mx-auto w-full max-w-2xl space-y-6 px-4 py-12 text-center text-zinc-100">
         <header className="space-y-2">
-          <h1 className="text-2xl font-semibold text-white">Workspace setup</h1>
+          <h1 className="text-2xl font-semibold text-white">Account setup</h1>
           <p className="whitespace-pre-wrap text-sm text-rose-300/90">{authError}</p>
         </header>
         <div className="flex flex-wrap justify-center gap-3">
@@ -44,7 +44,7 @@ export function DashboardPage() {
             onClick={() => void retryWorkspaceBootstrap()}
             className="rounded-lg border border-violet-500/40 bg-violet-600/25 px-4 py-2 text-sm font-medium text-violet-100 hover:bg-violet-600/35"
           >
-            Retry workspace setup
+            Retry setup
           </button>
           <button
             type="button"
@@ -62,7 +62,7 @@ export function DashboardPage() {
   if (isSupabaseConfigured() && authLoading && !workspaceShellReady) {
     return (
       <div className="mx-auto flex min-h-[min(70vh,48rem)] w-full max-w-2xl items-center justify-center px-4 py-12 text-zinc-100">
-        <p className="text-sm text-zinc-400">Loading workspace…</p>
+        <p className="text-sm text-zinc-400">Loading…</p>
       </div>
     )
   }
@@ -86,7 +86,7 @@ export function DashboardPage() {
       </header>
     ) : (
       <header className="border-b border-white/[0.06] pb-6">
-        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">Workspace</p>
+        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">Operations</p>
         <h1 className="mt-1 text-xl font-semibold text-white">Operations dashboard</h1>
         <p className="mt-2 max-w-2xl text-sm text-zinc-400">
           Assign training, review learner progress, and run workspace tools—learner views stay in the public catalog and My Learning.

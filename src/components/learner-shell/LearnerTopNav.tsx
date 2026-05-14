@@ -10,7 +10,7 @@ export function LearnerTopNav({ className = '' }: { className?: string }) {
     <nav
       className={`flex flex-wrap items-center gap-0.5 sm:gap-1 ${className}`}
       aria-label="Learning"
-      data-testid="workspace-nav-primary"
+      data-testid="learner-nav-primary"
     >
       <NavLink
         to={LEGAL_ROUTES.learn}

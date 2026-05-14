@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Navigate } from 'react-router-dom'
 import { canAccessPlatformSurface, canAccessProLab, isAtLeastTier } from '../../access/appAccess'
 import { useAppAccess } from '../../access/useAppAccess'
+import { LEGAL_ROUTES } from '../../training/trustCopy'
 
 function workspaceFallbackPath(): string {
   return '/dashboard'
@@ -19,6 +20,15 @@ export function RequirePlatformSurface({ children }: { children: ReactNode }) {
   const { tier } = useAppAccess()
   if (!canAccessPlatformSurface(tier)) {
     return <Navigate to="/" replace />
+  }
+  return <>{children}</>
+}
+
+/** Internal workspace libraries (generator-backed catalogs) — not the public `/library/*` lesson hubs. */
+export function RequireInternalWorkspaceLibrary({ children }: { children: ReactNode }) {
+  const { tier } = useAppAccess()
+  if (!isAtLeastTier(tier, 'workspace_admin')) {
+    return <Navigate to={LEGAL_ROUTES.learn} replace />
   }
   return <>{children}</>
 }

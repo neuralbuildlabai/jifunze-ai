@@ -4,7 +4,6 @@ import { isSupabaseConfigured } from '../../config/supabaseEnv'
 import { TRUST_COPY } from '../../training/trustCopy'
 import { memberLabel, useTeamAssignmentsBoard, useWorkspaceTrainingRole } from '../../training/teamTrainingHooks'
 import { TrainingInlineAlert } from '../training/TrainingInlineAlert'
-import { WorkspaceNav } from '../workspace/WorkspaceNav'
 
 /**
  * Institution / platform operators: roster-linked assignment progress — not learner trend analytics.
@@ -17,10 +16,8 @@ export function TeamLearningReportsPage() {
 
   return (
     <div className="mx-auto w-full max-w-5xl space-y-8 px-4 py-10 text-zinc-100">
-      <WorkspaceNav className="mb-4 w-full justify-start" />
-
       <header className="border-b border-white/[0.06] pb-6">
-        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">Workspace</p>
+        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">Learning operations</p>
         <h1 className="mt-1 text-xl font-semibold text-white">Learning reports</h1>
         <p className="mt-2 max-w-2xl text-sm text-zinc-400">
           Assignment progress for training plans your organization assigns. Member roster and roles live under Members; assignment setup lives under Assignments.
@@ -28,7 +25,7 @@ export function TeamLearningReportsPage() {
         <p className="mt-3 max-w-2xl text-[11px] leading-relaxed text-zinc-600">{TRUST_COPY.teamWorkspaceRosterBoundary}</p>
       </header>
 
-      {isSupabaseConfigured() && !workspaceShellReady ? <p className="text-sm text-zinc-400">Loading workspace…</p> : null}
+      {isSupabaseConfigured() && !workspaceShellReady ? <p className="text-sm text-zinc-400">Loading reports…</p> : null}
 
       {roleError ? (
         <p className="text-sm text-amber-200/90">{roleError.message}</p>
