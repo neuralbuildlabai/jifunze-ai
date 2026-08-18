@@ -1,0 +1,56 @@
+name: Autonomous content loop
+
+# Runs the daily pass: score → brief → render → upload → publish.
+# Signal ingestion is a separate Supabase pg_cron job (see SIGNAL_INGESTION_DEPLOYMENT.md);
+# this workflow can also poke it first to guarantee fresh signals.
+#
+# COST: GitHub Actions minutes (free tier), plus OpenAI pennies per run.
+# SAFETY: nothing posts publicly unless the IG_PUBLISH_ENABLED Supabase secret is "true".
+#   Set repo variable DRY_RUN=true to render + log without publishing at all.
+
+on:
+  schedule:
+    - cron: '0 16 * * *'   # 16:00 UTC ~= 19:00 Nairobi (evening scroll). Adjust as needed.
+  workflow_dispatch:        # manual "run now" button
+
+concurrency:
+  group: autonomous-loop
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
+
+      - name: Install deps
+        run: npm ci --no-audit --no-fund
+
+      - name: Refresh signals (best-effort)
+        continue-on-error: true
+        run: |
+          curl -sS -X POST "$SUPABASE_URL/functions/v1/ingest-signals" \
+            -H "x-ingest-secret: $INGEST_SECRET" -H "Content-Type: application/json" -d '{}' || true
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          INGEST_SECRET: ${{ secrets.INGEST_SECRET }}
+
+      - name: Run loop
+        run: node --experimental-strip-types orchestrator/run.ts
+        env:
+          RUN_DATE: ${{ github.run_id && '' || '' }}
+          DRY_RUN: ${{ vars.DRY_RUN }}
+          VISUAL_PROVIDER: ${{ vars.VISUAL_PROVIDER || 'stock' }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          PUBLISH_SECRET: ${{ secrets.PUBLISH_SECRET }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
