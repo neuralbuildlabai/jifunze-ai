@@ -54,3 +54,12 @@ jobs:
           PUBLISH_SECRET: ${{ secrets.PUBLISH_SECRET }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+
+      - name: Upload rendered video + decision
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: loop-output
+          path: loop-artifacts/
+          if-no-files-found: ignore
+          retention-days: 7
