@@ -12,7 +12,7 @@
  *      VISUAL_PROVIDER (default stock), DRY_RUN ("true" = render+log, no publish),
  *      RUN_DATE (YYYY-MM-DD, injected by CI for determinism).
  */
-import { mkdtempSync } from 'node:fs'
+import { mkdtempSync, mkdirSync, writeFileSync, copyFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { createClient } from '@supabase/supabase-js'
@@ -76,6 +76,23 @@ async function main() {
   const out = join(work, `${top.id}.mp4`)
   await renderBrief(brief as any, out)
   log('rendered', { out })
+
+  // Also drop the render + the decision into a stable dir so CI can upload them
+  // as a downloadable artifact (visible in DRY_RUN without publishing anything).
+  try {
+    const artDir = join(process.cwd(), 'loop-artifacts')
+    mkdirSync(artDir, { recursive: true })
+    copyFileSync(out, join(artDir, `${top.id}.mp4`))
+    writeFileSync(join(artDir, 'decision.json'), JSON.stringify({
+      run_date: RUN_DATE,
+      picked: { id: top.id, title: top.title, priority: top.priority, relevance: top.relevance, freshness: top.freshness, reason: top.selection_reason, url: top.url },
+      brief,
+      dry_run: DRY_RUN,
+    }, null, 2))
+    log('artifact ready', { dir: 'loop-artifacts' })
+  } catch (e) {
+    log('artifact copy skipped', { err: String(e) })
+  }
 
   if (DRY_RUN) { log('DRY_RUN — skipping upload + publish'); return }
 
