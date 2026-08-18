@@ -17,3 +17,7 @@ verify_jwt = true
 
 [functions.stripe-webhook]
 verify_jwt = false
+
+[functions.ingest-signals]
+# Cron has no user JWT; the x-ingest-secret shared secret is the gate.
+verify_jwt = false
