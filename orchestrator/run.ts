@@ -38,7 +38,7 @@ async function main() {
   const since = new Date(Date.now() - 3 * 86400_000).toISOString()
   const { data: rows, error } = await admin
     .from('ingested_signals')
-    .select('id, source, source_label, title, summary, url, published_at, topic_tags')
+    .select('id, source:provider_id, source_label, title, summary, url, published_at, topic_tags')
     .gte('published_at', since)
     .order('published_at', { ascending: false })
     .limit(200)
