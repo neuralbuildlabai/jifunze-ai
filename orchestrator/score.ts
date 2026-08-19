@@ -23,8 +23,27 @@ export type Signal = {
 export type ScoredOpportunity = Signal & {
   relevance: number
   freshness: number
+  /** Strict career/skill relevance (0-1). News must clear NEWS_BAR on THIS. */
+  careerScore: number
   priority: number
   selection_reason: string
+}
+
+/** Words that mean the story actually helps a job seeker act — not just 'mentions AI'. */
+const CAREER_TERMS = [
+  'job','jobs','hiring','hire','career','careers','cv','resume','resumé','interview',
+  'salary','recruit','recruiter','freelance','freelancing','remote work','upskill',
+  'skills','apprenticeship','internship','layoff','job market','job search','portfolio',
+  'get hired','land a job','application','cover letter',
+]
+
+/** 0-1 strict career relevance: fraction of career-signal presence in the text. */
+export function careerRelevance(s: Signal): number {
+  const hay = `${s.title} ${s.summary} ${s.topic_tags.join(' ')}`.toLowerCase()
+  let hits = 0
+  for (const t of CAREER_TERMS) if (hay.includes(t)) hits++
+  // needs at least a couple of genuine career terms to score meaningfully
+  return Math.min(hits / 3, 1)
 }
 
 /** Jifunze brand config: what the audience (Kenyan/emerging-market job seekers & learners) cares about. */
@@ -64,13 +83,14 @@ export function scoreSignals(signals: Signal[], nowMs: number): ScoredOpportunit
   return signals
     .map((s) => {
       const { score: relevance, hits } = relevanceScore(s)
+      const careerScore = careerRelevance(s)
       const freshness = freshnessScore(s.published_at, nowMs)
       // priority weights relevance higher than freshness — on-brand beats merely new
       const priority = Number((relevance * 0.7 + freshness * 0.3).toFixed(4))
       const reason = relevance === 0
         ? 'off-brand or blocked'
         : `matches ${hits.join(', ') || 'brand topics'}; ${freshness > 0.6 ? 'fresh' : 'still relevant'}`
-      return { ...s, relevance, freshness, priority, selection_reason: reason }
+      return { ...s, relevance, careerScore, freshness, priority, selection_reason: reason }
     })
     .filter((o) => o.relevance > 0)
     .sort((a, b) => b.priority - a.priority)

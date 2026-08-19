@@ -1,12 +1,14 @@
 /**
- * Brief generator: turn the top-ranked opportunity into a ProductionBrief the
- * render pipeline can consume (hook + on-screen segments + IG caption + tags).
+ * Brief generator — hybrid. Produces a ProductionBrief from EITHER:
+ *   - an evergreen how-to topic (the daily backbone, brand-right), or
+ *   - a news signal that cleared the career-skill bar (skill-pivot angle).
  *
- * Uses OpenAI when OPENAI_API_KEY is set — this is the ONE component that bills,
- * and it's pennies per call. Without a key it falls back to a deterministic
- * template so the loop still runs end-to-end at $0 (useful for rehearsal/CI).
+ * Strong, specific prompts force the model to TEACH one actionable thing with a
+ * scroll-stopping hook — not summarise. OpenAI when OPENAI_API_KEY is set (the
+ * only paid component, pennies/run); deterministic template fallback otherwise.
  */
 import type { ScoredOpportunity } from './score.ts'
+import type { EvergreenTopic } from './contentBank.ts'
 
 export type ProductionBrief = {
   id: string
@@ -15,66 +17,70 @@ export type ProductionBrief = {
   caption: string
   topic_tags: string[]
   duration_sec: number
-  source_url: string
+  source_url?: string
+  mode: 'evergreen' | 'news'
 }
 
-const SYSTEM = `You write scripts for Jifunze, a faceless short-video brand teaching practical AI and career skills to job seekers and students in Kenya and other emerging markets. Voice: direct, plain, no hype, no emojis in on-screen text. Turn a news signal into a 15-20s vertical video script. Return STRICT JSON only.`
+const SYSTEM = `You are the scriptwriter for Jifunze, a faceless short-video brand that teaches PRACTICAL AI and career skills to job seekers and students in Kenya and other emerging markets.
 
-function userPrompt(op: ScoredOpportunity): string {
-  return `Signal:
-Title: ${op.title}
-Summary: ${op.summary}
-Source: ${op.source_label ?? op.source}
+Non-negotiable rules:
+- Teach ONE specific, actionable thing the viewer can DO today. Never summarise news; never be vague.
+- Hook (<=7 words) must create a knowledge gap or name a painful mistake. No "New in AI", no headlines, no emojis.
+- Each on-screen segment is 3-6 words, one idea, imperative where possible. 4-5 segments.
+- Assume the viewer has applied to many jobs and heard nothing. Speak to that.
+- Caption <=180 chars, one line, ends exactly with: Free Kazi Kit — link in bio
+Return STRICT JSON: {"hook": "...", "segments": ["...","..."], "caption": "..."}`
 
-Produce JSON with:
-- "hook": one punchy opening line (<=8 words), no emoji
-- "segments": array of 3-5 on-screen text beats, each 3-6 words, that teach ONE useful takeaway a job seeker can act on
-- "caption": the Instagram caption (<=200 chars, 1 line), ending with "Free Kazi Kit — link in bio"
-Return only the JSON object.`
+function evergreenPrompt(t: EvergreenTopic): string {
+  return `Make a script that teaches this specific lesson:\n"${t.seed}"\nReturn only the JSON.`
 }
 
-/** Deterministic $0 fallback — no API call. Keeps the loop alive without a key. */
-function templateBrief(op: ScoredOpportunity): Omit<ProductionBrief, 'id' | 'topic_tags' | 'duration_sec' | 'source_url'> {
-  const topic = op.topic_tags[0] ?? 'AI'
-  return {
-    hook: `New in ${topic}: what it means for you`,
-    segments: ['Something changed this week', op.title.split(' ').slice(0, 5).join(' '), 'Here is how to use it', 'Start today', 'Link in bio'],
-    caption: `${op.title.slice(0, 150)} — here's how to use it. Free Kazi Kit — link in bio`,
-  }
+function newsPrompt(op: ScoredOpportunity): string {
+  return `A relevant news item:\nTitle: ${op.title}\nSummary: ${op.summary}\n\nDo NOT summarise it. Instead teach the ONE concrete action a job seeker should take BECAUSE of this news (a skill to learn, a tool to try on their CV/applications, an opportunity to grab). The takeaway must be usable today. Return only the JSON.`
 }
 
-async function llmBrief(op: ScoredOpportunity, key: string): Promise<Omit<ProductionBrief, 'id' | 'topic_tags' | 'duration_sec' | 'source_url'> | null> {
+async function llm(system: string, user: string, key: string): Promise<{ hook: string; segments: string[]; caption: string } | null> {
   try {
     const res = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
       body: JSON.stringify({
         model: process.env.OPENAI_MODEL ?? 'gpt-4o-mini',
-        messages: [{ role: 'system', content: SYSTEM }, { role: 'user', content: userPrompt(op) }],
-        temperature: 0.7,
+        messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
+        temperature: 0.8,
         response_format: { type: 'json_object' },
       }),
     })
     if (!res.ok) return null
     const data = await res.json()
-    const parsed = JSON.parse(data.choices?.[0]?.message?.content ?? '{}')
-    if (!parsed.hook || !Array.isArray(parsed.segments) || !parsed.caption) return null
-    return { hook: String(parsed.hook), segments: parsed.segments.map(String).slice(0, 5), caption: String(parsed.caption).slice(0, 200) }
-  } catch {
-    return null
+    const p = JSON.parse(data.choices?.[0]?.message?.content ?? '{}')
+    if (!p.hook || !Array.isArray(p.segments) || !p.caption) return null
+    return { hook: String(p.hook).slice(0, 60), segments: p.segments.map(String).slice(0, 5), caption: String(p.caption).slice(0, 180) }
+  } catch { return null }
+}
+
+/** Evergreen template fallback ($0) — still teaches, still on-brand. */
+function evergreenTemplate(t: EvergreenTopic): { hook: string; segments: string[]; caption: string } {
+  const first = t.seed.split(/[.:]/)[0].trim()
+  return {
+    hook: 'Most people get this wrong',
+    segments: ['Here is the fix', first.split(' ').slice(0, 5).join(' '), 'Do it today', 'It takes minutes', 'Link in bio'],
+    caption: `${first}. Free Kazi Kit — link in bio`,
   }
 }
 
-export async function buildBrief(op: ScoredOpportunity): Promise<ProductionBrief> {
+export async function buildEvergreenBrief(t: EvergreenTopic): Promise<ProductionBrief> {
   const key = process.env.OPENAI_API_KEY
-  const core = (key && (await llmBrief(op, key))) || templateBrief(op)
-  return {
-    id: op.id,
-    hook: core.hook,
-    segments: core.segments,
-    caption: core.caption,
-    topic_tags: op.topic_tags.length ? op.topic_tags : ['ai'],
-    duration_sec: 18,
-    source_url: op.url,
+  const core = (key && (await llm(SYSTEM, evergreenPrompt(t), key))) || evergreenTemplate(t)
+  return { id: `evg-${t.id}`, ...core, topic_tags: t.tags, duration_sec: 18, mode: 'evergreen' }
+}
+
+export async function buildNewsBrief(op: ScoredOpportunity): Promise<ProductionBrief> {
+  const key = process.env.OPENAI_API_KEY
+  const core = (key && (await llm(SYSTEM, newsPrompt(op), key))) || {
+    hook: 'This changes your job hunt',
+    segments: ['Something shifted this week', 'Here is what to do', op.title.split(' ').slice(0, 5).join(' '), 'Act on it now', 'Link in bio'],
+    caption: `${op.title.slice(0, 140)} — here's your move. Free Kazi Kit — link in bio`,
   }
+  return { id: op.id, ...core, topic_tags: op.topic_tags.length ? op.topic_tags : ['ai'], duration_sec: 18, source_url: op.url, mode: 'news' }
 }
