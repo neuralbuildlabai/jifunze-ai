@@ -6,8 +6,9 @@
  * ingested_signals, scores each against Jifunze's brand config, and returns a
  * ranked list of opportunities with a plain-language selection_reason.
  *
- * Deliberately lean: keyword relevance + freshness + a light domain fit, mirroring
- * the intent of the client-side scoreSignalForBrand without dragging in 600 files.
+ * The number that gates publishing is `careerScore`, not `relevance`: relevance
+ * says "this is in our world", careerScore says "a job seeker can DO something
+ * because of this". Only the latter is allowed to unseat the evergreen backbone.
  */
 export type Signal = {
   id: string
@@ -25,30 +26,80 @@ export type ScoredOpportunity = Signal & {
   freshness: number
   /** Strict career/skill relevance (0-1). News must clear NEWS_BAR on THIS. */
   careerScore: number
+  /** Which career concepts the story actually touched — used in the audit trail. */
+  careerFamilies: string[]
+  /** Set when the story is vetoed outright as off-brand for a skills channel. */
+  offBrandReason: string | null
   priority: number
   selection_reason: string
 }
 
-/** Words that mean the story actually helps a job seeker act — not just 'mentions AI'. */
-const CAREER_TERMS = [
-  'job','jobs','hiring','hire','career','careers','cv','resume','resumé','interview',
-  'salary','recruit','recruiter','freelance','freelancing','remote work','upskill',
-  'skills','apprenticeship','internship','layoff','job market','job search','portfolio',
-  'get hired','land a job','application','cover letter',
+/**
+ * Career concepts, not keywords. Grouped deliberately: matching "job", "jobs"
+ * and "job market" in one headline is ONE concept, not three. The old flat list
+ * let "AI will take your jobs" clear the bar on substring double-counting alone.
+ */
+export const CAREER_FAMILIES: Record<string, string[]> = {
+  jobs: ['job', 'jobs', 'job market', 'job search', 'employment', 'employer', 'employers', 'vacancy', 'vacancies', 'workforce'],
+  hiring: ['hiring', 'hire', 'hires', 'recruit', 'recruiter', 'recruitment', 'applicant tracking', 'screening candidates', 'screen resumes', 'screen cvs'],
+  cv: ['cv', 'cvs', 'resume', 'resumes', 'resumé', 'cover letter', 'portfolio'],
+  interview: ['interview', 'interviews', 'interviewing'],
+  application: ['job application', 'applications', 'applying for jobs', 'apply for a job'],
+  freelance: ['freelance', 'freelancing', 'freelancer', 'gig work', 'gig economy', 'upwork', 'fiverr', 'contractor'],
+  remote: ['remote work', 'remote job', 'remote hiring', 'work from home', 'hybrid work', 'return to office'],
+  skills: ['upskill', 'reskill', 'skills gap', 'digital skills', 'certification', 'apprenticeship', 'internship', 'training programme', 'training program'],
+  pay: ['salary', 'salaries', 'wage', 'wages', 'pay rise', 'pay raise', 'salary negotiation',
+    // what you actually earn on a platform is a pay question too
+    'platform fee', 'service fee', 'its fees', 'commission', 'take rate', 'pricing', 'day rate', 'hourly rate'],
+  career: ['career', 'careers', 'promotion', 'layoff', 'layoffs', 'redundancies', 'career change'],
+  workertools: ['productivity tool', 'workflow automation', 'workplace ai', 'ai at work', 'ai tools for work', 'employee productivity'],
+}
+
+/**
+ * Hard veto. These are the shapes of "AI news" that keep trying to become a
+ * Jifunze video and must never succeed, however many career words they contain.
+ */
+const OFF_BRAND_VETO: Array<[string, string[]]> = [
+  ['child/teen safety story', ['teen safety', 'teenager', 'teens', 'minors', 'child safety', 'kids online', 'parental control']],
+  ['celebrity story', ['celebrity', 'kardashian', 'taylor swift', 'influencer drama', 'red carpet']],
+  ['political story', ['election', 'president', 'senate', 'parliament', 'congress', 'political party', 'campaign trail', 'impeach']],
+  ['religious/festival content', ['christmas', 'easter', 'ramadan', 'eid', 'diwali', 'church', 'mosque', 'temple', 'festival']],
+  ['funding/valuation hype', ['raises $', 'valuation', 'series a', 'series b', 'ipo', 'market cap', 'stock surges', 'share price']],
+  ['model-launch hype', ['launches new model', 'unveils', 'announces gpt', 'benchmark record', 'state of the art model']],
+  ['gambling/crypto', ['crypto price', 'nft', 'gambling', 'casino', 'betting']],
 ]
 
-/** 0-1 strict career relevance: fraction of career-signal presence in the text. */
+const hay = (s: Signal): string => `${s.title} ${s.summary} ${(s.topic_tags ?? []).join(' ')}`.toLowerCase()
+
+/** Returns the veto reason, or null when the story is not obviously off-brand. */
+export function offBrandVeto(s: Signal): string | null {
+  const text = hay(s)
+  for (const [reason, terms] of OFF_BRAND_VETO) {
+    if (terms.some((t) => text.includes(t))) return reason
+  }
+  return null
+}
+
+/** Which career concepts a story genuinely touches. */
+export function careerFamilies(s: Signal): string[] {
+  const text = hay(s)
+  return Object.entries(CAREER_FAMILIES)
+    .filter(([, terms]) => terms.some((t) => text.includes(t)))
+    .map(([family]) => family)
+}
+
+/**
+ * 0–1 strict career relevance. Two distinct concepts (0.66) is the working bar:
+ * "employers ... screen resumes" = jobs + hiring/cv, "AI takes jobs" = jobs only.
+ * A vetoed story scores 0 no matter what it mentions.
+ */
 export function careerRelevance(s: Signal): number {
-  const hay = `${s.title} ${s.summary} ${s.topic_tags.join(' ')}`.toLowerCase()
-  let hits = 0
-  for (const t of CAREER_TERMS) if (hay.includes(t)) hits++
-  // needs at least a couple of genuine career terms to score meaningfully
-  return Math.min(hits / 3, 1)
+  if (offBrandVeto(s)) return 0
+  return Math.min(careerFamilies(s).length / 3, 1)
 }
 
 /** Jifunze brand config: what the audience (Kenyan/emerging-market job seekers & learners) cares about. */
 const BRAND = {
-  // weighted keywords; higher = more on-brand
   keywords: {
     'ai': 3, 'chatgpt': 3, 'artificial intelligence': 3, 'openai': 2.5, 'llm': 2,
     'jobs': 3, 'hiring': 3, 'career': 3, 'cv': 3, 'resume': 3, 'interview': 3,
@@ -56,19 +107,17 @@ const BRAND = {
     'automation': 2, 'tools': 1.5, 'startup': 1.5, 'tech': 1.5, 'learn': 2, 'course': 1.5,
     'africa': 2, 'kenya': 2.5, 'nigeria': 1.5, 'graduate': 2,
   } as Record<string, number>,
-  // topics that dampen (off-brand noise)
   block: ['crypto price', 'nft', 'gambling', 'casino'],
 }
 
 function relevanceScore(s: Signal): { score: number; hits: string[] } {
-  const hay = `${s.title} ${s.summary} ${s.topic_tags.join(' ')}`.toLowerCase()
-  if (BRAND.block.some((b) => hay.includes(b))) return { score: 0, hits: [] }
+  const text = hay(s)
+  if (BRAND.block.some((b) => text.includes(b))) return { score: 0, hits: [] }
   let score = 0
   const hits: string[] = []
   for (const [kw, w] of Object.entries(BRAND.keywords)) {
-    if (hay.includes(kw)) { score += w; hits.push(kw) }
+    if (text.includes(kw)) { score += w; hits.push(kw) }
   }
-  // normalise to 0–1 (cap contribution so one spammy title can't dominate)
   return { score: Math.min(score / 8, 1), hits: hits.slice(0, 4) }
 }
 
@@ -83,14 +132,19 @@ export function scoreSignals(signals: Signal[], nowMs: number): ScoredOpportunit
   return signals
     .map((s) => {
       const { score: relevance, hits } = relevanceScore(s)
-      const careerScore = careerRelevance(s)
+      const offBrandReason = offBrandVeto(s)
+      const families = offBrandReason ? [] : careerFamilies(s)
+      const careerScore = offBrandReason ? 0 : Math.min(families.length / 3, 1)
       const freshness = freshnessScore(s.published_at, nowMs)
-      // priority weights relevance higher than freshness — on-brand beats merely new
       const priority = Number((relevance * 0.7 + freshness * 0.3).toFixed(4))
-      const reason = relevance === 0
-        ? 'off-brand or blocked'
-        : `matches ${hits.join(', ') || 'brand topics'}; ${freshness > 0.6 ? 'fresh' : 'still relevant'}`
-      return { ...s, relevance, careerScore, freshness, priority, selection_reason: reason }
+      const reason = offBrandReason
+        ? `rejected: ${offBrandReason}`
+        : relevance === 0
+          ? 'rejected: off-brand or blocked'
+          : families.length < 2
+            ? `rejected: no actionable career angle (touches ${families.join(', ') || 'nothing concrete'})`
+            : `usable: ${families.join(' + ')}; ${freshness > 0.6 ? 'fresh' : 'still relevant'}; matches ${hits.join(', ') || 'brand topics'}`
+      return { ...s, relevance, careerScore, careerFamilies: families, offBrandReason, freshness, priority, selection_reason: reason }
     })
     .filter((o) => o.relevance > 0)
     .sort((a, b) => b.priority - a.priority)

@@ -1,32 +1,94 @@
 name: Autonomous content loop
 
-# Runs the daily pass: score → brief → render → upload → publish.
-# Signal ingestion is a separate Supabase pg_cron job (see SIGNAL_INGESTION_DEPLOYMENT.md);
-# this workflow can also poke it first to guarantee fresh signals.
+# Daily pass: validate → select → brief → quality gate → render → (upload → publish).
 #
-# COST: GitHub Actions minutes (free tier), plus OpenAI pennies per run.
-# SAFETY: nothing posts publicly unless the IG_PUBLISH_ENABLED Supabase secret is "true".
-#   Set repo variable DRY_RUN=true to render + log without publishing at all.
+# Signal ingestion is a separate Supabase pg_cron job (see
+# SIGNAL_INGESTION_DEPLOYMENT.md); this workflow pokes it first when the secret
+# is configured, to guarantee fresh signals.
+#
+# COST: GitHub Actions minutes (free tier). OpenAI is optional (pennies/run) and
+#       Pexels is optional and free. With NO secrets configured at all the
+#       workflow still runs green and uploads a designed evergreen video.
+#
+# SAFETY:
+#   - permissions are read-only; this workflow never commits to the repo
+#   - nothing posts publicly unless the IG_PUBLISH_ENABLED Supabase secret is "true"
+#   - repo variable DRY_RUN=true (or the manual input) renders + uploads without publishing
+#   - secrets are passed as env only, never echoed; capability checks print booleans
 
 on:
   schedule:
     - cron: '0 16 * * *'   # 16:00 UTC ~= 19:00 Nairobi (evening scroll). Adjust as needed.
-  workflow_dispatch:        # manual "run now" button
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Render and upload the artifact, but do not publish'
+        type: boolean
+        default: true
+      visual_provider:
+        description: 'Visual tier'
+        type: choice
+        default: designed
+        options: [designed, stock, fallback]
+
+permissions:
+  contents: read
 
 concurrency:
   group: autonomous-loop
   cancel-in-progress: false
 
 jobs:
+  # Cheap, secret-free gate. Anything wrong with the content engine shows up
+  # here in ~1 minute instead of after a 20-minute render job.
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install deps
+        run: npm ci --no-audit --no-fund
+
+      - name: Content engine tests
+        run: npm run test
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck pipeline
+        run: npm run typecheck:pipeline
+
+      # Offline: no Supabase, no OpenAI, no Pexels, no ffmpeg. Proves the
+      # selector + script quality gate before we spend render minutes.
+      - name: Content dry run
+        run: npm run video:dry-run
+
+      - name: Upload content decision
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: content-decision
+          path: loop-artifacts/decision.json
+          if-no-files-found: warn
+          retention-days: 7
+
   run:
+    needs: validate
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '22'
+          cache: npm
 
       - name: Install ffmpeg
         run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
@@ -34,32 +96,65 @@ jobs:
       - name: Install deps
         run: npm ci --no-audit --no-fund
 
-      - name: Refresh signals (best-effort)
-        continue-on-error: true
+      # Presence-only capability check. Prints booleans, never values, so the
+      # log makes it obvious WHY a run degraded without leaking anything.
+      - name: Detect configured integrations
+        id: caps
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          INGEST_SECRET: ${{ secrets.INGEST_SECRET }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
         run: |
-          curl -sS -X POST "$SUPABASE_URL/functions/v1/ingest-signals" \
-            -H "x-ingest-secret: $INGEST_SECRET" -H "Content-Type: application/json" -d '{}' || true
+          set -euo pipefail
+          has() { if [ -n "${1:-}" ]; then echo true; else echo false; fi; }
+          SUPA=false
+          if [ -n "${SUPABASE_URL:-}" ] && [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then SUPA=true; fi
+          {
+            echo "supabase=$SUPA"
+            echo "ingest=$(has "${INGEST_SECRET:-}")"
+            echo "openai=$(has "${OPENAI_API_KEY:-}")"
+            echo "pexels=$(has "${PEXELS_API_KEY:-}")"
+          } >> "$GITHUB_OUTPUT"
+          echo "supabase=$SUPA  openai=$(has "${OPENAI_API_KEY:-}")  pexels=$(has "${PEXELS_API_KEY:-}")"
+          if [ "$SUPA" = "false" ]; then
+            echo "::notice::No Supabase credentials — running offline: evergreen content, designed render, no publish."
+          fi
+          if [ -z "${PEXELS_API_KEY:-}" ]; then
+            echo "::notice::No PEXELS_API_KEY — the designed provider is used instead of stock footage. This is expected and free."
+          fi
+
+      - name: Refresh signals (best-effort)
+        if: steps.caps.outputs.supabase == 'true' && steps.caps.outputs.ingest == 'true'
+        continue-on-error: true
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           INGEST_SECRET: ${{ secrets.INGEST_SECRET }}
+        run: |
+          curl -sS -o /dev/null -X POST "$SUPABASE_URL/functions/v1/ingest-signals" \
+            -H "x-ingest-secret: $INGEST_SECRET" -H "Content-Type: application/json" -d '{}' || true
 
       - name: Run loop
-        run: node --experimental-strip-types orchestrator/run.ts
         env:
-          RUN_DATE: ${{ github.run_id && '' || '' }}
-          DRY_RUN: ${{ vars.DRY_RUN }}
-          VISUAL_PROVIDER: ${{ vars.VISUAL_PROVIDER || 'stock' }}
+          DRY_RUN: ${{ inputs.dry_run || vars.DRY_RUN || 'false' }}
+          # No Supabase configured -> offline mode instead of a hard failure.
+          LOOP_OFFLINE: ${{ steps.caps.outputs.supabase == 'false' }}
+          VISUAL_PROVIDER: ${{ inputs.visual_provider || vars.VISUAL_PROVIDER || 'designed' }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           PUBLISH_SECRET: ${{ secrets.PUBLISH_SECRET }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+        run: npm run autonomous:once
 
+      # Always uploaded: on failure loop-artifacts/decision.json still explains
+      # what was selected and which quality errors stopped the render.
       - name: Upload rendered video + decision
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: loop-output
           path: loop-artifacts/
-          if-no-files-found: ignore
+          if-no-files-found: warn
           retention-days: 7

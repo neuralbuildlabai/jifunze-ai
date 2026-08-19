@@ -1,0 +1,263 @@
+/**
+ * Content engine test suite — the guard rail on the hybrid selector, the script
+ * quality gate and the visual provider contract.
+ *
+ *   npm run test
+ *
+ * Deliberately dependency-free (node:assert + tsx, matching the other
+ * scripts/test-*.ts in this repo) and fully offline: no Supabase, no OpenAI, no
+ * Pexels, no ffmpeg. It must be runnable on a laptop with no secrets at all.
+ */
+import assert from 'node:assert/strict'
+import { scoreSignals, careerRelevance, careerFamilies, offBrandVeto, type Signal } from '../orchestrator/score.ts'
+import { selectContent, NEWS_BAR } from '../orchestrator/select.ts'
+import { CONTENT_BANK, pickEvergreen, TARGET_AUDIENCE } from '../orchestrator/contentBank.ts'
+import { validateBrief } from '../orchestrator/scriptQuality.ts'
+import { buildEvergreenBrief, buildNewsBrief } from '../orchestrator/brief.ts'
+import { selectVisualProvider } from '../render/providers/registry.ts'
+import { stockQueryFor } from '../render/providers/stockProvider.ts'
+import { buildAss, END_CARD_SEC, accentLine } from '../render/src/captions.ts'
+
+// no API keys in tests: every path here must be the $0 path
+delete process.env.OPENAI_API_KEY
+
+let passed = 0
+const failures: string[] = []
+async function test(name: string, fn: () => void | Promise<void>) {
+  try { await fn(); passed++; console.log(`  ok  ${name}`) }
+  catch (err) { failures.push(`${name}: ${(err as Error).message}`); console.log(`  FAIL ${name}\n       ${(err as Error).message}`) }
+}
+
+const RUN_DATE = '2026-08-19'
+const nowMs = Date.parse('2026-08-19T12:00:00Z')
+const fresh = new Date(nowMs - 4 * 3600_000).toISOString()
+const stale = new Date(nowMs - 8 * 86400_000).toISOString()
+
+const signal = (over: Partial<Signal>): Signal => ({
+  id: 'sig-1', source: 'rss', source_label: 'Test', title: '', summary: '', url: 'https://example.com/a',
+  published_at: fresh, topic_tags: [], ...over,
+})
+
+// --- news gate: the stories that must NEVER become a Jifunze video ----------
+const WEAK_NEWS: Array<[string, string]> = [
+  ['OpenAI launches new teen safety controls', 'Parents get new parental control tools for teens using ChatGPT.'],
+  ['Celebrity chef launches AI recipe app', 'A red carpet launch party for the celebrity backed app.'],
+  ['AI takes centre stage in the election', 'The president and congress debated AI on the campaign trail.'],
+  ['Church unveils AI nativity display for Christmas', 'A festival installation at the local church.'],
+  ['AI startup raises $200m at a $3bn valuation', 'Series B funding round values the startup at three billion.'],
+  ['OpenAI unveils its fastest model yet', 'The company announces GPT successor with a benchmark record.'],
+  ['AI could take your jobs, report warns', 'A broad report says AI will affect jobs everywhere.'],
+]
+
+// --- news gate: the stories that SHOULD become a lesson ---------------------
+const STRONG_NEWS: Array<[string, string]> = [
+  ['Employers are increasingly using AI to screen resumes', 'Recruiters say applicant tracking systems now rank CVs before any human reads them.'],
+  ['Remote work hiring rebounds for junior roles', 'Employers reopened remote job postings and changed how they interview candidates.'],
+  ['Freelance platform changes its fees for new freelancers', 'Upwork adjusted rates, affecting how a freelancer prices gig work.'],
+]
+
+console.log('\ncontent engine\n')
+
+for (const [title, summary] of WEAK_NEWS) {
+  await test(`rejects weak news: "${title.slice(0, 44)}"`, () => {
+    const s = signal({ title, summary })
+    assert.ok(careerRelevance(s) < NEWS_BAR, `careerRelevance ${careerRelevance(s)} should be below ${NEWS_BAR}`)
+    const d = selectContent({ signals: [s], runDate: RUN_DATE, nowMs })
+    assert.equal(d.mode, 'evergreen', 'weak news must fall back to evergreen')
+  })
+}
+
+for (const [title, summary] of STRONG_NEWS) {
+  await test(`accepts career news: "${title.slice(0, 44)}"`, () => {
+    const s = signal({ title, summary })
+    assert.ok(careerRelevance(s) >= NEWS_BAR, `careerRelevance ${careerRelevance(s)} should clear ${NEWS_BAR} (families: ${careerFamilies(s).join(',')})`)
+    const d = selectContent({ signals: [s], runDate: RUN_DATE, nowMs })
+    assert.equal(d.mode, 'news')
+    assert.equal(d.opportunity?.title, title)
+  })
+}
+
+await test('no signals at all falls back to evergreen', () => {
+  const d = selectContent({ signals: [], runDate: RUN_DATE, nowMs })
+  assert.equal(d.mode, 'evergreen')
+  assert.ok(d.topic, 'an evergreen topic must be chosen')
+  assert.match(d.reason, /no usable signals/)
+})
+
+await test('stale career news does not win', () => {
+  const s = signal({ title: STRONG_NEWS[0][0], summary: STRONG_NEWS[0][1], published_at: stale })
+  const d = selectContent({ signals: [s], runDate: RUN_DATE, nowMs })
+  assert.equal(d.mode, 'evergreen')
+  assert.ok(d.rejected.some((r) => /stale/.test(r.reason)), 'rejection reason should say stale')
+})
+
+await test('every rejected story explains why', () => {
+  const signals = WEAK_NEWS.map(([title, summary], i) => signal({ id: `w${i}`, title, summary }))
+  const d = selectContent({ signals, runDate: RUN_DATE, nowMs })
+  assert.equal(d.mode, 'evergreen')
+  assert.ok(d.rejected.length > 0, 'expected rejected candidates')
+  for (const r of d.rejected) assert.ok(r.reason.trim().length > 8, `empty reason for ${r.title}`)
+})
+
+await test('off-brand veto beats keyword stuffing', () => {
+  // stuffed with career words but still a teen-safety story
+  const s = signal({
+    title: 'Teen safety controls arrive for jobs, hiring, CV and interview tools',
+    summary: 'Parental control features for teens across resume and recruitment products.',
+  })
+  assert.equal(offBrandVeto(s), 'child/teen safety story')
+  assert.equal(careerRelevance(s), 0)
+  assert.equal(selectContent({ signals: [s], runDate: RUN_DATE, nowMs }).mode, 'evergreen')
+})
+
+await test('one career concept is not enough (no substring double counting)', () => {
+  const s = signal({ title: 'Jobs, job market and job search all shift', summary: 'A story about jobs.' })
+  assert.deepEqual(careerFamilies(s), ['jobs'])
+  assert.ok(careerRelevance(s) < NEWS_BAR)
+})
+
+await test('scoreSignals keeps an auditable reason on every row', () => {
+  const signals = [...WEAK_NEWS, ...STRONG_NEWS].map(([title, summary], i) => signal({ id: `s${i}`, title, summary }))
+  for (const o of scoreSignals(signals, nowMs)) {
+    assert.ok(/^(usable|rejected):/.test(o.selection_reason), `bad reason: ${o.selection_reason}`)
+  }
+})
+
+console.log('\nevergreen rotation\n')
+
+await test('rotation covers the whole bank before repeating', () => {
+  const seen = new Set<string>()
+  for (let i = 0; i < CONTENT_BANK.length; i++) {
+    const date = new Date(Date.parse('2026-08-19T00:00:00Z') + i * 86400_000).toISOString().slice(0, 10)
+    seen.add(pickEvergreen(date).id)
+  }
+  assert.equal(seen.size, CONTENT_BANK.length, 'a topic repeated inside one full cycle')
+})
+
+await test('recently used topics are skipped', () => {
+  const first = pickEvergreen(RUN_DATE)
+  const second = pickEvergreen(RUN_DATE, { exclude: [first.id] })
+  assert.notEqual(second.id, first.id)
+})
+
+await test('audience is recorded and non-empty', () => {
+  assert.ok(TARGET_AUDIENCE.length > 20)
+  assert.match(TARGET_AUDIENCE, /job seekers/i)
+})
+
+console.log('\nscript quality\n')
+
+await test('every bank script passes the quality gate unaided', () => {
+  for (const t of CONTENT_BANK) {
+    const report = validateBrief(t.script)
+    assert.ok(report.ok, `${t.id}: ${report.errors.join(' | ')}`)
+  }
+})
+
+await test('rejects generic AI-hype filler', () => {
+  const report = validateBrief({
+    hook: 'AI is changing everything',
+    segments: ["In today's fast-paced world", "Let's dive in", 'This is important for everyone'],
+    caption: 'AI is changing everything. link in bio',
+  })
+  assert.equal(report.ok, false)
+  assert.ok(report.errors.some((e) => /filler/.test(e)), report.errors.join(' | '))
+})
+
+await test('rejects a script with no action for the viewer', () => {
+  const report = validateBrief({
+    hook: 'Hiring is different now',
+    segments: ['Companies changed their systems', 'The market is competitive', 'Many people are affected'],
+    caption: 'Hiring changed. Free Kazi Kit — link in bio',
+  })
+  assert.equal(report.ok, false)
+  assert.ok(report.errors.some((e) => /action verb/.test(e)), report.errors.join(' | '))
+})
+
+await test('rejects a caption with no CTA', () => {
+  const t = CONTENT_BANK[0]
+  const report = validateBrief({ ...t.script, caption: 'Some caption with no call to action' })
+  assert.equal(report.ok, false)
+  assert.ok(report.errors.some((e) => /CTA/.test(e)), report.errors.join(' | '))
+})
+
+await test('rejects an over-long hook', () => {
+  const t = CONTENT_BANK[0]
+  const report = validateBrief({ ...t.script, hook: 'This is a very long hook that goes on and on and never lands' })
+  assert.equal(report.ok, false)
+})
+
+console.log('\nbrief generation (no API key)\n')
+
+await test('evergreen brief is publishable with zero API keys', async () => {
+  const brief = await buildEvergreenBrief(CONTENT_BANK[0])
+  assert.equal(brief.mode, 'evergreen')
+  assert.ok(validateBrief(brief).ok, validateBrief(brief).errors.join(' | '))
+  assert.match(brief.caption, /link in bio$/)
+})
+
+await test('news brief fallback is publishable with zero API keys', async () => {
+  const s = signal({ title: STRONG_NEWS[0][0], summary: STRONG_NEWS[0][1] })
+  const op = scoreSignals([s], nowMs)[0]
+  const brief = await buildNewsBrief(op)
+  assert.equal(brief.mode, 'news')
+  assert.equal(brief.source_url, s.url)
+  const report = validateBrief(brief)
+  assert.ok(report.ok, report.errors.join(' | '))
+})
+
+console.log('\nvisual providers\n')
+
+const providerFor = (env: Record<string, string | undefined>) =>
+  selectVisualProvider(env as NodeJS.ProcessEnv).id
+
+await test('designed is the default when VISUAL_PROVIDER is unset', () => {
+  assert.equal(providerFor({}), 'designed')
+})
+
+await test('stock without PEXELS_API_KEY falls back to designed', () => {
+  assert.equal(providerFor({ VISUAL_PROVIDER: 'stock' }), 'designed')
+})
+
+await test('stock with PEXELS_API_KEY uses stock', () => {
+  assert.equal(providerFor({ VISUAL_PROVIDER: 'stock', PEXELS_API_KEY: 'k' }), 'stock')
+})
+
+await test('generated is deprecated and maps to designed', () => {
+  assert.equal(providerFor({ VISUAL_PROVIDER: 'generated' }), 'designed')
+})
+
+await test('unknown provider names never silently downgrade', () => {
+  assert.equal(providerFor({ VISUAL_PROVIDER: 'cheap' }), 'designed')
+})
+
+await test('fallback is only reachable by asking for it explicitly', () => {
+  assert.equal(providerFor({ VISUAL_PROVIDER: 'fallback' }), 'fallback')
+})
+
+await test('stock search terms are translated, never raw tags', () => {
+  const base = { id: 'x', hook: 'h', segments: ['a'], caption: 'c', duration_sec: 18 }
+  assert.equal(stockQueryFor({ ...base, topic_tags: ['cv', 'jobs'] }), 'writing notebook desk closeup')
+  assert.equal(stockQueryFor({ ...base, topic_tags: ['interview'] }), 'business meeting handshake office')
+  assert.equal(stockQueryFor({ ...base, topic_tags: ['nonsense-tag'] }), 'professional working laptop')
+})
+
+console.log('\ncaptions\n')
+
+await test('captions reserve the end card and keep the brand CTA', () => {
+  const t = CONTENT_BANK[0]
+  const ass = buildAss({ id: t.id, ...t.script, topic_tags: t.tags, duration_sec: 18 })
+  assert.match(ass, /PlayResX: 1080/)
+  assert.match(ass, /PlayResY: 1920/)
+  assert.match(ass, /LINK IN BIO/, 'end card CTA missing')
+  assert.match(ass, /Style: Prog/, 'progress indicator missing')
+  assert.ok(END_CARD_SEC > 1.5, 'end card too short to read')
+})
+
+await test('keyword highlighting picks a meaningful word', () => {
+  const line = accentLine('Paste the advert into an AI')
+  assert.match(line, /\{\\c&HDCB978&\}ADVERT/)
+})
+
+console.log(`\n${passed} passed, ${failures.length} failed\n`)
+if (failures.length) { for (const f of failures) console.error(`  ✗ ${f}`); process.exit(1) }

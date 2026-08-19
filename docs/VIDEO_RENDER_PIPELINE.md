@@ -1,5 +1,8 @@
 # Video render pipeline — status
 
+> **Day-to-day operation, commands, quality tiers and troubleshooting live in
+> [`video-pipeline.md`](./video-pipeline.md).** This document covers setup/status only.
+
 Faceless vertical video from a brief: captions + music + pluggable visuals.
 **No voiceover, no manual work.** Proven working 2026-08-18 (test render:
 1080×1920 H.264, captions wrapping correctly, $0 generated background).
