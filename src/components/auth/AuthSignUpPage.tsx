@@ -16,7 +16,7 @@ export function AuthSignUpPage() {
         <header className="flex flex-col items-center gap-7 pb-10 text-center">
           <JifunzeBrandLogo to="/" size="xxl" surface="light" />
           <div className="space-y-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-orange-700">Jifunze.AI</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-orange-700">Jifunze</p>
             <h1 className="text-balance text-[1.7rem] font-semibold tracking-tight text-stone-900 sm:text-[2rem] sm:leading-[1.15]">
               Create your free account
             </h1>

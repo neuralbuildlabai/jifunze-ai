@@ -1,7 +1,7 @@
 const SOCIALS = [
   { name: 'TikTok', handle: '@jifunze_ai', href: 'https://www.tiktok.com/@jifunze_ai' },
   { name: 'Instagram', handle: '@jifunze.ai', href: 'https://www.instagram.com/jifunze.ai' },
-  { name: 'X', handle: '@Jifunze.AI', href: 'https://x.com/JifunzeAI' },
+  { name: 'X', handle: '@JifunzeAI', href: 'https://x.com/JifunzeAI' },
 ] as const
 
 function DotIcon() {

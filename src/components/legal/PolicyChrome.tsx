@@ -13,7 +13,7 @@ type Props = {
 }
 
 export function PolicyChrome(props: Props) {
-  const { title, eyebrow = 'Jifunze.AI', children, lastUpdated = '2026-04-16' } = props
+  const { title, eyebrow = 'Jifunze', children, lastUpdated = '2026-04-16' } = props
 
   return (
     <div className="min-h-screen w-full bg-zinc-950 px-4 py-10 text-zinc-100">

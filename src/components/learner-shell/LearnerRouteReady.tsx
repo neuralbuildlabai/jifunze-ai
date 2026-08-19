@@ -61,7 +61,7 @@ export function LearnerRouteReady({ children }: { children: React.ReactNode }) {
     return (
       <div className="mx-auto flex min-h-[min(70vh,48rem)] w-full max-w-2xl flex-col items-center justify-center space-y-6 px-4 py-12 text-center text-stone-800">
         <header className="space-y-2">
-          <h1 className="text-2xl font-semibold text-zinc-900">Jifunze.AI</h1>
+          <h1 className="text-2xl font-semibold text-zinc-900">Jifunze</h1>
           <p className="text-sm text-stone-600">Sign in to continue.</p>
         </header>
         <div className="flex justify-center">

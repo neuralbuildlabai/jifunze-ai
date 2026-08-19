@@ -4,7 +4,7 @@ export function TermsOfServicePage() {
   return (
     <PolicyChrome title="Terms of Service" eyebrow="Legal">
       <p>
-        These Terms describe how you may use Jifunze.AI (“Jifunze,” “we,” “us”). They are written to match the product as
+        These Terms describe how you may use Jifunze (“we,” “us”). They are written to match the product as
         it exists today. Specific payment, tax, and dispute rules may be refined when billing is connected to a payment
         processor and when counsel reviews regional requirements.
       </p>

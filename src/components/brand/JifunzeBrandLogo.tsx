@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
-import logoIcon from '../../assets/branding/jifunze-logo-icon.png'
-import logoLight from '../../assets/branding/jifunze-logo-light.png'
-import logoDark from '../../assets/branding/jifunze-logo-dark.png'
+import markSrc from '../../assets/branding/jifunze-mark.svg'
+import lockupOnDark from '../../assets/branding/jifunze-lockup-on-dark.svg'
+import lockupOnLight from '../../assets/branding/jifunze-lockup-on-light.svg'
 
 type Props = {
   /** Link target; use `null` for non-link (e.g. header title only). */
@@ -15,6 +15,8 @@ type Props = {
 
 // Sizing rules — bumped overall so the logo reads as a real brand mark, not a favicon.
 // `sm` is now the minimum for top nav, `xxl` is the hero size used on auth and maintenance.
+// `compact` uses the square mark (512×512), so equal h/w classes are correct here — the
+// horizontal lockup is 334.63×96 and must keep `w-auto` so it is never squeezed to square.
 const sizeClasses = {
   sm: {
     full: 'h-9 sm:h-10',
@@ -39,7 +41,10 @@ const sizeClasses = {
 } as const
 
 /**
- * Public brand lockup using the production logo assets.
+ * Public brand lockup using the production SVG assets.
+ *
+ * The tagline is deliberately NOT part of any logo asset — positioning copy stays
+ * editable in page-level markup.
  */
 export function JifunzeBrandLogo({
   to = '/',
@@ -50,13 +55,17 @@ export function JifunzeBrandLogo({
 }: Props) {
   const isCompact = variant === 'compact'
   const onLight = surface === 'light'
-  const fullLogoSrc = onLight ? logoDark : logoLight
+  const lockupSrc = onLight ? lockupOnLight : lockupOnDark
+  // Inside a link the wrapper supplies the accessible name, so the artwork is decorative.
+  // Standalone (`to === null`) the full lockup is the only thing to announce; in the compact
+  // variant the adjacent "Jifunze" text always carries the name, so the mark stays decorative.
+  const isLinked = to !== null
   const inner = (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
       {isCompact ? (
         <>
           <img
-            src={logoIcon}
+            src={markSrc}
             alt=""
             width={48}
             height={48}
@@ -67,14 +76,14 @@ export function JifunzeBrandLogo({
             className={`font-semibold tracking-tight ${onLight ? 'text-zinc-900' : 'text-zinc-100'}`}
           >
             Jifunze
-            <span className={onLight ? 'text-zinc-600' : 'text-zinc-400'}>.AI</span>
           </span>
         </>
       ) : (
         <img
-          src={fullLogoSrc}
-          alt="Jifunze.AI"
-          height={40}
+          src={lockupSrc}
+          alt={isLinked ? '' : 'Jifunze'}
+          width={335}
+          height={96}
           className={`${sizeClasses[size].full} w-auto shrink-0`}
           decoding="async"
         />
@@ -89,7 +98,7 @@ export function JifunzeBrandLogo({
   return (
     <Link
       to={to}
-      aria-label="Jifunze.AI home"
+      aria-label="Jifunze"
       className="inline-flex items-center outline-none ring-zinc-400/35 focus-visible:ring-2"
     >
       {inner}

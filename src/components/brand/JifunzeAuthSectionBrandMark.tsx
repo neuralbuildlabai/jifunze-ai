@@ -1,4 +1,4 @@
-import logoLight from '../../assets/branding/jifunze-logo-light.png'
+import lockupOnDark from '../../assets/branding/jifunze-lockup-on-dark.svg'
 
 /**
  * Ambient brand mark for the homepage auth “save & continue” column: centered logo with
@@ -15,10 +15,10 @@ export function JifunzeAuthSectionBrandMark() {
       </div>
       <div className="pointer-events-none absolute inset-x-[12%] top-1/2 z-0 h-px -translate-y-1/2 bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" aria-hidden />
       <img
-        src={logoLight}
+        src={lockupOnDark}
         alt=""
-        width={760}
-        height={220}
+        width={335}
+        height={96}
         className="jifunze-auth-brand-mark relative z-[1] w-[min(100%,23rem)] max-w-full opacity-[0.18] mix-blend-screen contrast-[1.18] brightness-125 drop-shadow-[0_10px_26px_rgba(0,0,0,0.24)] sm:w-[min(100%,27rem)] sm:opacity-[0.2]"
         decoding="async"
       />

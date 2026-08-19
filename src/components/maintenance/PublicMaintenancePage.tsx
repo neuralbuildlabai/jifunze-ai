@@ -20,7 +20,7 @@ export function PublicMaintenancePage() {
       <div className="relative z-10 mx-auto flex min-h-screen max-w-2xl flex-col items-center justify-center px-6 py-16 text-center sm:px-8">
         <div className="mb-10 flex flex-col items-center gap-5">
           <JifunzeBrandLogo to={null} size="xxl" surface="light" className="justify-center" />
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-orange-700">Jifunze.AI</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-orange-700">Jifunze</p>
         </div>
 
         <div className="w-full max-w-xl rounded-2xl border border-orange-100/90 bg-white px-6 py-10 shadow-[0_22px_50px_-20px_rgba(120,53,15,0.18)] sm:px-10 sm:py-12">

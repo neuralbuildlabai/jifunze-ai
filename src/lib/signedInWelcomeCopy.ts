@@ -183,7 +183,7 @@ export function buildSignedInWelcomeCopy(input: {
 
   return {
     eyebrow: 'Start here',
-    title: 'Welcome to Jifunze.AI',
+    title: 'Welcome to Jifunze',
     lede: `You’re in ${ws}. Your content profile is ${profile}. ${hint}`,
     continuity: `${lead}: ${focus}. Start with a topic below whenever you’re ready.`,
     focusLabel: focus,
