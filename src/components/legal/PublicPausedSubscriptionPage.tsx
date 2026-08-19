@@ -11,7 +11,7 @@ export function PublicPausedSubscriptionPage() {
     <div className="jf-public-surface min-h-screen w-full bg-gradient-to-b from-[#1c2028] via-[#1a1e26] to-[#16191f] px-4 py-10 text-[color:var(--jf-text)] sm:px-6 sm:py-12">
       <div className="mx-auto w-full max-w-2xl space-y-6">
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
-          <JifunzeBrandLogo to="/" size="sm" variant="compact" surface="dark" />
+          <JifunzeBrandLogo to="/" size="sm" surface="dark" />
           <Link className="text-[13px] font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to={LEGAL_ROUTES.learn}>
             Catalog
           </Link>

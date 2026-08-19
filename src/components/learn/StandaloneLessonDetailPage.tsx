@@ -79,7 +79,7 @@ function StandaloneLessonDetailLoaded({ entry, module, lesson, nav }: Standalone
       >
         <div className="mx-auto w-full max-w-4xl space-y-8">
           <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[color:var(--jf-border)] pb-5">
-            <JifunzeBrandLogo to="/" size="md" variant="compact" surface="light" />
+            <JifunzeBrandLogo to="/" size="md" surface="light" />
             <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
               <Link className="text-xs font-medium text-[color:var(--jf-muted)] hover:text-[color:var(--jf-text)]" to="/learn">
                 Catalog
@@ -235,7 +235,7 @@ function StandaloneLessonDetailLoaded({ entry, module, lesson, nav }: Standalone
     >
       <div className="mx-auto w-full max-w-3xl space-y-10">
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[color:var(--jf-border)] pb-6">
-          <JifunzeBrandLogo to="/" size="md" variant="compact" surface="light" />
+          <JifunzeBrandLogo to="/" size="md" surface="light" />
           <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
             <Link className="text-xs font-medium text-[color:var(--jf-brand)] hover:text-[color:var(--jf-brand-hover)]" to="/learn">
               Catalog

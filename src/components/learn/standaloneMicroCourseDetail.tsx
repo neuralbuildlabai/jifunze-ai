@@ -35,7 +35,7 @@ export function StandaloneMicroCourseDetailView({ entry }: { entry: StandaloneCa
     >
       <div className="mx-auto w-full max-w-3xl space-y-12">
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[color:var(--jf-border)] pb-6">
-          <JifunzeBrandLogo to="/" size="md" variant="compact" surface="light" />
+          <JifunzeBrandLogo to="/" size="md" surface="light" />
           <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
             <Link className="text-xs font-medium text-[color:var(--jf-brand)] hover:text-[color:var(--jf-brand-hover)]" to="/learn">
               Catalog

@@ -10,7 +10,7 @@ export function FullDisclaimerPage() {
     <div className="min-h-screen w-full bg-zinc-950 px-4 py-10 text-zinc-100">
       <div className="mx-auto w-full max-w-2xl">
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
-          <JifunzeBrandLogo to="/" size="sm" variant="compact" />
+          <JifunzeBrandLogo to="/" size="sm" />
           <Link to="/" className="text-xs font-medium text-violet-300/90 hover:text-violet-200">
             Home
           </Link>

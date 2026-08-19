@@ -193,7 +193,7 @@ export function DiscoveryTopNav({
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-200/80 bg-white/95 shadow-sm shadow-zinc-900/[0.03] backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-        <JifunzeBrandLogo to="/" size="md" variant="compact" surface="light" />
+        <JifunzeBrandLogo to="/" size="md" surface="light" />
         <nav
           className="order-3 flex w-full flex-wrap items-center justify-center gap-1 text-[13px] font-medium text-zinc-600 sm:order-none sm:flex-1 sm:justify-center sm:gap-2 lg:w-auto lg:gap-6"
           aria-label="Primary"
@@ -397,7 +397,7 @@ export function DiscoveryFooter({
     <footer id="contact-public" className="scroll-mt-24 bg-zinc-950 text-zinc-300">
       <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:gap-10 lg:px-8">
         <div>
-          <JifunzeBrandLogo to="/" size="sm" variant="compact" surface="dark" />
+          <JifunzeBrandLogo to="/" size="sm" surface="dark" />
           <p className="mt-5 text-[14px] leading-relaxed text-zinc-400">
             Practical, workspace-based learning for AI, data, business, and career-ready digital skills—with continuity you can sustain.
           </p>

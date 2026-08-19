@@ -38,7 +38,7 @@ function StandaloneCertificateBody({ entry }: { entry: StandaloneCatalogEntry })
       >
         <div className="mx-auto max-w-xl space-y-8">
           <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[color:var(--jf-border)] pb-6">
-            <JifunzeBrandLogo to="/" size="md" variant="compact" surface="light" />
+            <JifunzeBrandLogo to="/" size="md" surface="light" />
             <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
               <Link className="text-xs font-medium text-[color:var(--jf-brand)] hover:text-[color:var(--jf-brand-hover)]" to="/learn">
                 Catalog
@@ -76,7 +76,7 @@ function StandaloneCertificateBody({ entry }: { entry: StandaloneCatalogEntry })
   return (
     <div className="jf-learn-warm min-h-screen w-full bg-[var(--jf-bg-page)] px-4 py-10 text-[color:var(--jf-text)] sm:px-6 print:bg-white print:py-6">
       <div className="screen-only mx-auto mb-8 flex max-w-3xl flex-wrap items-center justify-between gap-4 border-b border-[color:var(--jf-border)] pb-6">
-        <JifunzeBrandLogo to="/" size="md" variant="compact" surface="light" />
+        <JifunzeBrandLogo to="/" size="md" surface="light" />
         <div className="flex flex-wrap items-center gap-3">
           <Link className="text-xs font-medium text-orange-700 hover:underline" to={coursePath}>
             Course overview
