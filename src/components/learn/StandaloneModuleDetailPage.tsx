@@ -37,11 +37,12 @@ function isDevManualScoreEnabled(): boolean {
   } catch {
     /* swallow */
   }
-  const env =
-    typeof import.meta !== 'undefined' && (import.meta as { env?: Record<string, unknown> }).env
-      ? ((import.meta as { env?: Record<string, unknown> }).env as Record<string, unknown>)
-      : undefined
-  if (env && env.VITE_PRACTICAL_MATH_DEV_MANUAL_SCORE === 'true') return true
+  // SECURITY (2026-08-20, narrow fix in an otherwise frozen file): read the flag statically.
+  // Holding `import.meta.env` as a whole `Record` defeats Vite's per-key `define` replacement, so
+  // Vite inlined the ENTIRE env record — every `VITE_*` value — as a literal object into the public
+  // bundle. That is how `VITE_MAINTENANCE_BYPASS_TOKEN` became readable in `dist/`. Behaviour of
+  // this flag is unchanged. See docs/social/SECURITY_AND_CHANGE_PROVENANCE_REVIEW_2026-08-20.md.
+  if (import.meta.env.VITE_PRACTICAL_MATH_DEV_MANUAL_SCORE === 'true') return true
   return false
 }
 
