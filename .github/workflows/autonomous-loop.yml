@@ -13,7 +13,8 @@ name: Autonomous content loop
 # SAFETY:
 #   - permissions are read-only; this workflow never commits to the repo
 #   - nothing posts publicly unless the IG_PUBLISH_ENABLED Supabase secret is "true"
-#   - repo variable DRY_RUN=true (or the manual input) renders + uploads without publishing
+#   - DRY_RUN defaults to true; scheduled runs render + upload without publishing unless
+#     the repository variable DRY_RUN is explicitly set to false
 #   - secrets are passed as env only, never echoed; capability checks print booleans
 
 on:
@@ -139,7 +140,10 @@ jobs:
 
       - name: Run loop
         env:
-          DRY_RUN: ${{ inputs.dry_run || vars.DRY_RUN || 'false' }}
+          # Fail safe: scheduled runs supply no `inputs`, so an unset repository variable
+          # must fall through to a dry run. Set the repository variable DRY_RUN=false
+          # deliberately to allow publishing; do not rely on this fall-through.
+          DRY_RUN: ${{ inputs.dry_run || vars.DRY_RUN || 'true' }}
           # No Supabase configured -> offline mode instead of a hard failure.
           LOOP_OFFLINE: ${{ steps.caps.outputs.supabase == 'false' }}
           VISUAL_PROVIDER: ${{ inputs.visual_provider || vars.VISUAL_PROVIDER || 'designed' }}
