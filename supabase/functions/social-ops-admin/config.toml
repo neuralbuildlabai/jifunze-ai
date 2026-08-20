@@ -1,0 +1,6 @@
+# JWT is verified inside the function with supabase-js + auth.getUser(), then the caller's
+# platform tier is re-checked with public.is_admin(). Gateway verification is disabled to avoid
+# UNAUTHORIZED_UNSUPPORTED_TOKEN_ALGORITHM with asymmetric signing keys, matching the other
+# functions in this project.
+[functions.social-ops-admin]
+verify_jwt = false
