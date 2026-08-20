@@ -49,8 +49,13 @@ const ACTION_VERBS = [
   'copy', 'save', 'follow', 'call', 'message', 'try', 'set', 'make', 'show', 'fix',
 ]
 
-/** Every caption must end with the channel CTA. */
+/**
+ * Channel CTA. REQUIREMENT DISABLED (2026-08-20): the Free Kazi Kit landing page
+ * does not exist, so captions must NOT promise it. Flip CTA_REQUIRED back to true
+ * once the destination is live and linked from every bio.
+ */
 export const CTA_SUFFIX = 'link in bio'
+export const CTA_REQUIRED = false
 
 export type QualityReport = {
   ok: boolean
@@ -93,7 +98,8 @@ export function validateBrief(brief: ScriptShape): QualityReport {
   if (!caption) errors.push('caption is empty')
   else {
     if (caption.length > 180) errors.push(`caption is ${caption.length} chars — Instagram first-line limit is 180`)
-    if (!caption.toLowerCase().includes(CTA_SUFFIX)) errors.push(`caption is missing the CTA ("${CTA_SUFFIX}")`)
+    if (CTA_REQUIRED && !caption.toLowerCase().includes(CTA_SUFFIX)) errors.push(`caption is missing the CTA ("${CTA_SUFFIX}")`)
+    if (!CTA_REQUIRED && caption.toLowerCase().includes(CTA_SUFFIX)) errors.push('caption promises a link in bio, but the Free Kazi Kit destination is not live')
   }
 
   // --- filler ---------------------------------------------------------------

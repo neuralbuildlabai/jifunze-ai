@@ -99,6 +99,23 @@ await test('every rejected story explains why', () => {
   for (const r of d.rejected) assert.ok(r.reason.trim().length > 8, `empty reason for ${r.title}`)
 })
 
+// REGRESSION (decision.json, 2026-08-18): this exact story was selected with
+// relevance 1 by the pre-hybrid scorer and produced a caption with no lesson in
+// it. It must never clear the gate again.
+await test('regression: the ChatGPT-for-teens story can never be selected', () => {
+  const s = signal({
+    id: '85b691cc-2cae-4668-9c6c-de6ac2d0266b',
+    title: 'OpenAI launches a safer ChatGPT for teens — years after teens started using it',
+    summary: 'The company is rolling out a teen-focused ChatGPT experience with parental controls.',
+    topic_tags: ['ai', 'tech', 'openai', 'teens'],
+  })
+  assert.equal(offBrandVeto(s), 'child/teen safety story')
+  assert.equal(careerRelevance(s), 0, 'a vetoed story must score 0 career relevance')
+  const decision = selectContent({ signals: [s], runDate: RUN_DATE, nowMs })
+  assert.equal(decision.mode, 'evergreen', 'must fall back to the evergreen backbone, not publish the news')
+  assert.ok(decision.rejected.some((r) => /teen/.test(r.reason)), JSON.stringify(decision.rejected))
+})
+
 await test('off-brand veto beats keyword stuffing', () => {
   // stuffed with career words but still a teen-safety story
   const s = signal({
@@ -158,7 +175,7 @@ await test('rejects generic AI-hype filler', () => {
   const report = validateBrief({
     hook: 'AI is changing everything',
     segments: ["In today's fast-paced world", "Let's dive in", 'This is important for everyone'],
-    caption: 'AI is changing everything. link in bio',
+    caption: 'AI is changing everything.',
   })
   assert.equal(report.ok, false)
   assert.ok(report.errors.some((e) => /filler/.test(e)), report.errors.join(' | '))
@@ -168,17 +185,25 @@ await test('rejects a script with no action for the viewer', () => {
   const report = validateBrief({
     hook: 'Hiring is different now',
     segments: ['Companies changed their systems', 'The market is competitive', 'Many people are affected'],
-    caption: 'Hiring changed. Free Kazi Kit — link in bio',
+    caption: 'Hiring changed. Check your CV against it today.',
   })
   assert.equal(report.ok, false)
   assert.ok(report.errors.some((e) => /action verb/.test(e)), report.errors.join(' | '))
 })
 
-await test('rejects a caption with no CTA', () => {
+// The Free Kazi Kit landing page does not exist yet, so the CTA requirement is
+// inverted: a caption that PROMISES a link in bio must now be rejected.
+await test('rejects a caption that promises a link in bio', () => {
+  const t = CONTENT_BANK[0]
+  const report = validateBrief({ ...t.script, caption: 'Do this today. Free Kazi Kit — link in bio' })
+  assert.equal(report.ok, false)
+  assert.ok(report.errors.some((e) => /link in bio/.test(e)), report.errors.join(' | '))
+})
+
+await test('accepts a caption with no CTA while the Kazi Kit is unbuilt', () => {
   const t = CONTENT_BANK[0]
   const report = validateBrief({ ...t.script, caption: 'Some caption with no call to action' })
-  assert.equal(report.ok, false)
-  assert.ok(report.errors.some((e) => /CTA/.test(e)), report.errors.join(' | '))
+  assert.equal(report.ok, true, report.errors.join(' | '))
 })
 
 await test('rejects an over-long hook', () => {
@@ -193,7 +218,7 @@ await test('evergreen brief is publishable with zero API keys', async () => {
   const brief = await buildEvergreenBrief(CONTENT_BANK[0])
   assert.equal(brief.mode, 'evergreen')
   assert.ok(validateBrief(brief).ok, validateBrief(brief).errors.join(' | '))
-  assert.match(brief.caption, /link in bio$/)
+  assert.doesNotMatch(brief.caption, /link in bio/)
 })
 
 await test('news brief fallback is publishable with zero API keys', async () => {
@@ -244,19 +269,34 @@ await test('stock search terms are translated, never raw tags', () => {
 
 console.log('\ncaptions\n')
 
-await test('captions reserve the end card and keep the brand CTA', () => {
+await test('captions reserve the end card and promise no dead link', () => {
   const t = CONTENT_BANK[0]
   const ass = buildAss({ id: t.id, ...t.script, topic_tags: t.tags, duration_sec: 18 })
   assert.match(ass, /PlayResX: 1080/)
   assert.match(ass, /PlayResY: 1920/)
-  assert.match(ass, /LINK IN BIO/, 'end card CTA missing')
+  // The Free Kazi Kit landing page does not exist, so no rendered frame may
+  // point viewers at it. Restore this assertion when the destination is live.
+  assert.doesNotMatch(ass, /LINK IN BIO/, 'end card still promises a link in bio')
   assert.match(ass, /Style: Prog/, 'progress indicator missing')
   assert.ok(END_CARD_SEC > 1.5, 'end card too short to read')
 })
 
+await test('captions use the approved typeface and violet accent', () => {
+  const t = CONTENT_BANK[0]
+  const ass = buildAss({ id: t.id, ...t.script, topic_tags: t.tags, duration_sec: 18 })
+  assert.doesNotMatch(ass, /DejaVu/, 'DejaVu Sans is not the approved typeface')
+  assert.doesNotMatch(ass, /DCB978/, '#78B9DC is the retired ".AI" blue and must not appear')
+  // Exact family names as recorded in brand/fonts/*.ttf — anything else makes
+  // libass fall back to DejaVu without warning.
+  assert.match(ass, /Style: Cap,Plus Jakarta Sans ExtraBold,/, 'caption style must name the ExtraBold face exactly')
+  assert.match(ass, /Style: Cta,Plus Jakarta Sans SemiBold,/, 'CTA style must name the SemiBold face exactly')
+  assert.match(ass, /Style: Prog,Plus Jakarta Sans ExtraBold,/, 'progress style must name the ExtraBold face exactly')
+  assert.match(ass, /&HED3A7C&/, 'keyword accent must be the brand violet #7C3AED')
+})
+
 await test('keyword highlighting picks a meaningful word', () => {
   const line = accentLine('Paste the advert into an AI')
-  assert.match(line, /\{\\c&HDCB978&\}ADVERT/)
+  assert.match(line, /\{\\c&HED3A7C&\}ADVERT/, 'keyword accent must be the brand violet #7C3AED')
 })
 
 console.log(`\n${passed} passed, ${failures.length} failed\n`)

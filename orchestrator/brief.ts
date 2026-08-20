@@ -30,7 +30,8 @@ Non-negotiable rules:
 - Assume the viewer has applied to many jobs and heard nothing. Speak to that.
 - Tone: practical, warm, clear, adult. Never hype.
 - BANNED, will be rejected: "in today's fast-paced world", "AI is changing everything", "let's dive in", "this is important for everyone", "game changer", "revolutionize", "unlock the power", "stay tuned".
-- Caption <=180 chars, one line, ends exactly with: Free Kazi Kit — link in bio
+- Caption <=180 chars, one line. Do NOT add any call to action, link, or 'link in bio' phrase:
+  the channel CTA is disabled until the Free Kazi Kit landing page is live.
 Return STRICT JSON: {"hook": "...", "segments": ["...","..."], "caption": "..."}`
 
 function evergreenPrompt(t: EvergreenTopic): string {
@@ -89,7 +90,7 @@ function newsTemplate(op: ScoredOpportunity): { hook: string; segments: string[]
       'Update one line today',
       'Then send the application again',
     ],
-    caption: `${op.title.slice(0, 110)} — check your CV against it today. Free Kazi Kit — link in bio`,
+    caption: `${op.title.slice(0, 110)} — check your CV against it today.`,
   }
 }
 

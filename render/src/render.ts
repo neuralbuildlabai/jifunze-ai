@@ -24,6 +24,13 @@ const MARK = join(HERE, '..', 'assets', 'brand', 'jifunze-mark.png')
 /** End card: full lockup including the tagline. */
 const WORDMARK = join(HERE, '..', 'assets', 'brand', 'jifunze-wordmark.png')
 
+/**
+ * Brand fonts, shipped in the repo. Passed to libass via fontsdir so the render
+ * uses Plus Jakarta Sans deterministically instead of whatever the host happens
+ * to have installed (which is how DejaVu Sans crept into every frame).
+ */
+const BRAND_FONTS = join(HERE, '..', '..', 'brand', 'fonts')
+
 /** ffmpeg needs the subtitle path escaped for the filtergraph parser. */
 const escapeForFilter = (p: string): string => p.replace(/\\/g, '/').replace(/:/g, '\\:').replace(/'/g, "\\'")
 
@@ -69,7 +76,10 @@ export async function renderBrief(brief: ProductionBrief, outPath: string): Prom
     last = 'ended'
   }
 
-  chain.push(`[${last}]subtitles='${escapeForFilter(assPath)}',format=yuv420p[vout]`)
+  const hasBrandFonts = existsSync(BRAND_FONTS)
+  if (!hasBrandFonts) console.warn(`[render] brand fonts missing (${BRAND_FONTS}) — captions will fall back to a system font and will NOT be on-brand.`)
+  const fontsdir = hasBrandFonts ? `:fontsdir='${escapeForFilter(BRAND_FONTS)}'` : ''
+  chain.push(`[${last}]subtitles='${escapeForFilter(assPath)}'${fontsdir},format=yuv420p[vout]`)
 
   args.push('-filter_complex', chain.join(';'), '-map', '[vout]')
   args.push('-t', String(dur), '-r', '30', '-c:v', 'libx264', '-preset', 'medium', '-crf', '21', '-pix_fmt', 'yuv420p', '-movflags', '+faststart')

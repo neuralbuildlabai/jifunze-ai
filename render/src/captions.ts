@@ -8,16 +8,28 @@ import type { ProductionBrief } from './types.ts'
  * rail): the progress bar and brand row sit at y≈150-280, the caption block is
  * vertically centred, and nothing is drawn below y≈1600.
  *
- * Colours are ASS &HBBGGRR, taken from the product palette in src/index.css and
- * the wordmark:
- *   text    #FFFFFF   accent #78B9DC (the wordmark's ".AI" blue, brightened for video)
- *   outline #0B0B12   track  #2A2A32
+ * Colours are ASS &HBBGGRR, taken from the APPROVED brand system (brand/README-jifunze-brand.md):
+ *   text    #FFFFFF            accent  #7C3AED  (primary violet)  -> &HED3A7C&
+ *   outline #0B0B12 (near-black)                                  -> &H0B0B0B... see styles
+ *   track   #2A2A32
+ *
+ * Corrected 2026-08-20: the accent was #78B9DC — the retired ".AI" blue from the
+ * old wordmark — and the typeface was DejaVu Sans. Both violated the approved
+ * identity (violet #7C3AED, Plus Jakarta Sans). Do not reintroduce either.
+ *
+ * Fontname must be the EXACT family recorded in the shipped TTF. brand/fonts
+ * ships three single-weight faces, each declaring its own family
+ * ("Plus Jakarta Sans ExtraBold", "... SemiBold", "... Medium"), so plain
+ * "Plus Jakarta Sans" silently falls back to DejaVu. Bold is 0 for the same
+ * reason: the weight lives in the face, and asking libass for synthetic bold
+ * re-triggers the fallback.
  */
 
 /** Seconds reserved at the end for the branded end card. */
 export const END_CARD_SEC = 2.6
 
-const ACCENT = '&HDCB978&'
+/** Primary violet #7C3AED as ASS &HBBGGRR. */
+const ACCENT = '&HED3A7C&'
 const WHITE = '&HFFFFFF&'
 
 /** Words that should never be the highlighted keyword. */
@@ -50,8 +62,13 @@ export function accentLine(line: string): string {
   return words.join(' ')
 }
 
-/** Bottom-of-frame CTA shown on the end card. Kept short so it never wraps. */
-const END_CTA = 'Free Kazi Kit — link in bio'
+/**
+ * Bottom-of-frame CTA shown on the end card.
+ * DISABLED (2026-08-20): the Free Kazi Kit landing page does not exist yet, so no
+ * rendered video may promise it. Restore a CTA here only once the destination is
+ * live and the bio link points at it.
+ */
+const END_CTA = ''
 
 export function buildAss(brief: ProductionBrief): string {
   const dur = Math.min(Math.max(brief.duration_sec ?? 18, 8), 60)
@@ -83,7 +100,9 @@ export function buildAss(brief: ProductionBrief): string {
     return `Dialogue: 0,${st},${en},Prog,,0,0,0,,{\\pos(0,0)\\c${ACCENT}\\p1}m ${X0} ${Y0} l ${x} ${Y0} ${x} ${Y1} ${X0} ${Y1}{\\p0}`
   })
 
-  const endCta = `Dialogue: 0,${ts(body)},${ts(dur)},Cta,,0,0,0,,{\\fad(220,0)}${esc(END_CTA)}`
+  const endCta = END_CTA
+    ? `Dialogue: 0,${ts(body)},${ts(dur)},Cta,,0,0,0,,{\\fad(220,0)}${esc(END_CTA)}`
+    : ''
 
   return `[Script Info]
 ScriptType: v4.00+
@@ -94,9 +113,9 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Cap,DejaVu Sans,96,&H00FFFFFF,&H000B0B12,&HA0000000,1,5,2,5,110,110,0,1
-Style: Cta,DejaVu Sans,52,&H00DCB978,&H000B0B12,&H00000000,1,3,0,8,80,80,1080,1
-Style: Prog,DejaVu Sans,40,&H00FFFFFF,&H00000000,&H00000000,0,0,0,7,0,0,0,1
+Style: Cap,Plus Jakarta Sans ExtraBold,96,&H00FFFFFF,&H000B0B12,&HA0000000,0,5,2,5,110,110,0,1
+Style: Cta,Plus Jakarta Sans SemiBold,52,&H00ED3A7C,&H000B0B12,&H00000000,0,3,0,8,80,80,1080,1
+Style: Prog,Plus Jakarta Sans ExtraBold,40,&H00FFFFFF,&H00000000,&H00000000,0,0,0,7,0,0,0,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text

@@ -37,7 +37,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     script: {
       hook: 'Your CV never reached a human',
       segments: ['Software screens it first', 'Paste the advert into an AI', 'Ask it to mirror the wording', 'Keep every fact true', 'Same truth, their words'],
-      caption: 'Software reads your CV before any human does. Mirror the advert wording, keep every fact true. Free Kazi Kit — link in bio',
+      caption: 'Software reads your CV before any human does. Mirror the advert wording, keep every fact true.',
     },
   },
   {
@@ -46,7 +46,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     script: {
       hook: 'Delete two words from your CV',
       segments: ['Responsible for says nothing', 'Write what you actually did', 'Add the real number', 'Then add what it changed', 'Cut stock waste by 30 percent'],
-      caption: 'Responsible for says nothing. What you did, plus the number, plus what it changed. Free Kazi Kit — link in bio',
+      caption: 'Responsible for says nothing. What you did, plus the number, plus what it changed.',
     },
   },
   {
@@ -55,7 +55,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     script: {
       hook: 'Your CV objective is wasting space',
       segments: ['Cut the objective statement', 'Write three lines instead', 'Who you are, how long', 'One proof with a number', 'The exact role you want'],
-      caption: 'Swap the objective for three lines: who you are, one proof with a number, the role you want. Free Kazi Kit — link in bio',
+      caption: 'Swap the objective for three lines: who you are, one proof with a number, the role you want.',
     },
   },
   {
@@ -64,7 +64,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     script: {
       hook: 'Tailor any CV in four minutes',
       segments: ['Three edits, nothing else', 'Move relevant experience to the top', 'Swap your words for theirs', 'Cut everything the advert ignores'],
-      caption: 'Three edits tailor a CV in four minutes: reorder, mirror the wording, cut the rest. Free Kazi Kit — link in bio',
+      caption: 'Three edits tailor a CV in four minutes: reorder, mirror the wording, cut the rest.',
     },
   },
   {
@@ -73,7 +73,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     script: {
       hook: 'Rehearse your interview free tonight',
       segments: ['Open any AI chat', 'Ask for one question at a time', 'Make it push on vague answers', 'Ask for your three weakest answers'],
-      caption: 'Free interview rehearsal: one question at a time, follow-ups on vague answers, then your three weakest. Free Kazi Kit — link in bio',
+      caption: 'Free interview rehearsal: one question at a time, follow-ups on vague answers, then your three weakest.',
     },
   },
   {
@@ -82,7 +82,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     script: {
       hook: 'Never say the first salary number',
       segments: ['They ask your expectation first', 'Ask what band is budgeted', 'If pushed, offer a range', 'Its bottom is what you accept'],
-      caption: 'Do not name the first number. Ask what band is budgeted, then offer a range you would accept. Free Kazi Kit — link in bio',
+      caption: 'Do not name the first number. Ask what band is budgeted, then offer a range you would accept.',
     },
   },
   {
@@ -91,7 +91,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     script: {
       hook: 'Know the questions before the interview',
       segments: ['Paste the advert into an AI', 'Ask for fifteen likely questions', 'In the order they will come', 'Ask what each one tests'],
-      caption: 'Paste the advert into an AI, ask for the 15 likely questions and what each one really tests. Free Kazi Kit — link in bio',
+      caption: 'Paste the advert into an AI, ask for the 15 likely questions and what each one really tests.',
     },
   },
   {
@@ -100,7 +100,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     script: {
       hook: 'Turn I want to learn into a plan',
       segments: ['One prompt builds thirty days', 'One hour a day', 'Each day one visible output', 'Free resources only', 'Day thirty shows an employer something'],
-      caption: 'One prompt turns I want to learn X into a 30-day plan with something to show at the end. Free Kazi Kit — link in bio',
+      caption: 'One prompt turns I want to learn X into a 30-day plan with something to show at the end.',
     },
   },
   {
@@ -109,7 +109,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     script: {
       hook: 'Cover letters take six minutes now',
       segments: ['Three paragraphs, no waffle', 'Why this company, one real detail', 'One proof with a number', 'Name your first three months'],
-      caption: 'Three paragraphs: why this company, one proof with a number, and your first three months. Free Kazi Kit — link in bio',
+      caption: 'Three paragraphs: why this company, one proof with a number, and your first three months.',
     },
   },
   {
@@ -118,7 +118,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     script: {
       hook: 'Stop selling design. Sell one task.',
       segments: ['Broad services drown in competition', 'Search one narrow service instead', 'Check how many sellers appear', 'Boring and specific gets booked'],
-      caption: 'Narrow beats broad on freelance platforms. Search one specific task and check the competition. Free Kazi Kit — link in bio',
+      caption: 'Narrow beats broad on freelance platforms. Search one specific task and check the competition.',
     },
   },
   {
@@ -127,7 +127,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     script: {
       hook: 'Build a portfolio with zero clients',
       segments: ['Pick a real local business', 'Fix one visible problem', 'Label it self-initiated, honestly', 'Write it up as a case study', 'Save it behind one link'],
-      caption: 'No clients yet? Fix one real local problem, label it self-initiated, write the case study. Free Kazi Kit — link in bio',
+      caption: 'No clients yet? Fix one real local problem, label it self-initiated, write the case study.',
     },
   },
   {
@@ -136,7 +136,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     script: {
       hook: 'Unreliable power? Choose async work.',
       segments: ['Live calls punish bad internet', 'Pick work with deadlines instead', 'Write offline, sync when you can', 'Finish a day early', 'Keep one backup connection'],
-      caption: 'Async work survives power cuts: deadlines not live calls, work offline, finish a day early. Free Kazi Kit — link in bio',
+      caption: 'Async work survives power cuts: deadlines not live calls, work offline, finish a day early.',
     },
   },
   {
@@ -145,7 +145,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     script: {
       hook: 'The follow-up almost nobody sends',
       segments: ['Wait seven days after applying', 'Send three sentences, no more', 'Remind them what and when', 'Add one new thing since', 'Once only, not three times'],
-      caption: 'Seven days after applying, send three sentences: what you applied for, one new thing, a short close. Free Kazi Kit — link in bio',
+      caption: 'Seven days after applying, send three sentences: what you applied for, one new thing, a short close.',
     },
   },
   {
@@ -154,7 +154,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     script: {
       hook: 'No experience means nobody paid you',
       segments: ['Your final-year project counts', 'So does any team you organised', 'Family business work counts', 'List them like real work'],
-      caption: 'No experience usually means nobody paid you. Your project, your team, the family business all count. Free Kazi Kit — link in bio',
+      caption: 'No experience usually means nobody paid you. Your project, your team, the family business all count.',
     },
   },
   {
@@ -163,7 +163,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     script: {
       hook: 'Spot a fake job in one minute',
       segments: ['Any upfront fee is a scam', 'Interview only on WhatsApp', 'Personal email, no company domain', 'Huge salary, no job description', 'Check the company exists first'],
-      caption: 'Fake job advert signs: upfront fees, WhatsApp-only interviews, personal email domains, no real company. Free Kazi Kit — link in bio',
+      caption: 'Fake job advert signs: upfront fees, WhatsApp-only interviews, personal email domains, no real company.',
     },
   },
   {
@@ -172,7 +172,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     script: {
       hook: 'Plan the three months after graduation',
       segments: ['Month one: build a master CV', 'Month two: send twenty tailored applications', 'Month three: earn something online', 'Waiting is not on the list'],
-      caption: 'The three months after graduation, planned: master CV, twenty tailored applications, then earn online. Free Kazi Kit — link in bio',
+      caption: 'The three months after graduation, planned: master CV, twenty tailored applications, then earn online.',
     },
   },
 ]
