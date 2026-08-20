@@ -42,7 +42,7 @@ Nothing secret may ever be given a `VITE_` prefix.
 | Name | Where | Default | Effect |
 |---|---|---|---|
 | `IG_PUBLISH_ENABLED` | Supabase secret | unset | Nothing posts publicly unless this is exactly `"true"` |
-| `DRY_RUN` | GH repo variable | — | Autonomous loop renders and uploads but does not publish |
+| `DRY_RUN` | GH repo variable | **`true`** (workflow fall-through) | Autonomous loop renders and uploads but does not publish. Set the variable to `false` deliberately to allow publishing |
 | `SOCIAL_SYNC_ENABLED` | GH repo variable | **unset** | The two-hour sync workflow short-circuits unless this is `"true"` |
 | `SOCIAL_SYNC_DRY_RUN` | GH repo variable | — | Sync decides everything and writes nothing |
 | `VISUAL_PROVIDER` | GH env | `designed` | `ai` is the only paid tier. Keep it off |
@@ -75,8 +75,13 @@ Nothing secret may ever be given a `VITE_` prefix.
 |---|---|---|
 | Browser (`/admin/social-ops`) | nothing | **No — ever** |
 | `social-ops-admin` Edge Function | Supabase secrets | Yes, server-side |
-| `scripts/social-sync.ts` in GitHub Actions | Actions secrets | Yes, server-side |
+| `scripts/social-sync.ts` in GitHub Actions | Actions secrets | Yes, read-only tokens only |
 | `publish-instagram` Edge Function | Supabase secrets | Yes, server-side |
+
+Least privilege in the metrics sync: `social-metrics-sync.yml` is read-only by construction and is
+deliberately **not** given `IG_PUBLISH_ENABLED` or `PUBLISH_SECRET`. With `IG_PUBLISH_ENABLED`
+absent the Instagram adapter's readiness label always reads *"publishing is disabled"*, which is the
+correct result for a job that must never publish.
 
 ## Rotation and revocation
 

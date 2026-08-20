@@ -202,7 +202,7 @@ Repository variables (Settings → Secrets and variables → Actions → Variabl
 
 | Variable | Effect |
 |---|---|
-| `DRY_RUN` | `true` = scheduled runs render + upload the artifact but never publish |
+| `DRY_RUN` | `true` = scheduled runs render + upload the artifact but never publish. Unset falls through to `true`; set `false` explicitly to allow publishing |
 | `VISUAL_PROVIDER` | default tier for scheduled runs (`designed` if unset) |
 
 ---

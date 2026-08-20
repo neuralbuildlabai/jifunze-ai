@@ -6,7 +6,7 @@
 |---|---|---|---|---|
 | 1 | `IG_PUBLISH_ENABLED` | Supabase secret | Nothing posts publicly unless it is exactly `"true"` | Next call |
 | 2 | `SOCIAL_SYNC_ENABLED` | GH repo variable | The two-hour sync short-circuits | Next scheduled run |
-| 3 | `DRY_RUN` | GH repo variable | The autonomous loop renders but never publishes | Next run |
+| 3 | `DRY_RUN` | GH repo variable | The autonomous loop renders but never publishes. Defaults to `true` when the variable is unset, so this switch is on until someone turns it off | Next run |
 | 4 | `PUBLISH_SECRET` | Supabase secret | Unset it and `publish-instagram` refuses every caller | Next call |
 | 5 | Disable the workflow | GitHub Actions UI | Nothing scheduled runs at all | Immediate |
 | 6 | Revoke the platform token | The platform's own settings | Kills anything holding a copy of that token | Immediate |
