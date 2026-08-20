@@ -4,7 +4,7 @@
 It captures what's built, the identifiers, where secrets live (names only, never
 values), and what's next — so no session re-derives state.
 
-_Last updated: 2026-08-18._
+_Last updated: 2026-08-20._
 
 ---
 
@@ -51,7 +51,9 @@ The **learning platform** in this same repo is FROZEN at tag
 | `IG_PUBLISH_ENABLED` | Supabase secret | **kill switch** — must be `"true"` to post publicly |
 | `OPENAI_API_KEY` | Supabase secret / GH secret | brief generation (the one real cost) |
 | `PEXELS_API_KEY` | GH secret | free stock video (optional; falls back to generated) |
-| `VISUAL_PROVIDER` | GH env | `stock`(default) \| `generated` \| `ai`(paid, off) |
+| `VISUAL_PROVIDER` | GH env | `designed`(default) \| `stock` \| `ai`(paid, off) |
+| `SOCIAL_SYNC_ENABLED` | GH repo variable | **kill switch** — the two-hour metrics sync no-ops unless `"true"`. Currently unset |
+| Platform credentials (Facebook, Threads, TikTok, YouTube, LinkedIn, X, Pinterest, Telegram) | none exist yet | names only — see `docs/social/ENVIRONMENT_VARIABLES.md` |
 
 **Never** print or commit secret values. The token never passes through chat or logs.
 
@@ -62,6 +64,12 @@ The **learning platform** in this same repo is FROZEN at tag
 | Component | Path | Status |
 |---|---|---|
 | Signal ingestion (RSS/Atom, cron) | `supabase/functions/ingest-signals` | ✅ built, tested |
+| Public career-skills website + content hub | `src/components/media/`, `src/social/` | ✅ built, tested — **not deployed** |
+| Social operations console | `src/components/social-ops/` at `/admin/social-ops` | ✅ built, tested — **not deployed** |
+| Social ops schema (11 tables) | `supabase/migrations/20260820120000_social_ops_core.sql` | ✅ built, verified locally — **not applied** |
+| Platform adapters (10) | `orchestrator/social/adapters/` | ✅ built — only Instagram is `ready` |
+| Two-hour metrics sync | `orchestrator/social/sync.ts`, `.github/workflows/social-metrics-sync.yml` | ✅ built, dry-run verified — **cron gated OFF** |
+| Admin server route | `supabase/functions/social-ops-admin` | ✅ built — **not deployed** |
 | Instagram publish (Reels) | `supabase/functions/publish-instagram` | ✅ built |
 | IG token refresh | `supabase/functions/refresh-ig-token` | ✅ built |
 | Video render (captions+music) | `render/` | ✅ built, render verified |
@@ -87,12 +95,37 @@ tier) is free at this scale.
 
 ---
 
+## Where the current detail lives
+
+| Topic | Document |
+|---|---|
+| Every official account, field by field | `docs/social/SOCIAL_ACCOUNT_INVENTORY.md` |
+| Approved copy per platform | `docs/social/PLATFORM_COPY.md` |
+| TikTok deletion record | `docs/social/TIKTOK_DELETION_RECORD.md` |
+| Website + content hub | `docs/social/WEBSITE_CONTENT_HUB.md` |
+| Social-ops console | `docs/social/SOCIAL_OPS_DASHBOARD.md` |
+| Database schema | `docs/social/SOCIAL_OPS_SCHEMA.md` |
+| Two-hour sync | `docs/social/TWO_HOUR_SYNC.md` |
+| Adapter matrix | `docs/social/PLATFORM_ADAPTER_MATRIX.md` |
+| OAuth setup | `docs/social/OAUTH_SETUP.md` |
+| Env var reference | `docs/social/ENVIRONMENT_VARIABLES.md` |
+| Manual owner actions | `docs/social/MANUAL_PLATFORM_ACTIONS.md` |
+| Deploy / rollback / incident | `docs/social/DEPLOYMENT_CHECKLIST.md`, `ROLLBACK_PLAN.md`, `INCIDENT_AND_KILL_SWITCH.md` |
+| Launch verdict | `docs/social/LAUNCH_READINESS_2026-08-20.md` |
+| Governance | `docs/AMENDMENT_001_2026-08-18_PIVOT.md`, `docs/AMENDMENT_002_2026-08-20_SOCIAL_OPS.md` |
+
+---
+
 ## Safety switches
 - `IG_PUBLISH_ENABLED` must be `"true"` before anything posts publicly. Deploying
   the code does NOT start posting.
 - `publish-instagram` dedupes by `idempotency_key` — an item never double-posts.
 - Standard Access only (own account). Advanced Access / other accounts needs
   Business Verification (deferred until there's a paying customer).
+- `SOCIAL_SYNC_ENABLED` must be `"true"` before the two-hour metrics sync does anything. Unset.
+  The workflow's schedule fires and short-circuits in a visible `gate` job, deliberately.
+- The social-ops console is READ-ONLY over secrets. No browser control can flip a kill switch.
+- Every platform adapter except Instagram refuses every call, with the blocker as the reason.
 
 ---
 
@@ -106,10 +139,24 @@ tier) is free at this scale.
 
 ---
 
-## Next steps (priority order)
-1. Finish server-side scoring + brief generator (`orchestrator/`).
-2. GitHub Actions cron chaining: ingest → score → brief → render → upload → publish.
-3. Supabase Storage bucket for the public `video_url`.
-4. Rehearse the full loop with `IG_PUBLISH_ENABLED` unset (renders + logs, no post).
-5. Flip `IG_PUBLISH_ENABLED=true` when a human approves the first live post.
-6. Decide the video-visual default (stock vs generated) after seeing a few renders.
+## Next steps (priority order, 20 Aug 2026)
+
+**Only the owner can do 1–4.**
+1. Sign the browser into TikTok `@jifunze_ai` — unblocks the authorised video deletion, the bio and
+   the avatar in one five-minute pass.
+2. Set the Instagram display name and bio link in the mobile app. Desktop web cannot.
+3. Delete or hide the 2 obsolete LinkedIn posts and 3 obsolete X posts.
+4. Review this branch, then the migration, then deploy. The deploy also completes the Pinterest
+   domain claim.
+
+**Then:**
+5. Add whatever platform credentials exist; run `npm run social:sync:dry-run` and read the report.
+6. Run the sync workflow manually with `dry_run: true`; only then set `SOCIAL_SYNC_ENABLED=true`.
+7. Document the music licence for the render pipeline.
+8. Rehearse the content loop with `DRY_RUN=true` for a week and review every hook, caption and frame.
+9. Publish the first 3–5 posts manually, under supervision.
+10. Only then flip `IG_PUBLISH_ENABLED=true` for a limited autonomous pilot.
+
+Deferred, each needing its own decision: Facebook Page token · Threads app + review · Google Cloud
+project + YouTube audit · LinkedIn app verification · Pinterest Trial → Standard · TikTok client
+audit · paid X access · Telegram channel · WhatsApp Channel.
