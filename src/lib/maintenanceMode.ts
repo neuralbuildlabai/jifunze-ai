@@ -1,7 +1,20 @@
 /**
  * Public maintenance / coming-soon mode (Vite build-time flag).
- * When enabled, anonymous visitors are steered away from marketing and course surfaces;
- * auth, legal, and (optionally) a secret bypass remain available.
+ *
+ * PRESENTATION ONLY. This module decides whether anonymous visitors see the public maintenance
+ * shell instead of marketing and course surfaces. It is **not** an authorization boundary and it
+ * must never be used as one:
+ * - Protected routes are gated by `RequireEmailVerified` / `RequireDisclaimerAcknowledged` /
+ *   `RequireAdminAccess` / `RequireSocialOpsAccess`, and ultimately by Supabase RLS on the server.
+ * - Nothing in this file grants access to data. Turning maintenance off only changes which shell
+ *   an anonymous visitor renders.
+ *
+ * SECURITY NOTE (2026-08-20): a `VITE_MAINTENANCE_BYPASS_TOKEN` query-param bypass used to live
+ * here. Vite inlines `VITE_*` values into the browser bundle at build time, so that token was
+ * publicly readable by anyone who downloaded the JS. It has been removed entirely — see
+ * `docs/social/SECURITY_AND_CHANGE_PROVENANCE_REVIEW_2026-08-20.md`. Do not reintroduce a
+ * client-side bypass secret. If an internal preview of a gated build is ever needed, sign in:
+ * authenticated users already bypass the maintenance shell, and their tier is checked server-side.
  *
  * Rules:
  * - **Local dev** (`import.meta.env.DEV`): maintenance is **off** by default so `localhost` shows the full
@@ -14,10 +27,6 @@
  * - Vite replaces `import.meta.env.VITE_*` at **build** time. Changing env in the dashboard does not
  *   change already-built static assets until a **new** deploy runs `vite build`.
  */
-
-const SESSION_BYPASS_KEY = 'jf_maintenance_preview_v1'
-/** Query param name for optional internal preview bypass (must match `VITE_MAINTENANCE_BYPASS_TOKEN`). */
-export const MAINTENANCE_BYPASS_QUERY = 'jf_maintenance_bypass'
 
 /** True when running the Vite dev server (`npm run dev`). */
 export function isLocalDev(): boolean {
@@ -34,7 +43,7 @@ function maintenanceEnv(): MaintenanceEnv {
 }
 
 /**
- * Anonymous public maintenance shell should be shown (before bypass / auth exemptions).
+ * Anonymous public maintenance shell should be shown (before auth exemptions).
  * - Dev + unset → false (full local app).
  * - Dev + `true` → true (opt-in local test).
  * - Prod + unset → true (production stays gated by default).
@@ -76,32 +85,4 @@ export function isMaintenanceExemptAnonymousPath(pathname: string): boolean {
     return true
   }
   return false
-}
-
-function configuredBypassToken(): string | undefined {
-  const t = import.meta.env.VITE_MAINTENANCE_BYPASS_TOKEN?.trim()
-  return t || undefined
-}
-
-/** True when this browser session was unlocked via a matching bypass query param (internal builds only). */
-export function hasMaintenancePreviewBypass(): boolean {
-  if (typeof sessionStorage === 'undefined') return false
-  const token = configuredBypassToken()
-  if (!token) return false
-  return sessionStorage.getItem(SESSION_BYPASS_KEY) === token
-}
-
-/**
- * If the URL contains `?jf_maintenance_bypass=<token>` matching `VITE_MAINTENANCE_BYPASS_TOKEN`,
- * persist bypass for the tab session. Caller should strip the query from the URL after success.
- * No-op when bypass token is unset (production public builds).
- */
-export function readMaintenanceBypassFromSearch(search: string): boolean {
-  if (!isMaintenanceModeEnabled()) return false
-  const token = configuredBypassToken()
-  if (!token || typeof sessionStorage === 'undefined') return false
-  const q = new URLSearchParams(search.startsWith('?') ? search.slice(1) : search)
-  if (q.get(MAINTENANCE_BYPASS_QUERY) !== token) return false
-  sessionStorage.setItem(SESSION_BYPASS_KEY, token)
-  return true
 }

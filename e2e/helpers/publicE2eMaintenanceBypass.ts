@@ -1,32 +1,30 @@
 import type { Page } from '@playwright/test'
 
 /**
- * Must match `webServer.env.VITE_MAINTENANCE_BYPASS_TOKEN` in `playwright.config.ts`.
- * Optional: sets session bypass when maintenance is on and `VITE_MAINTENANCE_BYPASS_TOKEN` matches.
- * With default local dev (maintenance off), this is a no-op but keeps E2E stable if you opt into `VITE_MAINTENANCE_MODE=true`.
- */
-export const PUBLIC_E2E_MAINTENANCE_BYPASS_TOKEN = 'playwright-maintenance-bypass'
-
-const SESSION_BYPASS_KEY = 'jf_maintenance_preview_v1'
-
-/**
- * Clears cookies, strips common auth keys from localStorage, and sets the maintenance preview
- * bypass in sessionStorage so non-exempt public routes render the real UI.
+ * Anonymous-visitor reset for public E2E specs.
+ *
+ * HISTORY (2026-08-20): this helper used to write a `VITE_MAINTENANCE_BYPASS_TOKEN` value into
+ * `sessionStorage` to unlock the maintenance shell. That client-side bypass has been removed from
+ * the application (see `src/lib/maintenanceMode.ts`), because any `VITE_*` value is compiled into
+ * the public browser bundle and therefore cannot be a secret.
+ *
+ * The function name is retained so the ~20 public specs that call it keep working unchanged. It now
+ * does only what those specs actually need: start each test as a clean anonymous visitor. Playwright
+ * runs against the dev server, where maintenance mode is off by default, so no bypass is required.
+ *
+ * If a suite ever needs to exercise a maintenance-ON build, sign a user in — authenticated users
+ * are exempt by design. Do not reintroduce a token.
  */
 export async function applyPublicE2eMaintenanceBypass(page: Page): Promise<void> {
   await page.context().clearCookies()
-  await page.addInitScript(
-    ({ sessionKey, token }) => {
-      try {
-        for (const k of Object.keys(localStorage)) {
-          if (/supabase|sb-|jifunze\.auth/i.test(k)) localStorage.removeItem(k)
-        }
-        sessionStorage.clear()
-        sessionStorage.setItem(sessionKey, token)
-      } catch {
-        /* ignore */
+  await page.addInitScript(() => {
+    try {
+      for (const k of Object.keys(localStorage)) {
+        if (/supabase|sb-|jifunze\.auth/i.test(k)) localStorage.removeItem(k)
       }
-    },
-    { sessionKey: SESSION_BYPASS_KEY, token: PUBLIC_E2E_MAINTENANCE_BYPASS_TOKEN },
-  )
+      sessionStorage.clear()
+    } catch {
+      /* ignore */
+    }
+  })
 }

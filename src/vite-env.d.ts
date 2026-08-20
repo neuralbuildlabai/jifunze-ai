@@ -8,7 +8,6 @@ interface ImportMetaEnv {
   readonly VITE_SEED_DEMO_LEARNING_IN_WORKSPACE?: string
   /** `false` disables localStorage-backed demo persistence (in-memory only). */
   readonly VITE_BROWSER_PERSISTENCE?: string
-  readonly VITE_CONTENT_API_URL?: string
   /** Preferred: `mock` | `http` (falls back to legacy URL / VITE_CONTENT_GENERATION_MODE). */
   readonly VITE_CONTENT_MODE?: string
   readonly VITE_CONTENT_GENERATION_MODE?: string
@@ -51,10 +50,16 @@ interface ImportMetaEnv {
    */
   readonly VITE_MAINTENANCE_MODE?: string
   /**
-   * Optional secret for internal preview: append `?jf_maintenance_bypass=<token>` once per tab.
-   * Leave unset in production public builds so the bypass cannot be activated.
+   * Dev/bootstrap tier allowlists (comma/space separated emails). Read statically in
+   * `src/access/appAccess.ts`. Not an authorization boundary — the server RPC
+   * `my_effective_access_tier` and RLS are.
    */
-  readonly VITE_MAINTENANCE_BYPASS_TOKEN?: string
+  readonly VITE_SUPER_ADMIN_EMAILS?: string
+  readonly VITE_PLATFORM_ADMIN_EMAILS?: string
+  readonly VITE_WORKSPACE_ADMIN_EMAILS?: string
+  readonly VITE_PRO_USER_EMAILS?: string
+  /** Dev-only manual score helper on standalone module pages (presentation only, localStorage). */
+  readonly VITE_PRACTICAL_MATH_DEV_MANUAL_SCORE?: string
   /** Injected on Vercel builds. */
   readonly VERCEL?: string
 }

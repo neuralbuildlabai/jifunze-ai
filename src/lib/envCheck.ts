@@ -20,8 +20,24 @@ const REQUIRED_KEYS = [
   'VITE_SIGNAL_MODE',
 ] as const
 
+/**
+ * SECURITY: read every key **statically**. Indexing `import.meta.env` with a dynamic key
+ * (`import.meta.env[key]`) defeats Vite's per-key `define` replacement and makes Vite emit the
+ * **entire** env record — every `VITE_*` value — as a literal object into the public browser
+ * bundle. That is how `VITE_MAINTENANCE_BYPASS_TOKEN` ended up readable in `dist/` (see
+ * `docs/social/SECURITY_AND_CHANGE_PROVENANCE_REVIEW_2026-08-20.md`). Only add keys here that are
+ * safe to publish. Do not reintroduce dynamic indexing.
+ */
+const PUBLIC_ENV: Record<string, string | undefined> = {
+  VITE_SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
+  VITE_SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY,
+  VITE_CONTENT_MODE: import.meta.env.VITE_CONTENT_MODE,
+  VITE_SIGNAL_MODE: import.meta.env.VITE_SIGNAL_MODE,
+  VITE_SIGNAL_INGESTION_URL: import.meta.env.VITE_SIGNAL_INGESTION_URL,
+}
+
 function raw(key: string): string | undefined {
-  const v = (import.meta.env as Record<string, string | undefined>)[key]
+  const v = PUBLIC_ENV[key]
   if (typeof v !== 'string') return undefined
   const t = v.trim()
   return t || undefined
@@ -67,7 +83,9 @@ export function validateStartupEnv(): EnvCheckResult {
     warnings.push(
       'VITE_CONTENT_MODE is "http" but Supabase is not fully configured for Edge Function calls.',
     )
-    hints.push('Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY (same project as generate-content).')
+    hints.push(
+      'Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY for the linked Jifunze.ai project.',
+    )
   }
   if (signalMode === 'remote' && !raw('VITE_SIGNAL_INGESTION_URL')) {
     warnings.push('VITE_SIGNAL_MODE is "remote" but VITE_SIGNAL_INGESTION_URL is missing.')

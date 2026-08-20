@@ -57,3 +57,11 @@ supabase/.temp/
 *.mp4
 *.mov
 *.webm
+_xfer/
+
+# --- Never-commit local scratch / transfer / quarantine areas ------------------
+# `_to_delete/` has held a source transfer archive that packaged a real `.env.local`.
+# Keep it out of the index so no `git add -A` can ever stage secrets from it.
+_to_delete/
+# FUSE mount leftovers from in-place edits of open files (transient, never source).
+.fuse_hidden*
