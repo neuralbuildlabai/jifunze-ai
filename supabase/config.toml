@@ -1,14 +1,6 @@
 # Supabase CLI project config. Set project_id when linking: `supabase link`.
 # https://supabase.com/docs/guides/cli/config
 
-[functions.generate-content]
-# Keep auth enforced for production/UAT generation.
-verify_jwt = true
-
-[functions.generate-public]
-# Public no-signup trial endpoint.
-verify_jwt = false
-
 [functions.stripe-checkout]
 verify_jwt = true
 
