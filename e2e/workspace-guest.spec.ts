@@ -12,7 +12,7 @@ test.describe('Workspace routes (demo / no Supabase env)', () => {
     await applyPublicE2eMaintenanceBypass(page)
   })
 
-  test('member guest hitting Ideas is redirected to public catalog', async ({ page }) => {
+  test('member guest hitting Ideas is redirected to the public homepage', async ({ page }) => {
     await page.goto('/ideas')
     await expect(page).toHaveURL(/\/$/, { timeout: 20_000 })
     await expect(page.getByRole('heading', { level: 1 })).toContainText(
@@ -20,7 +20,7 @@ test.describe('Workspace routes (demo / no Supabase env)', () => {
     )
   })
 
-  test('member guest hitting Studio is redirected to public catalog', async ({ page }) => {
+  test('member guest hitting Studio is redirected to the public homepage', async ({ page }) => {
     await page.goto('/studio')
     await expect(page).toHaveURL(/\/$/, { timeout: 20_000 })
     await expect(page.getByRole('heading', { level: 1 })).toContainText(
@@ -48,7 +48,7 @@ test.describe('Workspace routes (demo / no Supabase env)', () => {
     await expect(page.getByRole('heading', { name: /^dashboard$/i })).toBeVisible()
   })
 
-  test('member guest hitting training URLs is redirected to public catalog', async ({ page }) => {
+  test('member guest hitting training URLs is redirected to the public homepage', async ({ page }) => {
     await page.goto('/training')
     await expect(page).toHaveURL(/\/$/, { timeout: 20_000 })
     await expect(page.getByRole('heading', { level: 1 })).toContainText(
@@ -56,7 +56,7 @@ test.describe('Workspace routes (demo / no Supabase env)', () => {
     )
   })
 
-  test('member guest hitting team members is redirected to public catalog', async ({ page }) => {
+  test('member guest hitting team members is redirected to the public homepage', async ({ page }) => {
     await page.goto('/team/members')
     await expect(page).toHaveURL(/\/$/, { timeout: 20_000 })
     await expect(page.getByRole('heading', { level: 1 })).toContainText(
@@ -73,7 +73,7 @@ test.describe('Workspace routes (demo / no Supabase env)', () => {
     await expect(page.getByRole('heading', { name: /training assignments/i })).not.toBeVisible()
   })
 
-  test('member guest hitting trends is redirected to public catalog', async ({ page }) => {
+  test('member guest hitting trends is redirected to the public homepage', async ({ page }) => {
     await page.goto('/trends')
     await expect(page).toHaveURL(/\/$/, { timeout: 20_000 })
     await expect(page.getByRole('heading', { level: 1 })).toContainText(
@@ -93,7 +93,7 @@ test.describe('Workspace routes (demo / no Supabase env)', () => {
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible()
   })
 
-  test('member-tier guest cannot access /platform (redirects to catalog)', async ({ page }) => {
+  test('member-tier guest cannot access /platform (redirects to the public homepage)', async ({ page }) => {
     await page.goto('/platform')
     await expect(page).toHaveURL(/\/$/, { timeout: 20_000 })
     await expect(page.getByRole('heading', { level: 1 })).toContainText(
@@ -108,7 +108,7 @@ test.describe('Navigation smoke (guest)', () => {
     await applyPublicE2eMaintenanceBypass(page)
   })
 
-  test('member guest hitting insights is redirected to public catalog', async ({ page }) => {
+  test('member guest hitting insights is redirected to the public homepage', async ({ page }) => {
     await page.goto('/insights')
     await expect(page).toHaveURL(/\/$/, { timeout: 20_000 })
     await expect(page.getByRole('heading', { level: 1 })).toContainText(
