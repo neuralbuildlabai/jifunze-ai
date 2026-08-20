@@ -1,0 +1,131 @@
+name: Social metrics sync (every 2 hours)
+
+# Refreshes account and post metrics for every connected platform and writes timestamped
+# snapshots to Postgres. Read-only against every platform: this workflow NEVER publishes.
+#
+# ┌──────────────────────────────────────────────────────────────────────────┐
+# │ NOT ACTIVE. Every job is gated on the repository variable                 │
+# │ SOCIAL_SYNC_ENABLED == 'true', which is intentionally UNSET.              │
+# │                                                                          │
+# │ To activate, after the migration has been reviewed and applied:           │
+# │   1. Apply supabase/migrations/20260820120000_social_ops_core.sql         │
+# │   2. Add the secrets listed under `env:` below                            │
+# │   3. Set the repository variable SOCIAL_SYNC_ENABLED=true                 │
+# │                                                                          │
+# │ Until step 3, the schedule fires and every job short-circuits, which is   │
+# │ deliberate: it proves the cron works before it is allowed to do anything. │
+# └──────────────────────────────────────────────────────────────────────────┘
+
+on:
+  schedule:
+    # Every two hours, on the hour (UTC).
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Decide everything, write nothing'
+        type: boolean
+        default: true
+      platform:
+        description: 'Restrict to one platform (blank = all)'
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: social-metrics-sync
+  cancel-in-progress: false
+
+jobs:
+  # Runs on every trigger, costs seconds, and makes the gate visible in the Actions UI
+  # instead of a silently skipped workflow.
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      enabled: ${{ steps.check.outputs.enabled }}
+    steps:
+      - id: check
+        env:
+          ENABLED: ${{ vars.SOCIAL_SYNC_ENABLED }}
+        run: |
+          set -euo pipefail
+          if [ "${ENABLED:-}" = "true" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::SOCIAL_SYNC_ENABLED=true — the sync will run."
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::SOCIAL_SYNC_ENABLED is not 'true' — skipping. This is the expected state until the migration is reviewed."
+          fi
+
+  sync:
+    needs: gate
+    if: needs.gate.outputs.enabled == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install deps
+        run: npm ci --no-audit --no-fund
+
+      # Presence-only capability check. Prints booleans, never values, so the log explains a
+      # degraded run without leaking anything.
+      - name: Detect configured platform credentials
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
+          THREADS_ACCESS_TOKEN: ${{ secrets.THREADS_ACCESS_TOKEN }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+          LINKEDIN_REFRESH_TOKEN: ${{ secrets.LINKEDIN_REFRESH_TOKEN }}
+          PINTEREST_REFRESH_TOKEN: ${{ secrets.PINTEREST_REFRESH_TOKEN }}
+        run: |
+          set -euo pipefail
+          has() { if [ -n "${1:-}" ]; then echo true; else echo false; fi; }
+          echo "supabase=$(has "${SUPABASE_SERVICE_ROLE_KEY:-}")"
+          echo "instagram=$(has "${IG_ACCESS_TOKEN:-}")  facebook=$(has "${FB_PAGE_ACCESS_TOKEN:-}")"
+          echo "threads=$(has "${THREADS_ACCESS_TOKEN:-}")  youtube=$(has "${YOUTUBE_REFRESH_TOKEN:-}")"
+          echo "linkedin=$(has "${LINKEDIN_REFRESH_TOKEN:-}")  pinterest=$(has "${PINTEREST_REFRESH_TOKEN:-}")"
+
+      - name: Run sync
+        env:
+          DRY_RUN: ${{ inputs.dry_run || vars.SOCIAL_SYNC_DRY_RUN || 'false' }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_PUBLISH_ENABLED: ${{ secrets.IG_PUBLISH_ENABLED }}
+          PUBLISH_SECRET: ${{ secrets.PUBLISH_SECRET }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
+          THREADS_USER_ID: ${{ secrets.THREADS_USER_ID }}
+          THREADS_ACCESS_TOKEN: ${{ secrets.THREADS_ACCESS_TOKEN }}
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+          YOUTUBE_CHANNEL_ID: ${{ secrets.YOUTUBE_CHANNEL_ID }}
+          LINKEDIN_CLIENT_ID: ${{ secrets.LINKEDIN_CLIENT_ID }}
+          LINKEDIN_CLIENT_SECRET: ${{ secrets.LINKEDIN_CLIENT_SECRET }}
+          LINKEDIN_REFRESH_TOKEN: ${{ secrets.LINKEDIN_REFRESH_TOKEN }}
+          LINKEDIN_ORG_URN: ${{ secrets.LINKEDIN_ORG_URN }}
+          PINTEREST_APP_ID: ${{ secrets.PINTEREST_APP_ID }}
+          PINTEREST_APP_SECRET: ${{ secrets.PINTEREST_APP_SECRET }}
+          PINTEREST_REFRESH_TOKEN: ${{ secrets.PINTEREST_REFRESH_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+        run: |
+          set -euo pipefail
+          if [ -n "${{ inputs.platform }}" ]; then
+            npm run social:sync -- --platform=${{ inputs.platform }}
+          else
+            npm run social:sync
+          fi
