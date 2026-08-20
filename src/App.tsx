@@ -67,10 +67,7 @@ import {
   PROMPT_ENGINEERING_MODELS_PUBLIC_BASE_PATH,
 } from './data/learning/standaloneCoursesCatalog'
 import { RequireAdminAccess } from './components/access/RequireAccess'
-import { LegacyPlatformRedirect } from './components/routing/LegacyPlatformRedirect'
-import { SystemStatusBanner } from './components/SystemStatusBanner'
 import { logEnvValidationFailure, validateStartupEnv } from './lib/envCheck'
-import type { EnvCheckResult } from './lib/envCheck'
 import { PUBLIC_AI_FOUNDATIONS_BASE_PATH } from './data/publicStarterLibraries/aiFoundations'
 import { LEGAL_ROUTES } from './training/trustCopy'
 import { MaintenancePublicGate } from './components/maintenance/MaintenancePublicGate'
@@ -92,6 +89,23 @@ import { isAdminTier } from './lib/admin/adminAccess'
 import { ADMIN_DEFAULT_SIGNED_IN_PATH, LEARNER_DEFAULT_SIGNED_IN_PATH } from './lib/signedInDefaultRoute'
 import { isSupabaseConfigured } from './config/supabaseEnv'
 
+// --- Public career-skills site (new). Separate tree from the frozen learning platform. ---
+import { MediaSiteShell } from './components/media/MediaSiteShell'
+import { MediaHomePage } from './components/media/MediaHomePage'
+import { ContentHubPage } from './components/media/ContentHubPage'
+import { ContentDetailPage } from './components/media/ContentDetailPage'
+import { TopicPillarPage } from './components/media/TopicPillarPage'
+import { SocialDirectoryPage } from './components/media/SocialDirectoryPage'
+import { HowJifunzeWorksPage } from './components/media/HowJifunzeWorksPage'
+
+// --- Private social operations console. Isolated from the frozen /admin shell. ---
+import { RequireSocialOpsAccess } from './components/social-ops/RequireSocialOpsAccess'
+import { SocialOpsShell } from './components/social-ops/SocialOpsShell'
+import { SocialOpsOverviewPage } from './components/social-ops/SocialOpsOverviewPage'
+import { SocialOpsAccountsPage } from './components/social-ops/SocialOpsAccountsPage'
+import { SocialOpsPipelinePage } from './components/social-ops/SocialOpsPipelinePage'
+import { SocialOpsSafetyPage } from './components/social-ops/SocialOpsSafetyPage'
+
 function RedirectLegacyLibrariesAiFoundationsToCanonical() {
   return <Navigate to={PUBLIC_AI_FOUNDATIONS_BASE_PATH} replace />
 }
@@ -99,17 +113,6 @@ function RedirectLegacyLibrariesAiFoundationsToCanonical() {
 function RedirectLegacyLibrariesAiFoundationsLessonToCanonical() {
   const { lessonSlug } = useParams<{ lessonSlug: string }>()
   return <Navigate to={`${PUBLIC_AI_FOUNDATIONS_BASE_PATH}/${lessonSlug}`} replace />
-}
-
-function AppChrome({ env }: { env: EnvCheckResult }) {
-  const { user, session } = useAuth()
-  if (!user) return null
-  const accessToken = session?.access_token
-  return (
-    <div className="sticky top-0 z-50">
-      <SystemStatusBanner env={env} accessToken={accessToken} audience="user" />
-    </div>
-  )
 }
 
 function HomeEntryPage() {
@@ -146,7 +149,9 @@ function HomeEntryPage() {
     return <Navigate to={LEARNER_DEFAULT_SIGNED_IN_PATH} replace />
   }
 
-  return <Navigate to="/learn" replace />
+  // Signed-out visitors land on the public career-skills site. Signed-in routing above is
+  // unchanged, and /learn keeps working exactly as it did — it is simply no longer the front door.
+  return <MediaHomePage />
 }
 
 export default function App() {
@@ -165,7 +170,6 @@ export default function App() {
             <LearningAccessProvider>
               <AccessTierProvider>
                 <ProfileDisplayProvider>
-                  <AppChrome env={env} />
                   <MaintenancePublicGate />
                 </ProfileDisplayProvider>
               </AccessTierProvider>
@@ -173,7 +177,66 @@ export default function App() {
           </AuthProvider>
         }
       >
-        <Route path="/generate" element={<Navigate to="/learn" replace />} />
+        {/* ---------------------------------------------------------------
+            Public career-skills site. New tree; nothing here imports from
+            /learn, /admin, billing or training, all frozen at
+            learning-platform-frozen-2026-08-18.
+        ---------------------------------------------------------------- */}
+        <Route element={<MediaSiteShell />}>
+          <Route path="/" element={<HomeEntryPage />} />
+          <Route path="/content" element={<ContentHubPage />} />
+          <Route path="/content/:slug" element={<ContentDetailPage />} />
+          <Route path="/topics/:pillarSlug" element={<TopicPillarPage />} />
+          <Route path="/social" element={<SocialDirectoryPage />} />
+          <Route path="/about" element={<HowJifunzeWorksPage />} />
+        </Route>
+
+        {/* ---------------------------------------------------------------
+            Private social operations console.
+            Mounted OUTSIDE the frozen AdminShell and outside
+            RequireEmailVerified / RequireDisclaimerAcknowledged, with its own
+            authorization boundary. Deleting this block restores the frozen
+            admin behaviour exactly.
+        ---------------------------------------------------------------- */}
+        <Route
+          element={
+            <RequireSocialOpsAccess>
+              <SocialOpsShell />
+            </RequireSocialOpsAccess>
+          }
+        >
+          <Route path="/admin/social-ops" element={<SocialOpsOverviewPage />} />
+          <Route path="/admin/social-ops/accounts" element={<SocialOpsAccountsPage />} />
+          <Route path="/admin/social-ops/pipeline" element={<SocialOpsPipelinePage />} />
+          <Route path="/admin/social-ops/safety" element={<SocialOpsSafetyPage />} />
+        </Route>
+
+        {/* ---------------------------------------------------------------
+            Retired product routes.
+            These were the removed multi-tenant social-content SaaS and the old
+            workspace surfaces. They were deleted in May 2026 and have been
+            answering 404 ever since — including `/generate`, which is still
+            linked from Jifunze.ai's own April 2026 launch posts on TikTok,
+            LinkedIn and X. A visitor arriving from one of those posts should
+            land on what Jifunze.ai actually is now, not on a dead end and not
+            on the frozen course catalog.
+        ---------------------------------------------------------------- */}
+        {[
+          '/generate',
+          '/ideas',
+          '/studio',
+          '/trends',
+          '/insights',
+          '/platform',
+          '/training',
+          '/team/members',
+          '/team/assignments',
+        ].map((path) => (
+          <Route key={path} path={path} element={<Navigate to="/" replace />} />
+        ))}
+        <Route path="/generate/*" element={<Navigate to="/" replace />} />
+        <Route path="/training/*" element={<Navigate to="/" replace />} />
+
         <Route path="/disclaimer" element={<FullDisclaimerPage />} />
         <Route path="/terms" element={<TermsOfServicePage />} />
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
@@ -220,7 +283,6 @@ export default function App() {
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/auth/sign-in" element={<AuthSignInPage />} />
         <Route path="/auth/sign-up" element={<AuthSignUpPage />} />
-        <Route path="/" element={<HomeEntryPage />} />
         <Route path="/learn/courses/:slug/capstone" element={<FlagshipCapstoneSubmissionPage />} />
         <Route path="/learn/courses/:slug/session/:sessionId" element={<FlagshipCourseSessionPage />} />
         <Route path="/learn/courses/:slug" element={<FlagshipCourseDetailPage />} />
@@ -358,21 +420,6 @@ export default function App() {
           path="/libraries/ai-foundations/:lessonSlug"
           element={<RedirectLegacyLibrariesAiFoundationsLessonToCanonical />}
         />
-        <Route path="/platform" element={<LegacyPlatformRedirect />} />
-        <Route path="/trends" element={<Navigate to="/learn" replace />} />
-        <Route path="/ideas" element={<Navigate to="/learn" replace />} />
-        <Route path="/studio" element={<Navigate to="/learn" replace />} />
-        <Route path="/insights" element={<Navigate to="/learn" replace />} />
-        <Route path="/training" element={<Navigate to="/learn" replace />} />
-        <Route path="/training/*" element={<Navigate to="/learn" replace />} />
-        <Route path="/team/*" element={<Navigate to="/learn" replace />} />
-        <Route path="/library" element={<Navigate to="/learn" replace />} />
-        <Route path="/library/ai" element={<Navigate to="/learn" replace />} />
-        <Route path="/library/ml" element={<Navigate to="/learn" replace />} />
-        <Route path="/library/chatbots" element={<Navigate to="/learn" replace />} />
-        {Object.values(EXTENDED_PUBLIC_LIBRARY_CONFIGS).map((cfg) => (
-          <Route key={cfg.workspacePath} path={cfg.workspacePath} element={<Navigate to="/learn" replace />} />
-        ))}
         <Route element={<RequireEmailVerified />}>
           <Route element={<RequireDisclaimerAcknowledged />}>
             <Route element={<LearnerAppShell />}>
