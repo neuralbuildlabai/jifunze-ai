@@ -113,18 +113,29 @@ jobs:
         run: npm run test:security
 
       # Independent of the scanner's own needle list: if that list ever regresses, this fails.
+      #
+      # No `set -e` here, deliberately. `grep` exits 1 when a needle is ABSENT, which is the
+      # expected outcome for every needle, so under `set -e` with `pipefail` the step aborts on
+      # the first lookup and reports failure without having asserted anything. Each grep's status
+      # is therefore neutralised with `|| true` and the verdict is carried in `fail`.
       - name: Assert forbidden strings are absent from the built bundle
         run: |
-          set -euo pipefail
+          set -uo pipefail
           fail=0
           for needle in VITE_MAINTENANCE_BYPASS_TOKEN MAINTENANCE_BYPASS_TOKEN \
                         VERCEL_OIDC_TOKEN jf_maintenance_bypass \
                         jf_maintenance_preview_v1 generate-public generate-content; do
-            count=$(grep -rl "$needle" dist/ 2>/dev/null | wc -l)
-            echo "$needle -> $count file(s)"
-            [ "$count" -eq 0 ] || fail=1
+            matches="$(grep -rl "$needle" dist/ 2>/dev/null || true)"
+            if [ -n "$matches" ]; then
+              echo "$needle -> PRESENT in:"
+              printf '  %s\n' $matches
+              fail=1
+            else
+              echo "$needle -> absent"
+            fi
           done
           [ "$fail" -eq 0 ] || { echo "::error::forbidden string present in dist/"; exit 1; }
+          echo "bundle scan: all forbidden strings absent from dist/"
 
       - name: Sitemap and feed are in sync with their generator
         run: |
