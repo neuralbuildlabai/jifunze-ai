@@ -41,3 +41,27 @@ e2e/demo-artifacts/screenshots/*.png
 
 # Supabase CLI cache (local only)
 supabase/.temp/
+
+# --- Autonomous content loop: generated media -------------------------------
+# The loop writes its render, poster frame and decision.json here. These are CI
+# artifacts (uploaded by .github/workflows/autonomous-loop.yml), never commits.
+/loop-artifacts/
+/out/
+/output/
+/renders/
+/videos/
+/tmp/
+
+# Rendered video is never committed — it ships as a workflow artifact or via
+# Supabase Storage. Keep source art (png/svg) tracked.
+*.mp4
+*.mov
+*.webm
+_xfer/
+
+# --- Never-commit local scratch / transfer / quarantine areas ------------------
+# `_to_delete/` has held a source transfer archive that packaged a real `.env.local`.
+# Keep it out of the index so no `git add -A` can ever stage secrets from it.
+_to_delete/
+# FUSE mount leftovers from in-place edits of open files (transient, never source).
+.fuse_hidden*

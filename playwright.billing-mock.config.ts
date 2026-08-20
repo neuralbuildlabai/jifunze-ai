@@ -36,7 +36,6 @@ export default defineConfig({
       /** Synthetic checkout responses in `billingStripe.ts` — never ship `true` to production. */
       VITE_E2E_BILLING_INVOKE_MOCK: 'true',
       VITE_ACCESS_TIER_EMAIL_FALLBACK: 'false',
-      VITE_MAINTENANCE_BYPASS_TOKEN: 'playwright-maintenance-bypass',
       /** Full PricingSkuCards + workspace subscription route (not the public paused surface). */
       VITE_LEARNER_MONETIZATION_UI_DISABLED: 'false',
     },

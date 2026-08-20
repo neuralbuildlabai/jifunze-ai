@@ -35,9 +35,12 @@ test.describe('Learner surfaces cohesion (public / demo)', () => {
     expect(txt).not.toContain('create your first post')
   })
 
-  test('/trends redirects to public catalog', async ({ page }) => {
+  test('/trends redirects to the public career-skills homepage', async ({ page }) => {
+    // Updated 20 Aug 2026: retired routes now land on the public career-skills homepage rather
+    // than 404 or the frozen course catalog (AMENDMENT_001 §5). `/generate` matters most — the
+    // April 2026 launch posts still link to it.
     await page.goto('/trends')
-    await expect(page).toHaveURL(/\/learn$/, { timeout: 15_000 })
-    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible()
+    await expect(page).toHaveURL(/\/$/, { timeout: 20_000 })
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(/practical career, income and ai skills/i)
   })
 })

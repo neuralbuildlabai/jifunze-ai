@@ -1,5 +1,8 @@
 # Autonomous loop — deployment
 
+> **Day-to-day operation, commands, quality tiers and troubleshooting live in
+> [`video-pipeline.md`](./video-pipeline.md).** This document covers setup/status only.
+
 The loop that runs unattended: **score → brief → render → upload → publish**,
 daily, in GitHub Actions (free runtime). Signal ingestion is a separate Supabase
 cron (see SIGNAL_INGESTION_DEPLOYMENT.md); the workflow also pokes it first.

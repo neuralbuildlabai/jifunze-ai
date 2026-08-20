@@ -25,10 +25,13 @@ const SYSTEM = `You are the scriptwriter for Jifunze, a faceless short-video bra
 
 Non-negotiable rules:
 - Teach ONE specific, actionable thing the viewer can DO today. Never summarise news; never be vague.
-- Hook (<=7 words) must create a knowledge gap or name a painful mistake. No "New in AI", no headlines, no emojis.
-- Each on-screen segment is 3-6 words, one idea, imperative where possible. 4-5 segments.
+- Hook (<=8 words, <=60 chars) must create a knowledge gap or name a painful mistake. No "New in AI", no headlines, no emojis.
+- 4-5 on-screen segments. Each is 3-8 words, one idea, and at least one must start with a verb the viewer can act on (paste, ask, cut, send, check, write...).
 - Assume the viewer has applied to many jobs and heard nothing. Speak to that.
-- Caption <=180 chars, one line, ends exactly with: Free Kazi Kit — link in bio
+- Tone: practical, warm, clear, adult. Never hype.
+- BANNED, will be rejected: "in today's fast-paced world", "AI is changing everything", "let's dive in", "this is important for everyone", "game changer", "revolutionize", "unlock the power", "stay tuned".
+- Caption <=180 chars, one line. Do NOT add any call to action, link, or 'link in bio' phrase:
+  the channel CTA is disabled until the Free Kazi Kit landing page is live.
 Return STRICT JSON: {"hook": "...", "segments": ["...","..."], "caption": "..."}`
 
 function evergreenPrompt(t: EvergreenTopic): string {
@@ -52,20 +55,42 @@ async function llm(system: string, user: string, key: string): Promise<{ hook: s
       }),
     })
     if (!res.ok) return null
-    const data = await res.json()
+    const data = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> }
     const p = JSON.parse(data.choices?.[0]?.message?.content ?? '{}')
     if (!p.hook || !Array.isArray(p.segments) || !p.caption) return null
     return { hook: String(p.hook).slice(0, 60), segments: p.segments.map(String).slice(0, 5), caption: String(p.caption).slice(0, 180) }
   } catch { return null }
 }
 
-/** Evergreen template fallback ($0) — still teaches, still on-brand. */
+/**
+ * $0 evergreen fallback. Not a degraded stub: every topic in the bank ships a
+ * hand-written script that passes scriptQuality.ts on its own, so a run with no
+ * OPENAI_API_KEY is still publishable rather than filler.
+ */
 function evergreenTemplate(t: EvergreenTopic): { hook: string; segments: string[]; caption: string } {
-  const first = t.seed.split(/[.:]/)[0].trim()
+  return { hook: t.script.hook, segments: [...t.script.segments], caption: t.script.caption }
+}
+
+/**
+ * $0 news fallback. Deliberately conservative: it does not try to invent the
+ * lesson (that is what the LLM is for), it pivots to the one action that is
+ * always correct after a hiring-side change — re-check and re-send.
+ */
+const DANGLING = new Set(['to', 'the', 'a', 'an', 'of', 'for', 'and', 'in', 'on', 'with', 'is', 'are', 'at', 'by', 'from', 'as', 'its', 'that'])
+
+function newsTemplate(op: ScoredOpportunity): { hook: string; segments: string[]; caption: string } {
+  const gistWords = op.title.replace(/[^\w\s-]/g, '').split(/\s+/).filter(Boolean).slice(0, 6)
+  while (gistWords.length > 2 && DANGLING.has(gistWords[gistWords.length - 1].toLowerCase())) gistWords.pop()
+  const gist = gistWords.join(' ')
   return {
-    hook: 'Most people get this wrong',
-    segments: ['Here is the fix', first.split(' ').slice(0, 5).join(' '), 'Do it today', 'It takes minutes', 'Link in bio'],
-    caption: `${first}. Free Kazi Kit — link in bio`,
+    hook: 'Hiring just changed. Your move.',
+    segments: [
+      gist,
+      'Check your CV against it',
+      'Update one line today',
+      'Then send the application again',
+    ],
+    caption: `${op.title.slice(0, 110)} — check your CV against it today.`,
   }
 }
 
@@ -77,10 +102,6 @@ export async function buildEvergreenBrief(t: EvergreenTopic): Promise<Production
 
 export async function buildNewsBrief(op: ScoredOpportunity): Promise<ProductionBrief> {
   const key = process.env.OPENAI_API_KEY
-  const core = (key && (await llm(SYSTEM, newsPrompt(op), key))) || {
-    hook: 'This changes your job hunt',
-    segments: ['Something shifted this week', 'Here is what to do', op.title.split(' ').slice(0, 5).join(' '), 'Act on it now', 'Link in bio'],
-    caption: `${op.title.slice(0, 140)} — here's your move. Free Kazi Kit — link in bio`,
-  }
+  const core = (key && (await llm(SYSTEM, newsPrompt(op), key))) || newsTemplate(op)
   return { id: op.id, ...core, topic_tags: op.topic_tags.length ? op.topic_tags : ['ai'], duration_sec: 18, source_url: op.url, mode: 'news' }
 }

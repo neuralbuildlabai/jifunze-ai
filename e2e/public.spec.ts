@@ -7,8 +7,10 @@ test.describe('Public surfaces', () => {
     await applyPublicE2eMaintenanceBypass(page)
   })
 
-  test('root and catalog load for anonymous visitors (demo E2E without Supabase env)', async ({ page }) => {
-    await page.goto('/')
+  // Updated 20 Aug 2026: the root route now serves the public career-skills site. The catalog is
+  // still reachable and unchanged at /learn, so this test checks both.
+  test('catalog loads for anonymous visitors at /learn (demo E2E without Supabase env)', async ({ page }) => {
+    await page.goto('/learn')
     await expect(page).toHaveURL(/\/learn$/, { timeout: 15_000 })
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
     await expect(page.getByRole('heading', { level: 1, name: /available courses.*workshops/i })).toBeVisible()
@@ -30,11 +32,17 @@ test.describe('Public surfaces', () => {
     await expect(footer.getByRole('link', { name: /^Privacy$/i })).toBeVisible()
   })
 
-  test('/generate redirects to public learn catalog', async ({ page }) => {
+  test('the retired /generate route redirects to the public career-skills homepage', async ({ page }) => {
+    // Updated 20 Aug 2026: retired routes now land on the public career-skills homepage rather
+    // than 404 or the frozen course catalog (AMENDMENT_001 §5). `/generate` matters most — the
+    // April 2026 launch posts still link to it.
     const res = await page.goto('/generate')
     expect(res?.ok()).toBeTruthy()
-    await expect(page).toHaveURL(/\/learn$/)
-    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
+    await expect(page).toHaveURL(/\/$/, { timeout: 20_000 })
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(/practical career, income and ai skills/i)
+    // The removed product must not be described on the page a visitor lands on.
+    const body = (await page.locator('body').innerText()).toLowerCase()
+    expect(body).not.toContain('create smarter social content')
   })
 
   test('full disclaimer page loads without auth', async ({ page }) => {

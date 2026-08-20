@@ -7,8 +7,11 @@ test.describe('Learning discovery (public)', () => {
     await applyPublicE2eMaintenanceBypass(page)
   })
 
-  test('/ redirects to public learn catalog', async ({ page }) => {
-    await page.goto('/')
+  // Updated 20 Aug 2026: `/` is the public career-skills homepage, not the course catalog
+  // (AMENDMENT_001 §5 — the learning platform is frozen and is no longer the front door).
+  // `/learn` itself is untouched and still serves the catalog, which is what this now asserts.
+  test('/learn still serves the public course catalog directly', async ({ page }) => {
+    await page.goto('/learn')
     await expect(page).toHaveURL(/\/learn$/, { timeout: 15_000 })
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
   })

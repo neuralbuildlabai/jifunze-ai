@@ -1,12 +1,8 @@
-import { useEffect } from 'react'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../../auth/AuthContext'
 import {
-  MAINTENANCE_BYPASS_QUERY,
-  hasMaintenancePreviewBypass,
   isMaintenanceExemptAnonymousPath,
   isMaintenanceModeEnabled,
-  readMaintenanceBypassFromSearch,
 } from '../../lib/maintenanceMode'
 import { PublicMaintenancePage } from './PublicMaintenancePage'
 
@@ -25,33 +21,28 @@ function AuthResolvingPlaceholder() {
 }
 
 /**
+ * PRESENTATION GATE ONLY.
+ *
  * When maintenance mode is enabled (`src/lib/maintenanceMode.ts`), anonymous users on non-exempt
- * paths see the public maintenance page; signed-in users and optional preview bypass keep normal routing.
+ * paths see the public maintenance page. Signed-in users keep normal routing — and every protected
+ * route below still enforces its own authorization (`RequireEmailVerified`,
+ * `RequireDisclaimerAcknowledged`, `RequireAdminAccess`, `RequireSocialOpsAccess`) plus Supabase RLS
+ * on the server. Rendering `<Outlet />` here grants no data access by itself.
+ *
+ * There is deliberately NO client-side bypass token. A `VITE_*` value is compiled into the public
+ * browser bundle, so it can never be a secret. Removed 2026-08-20 — do not reintroduce.
  */
 export function MaintenancePublicGate() {
   const { user, loading } = useAuth()
   const location = useLocation()
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    if (!isMaintenanceModeEnabled()) return
-    if (!location.search) return
-    const applied = readMaintenanceBypassFromSearch(location.search)
-    if (!applied) return
-    const nextParams = new URLSearchParams(location.search)
-    nextParams.delete(MAINTENANCE_BYPASS_QUERY)
-    const qs = nextParams.toString()
-    navigate(`${location.pathname}${qs ? `?${qs}` : ''}`, { replace: true })
-  }, [location.pathname, location.search, navigate])
 
   if (!isMaintenanceModeEnabled()) {
     return <Outlet />
   }
 
-  const bypass = hasMaintenancePreviewBypass()
   const exempt = isMaintenanceExemptAnonymousPath(location.pathname)
 
-  if (user || exempt || bypass) {
+  if (user || exempt) {
     return <Outlet />
   }
 

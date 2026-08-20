@@ -9,6 +9,9 @@ export default defineConfig([
   globalIgnores([
     'dist',
     'supabase/functions',
+    // Deno Edge Function source, same as supabase/functions above: not part of the app's
+    // TypeScript program and linted by a different toolchain.
+    '_quarantined_functions',
     'public/course-assets/interactive/**',
   ]),
   {

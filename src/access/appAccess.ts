@@ -28,9 +28,20 @@ function parseEmailList(raw: string | undefined): Set<string> {
   )
 }
 
+/**
+ * SECURITY: static reads only. Dynamic indexing of `import.meta.env` forces Vite to inline the
+ * whole env record (every `VITE_*` value) into the public bundle. See
+ * `docs/social/SECURITY_AND_CHANGE_PROVENANCE_REVIEW_2026-08-20.md`.
+ */
+const TIER_EMAIL_ENV: Record<string, string | undefined> = {
+  VITE_SUPER_ADMIN_EMAILS: import.meta.env.VITE_SUPER_ADMIN_EMAILS,
+  VITE_PLATFORM_ADMIN_EMAILS: import.meta.env.VITE_PLATFORM_ADMIN_EMAILS,
+  VITE_WORKSPACE_ADMIN_EMAILS: import.meta.env.VITE_WORKSPACE_ADMIN_EMAILS,
+  VITE_PRO_USER_EMAILS: import.meta.env.VITE_PRO_USER_EMAILS,
+}
+
 function viteEnv(key: string): string | undefined {
-  const env = typeof import.meta !== 'undefined' ? import.meta.env : undefined
-  return (env as Record<string, string | undefined> | undefined)?.[key]
+  return TIER_EMAIL_ENV[key]
 }
 
 function tierRank(t: AccessTier): number {

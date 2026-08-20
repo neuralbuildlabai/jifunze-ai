@@ -1,0 +1,236 @@
+name: PR checks
+
+# Validates every pull request against `main` with the full local suite.
+#
+# SAFETY POSTURE:
+#   - `pull_request`, never `pull_request_target`. The head code runs WITHOUT repository
+#     secrets, so a fork PR cannot exfiltrate anything.
+#   - `permissions: contents: read` — this workflow never writes to the repository.
+#   - No secrets are referenced anywhere below, and none are needed: lint, both type-checks,
+#     the unit suites, the secret-boundary scan, the production build, all three Playwright
+#     suites and the migration verifier all pass with no `.env` file and no credentials.
+#   - Nothing here publishes, deploys, or touches a real environment. The only database is a
+#     throwaway PostgreSQL service container that is destroyed with the job; Supabase
+#     production is never contacted.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  # A follow-up commit or a force-push cancels the superseded run instead of paying twice.
+  group: pr-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  # ------------------------------------------------------------------- static
+  static:
+    name: Lint and type-check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install deps
+        run: npm ci --no-audit --no-fund
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Application type-check
+        run: npx tsc -b
+
+      - name: Pipeline type-check
+        run: npm run typecheck:pipeline
+
+  # --------------------------------------------------------------------- unit
+  unit:
+    name: Unit suites
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install deps
+        run: npm ci --no-audit --no-fund
+
+      - name: Content-engine tests
+        run: npm run test:content-engine
+
+      - name: Social-operations tests
+        run: npm run social:test
+
+      # Offline: no Supabase, no OpenAI, no Pexels, no platform credentials. Proves the
+      # selector + script quality gate and the sync planner without any network dependency.
+      - name: Content dry run (selector + quality gate, offline)
+        run: npm run video:dry-run
+
+      - name: Social sync dry run (offline, writes nothing)
+        run: npm run social:sync:dry-run
+
+  # --------------------------------------------------------- build and scan
+  # `npm run test:security` asserts against `dist/` and degrades to source-only checks with
+  # exit 0 when `dist/` is absent. The build and the scan therefore MUST stay in the same job.
+  build-and-scan:
+    name: Build and secret-boundary scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install deps
+        run: npm ci --no-audit --no-fund
+
+      # No `.env` file exists on a fresh checkout; the build must succeed without one.
+      - name: Production build
+        run: npm run build
+
+      - name: Secret-boundary scan (source + built bundle)
+        run: npm run test:security
+
+      # Independent of the scanner's own needle list: if that list ever regresses, this fails.
+      #
+      # No `set -e` here, deliberately. `grep` exits 1 when a needle is ABSENT, which is the
+      # expected outcome for every needle, so under `set -e` with `pipefail` the step aborts on
+      # the first lookup and reports failure without having asserted anything. Each grep's status
+      # is therefore neutralised with `|| true` and the verdict is carried in `fail`.
+      - name: Assert forbidden strings are absent from the built bundle
+        run: |
+          set -uo pipefail
+          fail=0
+          for needle in VITE_MAINTENANCE_BYPASS_TOKEN MAINTENANCE_BYPASS_TOKEN \
+                        VERCEL_OIDC_TOKEN jf_maintenance_bypass \
+                        jf_maintenance_preview_v1 generate-public generate-content; do
+            matches="$(grep -rl "$needle" dist/ 2>/dev/null || true)"
+            if [ -n "$matches" ]; then
+              echo "$needle -> PRESENT in:"
+              printf '  %s\n' $matches
+              fail=1
+            else
+              echo "$needle -> absent"
+            fi
+          done
+          [ "$fail" -eq 0 ] || { echo "::error::forbidden string present in dist/"; exit 1; }
+          echo "bundle scan: all forbidden strings absent from dist/"
+
+      - name: Sitemap and feed are in sync with their generator
+        run: |
+          set -euo pipefail
+          cp public/sitemap.xml "$RUNNER_TEMP/sitemap.before"
+          cp public/feed.xml    "$RUNNER_TEMP/feed.before"
+          cp public/robots.txt  "$RUNNER_TEMP/robots.before"
+          npm run seo:generate
+          diff "$RUNNER_TEMP/sitemap.before" public/sitemap.xml
+          diff "$RUNNER_TEMP/feed.before"    public/feed.xml
+          diff "$RUNNER_TEMP/robots.before"  public/robots.txt
+          git diff --exit-code -- public/sitemap.xml public/feed.xml public/robots.txt
+
+  # ---------------------------------------------------------------------- e2e
+  e2e:
+    name: Playwright
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install deps
+        run: npm ci --no-audit --no-fund
+
+      - name: Resolve Playwright version
+        id: pw
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: pw-${{ runner.os }}-${{ steps.pw.outputs.version }}
+
+      # BOTH are required: `devices['Desktop Chrome']` resolves to the headless shell, so
+      # installing only `chromium` fails with "Executable doesn't exist at .../chrome-headless-shell".
+      - name: Install Chromium and the headless shell
+        run: npx playwright install --with-deps chromium chromium-headless-shell
+
+      - name: Default suite
+        run: npm run test:e2e
+
+      - name: Forced-tier suite
+        run: npm run test:e2e:access-forced
+
+      - name: Billing-mock suite
+        run: npm run test:e2e:billing-mock
+
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: playwright-report
+          path: playwright-report/
+          if-no-files-found: warn
+          retention-days: 7
+
+  # ----------------------------------------------------------------- migration
+  # A disposable PostgreSQL 16 service container. Supabase production is never contacted:
+  # the verifier creates and drops its own scratch database on localhost.
+  migration:
+    name: Migration verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          # Throwaway container on the runner's loopback: no data, and no password to leak.
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install psql client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      # The script defaults to port 55432 for local use; the service container publishes 5432.
+      - name: Verify the social-operations migration on a disposable database
+        env:
+          PGHOST: 127.0.0.1
+          PGPORT: '5432'
+          PGUSER: postgres
+        run: npm run social:verify-migration
