@@ -15,8 +15,18 @@ test.describe('Access gates (forced pro/platform via build flags)', () => {
     await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
   })
 
-  test('legacy /platform redirects to admin health when Playwright admin shell is active', async ({ page }) => {
+  // Updated 20 Aug 2026: `/platform` is now one of the retired-SaaS routes that land on the public
+  // career-skills homepage (`src/App.tsx`, retired-routes block); `LegacyPlatformRedirect` was
+  // deleted with the rest of that surface. Operators reach runtime status at `/admin/health`
+  // directly — asserted immediately below, so admin-health coverage is not lost.
+  test('legacy /platform redirects to the public homepage, not into the admin shell', async ({ page }) => {
     await page.goto('/platform')
+    await expect(page).toHaveURL(/127\.0\.0\.1:\d+\/$/, { timeout: 20_000 })
+    await expect(page.getByTestId('admin-shell')).toHaveCount(0)
+  })
+
+  test('admin health remains reachable directly in the Playwright admin shell', async ({ page }) => {
+    await page.goto('/admin/health')
     await expect(page).toHaveURL(/\/admin\/health$/, { timeout: 20_000 })
   })
 
