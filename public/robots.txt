@@ -1,0 +1,10 @@
+# Jifunze.ai
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /account
+Disallow: /dashboard
+Disallow: /reports
+Disallow: /my-learning
+
+Sitemap: https://www.jifunze.ai/sitemap.xml
