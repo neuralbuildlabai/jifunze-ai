@@ -124,7 +124,10 @@ jobs:
           fail=0
           for needle in VITE_MAINTENANCE_BYPASS_TOKEN MAINTENANCE_BYPASS_TOKEN \
                         VERCEL_OIDC_TOKEN jf_maintenance_bypass \
-                        jf_maintenance_preview_v1 generate-public generate-content; do
+                        jf_maintenance_preview_v1 generate-public generate-content \
+                        "Create smarter, Grow faster" jf-learn-warm stripe-checkout \
+                        flagship_course_progress capstone_submissions training_plans \
+                        LearningDiscoveryHub jifunze-logo-icon.png; do
             matches="$(grep -rl "$needle" dist/ 2>/dev/null || true)"
             if [ -n "$matches" ]; then
               echo "$needle -> PRESENT in:"

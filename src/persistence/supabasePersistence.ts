@@ -6,8 +6,6 @@ import type { ListParams, BrandProfileId } from '../types/persistence'
 import type {
   SignalIngestionBatch,
   StoredContentItem,
-  StoredLearningLabRun,
-  StoredLearningSnapshot,
   StoredOpportunity,
 } from '../types/storedRecords'
 import type { SocialAccount } from '../types/socialAccount'
@@ -16,8 +14,6 @@ import { mapDbBrandRowToProfile, type BrandsTableRow } from '../services/brands/
 import type {
   BrandProfileRepository,
   ContentItemRepository,
-  LearningLabHistoryRepository,
-  LearningSnapshotRepository,
   OpportunityRepository,
   PerformanceMemoryRepository,
   PersistenceLayer,
@@ -53,8 +49,6 @@ export function createSupabasePersistenceLayer(
     contentItems: new SbContentItems(client, tenantId),
     socialAccounts: new SbSocialAccounts(client, tenantId),
     brands: new SbBrands(client, tenantId),
-    learningSnapshots: new SbLearningSnapshots(client, tenantId),
-    labHistory: new SbLearningLabHistory(client, tenantId),
   }
 }
 
@@ -366,92 +360,5 @@ class SbBrands implements BrandProfileRepository {
         .maybeSingle()
       if (error) throw error
     })
-  }
-}
-
-class SbLearningSnapshots implements LearningSnapshotRepository {
-  private readonly client: SupabaseClient
-  private readonly tenantId: string
-
-  constructor(client: SupabaseClient, tenantId: string) {
-    this.client = client
-    this.tenantId = tenantId
-  }
-
-  /**
-   * PostgREST: `POST /learning_snapshots` with merge (upsert). Chaining `.select()` forces the
-   * same request to pass **SELECT** RLS on the written row (catches missing SELECT / upsert edge cases).
-   */
-  async save(snapshot: StoredLearningSnapshot): Promise<void> {
-    await safeSupabaseWrite(this.client, async () => {
-      const { error } = await this.client
-        .from('learning_snapshots')
-        .upsert(
-          {
-            tenant_id: this.tenantId,
-            brand_profile_id: snapshot.brandProfileId,
-            payload: asJson(snapshot),
-            captured_at: snapshot.capturedAt,
-          },
-          { onConflict: 'tenant_id,brand_profile_id' },
-        )
-        .select('tenant_id,brand_profile_id')
-        .maybeSingle()
-      if (error) throw error
-    })
-  }
-
-  async getLatest(brandProfileId: BrandProfileId): Promise<StoredLearningSnapshot | undefined> {
-    const { data, error } = await this.client
-      .from('learning_snapshots')
-      .select('payload')
-      .eq('tenant_id', this.tenantId)
-      .eq('brand_profile_id', brandProfileId)
-      .maybeSingle()
-    if (error) throw error
-    return data?.payload as StoredLearningSnapshot | undefined
-  }
-}
-
-class SbLearningLabHistory implements LearningLabHistoryRepository {
-  private readonly client: SupabaseClient
-  private readonly tenantId: string
-
-  constructor(client: SupabaseClient, tenantId: string) {
-    this.client = client
-    this.tenantId = tenantId
-  }
-
-  async appendRun(run: StoredLearningLabRun): Promise<void> {
-    await safeSupabaseWrite(this.client, async () => {
-      const { error } = await this.client
-        .from('learning_lab_runs')
-        .insert({
-          id: run.id,
-          tenant_id: this.tenantId,
-          brand_profile_id: run.brandProfileId,
-          payload: asJson(run),
-          ran_at: run.ranAt,
-        })
-        .select('id')
-        .maybeSingle()
-      if (error) throw error
-    })
-  }
-
-  async listRunsForBrand(
-    brandProfileId: BrandProfileId,
-    params?: ListParams,
-  ): Promise<StoredLearningLabRun[]> {
-    const limit = params?.limit ?? 32
-    const { data, error } = await this.client
-      .from('learning_lab_runs')
-      .select('payload')
-      .eq('tenant_id', this.tenantId)
-      .eq('brand_profile_id', brandProfileId)
-      .order('ran_at', { ascending: false })
-      .limit(limit)
-    if (error) throw error
-    return (data ?? []).map((r) => r.payload as StoredLearningLabRun).filter(Boolean)
   }
 }

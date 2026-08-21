@@ -3,7 +3,7 @@
 /*
   Post-pivot stylesheet (Amendment 003). One brand surface: `.jf-media` — the approved violet
   (#7C3AED) on near-black (#0B0B12) system in Plus Jakarta Sans. The Learn-era scopes
-  (`.jf-learn-warm`, `.jf-public-surface`, reading/instruction surfaces, auth glow animations)
+  (the warm learn theme, public-surface tokens, reading/instruction surfaces, auth glow animations)
   were removed with the learning platform; the frozen styling remains recoverable at
   jifunze-learn-frozen-2026-08-21.
 */

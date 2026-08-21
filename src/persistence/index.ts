@@ -6,8 +6,6 @@ export type {
   ContentItemRepository,
   SocialAccountRepository,
   BrandProfileRepository,
-  LearningSnapshotRepository,
-  LearningLabHistoryRepository,
 } from './contracts'
 export {
   getPersistence,
