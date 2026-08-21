@@ -4,22 +4,24 @@
 It captures what's built, the identifiers, where secrets live (names only, never
 values), and what's next — so no session re-derives state.
 
-_Last updated: 2026-08-20._
+_Last updated: 2026-08-21 (Instagram-first pivot branch)._
 
 ---
 
 ## What this is
 
-Jifunze's **autonomous social content engine**: ingest real trend signals →
-score them server-side → turn the best into a production brief → render a
-faceless vertical video (captions + music, no voiceover) → publish to Instagram.
-Runs unattended on a schedule. Own handles first (`@jifunze.ai`); multi-tenant
-SaaS later.
+Jifunze is an **Instagram-first, faceless, AI-assisted social learning media system**
+(Amendment 003, 2026-08-21): detect signals → score → select → research & verify → generate →
+render faceless vertical video → quality/safety gates → **human review (enforced in code)** →
+publish → sync engagement → insights. Own handles only (`@jifunze.ai`); it is not a SaaS.
+Editorial pillars (single source `src/social/pillars.ts`): practical_ai, career_growth,
+income_business, digital_tools, productivity, opportunities.
 
-The **learning platform** in this same repo is FROZEN at tag
-`learning-platform-frozen-2026-08-18` (commit fc901a0). Do not touch
-`/learn`, `/admin`, billing, or training code. Restore with
-`git checkout learning-platform-frozen-2026-08-18` if anything breaks.
+The **learning platform was REMOVED from the active application on 2026-08-21** and is fully
+preserved at `78062b1` (tag `jifunze-learn-frozen-2026-08-21`, branch `archive/jifunze-learn`);
+see `docs/freeze/`. `/admin` now belongs to the social operations console; `/learn`, billing and
+training no longer exist in active code. Production course data is preserved untouched with no
+remaining callers.
 
 ---
 
@@ -73,9 +75,12 @@ The **learning platform** in this same repo is FROZEN at tag
 | Instagram publish (Reels) | `supabase/functions/publish-instagram` | ✅ built |
 | IG token refresh | `supabase/functions/refresh-ig-token` | ✅ built |
 | Video render (captions+music) | `render/` | ✅ built, render verified |
-| Server-side scoring | `orchestrator/` | 🔨 in progress |
-| Brief generator | `orchestrator/` | 🔨 in progress |
-| CI cron (the loop) | `.github/workflows/` | 🔨 in progress |
+| Server-side scoring | `orchestrator/score.ts` | ✅ built, tested |
+| Brief generator | `orchestrator/brief.ts` | ✅ built, tested (offline fallback) |
+| CI loop (DRY_RUN default) | `.github/workflows/autonomous-loop.yml` | ✅ built — publish gated OFF |
+| Human-approval publish gate | `orchestrator/approvalGate.ts` | ✅ enforced, fail-closed, no bypass — review UI still missing |
+| Admin console (`/admin`) | `src/components/admin-app/` | ✅ built — honest module labels |
+| Public latest-post feed foundation | `src/services/publicFeed/` | ✅ built — honest states; data after connection |
 
 ### Supabase tables added
 - `signal_sources`, `ingested_signals` (ingestion)
@@ -112,11 +117,17 @@ tier) is free at this scale.
 | Manual owner actions | `docs/social/MANUAL_PLATFORM_ACTIONS.md` |
 | Deploy / rollback / incident | `docs/social/DEPLOYMENT_CHECKLIST.md`, `ROLLBACK_PLAN.md`, `INCIDENT_AND_KILL_SWITCH.md` |
 | Launch verdict | `docs/social/LAUNCH_READINESS_2026-08-20.md` |
-| Governance | `docs/AMENDMENT_001_2026-08-18_PIVOT.md`, `docs/AMENDMENT_002_2026-08-20_SOCIAL_OPS.md` |
+| Capability truth table (27 stages) | `docs/social/CAPABILITY_TRUTH_TABLE.md` |
+| Connection sequence (all deferred) | `docs/social/DEFERRED_CONNECTIONS.md` |
+| Active routes + retired behaviour | `docs/ROUTES.md` |
+| Learn freeze + restoration | `docs/freeze/` |
+| Governance | `docs/AMENDMENT_003_2026-08-21_INSTAGRAM_FIRST.md` (governs), 001/002 (historical) |
 
 ---
 
 ## Safety switches
+- The publish path REFUSES any item without an explicit recorded human approval in
+  `content_approvals` (`orchestrator/approvalGate.ts`, fail-closed, no bypass env).
 - `IG_PUBLISH_ENABLED` must be `"true"` before anything posts publicly. Deploying
   the code does NOT start posting.
 - `publish-instagram` dedupes by `idempotency_key` — an item never double-posts.

@@ -113,3 +113,22 @@ accessible name naming the platform, the handle and that it opens in a new tab �
 rings on every interactive element · `aria-pressed` on the filter buttons with an `aria-live`
 result region · 44px minimum touch targets · no horizontal overflow at 375px (asserted in e2e) ·
 lesson video is optional and the full text is always present.
+
+
+---
+
+## Addendum (2026-08-21): the public latest-post feed
+
+The landing page now includes a "Latest posts" section rendered from the cached publication
+store via `src/services/publicFeed/publicFeedData.ts`. Contract:
+
+1. Server-side sync (metrics workflow) normalizes permitted post metadata into
+   `content_publications`; the browser NEVER calls a platform API and never sees a token.
+2. RLS exposes only display-safe rows; the module maps them to display-safe fields (platform,
+   permalink, type, pillar, caption excerpt, thumbnail/poster, published time, permitted public
+   metrics, featured, last-synced time) — nothing else reaches the DOM.
+3. UI states are exhaustive and honest: loading · live · stale (last sync older than 48 h,
+   labeled) · empty (nothing published yet) · unavailable (store unreachable / migration not
+   applied) · not configured (build without Supabase). Missing thumbnails fall back to a brand
+   tile. Live credentials are NOT required to deploy the landing page.
+4. No fixture ever renders in production; development fixtures exist only in tests.

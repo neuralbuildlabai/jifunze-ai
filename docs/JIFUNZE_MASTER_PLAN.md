@@ -1,3 +1,10 @@
+> ## ⚠ FROZEN — historical record (committed 2026-08-21)
+>
+> This is the May 2026 learning-platform master plan, retained because the governance chain
+> references it. **Do not act on it.** The learning platform was removed from the active
+> application on 2026-08-21 (see `docs/AMENDMENT_003_2026-08-21_INSTAGRAM_FIRST.md` and
+> `docs/freeze/`); it remains recoverable at tag `jifunze-learn-frozen-2026-08-21`.
+
 # Jifunze.ai — Master Plan
 
 **Status:** Authoritative. This document defines the product, the architecture, and the sequence of work. Once committed to, deviations require an explicit amendment to this document — not a side decision in a PR.
