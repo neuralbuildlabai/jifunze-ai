@@ -7,6 +7,10 @@
     { "src": "^/disclaimer/?$", "headers": { "Location": "/terms" }, "status": 301 },
     { "src": "^/support/?$", "headers": { "Location": "/contact" }, "status": 301 },
     { "src": "^/auth/sign-in/?$", "headers": { "Location": "/admin/login" }, "status": 301 },
+    { "src": "^/topics/(cv|interview|mindset)/?$", "headers": { "Location": "/topics/career-growth" }, "status": 301 },
+    { "src": "^/topics/ai-task/?$", "headers": { "Location": "/topics/practical-ai" }, "status": 301 },
+    { "src": "^/topics/money/?$", "headers": { "Location": "/topics/income-business" }, "status": 301 },
+    { "src": "^/topics/applications/?$", "headers": { "Location": "/topics/opportunities" }, "status": 301 },
 
     { "src": "^/(learn|library|libraries|courses|paths)(/.*)?$", "dest": "/index.html", "status": 410 },
     { "src": "^/(pricing|refunds)/?$", "dest": "/index.html", "status": 410 },

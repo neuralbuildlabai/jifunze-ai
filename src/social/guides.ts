@@ -36,7 +36,7 @@ export const GUIDES: readonly Guide[] = [
   {
     id: 'cv-ats-language',
     slug: 'cv-ats-language',
-    pillar: 'cv',
+    pillar: 'career_growth',
     title: 'Your CV never reached a human',
     summary: 'Software reads your CV before any human does. Mirror the advert wording, keep every fact true.',
     steps: [
@@ -51,7 +51,7 @@ export const GUIDES: readonly Guide[] = [
   {
     id: 'cv-responsible-for',
     slug: 'cv-responsible-for',
-    pillar: 'cv',
+    pillar: 'career_growth',
     title: 'Delete two words from your CV',
     summary: 'Responsible for says nothing. What you did, plus the number, plus what it changed.',
     steps: [
@@ -66,7 +66,7 @@ export const GUIDES: readonly Guide[] = [
   {
     id: 'cv-top-three-lines',
     slug: 'cv-top-three-lines',
-    pillar: 'cv',
+    pillar: 'career_growth',
     title: 'Your CV objective is wasting space',
     summary: 'Swap the objective for three lines: who you are, one proof with a number, the role you want.',
     steps: [
@@ -81,7 +81,7 @@ export const GUIDES: readonly Guide[] = [
   {
     id: 'cv-tailor-4min',
     slug: 'cv-tailor-4min',
-    pillar: 'cv',
+    pillar: 'career_growth',
     title: 'Tailor any CV in four minutes',
     summary: 'Three edits tailor a CV in four minutes: reorder, mirror the wording, cut the rest.',
     steps: [
@@ -95,7 +95,7 @@ export const GUIDES: readonly Guide[] = [
   {
     id: 'interview-mock-ai',
     slug: 'interview-mock-ai',
-    pillar: 'interview',
+    pillar: 'career_growth',
     title: 'Rehearse your interview free tonight',
     summary: 'Free interview rehearsal: one question at a time, follow-ups on vague answers, then your three weakest.',
     steps: [
@@ -109,7 +109,7 @@ export const GUIDES: readonly Guide[] = [
   {
     id: 'interview-salary',
     slug: 'interview-salary',
-    pillar: 'interview',
+    pillar: 'career_growth',
     title: 'Never say the first salary number',
     summary: 'Do not name the first number. Ask what band is budgeted, then offer a range you would accept.',
     steps: [
@@ -123,7 +123,7 @@ export const GUIDES: readonly Guide[] = [
   {
     id: 'interview-predict-qs',
     slug: 'interview-predict-qs',
-    pillar: 'interview',
+    pillar: 'career_growth',
     title: 'Know the questions before the interview',
     summary: 'Paste the advert into an AI, ask for the 15 likely questions and what each one really tests.',
     steps: [
@@ -137,7 +137,7 @@ export const GUIDES: readonly Guide[] = [
   {
     id: 'ai-skill-plan',
     slug: 'ai-skill-plan',
-    pillar: 'ai_task',
+    pillar: 'practical_ai',
     title: 'Turn I want to learn into a plan',
     summary: 'One prompt turns I want to learn X into a 30-day plan with something to show at the end.',
     steps: [
@@ -152,7 +152,7 @@ export const GUIDES: readonly Guide[] = [
   {
     id: 'ai-cover-letter',
     slug: 'ai-cover-letter',
-    pillar: 'ai_task',
+    pillar: 'practical_ai',
     title: 'Cover letters take six minutes now',
     summary: 'Three paragraphs: why this company, one proof with a number, and your first three months.',
     steps: [
@@ -166,7 +166,7 @@ export const GUIDES: readonly Guide[] = [
   {
     id: 'money-narrow-service',
     slug: 'money-narrow-service',
-    pillar: 'money',
+    pillar: 'income_business',
     title: 'Stop selling design. Sell one task.',
     summary: 'Narrow beats broad on freelance platforms. Search one specific task and check the competition.',
     steps: [
@@ -180,7 +180,7 @@ export const GUIDES: readonly Guide[] = [
   {
     id: 'money-portfolio-weekend',
     slug: 'money-portfolio-weekend',
-    pillar: 'money',
+    pillar: 'income_business',
     title: 'Build a portfolio with zero clients',
     summary: 'No clients yet? Fix one real local problem, label it self-initiated, write the case study.',
     steps: [
@@ -195,7 +195,7 @@ export const GUIDES: readonly Guide[] = [
   {
     id: 'money-async-work',
     slug: 'money-async-work',
-    pillar: 'money',
+    pillar: 'income_business',
     title: 'Unreliable power? Choose async work.',
     summary: 'Async work survives power cuts: deadlines not live calls, work offline, finish a day early.',
     steps: [
@@ -210,7 +210,7 @@ export const GUIDES: readonly Guide[] = [
   {
     id: 'apps-follow-up',
     slug: 'apps-follow-up',
-    pillar: 'applications',
+    pillar: 'opportunities',
     title: 'The follow-up almost nobody sends',
     summary: 'Seven days after applying, send three sentences: what you applied for, one new thing, a short close.',
     steps: [
@@ -225,7 +225,7 @@ export const GUIDES: readonly Guide[] = [
   {
     id: 'apps-no-experience',
     slug: 'apps-no-experience',
-    pillar: 'applications',
+    pillar: 'opportunities',
     title: 'No experience means nobody paid you',
     summary: 'No experience usually means nobody paid you. Your project, your team, the family business all count.',
     steps: [
@@ -239,7 +239,7 @@ export const GUIDES: readonly Guide[] = [
   {
     id: 'apps-scam-signs',
     slug: 'apps-scam-signs',
-    pillar: 'applications',
+    pillar: 'opportunities',
     title: 'Spot a fake job in one minute',
     summary: 'Fake job advert signs: upfront fees, WhatsApp-only interviews, personal email domains, no real company.',
     steps: [
@@ -254,7 +254,7 @@ export const GUIDES: readonly Guide[] = [
   {
     id: 'mindset-3-months',
     slug: 'mindset-3-months',
-    pillar: 'mindset',
+    pillar: 'career_growth',
     title: 'Plan the three months after graduation',
     summary: 'The three months after graduation, planned: master CV, twenty tailored applications, then earn online.',
     steps: [
@@ -264,6 +264,36 @@ export const GUIDES: readonly Guide[] = [
       'Waiting is not on the list',
     ],
     tags: ['graduate', 'jobs'],
+  },
+  {
+    id: 'tools-two-tool-stack',
+    slug: 'tools-two-tool-stack',
+    pillar: 'digital_tools',
+    title: 'You only need two tools',
+    summary: 'Tool-hopping kills momentum. Pick one writing tool and one planning tool, use them for a month, delete the rest.',
+    steps: [
+      'Stop collecting new apps',
+      'Pick one writing tool',
+      'Pick one planning tool',
+      'Use both for a month',
+      'Delete the rest',
+    ],
+    tags: ['tools', 'workflow'],
+  },
+  {
+    id: 'productivity-first-hour',
+    slug: 'productivity-first-hour',
+    pillar: 'productivity',
+    title: 'Your first hour decides your day',
+    summary: 'The first hour decides the day. Pick the hardest task tonight, do it before any messages tomorrow.',
+    steps: [
+      'Guard your first hour',
+      'Pick the hardest task tonight',
+      'Do it before any messages',
+      'Open email only after',
+      'Check results in a week',
+    ],
+    tags: ['productivity', 'focus'],
   },
 ] as const
 

@@ -26,7 +26,7 @@ import {
   containsProhibitedClaim,
   findProhibitedClaims,
 } from '../src/social/brand.ts'
-import { PILLARS, PILLAR_IDS, pillarBySlug } from '../src/social/pillars.ts'
+import { LEGACY_PILLAR_MAP, LEGACY_PILLAR_SLUGS, PILLARS, PILLAR_IDS, pillarBySlug } from '../src/social/pillars.ts'
 import { GUIDES } from '../src/social/guides.ts'
 import {
   PUBLIC_CONTENT,
@@ -243,6 +243,36 @@ await test('pillar slugs resolve and unknown slugs do not', () => {
   assert.equal(pillarBySlug(undefined), undefined)
 })
 
+await test('the SQL pillar CHECK constraint matches the TS union exactly (no drift)', () => {
+  const sql = readFileSync(
+    new URL('../supabase/migrations/20260820120000_social_ops_core.sql', import.meta.url),
+    'utf8',
+  )
+  const m = sql.match(/check \(pillar in \(([^)]+)\)\)/)
+  assert.ok(m, 'pillar CHECK constraint not found in the social-ops migration')
+  const sqlIds = m![1].split(',').map((s) => s.trim().replace(/'/g, '')).sort()
+  assert.deepEqual(sqlIds, [...PILLAR_IDS].sort(), 'SQL pillar constraint drifted from src/social/pillars.ts')
+})
+
+await test('every legacy pillar id and slug maps to a current pillar', () => {
+  for (const [legacy, current] of Object.entries(LEGACY_PILLAR_MAP)) {
+    assert.ok(PILLAR_IDS.includes(current), `legacy ${legacy} maps to unknown pillar ${current}`)
+  }
+  for (const [legacySlug, currentSlug] of Object.entries(LEGACY_PILLAR_SLUGS)) {
+    assert.ok(pillarBySlug(currentSlug), `legacy slug ${legacySlug} redirects to unknown slug ${currentSlug}`)
+    assert.equal(pillarBySlug(legacySlug), undefined, `legacy slug ${legacySlug} must no longer resolve directly`)
+  }
+})
+
+await test('the content engine consumes the canonical PillarId (no duplicate union)', () => {
+  const bank = readFileSync(new URL('../orchestrator/contentBank.ts', import.meta.url), 'utf8')
+  assert.match(bank, /import type \{ PillarId \} from '\.\.\/src\/social\/pillars\.ts'/)
+  assert.doesNotMatch(bank, /'cv' \| 'interview'/, 'contentBank must not re-declare its own pillar union')
+  for (const t of CONTENT_BANK) {
+    assert.ok(PILLAR_IDS.includes(t.pillar), `bank topic ${t.id} has unapproved pillar ${t.pillar}`)
+  }
+})
+
 await test('the public site shows only approved AND published records', () => {
   const draft: ContentItem = { ...PUBLIC_CONTENT[0], id: 'x1', slug: 'x1', publication_status: 'draft' }
   const unapproved: ContentItem = { ...PUBLIC_CONTENT[0], id: 'x2', slug: 'x2', approval_status: 'pending' }
@@ -399,7 +429,7 @@ const CONTENT: PublishableContent = {
     'Software reads your CV before any human does. Mirror the advert wording, keep every fact true.',
   body: ['Software screens it first', 'Paste the advert into an AI', 'Keep every fact true'],
   hashtags: ['cv', 'jobs', 'ai', 'kenya', 'career', 'interview', 'money'],
-  pillar: 'cv',
+  pillar: 'career_growth',
   video_url: 'https://example.supabase.co/storage/v1/object/public/reels/x.mp4',
   thumbnail_url: 'https://example.supabase.co/storage/v1/object/public/reels/x.png',
   permalink: 'https://www.jifunze.ai/content/cv-ats-language',
@@ -800,9 +830,9 @@ const PUBLICATIONS: PublicationRow[] = [
 ]
 
 const CONTENT_ROWS: ContentRow[] = [
-  { id: 'cv-ats-language', title: 'Your CV never reached a human', pillar: 'cv', approval_status: 'approved', publication_status: 'published', safety_status: 'ok', published_at: iso(86_400_000) },
-  { id: 'money-narrow-service', title: 'Stop selling design. Sell one task.', pillar: 'money', approval_status: 'approved', publication_status: 'published', safety_status: 'ok', published_at: iso(2 * 86_400_000) },
-  { id: 'apps-follow-up', title: 'The follow-up almost nobody sends', pillar: 'applications', approval_status: 'pending', publication_status: 'draft', safety_status: 'ok', published_at: null },
+  { id: 'cv-ats-language', title: 'Your CV never reached a human', pillar: 'career_growth', approval_status: 'approved', publication_status: 'published', safety_status: 'ok', published_at: iso(86_400_000) },
+  { id: 'money-narrow-service', title: 'Stop selling design. Sell one task.', pillar: 'income_business', approval_status: 'approved', publication_status: 'published', safety_status: 'ok', published_at: iso(2 * 86_400_000) },
+  { id: 'apps-follow-up', title: 'The follow-up almost nobody sends', pillar: 'opportunities', approval_status: 'pending', publication_status: 'draft', safety_status: 'ok', published_at: null },
 ]
 
 await test('totals sum the newest reading of every platform', () => {
@@ -845,7 +875,7 @@ await test('a queued publication with no post id is never ranked', () => {
 })
 
 await test('the top pillar comes from real post views', () => {
-  assert.deepEqual(topPillar(SNAPSHOTS, PUBLICATIONS, CONTENT_ROWS), { pillar: 'cv', views: 700 })
+  assert.deepEqual(topPillar(SNAPSHOTS, PUBLICATIONS, CONTENT_ROWS), { pillar: 'career_growth', views: 700 })
   assert.equal(topPillar([], PUBLICATIONS, CONTENT_ROWS), null)
 })
 

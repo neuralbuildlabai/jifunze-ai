@@ -27,6 +27,7 @@ import { isSupabaseConfigured } from './config/supabaseEnv'
 
 // --- Public site: the Jifunze social-learning landing pages. ---
 import { MediaSiteShell } from './components/media/MediaSiteShell'
+import { LEGACY_PILLAR_SLUGS } from './social/pillars'
 import { MediaHomePage } from './components/media/MediaHomePage'
 import { ContentHubPage } from './components/media/ContentHubPage'
 import { ContentDetailPage } from './components/media/ContentDetailPage'
@@ -134,6 +135,9 @@ export default function App() {
         {/* Public site */}
         <Route element={<MediaSiteShell />}>
           <Route path="/" element={<HomeEntryPage />} />
+          {Object.entries(LEGACY_PILLAR_SLUGS).map(([oldSlug, newSlug]) => (
+            <Route key={oldSlug} path={`/topics/${oldSlug}`} element={<Navigate to={`/topics/${newSlug}`} replace />} />
+          ))}
           <Route path="/content" element={<ContentHubPage />} />
           <Route path="/content/:slug" element={<ContentDetailPage />} />
           <Route path="/topics/:pillarSlug" element={<TopicPillarPage />} />

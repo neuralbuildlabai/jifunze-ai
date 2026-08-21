@@ -102,7 +102,7 @@ create table if not exists public.content_items (
   -- Accessible full text: the transcript for a video, the ordered steps for a guide.
   body                text[] not null default '{}',
   pillar              text not null
-    check (pillar in ('cv','interview','ai_task','money','applications','mindset')),
+    check (pillar in ('practical_ai','career_growth','income_business','digital_tools','productivity','opportunities')),
   source_type         text not null default 'engine'
     check (source_type in ('evergreen','engine')),
   original_source_url text,
