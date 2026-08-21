@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../auth/AuthContext'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { useAdminAccess } from './useAdminAccess'
 
 /**

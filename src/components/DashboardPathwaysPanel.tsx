@@ -18,7 +18,7 @@ import {
   pickTopPathway,
 } from '../lib/pathwayNextAction'
 import { isFlagshipCoursePublished } from '../lib/pathwayProgressDerived'
-import { LEGAL_ROUTES } from '../training/trustCopy'
+import { LEGAL_ROUTES } from '../shared/legalRoutes'
 import type { FlagshipCourseProgressState } from '../lib/flagshipCourseProgressDerived'
 import { useRemoteFlagshipProgressBySlugs, type PathwayProgressSyncContext } from '../hooks/usePathwayProgressMap'
 import { useSelectedPathway } from '../hooks/useSelectedPathway'

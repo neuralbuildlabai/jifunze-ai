@@ -7,7 +7,7 @@ import { getSupabaseBrowserClient } from '../../lib/supabaseClient'
 import { MODULE_QUIZ_DRAW_COUNT } from '../../lib/flagshipModuleQuizPools'
 import { getPaidFlagshipCertificateConfig, JIFUNZE_LEARNING_HUB_ISSUER } from '../../lib/paidFlagshipCertificateConfig'
 import { insertCapstoneSubmission } from '../../services/learning/learnerCapstoneSubmissionsRemote'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 
 const ACCEPT = {

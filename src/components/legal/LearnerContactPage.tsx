@@ -1,5 +1,5 @@
 import { LegalPageShell } from './LegalPageShell'
-import { SUPPORT_CONTACT_EMAIL } from '../../training/trustCopy'
+import { SUPPORT_CONTACT_EMAIL } from '../../shared/legalRoutes'
 
 export function LearnerContactPage() {
   return (

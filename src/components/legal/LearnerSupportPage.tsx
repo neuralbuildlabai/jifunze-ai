@@ -1,5 +1,5 @@
 import { LegalPageShell } from './LegalPageShell'
-import { LEGAL_ROUTES, SUPPORT_CONTACT_EMAIL } from '../../training/trustCopy'
+import { LEGAL_ROUTES, SUPPORT_CONTACT_EMAIL } from '../../shared/legalRoutes'
 import { Link } from 'react-router-dom'
 
 export function LearnerSupportPage() {

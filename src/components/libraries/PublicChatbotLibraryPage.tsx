@@ -8,7 +8,7 @@ import {
   listPublicChatbotStarterLessons,
 } from '../../data/learning/chatbotEverydayCurriculum'
 import type { CurriculumLesson } from '../../data/learning/aiEverydayWorkCurriculum'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { useChatbotCurriculumLocalProgress } from '../../hooks/useChatbotCurriculumLocalProgress'
 import { PublicStarterLibraryChrome } from './PublicStarterLibraryChrome'
 import { recordTeachingSignal } from '../../data/teaching/teachingSignals'

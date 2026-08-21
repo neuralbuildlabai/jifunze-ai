@@ -4,7 +4,7 @@ import { firstPublicLessonPreviewLinks, getStandaloneCourseScanStats } from '../
 import { STANDALONE_COURSE_DISCOVERY_META } from '../../data/learning/standaloneCourseDiscoveryMeta'
 import { paletteForStandaloneCourse } from '../../data/learning/standaloneCoursePalettes'
 import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { TrustBoundaryStrip } from '../TrustBoundaryStrip'
 import { PublicStarterLibraryChrome } from '../libraries/PublicStarterLibraryChrome'
 import { DiscoveryBadgeChips } from '../learn/DiscoveryBadgeChips'

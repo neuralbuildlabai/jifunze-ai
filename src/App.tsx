@@ -4,7 +4,9 @@ import { AuthSignInPage } from './components/auth/AuthSignInPage'
 import { AuthSignUpPage } from './components/auth/AuthSignUpPage'
 import { MyLearningPage } from './components/learning/MyLearningPage'
 import { LearnerCommerceProvider } from './learner/LearnerCommerceContext'
-import { LEARNER_MONETIZATION_UI_DISABLED } from './learner/learnerCommerceConstants'
+
+// Inlined from the removed learner commerce layer (trap #2): true (default) hides monetization UI.
+const LEARNER_MONETIZATION_UI_DISABLED = import.meta.env.VITE_LEARNER_MONETIZATION_UI_DISABLED !== 'false'
 import { LearnerDeviceLimitModal } from './components/learn/LearnerDeviceLimitModal'
 import { LearnerCheckoutPage } from './components/learn/LearnerCheckoutPage'
 import { ReadinessChallengePage } from './components/learn/ReadinessChallengePage'
@@ -69,7 +71,7 @@ import {
 import { RequireAdminAccess } from './components/access/RequireAccess'
 import { logEnvValidationFailure, validateStartupEnv } from './lib/envCheck'
 import { PUBLIC_AI_FOUNDATIONS_BASE_PATH } from './data/publicStarterLibraries/aiFoundations'
-import { LEGAL_ROUTES } from './training/trustCopy'
+import { LEGAL_ROUTES } from './shared/legalRoutes'
 import { MaintenancePublicGate } from './components/maintenance/MaintenancePublicGate'
 import { NotFoundPage } from './components/NotFoundPage'
 import { AdminShell } from './components/admin/platform/AdminShell'
@@ -86,7 +88,7 @@ import { AdminSettingsPage } from './components/admin/platform/AdminSettingsPage
 import { AdminHealthPage } from './components/admin/platform/AdminHealthPage'
 import { ProfileDisplayProvider } from './profile/ProfileDisplayProvider'
 import { isAdminTier } from './lib/admin/adminAccess'
-import { ADMIN_DEFAULT_SIGNED_IN_PATH, LEARNER_DEFAULT_SIGNED_IN_PATH } from './lib/signedInDefaultRoute'
+import { ADMIN_DEFAULT_SIGNED_IN_PATH } from './lib/signedInDefaultRoute'
 import { isSupabaseConfigured } from './config/supabaseEnv'
 
 // --- Public career-skills site (new). Separate tree from the frozen learning platform. ---
@@ -146,7 +148,8 @@ function HomeEntryPage() {
     if (isAdminTier(tier)) {
       return <Navigate to={ADMIN_DEFAULT_SIGNED_IN_PATH} replace />
     }
-    return <Navigate to={LEARNER_DEFAULT_SIGNED_IN_PATH} replace />
+    // Non-admin signed-in accounts stay on the public site (no learner workspace after the pivot).
+    return <MediaHomePage />
   }
 
   // Signed-out visitors land on the public career-skills site. Signed-in routing above is

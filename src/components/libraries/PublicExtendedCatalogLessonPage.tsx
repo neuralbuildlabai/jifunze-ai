@@ -12,7 +12,7 @@ import type { ExtendedPublicLibraryConfig } from '../../data/learning/extendedPu
 import { recordLibraryLessonSurface } from '../../data/learning/curriculumEvolutionSignals'
 import { recordTeachingSignal } from '../../data/teaching/teachingSignals'
 import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { PublicStarterLibraryChrome } from './PublicStarterLibraryChrome'
 import { useLearningAccess } from '../../learning/LearningAccessContext'
 import { evaluateLessonReadAccess, extendedLibraryModuleKey } from '../../learning/learningEntitlement'

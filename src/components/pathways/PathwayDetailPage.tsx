@@ -10,7 +10,7 @@ import { usePathwayProgressMap, type PathwayProgressSyncContext } from '../../ho
 import { useSelectedPathway } from '../../hooks/useSelectedPathway'
 import { getPathwayNextAction, getPathwayProgressSummary, getPathwayAvailableCourses } from '../../lib/pathwayNextAction'
 import { derivePathwayCourseProgress } from '../../lib/pathwayProgressDerived'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { EmployablePathwaysPublicNav } from './EmployablePathwaysPublicNav'
 import { TrustLegalFooterLinks } from '../TrustLegalFooterLinks'
 import { LearnHeroAbstractFigure, LearnSectionSparkIcon, LearnWorkflowStepsFigure } from '../visuals/JifunzeLearnVisuals'

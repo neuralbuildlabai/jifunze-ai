@@ -5,7 +5,7 @@ import { PUBLIC_AI_FOUNDATIONS_BASE_PATH } from '../../data/publicStarterLibrari
 import { TeachingLabArticle } from '../teaching/TeachingLabArticle'
 import { PublicStarterLibraryChrome } from './PublicStarterLibraryChrome'
 import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { LearnerHelpAssistant } from '../teaching/LearnerHelpAssistant'
 
 const FAMILY_SECTIONS: { track: AiAppliedLabTrack; title: string }[] = [

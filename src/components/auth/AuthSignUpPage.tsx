@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { AuthForm } from '../AuthForm'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { TrustLegalFooterLinks } from '../TrustLegalFooterLinks'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 
 /**
  * Warm, learner-focused sign-up surface — aligned with the `/learn` warm shell.

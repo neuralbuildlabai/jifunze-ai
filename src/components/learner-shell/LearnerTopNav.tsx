@@ -1,5 +1,5 @@
 import { Link, NavLink } from 'react-router-dom'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { learnerShellTokens } from './learnerShellTokens'
 import { useAdminAccess } from '../admin/useAdminAccess'
 

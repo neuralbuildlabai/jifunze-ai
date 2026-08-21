@@ -7,7 +7,7 @@ import {
   annualEffectiveMonthlyUsd,
   formatUsdWhole,
 } from '../../data/learning/publicPricingStory'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 
 function billingHref(billingEnabled: boolean): string {
   return billingEnabled ? LEGAL_ROUTES.workspaceSubscription : '/?auth=signup#auth'

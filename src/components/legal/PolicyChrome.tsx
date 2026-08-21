@@ -1,8 +1,13 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
-import { LEGAL_ROUTES, SUPPORT_CONTACT_EMAIL } from '../../training/trustCopy'
+import { LEGAL_ROUTES, SUPPORT_CONTACT_EMAIL } from '../../shared/legalRoutes'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
+
+/**
+ * Inlined from the removed learner commerce layer (trap #2, docs/freeze/WIP_RECONCILIATION.md):
+ * true (default) hides monetization UI. Behaviour unchanged.
+ */
+const LEARNER_MONETIZATION_UI_DISABLED = import.meta.env.VITE_LEARNER_MONETIZATION_UI_DISABLED !== 'false'
 
 type Props = {
   title: string

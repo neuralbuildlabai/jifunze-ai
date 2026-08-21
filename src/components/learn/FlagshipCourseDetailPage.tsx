@@ -6,7 +6,7 @@ import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceC
 import { FLAGSHIP_SCHOOLS, getFlagshipCourseBySlug } from '../../data/learning/flagshipCoursesCatalog'
 import { getFlagshipCurriculum } from '../../data/learning/flagshipCourseCurricula'
 import { useFlagshipCourseProgress } from '../../hooks/useFlagshipCourseProgress'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { LearnerHelpAssistant } from '../teaching/LearnerHelpAssistant'
 import { TrustBoundaryStrip } from '../TrustBoundaryStrip'

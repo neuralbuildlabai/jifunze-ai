@@ -10,7 +10,7 @@ import {
   PUBLIC_AI_FOUNDATIONS_BASE_PATH,
 } from '../../data/publicStarterLibraries/aiFoundations'
 import { AI_EVERYDAY_WORK_CURRICULUM } from '../../data/learning/aiEverydayWorkCurriculum'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { useAiCurriculumLocalProgress } from '../../hooks/useAiCurriculumLocalProgress'
 import { PublicStarterLibraryChrome } from './PublicStarterLibraryChrome'
 import { recordTeachingSignal } from '../../data/teaching/teachingSignals'

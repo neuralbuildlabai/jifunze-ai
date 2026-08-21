@@ -1,7 +1,7 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { FLAGSHIP_SCHOOLS, type FlagshipSchoolId } from '../../data/learning/flagshipCoursesCatalog'
 import { learnerPublicCatalogCoursesForSchool } from '../../data/learning/flagshipLearnerCatalogPolicy'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { FlagshipCourseCard } from './FlagshipCourseCard'
 import { SignedInPublicLearningActions } from './SignedInPublicLearningActions'

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { SignedInPublicLearningActions } from '../learn/SignedInPublicLearningActions'
 

@@ -6,7 +6,8 @@ import { useAuth } from '../auth/AuthContext'
 import { isSupabaseConfigured } from '../config/supabaseEnv'
 import { passwordPolicyErrorMessage, passwordPolicyHint } from '../auth/passwordPolicy'
 import { resolvePostAuthNavigatePath } from '../lib/signedInDefaultRoute'
-import { LEGAL_ROUTES, TRUST_COPY } from '../training/trustCopy'
+import { LEGAL_ROUTES } from '../shared/legalRoutes'
+import { TRUST_COPY } from '../training/trustCopy'
 
 type AuthFormProps = {
   initialMode?: 'signin' | 'signup'

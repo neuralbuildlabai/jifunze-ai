@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { useAuth } from '../../auth/AuthContext'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
 import { LEARNER_PROGRESS_HUB_EVENT, loadLearnerUnifiedActiveCourses, type LearnerUnifiedActiveCourse } from '../../lib/learnerProgressHub'

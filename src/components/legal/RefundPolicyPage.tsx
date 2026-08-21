@@ -1,5 +1,5 @@
 import { LegalPageShell } from './LegalPageShell'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { Link } from 'react-router-dom'
 
 export function RefundPolicyPage() {

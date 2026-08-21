@@ -10,7 +10,7 @@ import {
 } from '../../data/learning/machineLearningCurriculum'
 import { resolveMlLessonReaderSections } from '../../data/learning/mlLessonReaderContent'
 import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { useMlCurriculumLocalProgress } from '../../hooks/useMlCurriculumLocalProgress'
 import { loadMlCurriculumProgress } from '../../lib/mlCurriculumLocalProgress'
 import { recordTeachingSignal } from '../../data/teaching/teachingSignals'

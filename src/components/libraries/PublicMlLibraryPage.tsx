@@ -8,7 +8,7 @@ import {
   listPublicMlStarterLessons,
   mlCurriculumStats,
 } from '../../data/learning/machineLearningCurriculum'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { useMlCurriculumLocalProgress } from '../../hooks/useMlCurriculumLocalProgress'
 import { PublicStarterLibraryChrome } from './PublicStarterLibraryChrome'
 import { recordTeachingSignal } from '../../data/teaching/teachingSignals'

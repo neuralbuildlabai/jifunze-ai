@@ -8,7 +8,7 @@ import { clearTeachingLabDraft, readTeachingLabDrafts, writeTeachingLabDraft } f
 import { canAccessTeachingLab, teachingLabAccessLabel } from '../../lib/teachingLabAccess'
 import { lessonPublicHref } from '../../lib/learnerHelpEngine'
 import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { recordTeachingSignal } from '../../data/teaching/teachingSignals'
 
 function kindLabel(kind: TeachingLab['kind']): string {

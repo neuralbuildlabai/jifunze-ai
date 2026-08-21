@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
-import { LEGAL_ROUTES, SUPPORT_CONTACT_EMAIL } from '../../training/trustCopy'
+import { LEGAL_ROUTES, SUPPORT_CONTACT_EMAIL } from '../../shared/legalRoutes'
 
 /**
  * Warm Jifunze-branded maintenance surface for anonymous visitors when

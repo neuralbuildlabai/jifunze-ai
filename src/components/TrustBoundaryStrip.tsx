@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { LEGAL_ROUTES, TRUST_COPY } from '../training/trustCopy'
+import { LEGAL_ROUTES } from '../shared/legalRoutes'
+import { TRUST_COPY } from '../training/trustCopy'
 
 type Props = {
   /** `panel` = subtle bordered callout; `inline` = plain paragraph; `muted` = softer text */

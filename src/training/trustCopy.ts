@@ -3,25 +3,6 @@
  * Prefer importing strings from here rather than scattering claims in JSX.
  */
 
-/** Stable routes for legal / trust / pricing pages */
-export const LEGAL_ROUTES = {
-  disclaimer: '/disclaimer',
-  terms: '/terms',
-  privacy: '/privacy',
-  support: '/support',
-  contact: '/contact',
-  refunds: '/refunds',
-  pricing: '/pricing',
-  paths: '/paths',
-  learn: '/learn',
-  workspaceSubscription: '/settings/subscription',
-  authSignIn: '/auth/sign-in',
-  authSignUp: '/auth/sign-up',
-} as const
-
-/** Operational support inbox (shown on legal/disclaimer surfaces; not legal advice). */
-export const SUPPORT_CONTACT_EMAIL = 'neuralbuildlab.ai@gmail.com'
-
 export const TRUST_COPY = {
   /**
    * Affiliation + scope + no-guarantee fine print (signup-adjacent, public, billing, readiness).

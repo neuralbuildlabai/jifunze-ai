@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { LEGAL_ROUTES, SUPPORT_CONTACT_EMAIL, TRUST_COPY } from '../training/trustCopy'
+import { LEGAL_ROUTES, SUPPORT_CONTACT_EMAIL } from '../shared/legalRoutes'
+import { TRUST_COPY } from '../training/trustCopy'
 import { JifunzeBrandLogo } from './brand/JifunzeBrandLogo'
 
 /**

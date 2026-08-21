@@ -1,8 +1,17 @@
 import { LegalPageShell } from './LegalPageShell'
-import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
-import { LEGAL_ROUTES, TRUST_COPY } from '../../training/trustCopy'
-import { MENTAL_WELLBEING_RESET_DISCLAIMER } from '../../data/learning/mentalWellbeingResetMicrolearningPageCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
+import { TRUST_COPY } from '../../training/trustCopy'
 import { Link } from 'react-router-dom'
+
+/** Inlined (verbatim) from the frozen course data so this page keeps zero imports into `src/data/learning/` (trap #3). */
+const MENTAL_WELLBEING_RESET_DISCLAIMER =
+  'This course is for educational and personal wellbeing support only. It does not provide medical advice, diagnosis, therapy, counseling, or treatment. If you feel unsafe, at risk of harming yourself or someone else, or unable to cope, seek immediate support from emergency services, a qualified professional, or a crisis support line in your country.'
+
+/**
+ * Inlined from the removed learner commerce layer (trap #2, docs/freeze/WIP_RECONCILIATION.md):
+ * true (default) hides monetization UI. Behaviour unchanged.
+ */
+const LEARNER_MONETIZATION_UI_DISABLED = import.meta.env.VITE_LEARNER_MONETIZATION_UI_DISABLED !== 'false'
 
 /**
  * Canonical full disclaimer — links to Terms / Privacy / Refunds for contractual detail.

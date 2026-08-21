@@ -31,7 +31,7 @@ import { recordTeachingSignal } from '../data/teaching/teachingSignals'
 import { getFlagshipCurriculum } from '../data/learning/flagshipCourseCurricula'
 import { curriculumOutlineSnippet, resolveTopicToCourses } from './courseTopicResolver'
 import { LEARNER_MONETIZATION_UI_DISABLED } from '../learner/learnerCommerceConstants'
-import { LEGAL_ROUTES } from '../training/trustCopy'
+import { LEGAL_ROUTES } from '../shared/legalRoutes'
 
 export type LearnerHelpCitation = {
   label: string

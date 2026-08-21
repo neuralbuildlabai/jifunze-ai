@@ -10,7 +10,7 @@ import {
   loadLearnerUnifiedActiveCourses,
   type LearnerUnifiedActiveCourse,
 } from '../../lib/learnerProgressHub'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { LearnerRouteReady } from '../learner-shell/LearnerRouteReady'
 import { LearnerPageShell } from '../learner-shell/LearnerPageShell'
 import { learnerShellTokens } from '../learner-shell/learnerShellTokens'

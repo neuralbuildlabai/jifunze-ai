@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { LEGAL_ROUTES, SUPPORT_CONTACT_EMAIL } from '../../training/trustCopy'
+import { LEGAL_ROUTES, SUPPORT_CONTACT_EMAIL } from '../../shared/legalRoutes'
 
 /**
  * Subtle legal row for warm learner/catalog surfaces — centralized policies only.

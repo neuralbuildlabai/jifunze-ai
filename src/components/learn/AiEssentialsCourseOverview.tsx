@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import type { FlagshipCourse, FlagshipSchool } from '../../data/learning/flagshipCoursesCatalog'
 import type { FlagshipCourseCurriculum } from '../../data/learning/flagshipCourseCurricula'
 import {

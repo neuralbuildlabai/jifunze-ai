@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { EMPLOYABLE_PATHWAYS, featuredEmployablePathways } from '../../data/learning/employablePathwaysCatalog'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { LearnHeroAbstractFigure } from '../visuals/JifunzeLearnVisuals'
 import { EmployablePathwaysPublicNav } from './EmployablePathwaysPublicNav'
 import { TrustLegalFooterLinks } from '../TrustLegalFooterLinks'

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { featuredEmployablePathways } from '../../data/learning/employablePathwaysCatalog'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { EmployablePathwayCard } from './EmployablePathwayCard'
 
 /**

@@ -32,7 +32,7 @@ import {
 import { useSelectedPathway } from '../../hooks/useSelectedPathway'
 import { LearnerRouteReady } from '../learner-shell/LearnerRouteReady'
 import { LearnerPageShell } from '../learner-shell/LearnerPageShell'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 
 type CourseReportRow = {
   slug: string

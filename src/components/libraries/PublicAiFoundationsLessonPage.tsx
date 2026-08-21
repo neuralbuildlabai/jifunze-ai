@@ -11,7 +11,7 @@ import {
   getAiFoundationsLesson,
 } from '../../data/publicStarterLibraries/aiFoundations'
 import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { useAiCurriculumLocalProgress } from '../../hooks/useAiCurriculumLocalProgress'
 import { loadAiCurriculumProgress } from '../../lib/aiCurriculumLocalProgress'
 import { recordTeachingSignal } from '../../data/teaching/teachingSignals'

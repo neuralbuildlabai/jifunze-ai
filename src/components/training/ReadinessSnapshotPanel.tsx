@@ -1,6 +1,7 @@
 import type { ReadinessSnapshot } from '../../training/readinessIndicators'
 import { Link } from 'react-router-dom'
-import { LEGAL_ROUTES, TRUST_COPY } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
+import { TRUST_COPY } from '../../training/trustCopy'
 
 export function ReadinessSnapshotPanel(props: { snapshot: ReadinessSnapshot }) {
   const { snapshot } = props

@@ -7,7 +7,7 @@ import {
   globalFreshnessHealthSummary,
   rollupTeachingSignals,
 } from '../../data/learning/curriculumFreshnessPipeline'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 
 export function CurriculumDepthSection({
   libraryId,

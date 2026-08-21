@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { MODULE_QUIZ_DRAW_COUNT } from '../../lib/flagshipModuleQuizPools'
 import { getPaidFlagshipCertificateConfig } from '../../lib/paidFlagshipCertificateConfig'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 
 type Props = {
   courseSlug: string

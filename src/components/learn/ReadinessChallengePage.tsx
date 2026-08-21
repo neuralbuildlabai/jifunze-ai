@@ -6,7 +6,7 @@ import { evaluateAdaptiveStep, READINESS_MAX_QUESTIONS } from '@/learner/readine
 import { useLearnerCommerce } from '@/learner/LearnerCommerceContext'
 import { LEARNER_MONETIZATION_UI_DISABLED } from '@/learner/learnerCommerceConstants'
 import { getFlagshipCourseBySlug } from '@/data/learning/flagshipCoursesCatalog'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 
 function shuffleInPlace<T>(arr: T[]): T[] {

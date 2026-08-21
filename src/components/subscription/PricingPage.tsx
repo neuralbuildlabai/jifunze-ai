@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { SUBSCRIPTION_PLANS } from '../../subscription/subscriptionCatalog'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { isBillingCheckoutEnabled } from '../../lib/billingEnv'

@@ -10,7 +10,7 @@ import {
 } from '../../data/learning/chatbotEverydayCurriculum'
 import { resolveChatbotLessonReaderSections } from '../../data/learning/chatbotLessonReaderContent'
 import { LEARNER_MONETIZATION_UI_DISABLED } from '../../learner/learnerCommerceConstants'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 import { useChatbotCurriculumLocalProgress } from '../../hooks/useChatbotCurriculumLocalProgress'
 import { loadChatbotCurriculumProgress } from '../../lib/chatbotCurriculumLocalProgress'
 import { recordTeachingSignal } from '../../data/teaching/teachingSignals'

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { DISCLAIMER_ACKNOWLEDGMENT_MODAL_BODY, LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
+import { DISCLAIMER_ACKNOWLEDGMENT_MODAL_BODY } from '../../training/trustCopy'
 
 type Props = {
   onAcknowledge: () => void

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { answerLearnerHelpQuestion } from '../../lib/learnerHelpEngine'
 import { useLearnerCommerceOptional } from '../../learner/LearnerCommerceContext'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 
 export type LearnerHelpAssistantProps = {
   /** When set, answers prefer curriculum placement for this lesson slug. */
