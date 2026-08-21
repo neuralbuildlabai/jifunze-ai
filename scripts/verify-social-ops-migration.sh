@@ -65,8 +65,8 @@ assert "a content item may publish at most once per platform" \
 assert "platform post ids are unique per platform" \
   "select count(*)=1 from pg_indexes where schemaname='public' and tablename='content_publications' and indexname='content_publications_platform_post_unique'"
 
-assert "all ten official channels seeded" \
-  "select count(*)=10 from public.social_accounts"
+assert "all eleven official channels seeded" \
+  "select count(*)=11 from public.social_accounts"
 
 assert "github is not a social account" \
   "select count(*)=0 from public.social_accounts where profile_url ilike '%github%'"
@@ -80,6 +80,9 @@ assert "x is recorded as manual-only under the no-spend rule" \
 assert "whatsapp channel cannot publish" \
   "select can_publish = false from public.social_accounts where platform='whatsapp_channel'"
 
+assert "bluesky is seeded and not yet credentialled" \
+  "select readiness='credentials_missing' from public.social_accounts where platform='bluesky'"
+
 assert "public content policy requires approved AND published" \
   "select count(*)=1 from pg_policies where schemaname='public' and tablename='content_items'
      and policyname='content_items_public_read'
@@ -91,7 +94,7 @@ assert "retention function exists and is not granted to anon" \
 # Idempotency: a migration re-run must be a no-op, not an error.
 $PSQL -d "$DB" -f "$ROOT/supabase/migrations/20260820120000_social_ops_core.sql" >/dev/null
 echo "  ok  migration is re-runnable (idempotent)"
-assert "re-run did not duplicate seeded accounts" "select count(*)=10 from public.social_accounts"
+assert "re-run did not duplicate seeded accounts" "select count(*)=11 from public.social_accounts"
 
 if [ "$fail" -ne 0 ]; then echo; echo "migration verification FAILED"; exit 1; fi
 echo
