@@ -8,7 +8,7 @@ import { PublicMaintenancePage } from './PublicMaintenancePage'
 
 function AuthResolvingPlaceholder() {
   return (
-    <div className="jf-learn-warm flex min-h-screen w-full items-center justify-center bg-[var(--jf-bg-page)] text-[color:var(--jf-muted)]">
+    <div className="jf-media flex min-h-screen w-full items-center justify-center bg-[#0B0B12] text-zinc-400">
       <div className="flex flex-col items-center gap-3">
         <div
           className="h-9 w-9 rounded-full border-2 border-orange-200/70 border-t-orange-500 animate-spin"

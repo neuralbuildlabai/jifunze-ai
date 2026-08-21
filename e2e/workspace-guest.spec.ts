@@ -1,123 +1,42 @@
-import { test, expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 import { applyPublicE2eMaintenanceBypass } from './helpers/publicE2eMaintenanceBypass'
 
 /**
- * Supabase env cleared for E2E: app runs in **demo persistence** (local tenant + demo brands).
- * Retired workspace/studio routes redirect to the public catalog or learner shell as appropriate.
+ * Admin access boundaries in the no-Supabase demo bundle (the default e2e build).
+ *
+ * With no Supabase configuration there is no way to authenticate anyone, so every admin
+ * surface must stay closed — no placeholder consoles, no Playwright bypass.
  */
-// Updated 20 Aug 2026: retired product routes now land on the public career-skills homepage
-// instead of 404 or the frozen course catalog (AMENDMENT_001 §5).
-test.describe('Workspace routes (demo / no Supabase env)', () => {
-  test.beforeEach(async ({ page }) => {
-    await applyPublicE2eMaintenanceBypass(page)
-  })
 
-  test('member guest hitting Ideas is redirected to the public homepage', async ({ page }) => {
-    await page.goto('/ideas')
-    await expect(page).toHaveURL(/\/$/, { timeout: 20_000 })
-    await expect(page.getByRole('heading', { level: 1 })).toContainText(
-      /practical career, income and ai skills/i,
-    )
-  })
-
-  test('member guest hitting Studio is redirected to the public homepage', async ({ page }) => {
-    await page.goto('/studio')
-    await expect(page).toHaveURL(/\/$/, { timeout: 20_000 })
-    await expect(page.getByRole('heading', { level: 1 })).toContainText(
-      /practical career, income and ai skills/i,
-    )
-  })
-
-  test('settings route redirects to account (demo guest)', async ({ page }) => {
-    await page.goto('/settings')
-    await expect(page).toHaveURL(/\/account$/, { timeout: 15_000 })
-    await expect(page.getByRole('heading', { name: /^account$/i }).first()).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByText(/sign in with a live account to update your profile/i)).toBeVisible()
-  })
-
-  test('plans & billing page shows paused copy (demo guest)', async ({ page }) => {
-    await page.goto('/settings/subscription')
-    await expect(page.getByRole('heading', { name: /plans & billing/i })).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByText(/plans are not available yet/i)).toBeVisible()
-  })
-
-  test('dashboard route loads learner dashboard (demo guest)', async ({ page }) => {
-    await page.goto('/dashboard')
-    await expect(page).toHaveURL(/\/dashboard$/, { timeout: 15_000 })
-    await expect(page.getByTestId('learner-dashboard-home')).toBeVisible()
-    await expect(page.getByRole('heading', { name: /^dashboard$/i })).toBeVisible()
-  })
-
-  test('member guest hitting training URLs is redirected to the public homepage', async ({ page }) => {
-    await page.goto('/training')
-    await expect(page).toHaveURL(/\/$/, { timeout: 20_000 })
-    await expect(page.getByRole('heading', { level: 1 })).toContainText(
-      /practical career, income and ai skills/i,
-    )
-  })
-
-  test('member guest hitting team members is redirected to the public homepage', async ({ page }) => {
-    await page.goto('/team/members')
-    await expect(page).toHaveURL(/\/$/, { timeout: 20_000 })
-    await expect(page.getByRole('heading', { level: 1 })).toContainText(
-      /practical career, income and ai skills/i,
-    )
-  })
-
-  test('member guest hitting team assignments is redirected away (operator-only)', async ({ page }) => {
-    await page.goto('/team/assignments')
-    await expect(page).toHaveURL(/\/$/, { timeout: 20_000 })
-    await expect(page.getByRole('heading', { level: 1 })).toContainText(
-      /practical career, income and ai skills/i,
-    )
-    await expect(page.getByRole('heading', { name: /training assignments/i })).not.toBeVisible()
-  })
-
-  test('member guest hitting trends is redirected to the public homepage', async ({ page }) => {
-    await page.goto('/trends')
-    await expect(page).toHaveURL(/\/$/, { timeout: 20_000 })
-    await expect(page.getByRole('heading', { level: 1 })).toContainText(
-      /practical career, income and ai skills/i,
-    )
-  })
-
-  test('legacy teaching labs URL redirects to public learn catalog', async ({ page }) => {
-    await page.goto('/learning/labs')
-    await expect(page).toHaveURL(/\/learn$/, { timeout: 15_000 })
-    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible()
-  })
-
-  test('member guest /lab redirects to public learn catalog', async ({ page }) => {
-    await page.goto('/lab')
-    await expect(page).toHaveURL(/\/learn$/, { timeout: 15_000 })
-    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible()
-  })
-
-  test('member-tier guest cannot access /platform (redirects to the public homepage)', async ({ page }) => {
-    await page.goto('/platform')
-    await expect(page).toHaveURL(/\/$/, { timeout: 20_000 })
-    await expect(page.getByRole('heading', { level: 1 })).toContainText(
-      /practical career, income and ai skills/i,
-    )
-    await expect(page).not.toHaveURL(/\/platform/)
-  })
+test.beforeEach(async ({ page }) => {
+  await applyPublicE2eMaintenanceBypass(page)
 })
 
-test.describe('Navigation smoke (guest)', () => {
-  test.beforeEach(async ({ page }) => {
-    await applyPublicE2eMaintenanceBypass(page)
-  })
+test('the social-ops console stays closed without Supabase', async ({ page }) => {
+  for (const path of ['/admin/social-ops', '/admin/social-ops/accounts', '/admin/social-ops/pipeline', '/admin/social-ops/safety']) {
+    await page.goto(path)
+    await expect(page.getByText(/social ops is unavailable/i)).toBeVisible()
+    const body = (await page.locator('body').innerText()).toLowerCase()
+    expect(body).not.toMatch(/publish|token|metric row|queue depth/)
+  }
+})
 
-  test('member guest hitting insights is redirected to the public homepage', async ({ page }) => {
-    await page.goto('/insights')
-    await expect(page).toHaveURL(/\/$/, { timeout: 20_000 })
-    await expect(page.getByRole('heading', { level: 1 })).toContainText(
-      /practical career, income and ai skills/i,
-    )
-  })
+test('the admin login page explains itself and offers no registration', async ({ page }) => {
+  await page.goto('/admin/login')
+  await expect(page.getByText(/administrator access/i).first()).toBeVisible()
+  const body = (await page.locator('body').innerText()).toLowerCase()
+  expect(body).not.toContain('sign up')
+  expect(body).not.toContain('create an account')
+})
 
-  test('member guest /admin/dashboard without Supabase redirects to dashboard', async ({ page }) => {
-    await page.goto('/admin/dashboard')
-    await expect(page).toHaveURL(/\/dashboard$/, { timeout: 15_000 })
-  })
+test('the frozen Learn admin pages are gone', async ({ page }) => {
+  for (const path of ['/admin/dashboard', '/admin/learners', '/admin/courses', '/admin/enrollments', '/admin/certificates', '/admin/capstones']) {
+    await page.goto(path)
+    await expect(page.getByRole('heading', { name: /page not found/i })).toBeVisible()
+  }
+})
+
+test('legacy /auth/sign-in resolves to the admin login', async ({ page }) => {
+  await page.goto('/auth/sign-in')
+  await expect(page).toHaveURL(/\/admin\/login$/)
 })

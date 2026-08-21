@@ -29,6 +29,8 @@ import { selectContent, NEWS_BAR } from './select.ts'
 import { buildEvergreenBrief, buildNewsBrief, type ProductionBrief } from './brief.ts'
 import { TARGET_AUDIENCE } from './contentBank.ts'
 import { validateBrief, formatReport } from './scriptQuality.ts'
+import { checkHumanApproval, supabaseApprovalReader } from './approvalGate.ts'
+import { findProhibitedClaims } from '../src/social/brand.ts'
 import { uploadReel } from './storage.ts'
 import { renderBrief, grabFrame } from '../render/src/render.ts'
 
@@ -128,6 +130,26 @@ async function main() {
 
   if (DRY_RUN) { log('DRY_RUN — skipping upload + publish'); return }
   if (!admin) { log('offline — skipping upload + publish'); return }
+
+  // 6.5 publish-path safety gates — BOTH fail closed and have no bypass switch.
+  //  (a) Prohibited-claims linter: brand.ts PROHIBITED_CLAIMS applied to everything that
+  //      could reach a caption or the screen.
+  const claimHits = findProhibitedClaims([brief.hook, ...brief.segments, brief.caption].join(' \n '))
+  if (claimHits.length) {
+    log('REFUSED: prohibited claim on the publish path', { claims: claimHits })
+    process.exitCode = 1
+    return
+  }
+  //  (b) Human approval: an explicit recorded 'approved' decision in content_approvals is
+  //      required before the publish layer will accept the item. Content generation
+  //      succeeding is never sufficient on its own.
+  const verdict = await checkHumanApproval(supabaseApprovalReader(admin), brief.id)
+  if (!verdict.allowed) {
+    log(`REFUSED: ${verdict.reason}`, { content_id: brief.id })
+    log('run complete WITHOUT publishing — submit the item for review and record an approval first')
+    return
+  }
+  log('human approval recorded — proceeding', { decided_at: verdict.decidedAt })
 
   // 7. upload to public URL
   const videoUrl = await uploadReel(out, `${RUN_DATE}_${brief.id}`)

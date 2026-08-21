@@ -1,4 +1,0 @@
-# Disable gateway JWT verification (avoids UNAUTHORIZED_UNSUPPORTED_TOKEN_ALGORITHM with newer asymmetric
-# signing keys). This function validates the caller with supabase-js + auth.getUser() instead.
-[functions.generate-content]
-verify_jwt = false

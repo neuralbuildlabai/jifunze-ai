@@ -5,8 +5,6 @@ import type { ListParams, BrandProfileId } from '../types/persistence'
 import type {
   SignalIngestionBatch,
   StoredContentItem,
-  StoredLearningLabRun,
-  StoredLearningSnapshot,
   StoredOpportunity,
 } from '../types/storedRecords'
 import type { SocialAccount } from '../types/socialAccount'
@@ -15,7 +13,6 @@ import type { PersistenceLayer } from './contracts'
 
 const DOC_VERSION = 1 as const
 const MAX_PERFORMANCE_ROWS = 520
-const MAX_LAB_RUNS = 120
 const MAX_CONTENT_ITEMS = 140
 
 export type BrowserTenantDocV1 = {
@@ -26,8 +23,6 @@ export type BrowserTenantDocV1 = {
   contentItems: Record<string, StoredContentItem>
   socialByBrand: Record<string, SocialAccount[]>
   brands: BrandProfile[]
-  learningSnapshots: Record<string, StoredLearningSnapshot>
-  labRuns: StoredLearningLabRun[]
 }
 
 function storageKey(tenantId: string): string {
@@ -51,11 +46,6 @@ function trimContentItems(map: Record<string, StoredContentItem>): Record<string
   return next
 }
 
-function trimLabRuns(runs: StoredLearningLabRun[]): StoredLearningLabRun[] {
-  if (runs.length <= MAX_LAB_RUNS) return runs
-  return [...runs].sort((a, b) => Date.parse(b.ranAt) - Date.parse(a.ranAt)).slice(0, MAX_LAB_RUNS)
-}
-
 function normalizeDoc(raw: unknown, seedBrands: BrandProfile[]): BrowserTenantDocV1 {
   const d = raw as Partial<BrowserTenantDocV1> | null
   const base: BrowserTenantDocV1 = {
@@ -67,13 +57,9 @@ function normalizeDoc(raw: unknown, seedBrands: BrandProfile[]): BrowserTenantDo
     contentItems: typeof d?.contentItems === 'object' && d?.contentItems ? { ...d.contentItems } : {},
     socialByBrand: typeof d?.socialByBrand === 'object' && d?.socialByBrand ? { ...d.socialByBrand } : {},
     brands: Array.isArray(d?.brands) && d!.brands!.length ? d!.brands!.map((b) => ({ ...b })) : [...seedBrands],
-    learningSnapshots:
-      typeof d?.learningSnapshots === 'object' && d?.learningSnapshots ? { ...d.learningSnapshots } : {},
-    labRuns: Array.isArray(d?.labRuns) ? d!.labRuns! : [],
   }
   base.performance = trimPerformance(base.performance)
   base.contentItems = trimContentItems(base.contentItems)
-  base.labRuns = trimLabRuns(base.labRuns)
   return base
 }
 
@@ -90,7 +76,6 @@ function readDoc(tenantId: string, seedBrands: BrandProfile[]): BrowserTenantDoc
 function writeDoc(tenantId: string, doc: BrowserTenantDocV1): void {
   doc.performance = trimPerformance(doc.performance)
   doc.contentItems = trimContentItems(doc.contentItems)
-  doc.labRuns = trimLabRuns(doc.labRuns)
   try {
     localStorage.setItem(storageKey(tenantId), JSON.stringify(doc))
   } catch {
@@ -246,42 +231,6 @@ export function createBrowserBackedPersistenceLayer(
         if (idx >= 0) store.doc.brands[idx] = { ...brand }
         else store.doc.brands.push({ ...brand })
         store.schedulePersist()
-      },
-    },
-    learningSnapshots: {
-      async save(snapshot: StoredLearningSnapshot): Promise<void> {
-        store.doc.learningSnapshots[snapshot.brandProfileId] = {
-          ...snapshot,
-          insights: snapshot.insights.map((i) => ({ ...i })),
-          recommendations: snapshot.recommendations.map((r) => ({ ...r })),
-        }
-        store.schedulePersist()
-      },
-      async getLatest(brandProfileId: BrandProfileId): Promise<StoredLearningSnapshot | undefined> {
-        const s = store.doc.learningSnapshots[brandProfileId]
-        if (!s) return undefined
-        return {
-          ...s,
-          insights: s.insights.map((i) => ({ ...i })),
-          recommendations: s.recommendations.map((r) => ({ ...r })),
-        }
-      },
-    },
-    labHistory: {
-      async appendRun(run: StoredLearningLabRun): Promise<void> {
-        store.doc.labRuns.push({ ...run })
-        store.doc.labRuns = trimLabRuns(store.doc.labRuns)
-        store.schedulePersist()
-      },
-      async listRunsForBrand(
-        brandProfileId: BrandProfileId,
-        params?: ListParams,
-      ): Promise<StoredLearningLabRun[]> {
-        const filtered = store.doc.labRuns
-          .filter((r) => r.brandProfileId === brandProfileId)
-          .sort((a, b) => Date.parse(b.ranAt) - Date.parse(a.ranAt))
-        const limit = params?.limit ?? 32
-        return filtered.slice(0, limit).map((r) => ({ ...r }))
       },
     },
   }

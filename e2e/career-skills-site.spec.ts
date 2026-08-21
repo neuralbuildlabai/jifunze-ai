@@ -3,7 +3,6 @@ import { applyPublicE2eMaintenanceBypass } from './helpers/publicE2eMaintenanceB
 import { OFFICIAL_SOCIAL_ACCOUNTS } from '../src/social/socialAccounts'
 import { PILLARS } from '../src/social/pillars'
 import { GUIDES } from '../src/social/guides'
-import { BRAND_TAGLINE } from '../src/social/brand'
 
 /**
  * The public career-skills site and the private social-ops console.
@@ -19,13 +18,19 @@ test.describe('Public career-skills site', () => {
     await applyPublicE2eMaintenanceBypass(page)
   })
 
-  test('the homepage presents the career-skills brand, not a course platform', async ({ page }) => {
+  test('the homepage presents the social-learning brand, not a course platform', async ({ page }) => {
     await page.goto('/')
-    await expect(page.getByRole('heading', { level: 1 })).toContainText(
-      /practical career, income and ai skills/i,
-    )
-    await expect(page.getByText(BRAND_TAGLINE).first()).toBeVisible()
-    await expect(page.getByRole('link', { name: /browse the content hub/i })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(/your idea never sleeps/i)
+    await expect(page.getByRole('link', { name: /explore our latest posts/i })).toBeVisible()
+    await expect(page.getByRole('link', { name: /^follow jifunze$/i })).toBeVisible()
+    await expect(page.getByRole('banner').getByRole('link', { name: /admin login/i })).toBeVisible()
+    await expect(page.getByRole('contentinfo').getByRole('link', { name: /admin login/i })).toBeVisible()
+    await expect(page.getByRole('contentinfo').getByRole('link', { name: /ai disclosure/i })).toBeVisible()
+
+    const nav = (await page.getByRole('banner').innerText()).toLowerCase()
+    for (const forbidden of ['courses', 'learn', 'pricing', 'sign up', 'register', 'instructor', 'student login', 'learner']) {
+      expect(nav).not.toContain(forbidden)
+    }
 
     const body = (await page.locator('body').innerText()).toLowerCase()
     // The retired multi-tenant SaaS must not be describable anywhere on the front door.
@@ -39,9 +44,9 @@ test.describe('Public career-skills site', () => {
 
   test('the homepage sets the approved document title and description', async ({ page }) => {
     await page.goto('/')
-    await expect(page).toHaveTitle(/Jifunze\.ai — Career, Income and Practical AI Skills/)
+    await expect(page).toHaveTitle(/Jifunze(\.ai)? — Your idea never sleeps/)
     const description = await page.locator('meta[name="description"]').getAttribute('content')
-    expect(description).toMatch(/practical career, income and ai skills/i)
+    expect(description).toMatch(/social content you can read, watch and apply/i)
     const canonical = await page.locator('link[rel="canonical"]').getAttribute('href')
     expect(canonical).toBe('https://www.jifunze.ai/')
   })
@@ -53,9 +58,10 @@ test.describe('Public career-skills site', () => {
     const allCards = page.locator('main article')
     await expect(allCards).toHaveCount(GUIDES.length)
 
-    const cvCount = GUIDES.filter((g) => g.pillar === 'cv').length
-    await page.getByRole('button', { name: `CV (${cvCount})`, exact: true }).click()
-    await expect(allCards).toHaveCount(cvCount)
+    const firstPillar = PILLARS[0]
+    const firstCount = GUIDES.filter((g) => g.pillar === firstPillar.id).length
+    await page.getByRole('button', { name: `${firstPillar.label} (${firstCount})`, exact: true }).click()
+    await expect(allCards).toHaveCount(firstCount)
   })
 
   test('a lesson detail page renders its full readable text, not just an embed', async ({ page }) => {
@@ -94,7 +100,7 @@ test.describe('Public career-skills site', () => {
 
   test('the social directory lists every official account, and no others', async ({ page }) => {
     await page.goto('/social')
-    const directory = page.getByRole('navigation', { name: /official jifunze\.ai accounts/i })
+    const directory = page.getByRole('navigation', { name: /official jifunze accounts/i })
     const links = directory.getByRole('link')
     await expect(links).toHaveCount(OFFICIAL_SOCIAL_ACCOUNTS.length)
 
@@ -126,7 +132,7 @@ test.describe('Public career-skills site', () => {
   test('social links are reachable by keyboard and expose an accessible name', async ({ page }) => {
     await page.goto('/social')
     const first = page
-      .getByRole('navigation', { name: /official jifunze\.ai accounts/i })
+      .getByRole('navigation', { name: /official jifunze accounts/i })
       .getByRole('link')
       .first()
     await first.focus()
@@ -135,9 +141,9 @@ test.describe('Public career-skills site', () => {
     expect(label).toMatch(/opens in a new tab/i)
   })
 
-  test('the "how it works" page explains selection without overclaiming', async ({ page }) => {
+  test('the "about" page explains the loop without overclaiming', async ({ page }) => {
     await page.goto('/about')
-    await expect(page.getByRole('heading', { name: /how a lesson is chosen/i })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /how content is made/i })).toBeVisible()
     await expect(page.getByRole('heading', { name: /what we do not claim/i })).toBeVisible()
     const body = (await page.locator('body').innerText()).toLowerCase()
     expect(body).toContain('we do not guarantee a job')
@@ -147,9 +153,9 @@ test.describe('Public career-skills site', () => {
     expect(body).not.toMatch(/\boffers? accredited training\b/)
   })
 
-  test('the frozen learning platform is untouched and still reachable', async ({ page }) => {
+  test('the retired course catalog renders the retired-content response', async ({ page }) => {
     await page.goto('/learn')
-    await expect(page.getByTestId('learning-discovery-hub')).toBeVisible({ timeout: 20_000 })
+    await expect(page.getByRole('heading', { name: /course page has been retired/i })).toBeVisible()
   })
 
   test('legal pages are linked from the public footer', async ({ page }) => {

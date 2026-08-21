@@ -1,8 +1,0 @@
-# Requirements for Prompt Engineering Examples
-
-# Core dependencies
-openai>=1.0.0
-python-dotenv>=1.0.0
-
-# Development and testing
-pytest>=7.4.0

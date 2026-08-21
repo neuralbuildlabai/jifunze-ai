@@ -7,8 +7,8 @@ name: PR checks
 #     secrets, so a fork PR cannot exfiltrate anything.
 #   - `permissions: contents: read` — this workflow never writes to the repository.
 #   - No secrets are referenced anywhere below, and none are needed: lint, both type-checks,
-#     the unit suites, the secret-boundary scan, the production build, all three Playwright
-#     suites and the migration verifier all pass with no `.env` file and no credentials.
+#     the unit suites, the secret-boundary scan, the production build, the Playwright
+#     suite and the migration verifier all pass with no `.env` file and no credentials.
 #   - Nothing here publishes, deploys, or touches a real environment. The only database is a
 #     throwaway PostgreSQL service container that is destroyed with the job; Supabase
 #     production is never contacted.
@@ -124,7 +124,10 @@ jobs:
           fail=0
           for needle in VITE_MAINTENANCE_BYPASS_TOKEN MAINTENANCE_BYPASS_TOKEN \
                         VERCEL_OIDC_TOKEN jf_maintenance_bypass \
-                        jf_maintenance_preview_v1 generate-public generate-content; do
+                        jf_maintenance_preview_v1 generate-public generate-content \
+                        "Create smarter, Grow faster" jf-learn-warm stripe-checkout \
+                        flagship_course_progress capstone_submissions training_plans \
+                        LearningDiscoveryHub jifunze-logo-icon.png; do
             matches="$(grep -rl "$needle" dist/ 2>/dev/null || true)"
             if [ -n "$matches" ]; then
               echo "$needle -> PRESENT in:"
@@ -182,12 +185,6 @@ jobs:
 
       - name: Default suite
         run: npm run test:e2e
-
-      - name: Forced-tier suite
-        run: npm run test:e2e:access-forced
-
-      - name: Billing-mock suite
-        run: npm run test:e2e:billing-mock
 
       - name: Upload Playwright report on failure
         if: failure()

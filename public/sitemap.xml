@@ -31,32 +31,42 @@
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://www.jifunze.ai/topics/cv</loc>
+    <loc>https://www.jifunze.ai/contact</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.jifunze.ai/ai-disclosure</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://www.jifunze.ai/topics/practical-ai</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.jifunze.ai/topics/interview</loc>
+    <loc>https://www.jifunze.ai/topics/career-growth</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.jifunze.ai/topics/ai-task</loc>
+    <loc>https://www.jifunze.ai/topics/income-business</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.jifunze.ai/topics/money</loc>
+    <loc>https://www.jifunze.ai/topics/digital-tools</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.jifunze.ai/topics/applications</loc>
+    <loc>https://www.jifunze.ai/topics/productivity</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.jifunze.ai/topics/mindset</loc>
+    <loc>https://www.jifunze.ai/topics/opportunities</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -152,6 +162,18 @@
   </url>
   <url>
     <loc>https://www.jifunze.ai/content/mindset-3-months</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.jifunze.ai/content/tools-two-tool-stack</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.jifunze.ai/content/productivity-first-hour</loc>
     <lastmod>2026-08-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

@@ -111,7 +111,7 @@ export function PublicSocialLinks({
   variant = 'compact',
   only,
   className = '',
-  label = 'Jifunze.AI on social media',
+  label = 'Jifunze on social media',
 }: PublicSocialLinksProps) {
   const accounts: readonly SocialAccount[] = only
     ? only

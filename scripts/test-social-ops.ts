@@ -13,6 +13,7 @@
  */
 import assert from 'node:assert/strict'
 import { readFileSync, existsSync } from 'node:fs'
+import * as fsExtra from 'node:fs'
 
 import { CONTENT_BANK, TARGET_AUDIENCE as ENGINE_AUDIENCE } from '../orchestrator/contentBank.ts'
 import {
@@ -26,7 +27,7 @@ import {
   containsProhibitedClaim,
   findProhibitedClaims,
 } from '../src/social/brand.ts'
-import { PILLARS, PILLAR_IDS, pillarBySlug } from '../src/social/pillars.ts'
+import { LEGACY_PILLAR_MAP, LEGACY_PILLAR_SLUGS, PILLARS, PILLAR_IDS, pillarBySlug } from '../src/social/pillars.ts'
 import { GUIDES } from '../src/social/guides.ts'
 import {
   PUBLIC_CONTENT,
@@ -243,6 +244,36 @@ await test('pillar slugs resolve and unknown slugs do not', () => {
   assert.equal(pillarBySlug(undefined), undefined)
 })
 
+await test('the SQL pillar CHECK constraint matches the TS union exactly (no drift)', () => {
+  const sql = readFileSync(
+    new URL('../supabase/migrations/20260820120000_social_ops_core.sql', import.meta.url),
+    'utf8',
+  )
+  const m = sql.match(/check \(pillar in \(([^)]+)\)\)/)
+  assert.ok(m, 'pillar CHECK constraint not found in the social-ops migration')
+  const sqlIds = m![1].split(',').map((s) => s.trim().replace(/'/g, '')).sort()
+  assert.deepEqual(sqlIds, [...PILLAR_IDS].sort(), 'SQL pillar constraint drifted from src/social/pillars.ts')
+})
+
+await test('every legacy pillar id and slug maps to a current pillar', () => {
+  for (const [legacy, current] of Object.entries(LEGACY_PILLAR_MAP)) {
+    assert.ok(PILLAR_IDS.includes(current), `legacy ${legacy} maps to unknown pillar ${current}`)
+  }
+  for (const [legacySlug, currentSlug] of Object.entries(LEGACY_PILLAR_SLUGS)) {
+    assert.ok(pillarBySlug(currentSlug), `legacy slug ${legacySlug} redirects to unknown slug ${currentSlug}`)
+    assert.equal(pillarBySlug(legacySlug), undefined, `legacy slug ${legacySlug} must no longer resolve directly`)
+  }
+})
+
+await test('the content engine consumes the canonical PillarId (no duplicate union)', () => {
+  const bank = readFileSync(new URL('../orchestrator/contentBank.ts', import.meta.url), 'utf8')
+  assert.match(bank, /import type \{ PillarId \} from '\.\.\/src\/social\/pillars\.ts'/)
+  assert.doesNotMatch(bank, /'cv' \| 'interview'/, 'contentBank must not re-declare its own pillar union')
+  for (const t of CONTENT_BANK) {
+    assert.ok(PILLAR_IDS.includes(t.pillar), `bank topic ${t.id} has unapproved pillar ${t.pillar}`)
+  }
+})
+
 await test('the public site shows only approved AND published records', () => {
   const draft: ContentItem = { ...PUBLIC_CONTENT[0], id: 'x1', slug: 'x1', publication_status: 'draft' }
   const unapproved: ContentItem = { ...PUBLIC_CONTENT[0], id: 'x2', slug: 'x2', approval_status: 'pending' }
@@ -316,8 +347,8 @@ await test('the RSS feed has one item per lesson with a permalink guid', () => {
 
 await test('index.html carries the approved title, description and Organization data', () => {
   const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8')
-  assert.match(html, /<title>Jifunze\.ai — Career, Income and Practical AI Skills<\/title>/)
-  assert.match(html, /Practical career, income and AI skills for job seekers/)
+  assert.match(html, /<title>Jifunze — Your idea never sleeps\.<\/title>/)
+  assert.match(html, /social content you can read, watch and apply/)
   assert.match(html, /"@type": "Organization"/)
   assert.match(html, /"slogan": "Your idea never sleeps\."/)
   assert.match(html, /rel="canonical"/)
@@ -399,7 +430,7 @@ const CONTENT: PublishableContent = {
     'Software reads your CV before any human does. Mirror the advert wording, keep every fact true.',
   body: ['Software screens it first', 'Paste the advert into an AI', 'Keep every fact true'],
   hashtags: ['cv', 'jobs', 'ai', 'kenya', 'career', 'interview', 'money'],
-  pillar: 'cv',
+  pillar: 'career_growth',
   video_url: 'https://example.supabase.co/storage/v1/object/public/reels/x.mp4',
   thumbnail_url: 'https://example.supabase.co/storage/v1/object/public/reels/x.png',
   permalink: 'https://www.jifunze.ai/content/cv-ats-language',
@@ -800,9 +831,9 @@ const PUBLICATIONS: PublicationRow[] = [
 ]
 
 const CONTENT_ROWS: ContentRow[] = [
-  { id: 'cv-ats-language', title: 'Your CV never reached a human', pillar: 'cv', approval_status: 'approved', publication_status: 'published', safety_status: 'ok', published_at: iso(86_400_000) },
-  { id: 'money-narrow-service', title: 'Stop selling design. Sell one task.', pillar: 'money', approval_status: 'approved', publication_status: 'published', safety_status: 'ok', published_at: iso(2 * 86_400_000) },
-  { id: 'apps-follow-up', title: 'The follow-up almost nobody sends', pillar: 'applications', approval_status: 'pending', publication_status: 'draft', safety_status: 'ok', published_at: null },
+  { id: 'cv-ats-language', title: 'Your CV never reached a human', pillar: 'career_growth', approval_status: 'approved', publication_status: 'published', safety_status: 'ok', published_at: iso(86_400_000) },
+  { id: 'money-narrow-service', title: 'Stop selling design. Sell one task.', pillar: 'income_business', approval_status: 'approved', publication_status: 'published', safety_status: 'ok', published_at: iso(2 * 86_400_000) },
+  { id: 'apps-follow-up', title: 'The follow-up almost nobody sends', pillar: 'opportunities', approval_status: 'pending', publication_status: 'draft', safety_status: 'ok', published_at: null },
 ]
 
 await test('totals sum the newest reading of every platform', () => {
@@ -845,7 +876,7 @@ await test('a queued publication with no post id is never ranked', () => {
 })
 
 await test('the top pillar comes from real post views', () => {
-  assert.deepEqual(topPillar(SNAPSHOTS, PUBLICATIONS, CONTENT_ROWS), { pillar: 'cv', views: 700 })
+  assert.deepEqual(topPillar(SNAPSHOTS, PUBLICATIONS, CONTENT_ROWS), { pillar: 'career_growth', views: 700 })
   assert.equal(topPillar([], PUBLICATIONS, CONTENT_ROWS), null)
 })
 
@@ -926,16 +957,15 @@ await test('only unresolved alerts are shown as open', () => {
 // ===========================================================================
 section('dashboard authorization + isolation')
 
-await test('/admin/social-ops is guarded and is NOT mounted inside the frozen AdminShell', () => {
+await test('every /admin surface is guarded and no frozen Learn admin code is imported', () => {
   const app = readFileSync(new URL('../src/App.tsx', import.meta.url), 'utf8')
   assert.match(app, /RequireSocialOpsAccess/, 'the console must have a guard')
-
-  const frozenBlock = app.slice(app.indexOf('<AdminShell />'), app.indexOf('</Routes>'))
-  assert.equal(
-    frozenBlock.includes('social-ops'),
-    false,
-    'social-ops must not be nested inside the frozen admin shell',
-  )
+  assert.equal(/components\/admin\/platform/.test(app), false, 'frozen Learn admin must not be imported')
+  // Both /admin blocks (console shell + social-ops shell) must sit inside the guard.
+  const guardCount = (app.match(/<RequireSocialOpsAccess>/g) ?? []).length
+  assert.ok(guardCount >= 2, 'both admin route blocks must be wrapped in the guard')
+  // The only /admin paths outside a guard block are the public login entry.
+  assert.match(app, /path="\/admin\/login"/)
 })
 
 await test('the social-ops guard has no test bypass', () => {
@@ -1007,6 +1037,120 @@ await test('the admin Edge Function never returns a secret value', () => {
   assert.match(fn, /Boolean\(Deno\.env\.get\('PUBLISH_SECRET'\)\)/, 'presence only')
   assert.equal(/message:\s*Deno\.env\.get/.test(fn), false)
   assert.match(fn, /safeSummary/, 'errors must be reduced before being returned')
+})
+
+// ===========================================================================
+section('frozen Learn boundary')
+
+const ACTIVE_SOURCE_ROOTS = ['../src', '../orchestrator', '../render/src', '../scripts', '../supabase/functions']
+
+const FROZEN_SCHEMA_NEEDLES = [
+  'training_plans',
+  'learning_lab_runs',
+  'teaching_learning_events',
+  'learner_pathway_preferences',
+  'flagship_course_progress',
+  'learner_course_artifacts',
+  'capstone_submissions',
+  'stripe_customers',
+  'stripe_subscription_entitlements',
+  'billing_refund_requests',
+  'stripe_module_purchases',
+  'my_learning_access_summary',
+]
+
+const RETIRED_BRAND_NEEDLES = [
+  'Create smarter, Grow faster',
+  'jf-learn-warm',
+  'jifunze-logo-light.png',
+  'jifunze-logo-dark.png',
+  'jifunze-logo-icon.png',
+  'Become an Instructor',
+  'Enroll now',
+]
+
+const RETIRED_ROUTE_COMPONENT_NEEDLES = [
+  'LearningDiscoveryHubPage',
+  'FlagshipCourseDetailPage',
+  'LearnerCheckoutPage',
+  'AuthSignUpPage',
+  'LearnerAppShell',
+  'stripe-checkout',
+  'stripe-portal',
+  'stripe-webhook',
+]
+
+function* walkFiles(dirUrl: URL): Generator<string> {
+  const { readdirSync, statSync } = fsExtra
+  let entries: string[] = []
+  try {
+    entries = readdirSync(dirUrl)
+  } catch {
+    return
+  }
+  for (const name of entries) {
+    const child = new URL(`${dirUrl.href.replace(/\/$/, '')}/${name}`)
+    const st = statSync(child)
+    if (st.isDirectory()) yield* walkFiles(new URL(`${child.href}/`))
+    else if (/\.(ts|tsx|js|mjs|css|html|sql|json)$/.test(name)) yield child.pathname
+  }
+}
+
+await test('no active source file references a frozen table, retired brand string or removed course module', () => {
+  const offenders: string[] = []
+  const self = new URL(import.meta.url).pathname
+  for (const root of ACTIVE_SOURCE_ROOTS) {
+    for (const file of walkFiles(new URL(`${root}/`, import.meta.url))) {
+      if (file === self) continue
+      const text = readFileSync(file, 'utf8')
+      for (const needle of [...FROZEN_SCHEMA_NEEDLES, ...RETIRED_BRAND_NEEDLES, ...RETIRED_ROUTE_COMPONENT_NEEDLES]) {
+        if (text.includes(needle)) offenders.push(`${file} -> ${needle}`)
+      }
+    }
+  }
+  assert.deepEqual(offenders, [], 'frozen/retired reference in active source')
+})
+
+await test('the built bundle (when present) contains no frozen table or retired brand string', () => {
+  const { readdirSync } = fsExtra
+  let files: string[] = []
+  try {
+    files = readdirSync(new URL('../dist/assets/', import.meta.url))
+  } catch {
+    console.log('       (dist/ not present — run `npm run build` for the bundle leg)')
+    return
+  }
+  const offenders: string[] = []
+  for (const name of files) {
+    if (!/\.(js|css)$/.test(name)) continue
+    const text = readFileSync(new URL(`../dist/assets/${name}`, import.meta.url), 'utf8')
+    for (const needle of [...FROZEN_SCHEMA_NEEDLES, ...RETIRED_BRAND_NEEDLES]) {
+      if (text.includes(needle)) offenders.push(`${name} -> ${needle}`)
+    }
+  }
+  assert.deepEqual(offenders, [], 'frozen/retired string in the production bundle')
+})
+
+await test('the sitemap and feed carry no course URLs and no legacy topic slugs', () => {
+  const sitemap = readFileSync(pubUrl('sitemap.xml'), 'utf8')
+  const feed = readFileSync(pubUrl('feed.xml'), 'utf8')
+  for (const bad of ['/learn', '/library', '/courses/', '/paths', '/pricing', '/auth/sign-up']) {
+    assert.equal(sitemap.includes(bad), false, `sitemap contains retired URL ${bad}`)
+    assert.equal(feed.includes(bad), false, `feed contains retired URL ${bad}`)
+  }
+  for (const legacySlug of Object.keys(LEGACY_PILLAR_SLUGS)) {
+    assert.equal(sitemap.includes(`/topics/${legacySlug}<`), false, `sitemap lists legacy topic slug ${legacySlug}`)
+  }
+  assert.equal(/\/admin/.test(sitemap), false, 'admin routes must not be in the sitemap')
+})
+
+await test('the publishing workflows stay gated off by default', () => {
+  const loop = readFileSync(new URL('../.github/workflows/autonomous-loop.yml', import.meta.url), 'utf8')
+  const sync = readFileSync(new URL('../.github/workflows/social-metrics-sync.yml', import.meta.url), 'utf8')
+  assert.match(loop, /DRY_RUN/, 'loop must carry the DRY_RUN gate')
+  assert.match(sync, /SOCIAL_SYNC_ENABLED/, 'sync must carry the SOCIAL_SYNC_ENABLED gate')
+  assert.equal(/IG_PUBLISH_ENABLED:\s*['"]?true/.test(loop), false, 'publishing must not be hardcoded on')
+  assert.equal(/SOCIAL_SYNC_ENABLED:\s*['"]?true/.test(sync), false, 'sync must not be hardcoded on')
 })
 
 // ===========================================================================

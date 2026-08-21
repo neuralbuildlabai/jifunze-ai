@@ -1,20 +1,27 @@
-# Jifunze.ai
+# Jifunze
 
-**A career-skills media brand powered by an internal autonomous content engine.** It shares
-practical career, income and AI skills with job seekers, students and new freelancers in Kenya and
-other emerging markets, across six content pillars: CVs, interviews, practical AI, money,
-applications and mindset.
+**An Instagram-first, faceless, AI-assisted social learning media system.** Jifunze turns
+emerging developments in AI, work and digital opportunity into useful social learning content
+for ambitious African and diaspora professionals — across six editorial pillars: Practical AI,
+Career growth & employability, Income & business skills, Digital tools, Productivity, and
+Opportunities & useful resources.
 
 > "Jifunze" = learn (Swahili). · *Your idea never sleeps.*
 
-**This repository also contains a learning platform, frozen at
-`learning-platform-frozen-2026-08-18`.** It is preserved and reversible, not deleted — but it is
-not the current product and must not be presented as one. Do not modify `/learn`, `/admin`,
-billing, training or course assets.
+**The operating loop** (the product): detect signals → normalize/dedupe → score → select →
+research & verify → generate content → produce media → quality/safety gates → **human review** →
+approve/schedule → publish (Instagram first, after supervised activation) → sync engagement →
+insights → reviewed improvements to selection. The website is the brand home and social
+distribution hub — not the main product.
 
-**Jifunze.ai does not sell a social-content product.** The content engine operates this brand's own
-channels. Any public claim that brands or creators can use Jifunze.ai to generate social content is
-false and must be corrected on sight.
+**The former Jifunze Learn platform was removed from the active application on 2026-08-21** and
+is fully preserved at commit `78062b1` (tag `jifunze-learn-frozen-2026-08-21`, branch
+`archive/jifunze-learn`). See [`docs/freeze/`](./docs/freeze/) for the freeze record and
+restoration procedure. Courses, subscriptions, payments and learner accounts no longer exist in
+the active product, and production course data is preserved untouched.
+
+**Jifunze does not sell a social-content product.** The content engine operates this brand's own
+channels only.
 
 ---
 
@@ -22,70 +29,48 @@ false and must be corrected on sight.
 
 If you are a new contributor (human or AI), read these in order:
 
-1. [`OPERATIONS.md`](./OPERATIONS.md) — **the operating memory.** What is built, what the
-   identifiers are, which switches are off, what is next. Read it first, update it last.
-2. [`docs/AMENDMENT_001_2026-08-18_PIVOT.md`](./docs/AMENDMENT_001_2026-08-18_PIVOT.md) — the pivot,
-   the brand, the six pillars, what is frozen.
-3. [`docs/AMENDMENT_002_2026-08-20_SOCIAL_OPS.md`](./docs/AMENDMENT_002_2026-08-20_SOCIAL_OPS.md) —
-   the website, the content ledger, the social-ops console, adapter readiness.
-4. [`docs/social/`](./docs/social/) — account inventory, platform copy, schema, sync, adapters,
-   OAuth setup, env vars, deploy/rollback/incident, launch readiness.
+1. [`OPERATIONS.md`](./OPERATIONS.md) — **the operating memory.** What is built, the
+   identifiers, which switches are off, what is next. Read it first, update it last.
+2. [`docs/AMENDMENT_003_2026-08-21_INSTAGRAM_FIRST.md`](./docs/AMENDMENT_003_2026-08-21_INSTAGRAM_FIRST.md)
+   — the current direction: Instagram-first pivot, complete Learn removal, the six pillars.
+3. [`docs/ROUTES.md`](./docs/ROUTES.md) — the active route map and retired-route behaviour.
+4. [`docs/social/`](./docs/social/) — capability truth table, account inventory, schema, sync,
+   adapters, OAuth setup, env vars, deploy/rollback/incident runbooks.
+5. [`docs/freeze/`](./docs/freeze/) — Learn freeze record, DB/storage inventory, restoration.
 
-Historical, superseded, and retained deliberately:
-[`PROJECT_CONTEXT.md`](./PROJECT_CONTEXT.md) and
-[`docs/JIFUNZE_MASTER_PLAN.md`](./docs/JIFUNZE_MASTER_PLAN.md) record the May 2026 learning-platform
-plan. Do not act on them; do not delete them.
+Historical, superseded, and retained deliberately: `PROJECT_CONTEXT.md`,
+`docs/JIFUNZE_MASTER_PLAN.md` (May 2026 learning-platform plan) and Amendments 001/002. Do not
+act on them; do not delete them.
 
-`OPERATIONS.md` is the source of truth. Where it and an amendment conflict, `OPERATIONS.md` governs.
+`OPERATIONS.md` is the source of truth for engine state. Where it and an amendment conflict on
+direction, the newest amendment (003) governs.
 
----
+## The application
 
-## Commands worth knowing
+- **Public site** (`/`): landing page, content hub (quick reads), topic pages, verified social
+  directory, about, AI disclosure, legal. Built with Vite + React, violet `#7C3AED` on
+  near-black `#0B0B12`, Plus Jakarta Sans (the approved `brand/` kit).
+- **Admin console** (`/admin`, invite-only): workflow-ordered modules with honest capability
+  labels; the proven social-ops console lives at `/admin/social-ops`.
+- **Engine**: `orchestrator/` (select → brief → quality gates → render → publish path with an
+  enforced human-approval gate), `render/` (faceless vertical video), Supabase Edge Functions
+  (`ingest-signals`, `publish-instagram`, `refresh-ig-token`, `social-ops-admin`).
 
-| Command | What |
-|---|---|
-| `npm run dev` | Vite dev server |
-| `npm run test` | Content-engine suite (38 tests, offline, no secrets) |
-| `npm run social:test` | Social-ops suite (103 tests, offline, no secrets) |
-| `npm run social:sync:dry-run` | Two-hour metrics sync — decides everything, writes nothing |
-| `npm run social:verify-migration` | Applies the social-ops migration to a throwaway Postgres and asserts its shape |
-| `npm run seo:generate` | Regenerates `public/robots.txt`, `sitemap.xml`, `feed.xml` |
-| `npm run guides:generate` | Regenerates `src/social/guides.ts` from the content bank |
-| `npx playwright test` | End-to-end suite |
+## Standing safety posture
 
----
+Publishing is **off**: `DRY_RUN` defaults true, `IG_PUBLISH_ENABLED` and `SOCIAL_SYNC_ENABLED`
+are unset, and the publish path refuses any item without an explicit recorded human approval
+(no bypass exists). No production migration is applied and no Edge Function is deployed except
+through the separately authorized connection sequence in
+[`docs/social/DEPLOYMENT_CHECKLIST.md`](./docs/social/DEPLOYMENT_CHECKLIST.md).
 
-## Tech stack
-
-React + Vite + TypeScript, Tailwind CSS, Supabase (Postgres + Auth + Edge Functions), Stripe, Vercel, OpenAI / Anthropic, Pyodide (math lab), MDX-based content authoring with a typed compiler.
-
-## Local development
+## Development
 
 ```bash
-npm install
-npm run dev
+npm ci
+npm run dev          # public site + admin console
+npm run test:all     # content-engine + social-ops + security + route suites (offline)
+npm run test:e2e     # Playwright
+npm run build        # production build
+npm run autonomous:offline  # engine dry-run with no keys, renders an evergreen sample
 ```
-
-Other scripts: `npm run build`, `npm run typecheck`, `npm run lint`, `npm run test`. The `scripts/` folder holds course-authoring CLIs and audit utilities; see the master plan for which scripts belong to which wave.
-
-## Repository layout (post-Wave-1)
-
-```
-content/                 # Canonical course source (Wave 2+) — course.yaml + MDX
-src/                     # React app — components, routes, services, types
-src/data/learning/       # Compiled course catalogs and curricula (auto-generated post-Wave-2)
-public/course-assets/    # Embedded interactive course packages (Articulate Rise)
-supabase/migrations/     # Database schema
-docs/                    # Architecture, governance, wave plans
-scripts/                 # Audit, verify, and authoring CLIs
-```
-
-## Status
-
-**Current wave: Wave 1 — Strip-and-clean rewrite.** The legacy trends/opportunities/brand-publishing subsystem and the old multi-brand tenancy are being removed. See `docs/internal/WAVE_1_REWRITE_PLAN.md` (created at the start of Wave 1) for the step-by-step plan.
-
-## Ownership and contributions
-
-Jifunze.ai is owned by Godfrey Maseno. **All contributions are strictly contract-based and confer no ownership, equity, license, resale, or control rights** unless explicitly agreed in writing and signed by the owner. Code contributions, documentation, course content, design, advisory work, and AI-assisted output are all included in this rule.
-
-See [`docs/OWNERSHIP_AND_IP_NOTICE.md`](./docs/OWNERSHIP_AND_IP_NOTICE.md) and [`docs/FOUNDER_OWNERSHIP_AND_CONTRIBUTOR_TERMS.md`](./docs/FOUNDER_OWNERSHIP_AND_CONTRIBUTOR_TERMS.md) for the full terms. Legal and policy status is tracked in [`docs/legal-and-policies-status.md`](./docs/legal-and-policies-status.md).

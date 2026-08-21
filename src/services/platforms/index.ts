@@ -1,6 +1,0 @@
-export { adaptOpportunityToPlatforms } from './adaptOpportunityToPlatforms'
-export type { AdaptOpportunityToPlatformsInput } from './adaptOpportunityToPlatforms'
-export { adaptContentForSocialAccounts } from './adaptContentForSocialAccounts'
-export type { AdaptContentForSocialAccountsInput } from './adaptContentForSocialAccounts'
-export { normalizeCreativeBriefForAdaptation } from './safeCreativeBrief'
-export { validatePlatformVariant, refinePlatformVariant } from './validatePlatformVariant'

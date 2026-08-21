@@ -9,7 +9,10 @@
  * Pexels, no ffmpeg. It must be runnable on a laptop with no secrets at all.
  */
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import { scoreSignals, careerRelevance, careerFamilies, offBrandVeto, type Signal } from '../orchestrator/score.ts'
+import { checkHumanApproval } from '../orchestrator/approvalGate.ts'
+import { findProhibitedClaims } from '../src/social/brand.ts'
 import { selectContent, NEWS_BAR } from '../orchestrator/select.ts'
 import { CONTENT_BANK, pickEvergreen, TARGET_AUDIENCE } from '../orchestrator/contentBank.ts'
 import { validateBrief } from '../orchestrator/scriptQuality.ts'
@@ -159,7 +162,67 @@ await test('recently used topics are skipped', () => {
 
 await test('audience is recorded and non-empty', () => {
   assert.ok(TARGET_AUDIENCE.length > 20)
-  assert.match(TARGET_AUDIENCE, /job seekers/i)
+  assert.match(TARGET_AUDIENCE, /african and diaspora professionals/i)
+})
+
+console.log('\npublish-path gates\n')
+
+await test('the human-approval gate refuses when no approval is recorded (default closed)', async () => {
+  const reader = { latestDecisionFor: async () => ({ ok: true as const, row: null }) }
+  const verdict = await checkHumanApproval(reader, 'some-item')
+  assert.equal(verdict.allowed, false)
+  assert.match((verdict as { reason: string }).reason, /no recorded human approval/i)
+})
+
+await test('the human-approval gate refuses rejected and changes_requested decisions', async () => {
+  for (const decision of ['rejected', 'changes_requested'] as const) {
+    const reader = {
+      latestDecisionFor: async () => ({
+        ok: true as const,
+        row: { decision, decided_at: '2026-08-21T00:00:00Z', decided_by: null },
+      }),
+    }
+    const verdict = await checkHumanApproval(reader, 'some-item')
+    assert.equal(verdict.allowed, false, `decision '${decision}' must not publish`)
+  }
+})
+
+await test('the human-approval gate fails CLOSED when the approval store is unreadable', async () => {
+  const reader = { latestDecisionFor: async () => ({ ok: false as const, error: 'network down' }) }
+  const verdict = await checkHumanApproval(reader, 'some-item')
+  assert.equal(verdict.allowed, false)
+  assert.match((verdict as { reason: string }).reason, /fail closed/i)
+})
+
+await test('the human-approval gate refuses an empty content id', async () => {
+  const reader = { latestDecisionFor: async () => ({ ok: true as const, row: null }) }
+  const verdict = await checkHumanApproval(reader, '  ')
+  assert.equal(verdict.allowed, false)
+})
+
+await test('only an explicit approved decision opens the gate', async () => {
+  const reader = {
+    latestDecisionFor: async () => ({
+      ok: true as const,
+      row: { decision: 'approved' as const, decided_at: '2026-08-21T00:00:00Z', decided_by: 'operator-uuid' },
+    }),
+  }
+  const verdict = await checkHumanApproval(reader, 'some-item')
+  assert.equal(verdict.allowed, true)
+})
+
+await test('the publish path lints prohibited claims (brand linter reachable from the pipeline)', () => {
+  assert.deepEqual(findProhibitedClaims('Mirror the advert wording, keep every fact true.'), [])
+  assert.ok(findProhibitedClaims('Guaranteed jobs for every graduate — link in bio').length >= 2)
+})
+
+await test('run.ts wires both gates ahead of upload+publish with no bypass switch', () => {
+  const run = readFileSync(new URL('../orchestrator/run.ts', import.meta.url), 'utf8')
+  const claims = run.indexOf('findProhibitedClaims([')
+  const approval = run.indexOf('await checkHumanApproval')
+  const upload = run.indexOf('uploadReel(out')
+  assert.ok(claims > 0 && approval > claims && upload > approval, 'gates must precede upload/publish')
+  assert.equal(/SKIP_APPROVAL|APPROVAL_DISABLED|BYPASS_APPROVAL|APPROVAL_BYPASS/i.test(run), false, 'no bypass switch may exist')
 })
 
 console.log('\nscript quality\n')

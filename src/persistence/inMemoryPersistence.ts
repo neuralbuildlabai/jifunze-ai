@@ -6,8 +6,6 @@ import type { ListParams, BrandProfileId } from '../types/persistence'
 import type {
   SignalIngestionBatch,
   StoredContentItem,
-  StoredLearningLabRun,
-  StoredLearningSnapshot,
   StoredOpportunity,
 } from '../types/storedRecords'
 import type { SocialAccount } from '../types/socialAccount'
@@ -15,8 +13,6 @@ import type { ScoredSignal } from '../services/relevance/types'
 import type {
   BrandProfileRepository,
   ContentItemRepository,
-  LearningLabHistoryRepository,
-  LearningSnapshotRepository,
   OpportunityRepository,
   PerformanceMemoryRepository,
   SignalRepository,
@@ -150,49 +146,6 @@ export class InMemoryBrandProfileRepository implements BrandProfileRepository {
   }
 }
 
-export class InMemoryLearningSnapshotRepository implements LearningSnapshotRepository {
-  private latest = new Map<string, StoredLearningSnapshot>()
-
-  async save(snapshot: StoredLearningSnapshot): Promise<void> {
-    this.latest.set(snapshot.brandProfileId, {
-      ...snapshot,
-      insights: snapshot.insights.map((i) => ({ ...i })),
-      recommendations: snapshot.recommendations.map((r) => ({ ...r })),
-    })
-  }
-
-  async getLatest(brandProfileId: BrandProfileId): Promise<StoredLearningSnapshot | undefined> {
-    const s = this.latest.get(brandProfileId)
-    if (!s) return undefined
-    return {
-      ...s,
-      insights: s.insights.map((i) => ({ ...i })),
-      recommendations: s.recommendations.map((r) => ({ ...r })),
-    }
-  }
-}
-
-export class InMemoryLearningLabHistoryRepository implements LearningLabHistoryRepository {
-  private runs: StoredLearningLabRun[] = []
-
-  async appendRun(run: StoredLearningLabRun): Promise<void> {
-    this.runs.push({ ...run })
-    const cap = 240
-    if (this.runs.length > cap) this.runs.splice(0, this.runs.length - cap)
-  }
-
-  async listRunsForBrand(
-    brandProfileId: BrandProfileId,
-    params?: ListParams,
-  ): Promise<StoredLearningLabRun[]> {
-    const filtered = this.runs
-      .filter((r) => r.brandProfileId === brandProfileId)
-      .sort((a, b) => Date.parse(b.ranAt) - Date.parse(a.ranAt))
-    const limit = params?.limit ?? 32
-    return filtered.slice(0, limit).map((r) => ({ ...r }))
-  }
-}
-
 export function createInMemoryPersistenceLayer(seedBrands: BrandProfile[] = []) {
   return {
     performance: new InMemoryPerformanceMemoryRepository(),
@@ -201,7 +154,5 @@ export function createInMemoryPersistenceLayer(seedBrands: BrandProfile[] = []) 
     contentItems: new InMemoryContentItemRepository(),
     socialAccounts: new InMemorySocialAccountRepository(),
     brands: new InMemoryBrandProfileRepository(seedBrands),
-    learningSnapshots: new InMemoryLearningSnapshotRepository(),
-    labHistory: new InMemoryLearningLabHistoryRepository(),
   }
 }

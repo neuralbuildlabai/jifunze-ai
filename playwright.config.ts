@@ -1,20 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
 
-/**
- * Align the test runner with Vite: paused monetization unless this invocation explicitly sets
- * `VITE_LEARNER_MONETIZATION_UI_DISABLED=false` (see `src/learner/learnerCommerceConstants.ts`).
- */
-if (process.env.VITE_LEARNER_MONETIZATION_UI_DISABLED !== 'false') {
-  process.env.VITE_LEARNER_MONETIZATION_UI_DISABLED = 'true'
-}
-
-/**
- * Default E2E: deterministic UI (no Supabase in webServer env) + Vite dev server.
- * Forced-tier positive paths: see `playwright.forced.config.ts` + `npm run test:e2e:access-forced`.
- */
+/** Default E2E: deterministic UI (no Supabase in webServer env) + Vite dev server. */
 export default defineConfig({
   testDir: './e2e',
-  testIgnore: /(access-forced-positive|live-uat|billing-checkout-mocked)\.spec\.ts/,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,

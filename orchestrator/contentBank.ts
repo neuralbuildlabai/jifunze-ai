@@ -1,8 +1,8 @@
 /**
  * Evergreen content bank — the brand-right backbone.
  *
- * Each entry is a proven how-to topic for Jifunze's audience (job seekers &
- * students in emerging markets), distilled from the 30-script playbook. The
+ * Each entry is a proven how-to topic for Jifunze's audience (ambitious African and
+ * diaspora professionals), distilled from the 30-script playbook. The
  * engine draws from here by default and only reaches for news when a signal
  * clears a strict career-skill bar (see select.ts). Rotated deterministically by
  * date so topics don't repeat quickly.
@@ -14,7 +14,7 @@
  */
 
 /** Who every script is written for. Recorded on every decision for audit. */
-export const TARGET_AUDIENCE = 'Job seekers, students and new freelancers in Kenya and other emerging markets'
+export const TARGET_AUDIENCE = 'Ambitious African and diaspora professionals who want to use AI and digital tools to improve their work, career and income'
 
 export type EvergreenScript = {
   hook: string
@@ -22,9 +22,11 @@ export type EvergreenScript = {
   caption: string
 }
 
+import type { PillarId } from '../src/social/pillars.ts'
+
 export type EvergreenTopic = {
   id: string
-  pillar: 'cv' | 'interview' | 'ai_task' | 'money' | 'applications' | 'mindset'
+  pillar: PillarId
   seed: string        // the specific, actionable lesson the script must teach
   tags: string[]
   script: EvergreenScript
@@ -32,7 +34,7 @@ export type EvergreenTopic = {
 
 export const CONTENT_BANK: EvergreenTopic[] = [
   {
-    id: 'cv-ats-language', pillar: 'cv', tags: ['cv', 'jobs', 'ai'],
+    id: 'cv-ats-language', pillar: 'career_growth', tags: ['cv', 'jobs', 'ai'],
     seed: 'CVs are screened by software first. Teach: paste your CV + the job advert into an AI chat and ask it to rewrite your CV using the advert\'s exact wording, keeping every fact true. Same truth, employer\'s words.',
     script: {
       hook: 'Your CV never reached a human',
@@ -41,7 +43,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     },
   },
   {
-    id: 'cv-responsible-for', pillar: 'cv', tags: ['cv', 'jobs'],
+    id: 'cv-responsible-for', pillar: 'career_growth', tags: ['cv', 'jobs'],
     seed: 'Delete the phrase "responsible for" from a CV. Teach the formula: what you did + the number + what it caused. Give a before/after example.',
     script: {
       hook: 'Delete two words from your CV',
@@ -50,7 +52,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     },
   },
   {
-    id: 'cv-top-three-lines', pillar: 'cv', tags: ['cv', 'jobs'],
+    id: 'cv-top-three-lines', pillar: 'career_growth', tags: ['cv', 'jobs'],
     seed: 'Replace the CV objective statement with three lines: who you are + how long, your single strongest proof with a number, and the specific role you want.',
     script: {
       hook: 'Your CV objective is wasting space',
@@ -59,7 +61,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     },
   },
   {
-    id: 'cv-tailor-4min', pillar: 'cv', tags: ['cv', 'applications'],
+    id: 'cv-tailor-4min', pillar: 'career_growth', tags: ['cv', 'applications'],
     seed: 'Tailor a CV to any job in 4 minutes with three edits: reorder most-relevant experience to the top, swap your words for the advert\'s words, cut anything irrelevant.',
     script: {
       hook: 'Tailor any CV in four minutes',
@@ -68,7 +70,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     },
   },
   {
-    id: 'interview-mock-ai', pillar: 'interview', tags: ['interview', 'ai'],
+    id: 'interview-mock-ai', pillar: 'career_growth', tags: ['interview', 'ai'],
     seed: 'Rehearse a real interview free with an AI: prompt it to ask one question at a time, follow up whenever your answer is vague, and name your three weakest answers at the end.',
     script: {
       hook: 'Rehearse your interview free tonight',
@@ -77,7 +79,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     },
   },
   {
-    id: 'interview-salary', pillar: 'interview', tags: ['interview', 'salary'],
+    id: 'interview-salary', pillar: 'career_growth', tags: ['interview', 'salary'],
     seed: 'Never name the first salary number. Teach the deflection: "Do you have a band budgeted for this role?" then, if pushed, give a range whose bottom is what you\'d actually accept.',
     script: {
       hook: 'Never say the first salary number',
@@ -86,7 +88,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     },
   },
   {
-    id: 'interview-predict-qs', pillar: 'interview', tags: ['interview', 'ai'],
+    id: 'interview-predict-qs', pillar: 'career_growth', tags: ['interview', 'ai'],
     seed: 'Predict interview questions from the advert: paste it into an AI and ask for the 15 most likely questions in order, plus what the interviewer is really testing with each.',
     script: {
       hook: 'Know the questions before the interview',
@@ -95,7 +97,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     },
   },
   {
-    id: 'ai-skill-plan', pillar: 'ai_task', tags: ['ai', 'skills', 'learn'],
+    id: 'ai-skill-plan', pillar: 'practical_ai', tags: ['ai', 'skills', 'learn'],
     seed: 'Turn "I want to learn X" into a 30-day plan with one AI prompt: one hour a day, each day one task with an output you can point at, only free resources, day 30 gives something to show an employer.',
     script: {
       hook: 'Turn I want to learn into a plan',
@@ -104,7 +106,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     },
   },
   {
-    id: 'ai-cover-letter', pillar: 'ai_task', tags: ['ai', 'cv', 'applications'],
+    id: 'ai-cover-letter', pillar: 'practical_ai', tags: ['ai', 'cv', 'applications'],
     seed: 'Write a non-generic cover letter in 6 minutes: paragraph 1 why THIS company with a specific detail, paragraph 2 one proof with a number, paragraph 3 what you\'d work on in your first 3 months.',
     script: {
       hook: 'Cover letters take six minutes now',
@@ -113,7 +115,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     },
   },
   {
-    id: 'money-narrow-service', pillar: 'money', tags: ['freelance', 'money'],
+    id: 'money-narrow-service', pillar: 'income_business', tags: ['freelance', 'money'],
     seed: 'Stop selling broad services (design, writing) — go narrow and boring. Teach: search a freelance platform for a narrow service vs a broad one to see the competition gap. Boring, specific tasks get booked.',
     script: {
       hook: 'Stop selling design. Sell one task.',
@@ -122,7 +124,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     },
   },
   {
-    id: 'money-portfolio-weekend', pillar: 'money', tags: ['freelance', 'skills'],
+    id: 'money-portfolio-weekend', pillar: 'income_business', tags: ['freelance', 'skills'],
     seed: 'Build a portfolio with zero clients in a weekend: pick a real local business with a visible problem, fix it as a labelled self-initiated project, write it up as a case study, put it behind one link.',
     script: {
       hook: 'Build a portfolio with zero clients',
@@ -131,7 +133,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     },
   },
   {
-    id: 'money-async-work', pillar: 'money', tags: ['freelance', 'remote work'],
+    id: 'money-async-work', pillar: 'income_business', tags: ['freelance', 'remote work'],
     seed: 'Freelancing works with unreliable power/internet IF you choose ASYNC work (deliver files by a deadline) over live work. Teach: work offline and sync, finish a day early, keep one backup connection.',
     script: {
       hook: 'Unreliable power? Choose async work.',
@@ -140,7 +142,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     },
   },
   {
-    id: 'apps-follow-up', pillar: 'applications', tags: ['jobs', 'applications'],
+    id: 'apps-follow-up', pillar: 'opportunities', tags: ['jobs', 'applications'],
     seed: 'The 7-day follow-up nobody sends: three sentences — remind them what/when you applied, one new thing since, a short close. Once, not three times.',
     script: {
       hook: 'The follow-up almost nobody sends',
@@ -149,7 +151,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     },
   },
   {
-    id: 'apps-no-experience', pillar: 'applications', tags: ['jobs', 'cv'],
+    id: 'apps-no-experience', pillar: 'opportunities', tags: ['jobs', 'cv'],
     seed: '"No experience" usually means "nobody paid me." Teach what counts on a CV: final-year project, any committee/team you organised, family-business work, self-invented projects labelled honestly.',
     script: {
       hook: 'No experience means nobody paid you',
@@ -158,7 +160,7 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     },
   },
   {
-    id: 'apps-scam-signs', pillar: 'applications', tags: ['jobs', 'kenya'],
+    id: 'apps-scam-signs', pillar: 'opportunities', tags: ['jobs', 'kenya'],
     seed: 'Spot a fake job advert in under a minute: any upfront fee, WhatsApp-only interview, personal-email domain, salary too good with no job description, extreme urgency, no traceable company.',
     script: {
       hook: 'Spot a fake job in one minute',
@@ -167,12 +169,30 @@ export const CONTENT_BANK: EvergreenTopic[] = [
     },
   },
   {
-    id: 'mindset-3-months', pillar: 'mindset', tags: ['graduate', 'jobs'],
+    id: 'mindset-3-months', pillar: 'career_growth', tags: ['graduate', 'jobs'],
     seed: 'The three months after graduation, planned: month 1 build a master CV + one portfolio piece, month 2 twenty tailored tracked applications, month 3 start earning something online. Not on the list: waiting.',
     script: {
       hook: 'Plan the three months after graduation',
       segments: ['Month one: build a master CV', 'Month two: send twenty tailored applications', 'Month three: earn something online', 'Waiting is not on the list'],
       caption: 'The three months after graduation, planned: master CV, twenty tailored applications, then earn online.',
+    },
+  },
+  {
+    id: 'tools-two-tool-stack', pillar: 'digital_tools', tags: ['tools', 'workflow'],
+    seed: 'Tool-hopping kills momentum. Teach: pick ONE writing tool and ONE planning tool, master both for a month, and delete the rest. Depth in two tools beats surface familiarity with ten.',
+    script: {
+      hook: 'You only need two tools',
+      segments: ['Stop collecting new apps', 'Pick one writing tool', 'Pick one planning tool', 'Use both for a month', 'Delete the rest'],
+      caption: 'Tool-hopping kills momentum. Pick one writing tool and one planning tool, use them for a month, delete the rest.',
+    },
+  },
+  {
+    id: 'productivity-first-hour', pillar: 'productivity', tags: ['productivity', 'focus'],
+    seed: 'The first hour of the workday decides the rest. Teach: pick the single hardest task the night before, do it in the first hour before opening any messages, and review after one week.',
+    script: {
+      hook: 'Your first hour decides your day',
+      segments: ['Guard your first hour', 'Pick the hardest task tonight', 'Do it before any messages', 'Open email only after', 'Check results in a week'],
+      caption: 'The first hour decides the day. Pick the hardest task tonight, do it before any messages tomorrow.',
     },
   },
 ]

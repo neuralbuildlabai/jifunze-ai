@@ -5,8 +5,6 @@ import type { ListParams, BrandProfileId } from '../types/persistence'
 import type {
   SignalIngestionBatch,
   StoredContentItem,
-  StoredLearningLabRun,
-  StoredLearningSnapshot,
   StoredOpportunity,
 } from '../types/storedRecords'
 import type { SocialAccount } from '../types/socialAccount'
@@ -57,17 +55,6 @@ export type BrandProfileRepository = {
   upsert(brand: BrandProfile): Promise<void>
 }
 
-export type LearningSnapshotRepository = {
-  save(snapshot: StoredLearningSnapshot): Promise<void>
-  getLatest(brandProfileId: BrandProfileId): Promise<StoredLearningSnapshot | undefined>
-}
-
-/** Append-only recent lab / trend runs per brand (durable learning history UX). */
-export type LearningLabHistoryRepository = {
-  appendRun(run: StoredLearningLabRun): Promise<void>
-  listRunsForBrand(brandProfileId: BrandProfileId, params?: ListParams): Promise<StoredLearningLabRun[]>
-}
-
 export type PersistenceLayer = {
   performance: PerformanceMemoryRepository
   signals: SignalRepository
@@ -75,6 +62,4 @@ export type PersistenceLayer = {
   contentItems: ContentItemRepository
   socialAccounts: SocialAccountRepository
   brands: BrandProfileRepository
-  learningSnapshots: LearningSnapshotRepository
-  labHistory: LearningLabHistoryRepository
 }

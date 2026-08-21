@@ -4,7 +4,7 @@ import { useAuth } from '../../auth/AuthContext'
 import { useAppAccess } from '../../access/useAppAccess'
 import { isAdminTier } from '../../lib/admin/adminAccess'
 import { isSupabaseConfigured } from '../../config/supabaseEnv'
-import { LEGAL_ROUTES } from '../../training/trustCopy'
+import { LEGAL_ROUTES } from '../../shared/legalRoutes'
 
 /**
  * Authorization boundary for `/admin/social-ops`.
@@ -52,7 +52,7 @@ export function RequireSocialOpsAccess({ children }: { children: ReactNode }) {
 
   if (!user) {
     const returnUrl = encodeURIComponent(`${location.pathname}${location.search}`)
-    return <Navigate to={`${LEGAL_ROUTES.authSignIn}?returnUrl=${returnUrl}`} replace />
+    return <Navigate to={`${LEGAL_ROUTES.adminLogin}?returnUrl=${returnUrl}`} replace />
   }
 
   if (!isAdminTier(tier)) {

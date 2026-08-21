@@ -27,10 +27,6 @@ const robots = `# ${BRAND_SITE_NAME}
 User-agent: *
 Allow: /
 Disallow: /admin/
-Disallow: /account
-Disallow: /dashboard
-Disallow: /reports
-Disallow: /my-learning
 
 Sitemap: ${CANONICAL_ORIGIN}/sitemap.xml
 `
@@ -46,6 +42,8 @@ const entries: Entry[] = [
   { loc: '/about', changefreq: 'monthly', priority: '0.7' },
   { loc: '/privacy', changefreq: 'yearly', priority: '0.3' },
   { loc: '/terms', changefreq: 'yearly', priority: '0.3' },
+  { loc: '/contact', changefreq: 'yearly', priority: '0.3' },
+  { loc: '/ai-disclosure', changefreq: 'yearly', priority: '0.4' },
   ...PILLARS.map((p) => ({ loc: `/topics/${p.slug}`, changefreq: 'weekly', priority: '0.8' })),
   ...GUIDES.map((g) => ({
     loc: `/content/${g.slug}`,
