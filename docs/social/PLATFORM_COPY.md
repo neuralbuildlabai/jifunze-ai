@@ -37,6 +37,7 @@ retained, kept separate from the logo symbol.
 | X | `Jifunze.AI` ✅ | `@JifunzeAI` keep | `https://jifunze.ai` ✅ | — | 119-char bio below |
 | LinkedIn | `Jifunze.AI` ✅ | `jifunze-ai` keep | `jifunze.ai` ✅ | Education | tagline + overview below |
 | Pinterest | `Jifunze.AI` ✅ | `@jifunzeai` keep | `jifunze.ai` ✅ | Publisher/media · Education | About below |
+| Bluesky | `Jifunze.AI` ✅ | `@jifunze.bsky.social` (see note) | no website field — URL goes in the bio ✅ | — | bio below |
 
 ### Instagram bio (106/150)
 ```
@@ -58,6 +59,22 @@ Career, income & AI skills for job seekers, students & freelancers.
 ```
 Career, income & practical AI skills for job seekers, students and new freelancers. Your idea never sleeps.
 ```
+
+### Bluesky bio (123/256) — **applied 21 August 2026**
+```
+Career, income & practical AI skills for job seekers, students and new freelancers. Your idea never sleeps.
+
+www.jifunze.ai
+```
+Bluesky has no separate website field, so the URL lives in the bio, where the client renders it as a
+link. Post text is capped at **300 graphemes** — the tightest limit of any Jifunze channel after X,
+so a caption written for Instagram will usually need trimming, which `transformForPlatform` does.
+
+**Handle note.** `@jifunze.bsky.social` is the default handle. Bluesky also lets a domain act as the
+handle: publish the account DID at `https://www.jifunze.ai/.well-known/atproto-did` (or a
+`_atproto` DNS TXT record) and the handle becomes `@jifunze.ai`, which is both on-brand and a de
+facto verification. It changes the public profile URL, so it is an owner decision — recorded as
+outstanding in `SOCIAL_ACCOUNT_INVENTORY.md` §4.
 
 ### YouTube channel description (277/1000)
 ```

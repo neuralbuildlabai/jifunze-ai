@@ -99,6 +99,14 @@ export const PLATFORM_LIMITS: Record<PlatformId, Limits> = {
     hashtagsInFirstComment: false,
     media: 'Video up to 2GB. No aspect-ratio requirement.',
   },
+  bluesky: {
+    caption: 300,
+    title: null,
+    hashtags: 2,
+    linkInBody: true,
+    hashtagsInFirstComment: false,
+    media: 'Up to 4 images (JPEG/PNG/WebP, 1MB each) or one MP4 video up to 3 minutes. Alt text up to 1,000 graphemes.',
+  },
   whatsapp_channel: {
     caption: 4096,
     title: null,
@@ -180,7 +188,7 @@ export function transformForPlatform(
 
   const title = limits.title ? trimToLimit(content.title, limits.title) : null
 
-  if (!content.video_url && platform !== 'x' && platform !== 'threads') {
+  if (!content.video_url && platform !== 'x' && platform !== 'threads' && platform !== 'bluesky') {
     warnings.push('No rendered video for a video-first platform.')
   }
   if (platform === 'pinterest' && !content.thumbnail_url) {
