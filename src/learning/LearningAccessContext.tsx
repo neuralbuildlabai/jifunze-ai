@@ -13,7 +13,7 @@ export type LearningAccessContextValue = {
 const LearningAccessContext = createContext<LearningAccessContextValue | null>(null)
 
 export function LearningAccessProvider({ children }: { children: ReactNode }) {
-  const { supabase, user, tenantId } = useAuth()
+  const { supabase, user } = useAuth()
   const [summary, setSummary] = useState<LearningAccessSummary | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -27,11 +27,11 @@ export function LearningAccessProvider({ children }: { children: ReactNode }) {
     }
     setLoading(true)
     setError(null)
-    const { summary: next, error: err } = await fetchLearningAccessSummary(supabase, tenantId)
+    const { summary: next, error: err } = await fetchLearningAccessSummary(supabase)
     setSummary(next)
     setError(err)
     setLoading(false)
-  }, [supabase, user, tenantId])
+  }, [supabase, user])
 
   useEffect(() => {
     let cancelled = false
@@ -47,7 +47,7 @@ export function LearningAccessProvider({ children }: { children: ReactNode }) {
       setLoading(true)
       setError(null)
 
-      const { summary: next, error: err } = await fetchLearningAccessSummary(supabase, tenantId)
+      const { summary: next, error: err } = await fetchLearningAccessSummary(supabase)
 
       if (cancelled) return
 
@@ -61,7 +61,7 @@ export function LearningAccessProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true
     }
-  }, [supabase, user, tenantId])
+  }, [supabase, user])
 
   const value = useMemo<LearningAccessContextValue>(
     () => ({

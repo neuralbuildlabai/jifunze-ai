@@ -8,7 +8,7 @@ import { inferArtifactType } from '../../../lib/flagshipSessionResponseBlocks'
 import {
   fetchLearnerArtifactsForSession,
   upsertLearnerCourseArtifact,
-} from '../../../services/learning/learnerCourseArtifactsRemote'
+} from '../../../services/learnerState/learnerCourseArtifactsRemote'
 import type { FlagshipSessionResponseContext } from './flagshipSessionResponseTypes'
 
 export type { FlagshipSessionResponseContext } from './flagshipSessionResponseTypes'
@@ -110,7 +110,6 @@ function rowFromLocal(blockKey: string, local: LocalLearnerArtifact | undefined)
   return {
     id: `local-${blockKey}`,
     user_id: 'local',
-    tenant_id: null,
     course_slug: '',
     module_id: '',
     session_id: '',
@@ -149,7 +148,6 @@ export function FlagshipLearnerResponsePanel(props: {
     userId,
     supabase,
     usesWorkspacePersistence,
-    tenantId,
     canEdit,
     moduleFullyComplete,
   } = ctx
@@ -232,7 +230,6 @@ export function FlagshipLearnerResponsePanel(props: {
         const attempt = remoteRow?.attempt_count ?? 0
         const { row: next, error: err } = await upsertLearnerCourseArtifact(supabase, {
           user_id: userId,
-          tenant_id: tenantId,
           course_slug: courseSlug,
           module_id: moduleId,
           session_id: sessionId,
@@ -266,7 +263,6 @@ export function FlagshipLearnerResponsePanel(props: {
     canEdit,
     useRemote,
     supabase,
-    tenantId,
     courseSlug,
     moduleId,
     sessionId,
@@ -301,7 +297,6 @@ export function FlagshipLearnerResponsePanel(props: {
       if (useRemote && supabase) {
         const { row: next, error: err } = await upsertLearnerCourseArtifact(supabase, {
           user_id: userId,
-          tenant_id: tenantId,
           course_slug: courseSlug,
           module_id: moduleId,
           session_id: sessionId,
@@ -344,7 +339,6 @@ export function FlagshipLearnerResponsePanel(props: {
     remoteRow,
     useRemote,
     supabase,
-    tenantId,
     courseSlug,
     moduleId,
     sessionId,

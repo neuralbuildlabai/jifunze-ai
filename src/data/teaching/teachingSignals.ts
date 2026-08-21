@@ -4,7 +4,7 @@
  */
 
 import type { TeachingSignal } from './teachingTypes'
-import { persistTeachingLearningEvent } from '../../services/teaching/persistTeachingLearningEvent'
+import { persistTeachingLearningEvent } from '../../services/learnerState/persistTeachingLearningEvent'
 
 const STORAGE_KEY = 'jifunze.teachingSignals.v1'
 const MAX_EVENTS = 200

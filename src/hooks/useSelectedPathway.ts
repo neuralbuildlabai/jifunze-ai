@@ -7,7 +7,7 @@ import {
   deleteLearnerPathwayPreference,
   fetchLearnerPathwayPreference,
   upsertLearnerPathwayPreference,
-} from '../services/learning/learnerPathwayPreferenceRemote'
+} from '../services/learnerState/learnerPathwayPreferenceRemote'
 
 const LOCAL_MIRROR_KEY = 'jf_primary_pathway_slug_mirror_v1'
 

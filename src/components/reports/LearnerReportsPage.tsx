@@ -28,7 +28,7 @@ import { mergeLocalRemoteReconciledForSlug } from '../../lib/flagshipCourseProgr
 import {
   fetchFlagshipProgressRowsForUser,
   flagshipProgressRowToState,
-} from '../../services/learning/flagshipCourseProgressRemote'
+} from '../../services/learnerState/flagshipCourseProgressRemote'
 import { useSelectedPathway } from '../../hooks/useSelectedPathway'
 import { LearnerRouteReady } from '../learner-shell/LearnerRouteReady'
 import { LearnerPageShell } from '../learner-shell/LearnerPageShell'

@@ -1,8 +1,16 @@
 import { useMemo } from 'react'
-import type { SupabaseClient } from '@supabase/supabase-js'
-import type { User } from '@supabase/supabase-js'
+import type { SupabaseClient, User } from '@supabase/supabase-js'
 import { isSupabaseConfigured } from '../config/supabaseEnv'
-import { isDemoPersistenceTenantId, isWorkspaceTenantId } from '../persistence/tenantPersistenceMode'
+
+/**
+ * Resolves whether training data is read/written via Supabase (signed-in learner) or the demo
+ * store (unauthenticated / Supabase unavailable).
+ *
+ * Post-Wave-1 (2026-05-18): renamed from tenant-scoped to user-scoped. The training workspace is
+ * the user — there is no separate tenant boundary in the single-user model.
+ */
+
+const DEMO_WORKSPACE_ID = 'demo-guest'
 
 export type TrainingWorkspaceMode =
   | {
@@ -21,34 +29,26 @@ export type TrainingWorkspaceMode =
       reason: 'workspace_unavailable'
     }
 
-/**
- * Resolves whether training data is read/written via Supabase (workspace UUID) or the demo store.
- */
 export function useTrainingWorkspace(
   user: User | null,
-  tenantId: string,
   supabase: SupabaseClient | null,
 ): TrainingWorkspaceMode {
-  return useMemo(
-    () => resolveTrainingWorkspace(user, tenantId, supabase),
-    [user, tenantId, supabase],
-  )
+  return useMemo(() => resolveTrainingWorkspace(user, supabase), [user, supabase])
 }
 
 export function resolveTrainingWorkspace(
   user: User | null,
-  tenantId: string,
   supabase: SupabaseClient | null,
 ): TrainingWorkspaceMode {
-  const userId = user?.id ?? 'demo-guest'
+  const userId = user?.id ?? DEMO_WORKSPACE_ID
 
-  if (!isSupabaseConfigured() || isDemoPersistenceTenantId(tenantId)) {
-    return { kind: 'demo', workspaceId: tenantId, userId }
+  if (!isSupabaseConfigured() || !user?.id) {
+    return { kind: 'demo', workspaceId: userId, userId }
   }
 
-  if (!isWorkspaceTenantId(tenantId) || !user?.id || !supabase) {
+  if (!supabase) {
     return { kind: 'blocked', reason: 'workspace_unavailable' }
   }
 
-  return { kind: 'live', workspaceId: tenantId, userId, supabase }
+  return { kind: 'live', workspaceId: userId, userId, supabase }
 }

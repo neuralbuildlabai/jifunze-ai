@@ -9,7 +9,6 @@ import {
 } from 'react'
 import { useAuth } from '../auth/AuthContext'
 import { isSupabaseConfigured } from '../config/supabaseEnv'
-import { isWorkspaceTenantId } from '../persistence/tenantPersistenceMode'
 import type { AccessTier } from './appAccess'
 import { effectiveAccessTierAfterRpc, resolveAccessTier } from './appAccess'
 import type { AccessTierContextValue } from './accessTierContext'
@@ -23,24 +22,12 @@ function envEmailFallbackEnabled(): boolean {
 }
 
 export function AccessTierProvider({ children }: { children: ReactNode }) {
-  const {
-    user,
-    supabase,
-    tenantId,
-    workspaceShellReady,
-    usesWorkspacePersistence,
-    emailVerified,
-  } = useAuth()
+  const { user, supabase, emailVerified } = useAuth()
   const email = user?.email ?? null
 
   const [tier, setTier] = useState<AccessTier>('member')
   const [tierLoading, setTierLoading] = useState(false)
   const requestId = useRef(0)
-
-  const rpcTenantId = useMemo(() => {
-    if (usesWorkspacePersistence && isWorkspaceTenantId(tenantId)) return tenantId
-    return null
-  }, [tenantId, usesWorkspacePersistence])
 
   const applyFallbackTier = useCallback(() => {
     const fromEmail = resolveAccessTier(email)
@@ -63,16 +50,9 @@ export function AccessTierProvider({ children }: { children: ReactNode }) {
       setTierLoading(false)
       return
     }
-    if (!workspaceShellReady) {
-      // Do not spin `tierLoading` forever while the workspace shell resolves; catalog and public routes
-      // should still resolve a conservative tier from email/env fallbacks.
-      applyFallbackTier()
-      setTierLoading(false)
-      return
-    }
 
     setTierLoading(true)
-    const { tier: next, error } = await fetchMyEffectiveAccessTier(supabase, rpcTenantId)
+    const { tier: next, error } = await fetchMyEffectiveAccessTier(supabase)
     if (rid !== requestId.current) return
 
     if (error || !next) {
@@ -81,7 +61,7 @@ export function AccessTierProvider({ children }: { children: ReactNode }) {
       setTier(effectiveAccessTierAfterRpc(email, next))
     }
     setTierLoading(false)
-  }, [user, supabase, email, emailVerified, workspaceShellReady, rpcTenantId, applyFallbackTier])
+  }, [user, supabase, email, emailVerified, applyFallbackTier])
 
   useEffect(() => {
     startTransition(() => {

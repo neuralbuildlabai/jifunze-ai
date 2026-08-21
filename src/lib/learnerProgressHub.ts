@@ -36,7 +36,7 @@ import {
   fetchFlagshipProgressRowsForUser,
   flagshipProgressRowToState,
   type FlagshipCourseProgressRow,
-} from '../services/learning/flagshipCourseProgressRemote'
+} from '../services/learnerState/flagshipCourseProgressRemote'
 import {
   fetchLearnerSelfPacedRow,
   fetchLearnerSelfPacedRowsForUser,
@@ -44,7 +44,7 @@ import {
   type LearnerSelfPacedProgressRow,
   type LearnerSelfPacedStatus,
   type LearnerSelfPacedUpsertPatch,
-} from '../services/learning/learnerSelfPacedProgressRemote'
+} from '../services/learnerState/learnerSelfPacedProgressRemote'
 import { sessionOpenForLearner } from '../learner/flagshipSessionPrereq'
 
 export type LearnerUnifiedCourseKind = 'flagship' | 'self_paced' | 'standalone_local'

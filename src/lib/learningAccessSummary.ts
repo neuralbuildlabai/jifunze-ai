@@ -38,10 +38,9 @@ function summarizeRpcFailure(err: { message?: string; code?: string; details?: s
 
 export async function fetchLearningAccessSummary(
   supabase: SupabaseClient,
-  tenantId: string | null = null,
 ): Promise<{ summary: LearningAccessSummary; error: string | null }> {
   try {
-    const { data, error } = await supabase.rpc('my_learning_access_summary', { p_tenant_id: tenantId })
+    const { data, error } = await supabase.rpc('my_learning_access_summary')
     if (error) {
       console.warn(
         '[JifunzeAI] my_learning_access_summary failed; using degraded entitlements (free catalog unaffected). If you see pass_pre_postgres_probe, check Supabase auth/RPC context for this function.',

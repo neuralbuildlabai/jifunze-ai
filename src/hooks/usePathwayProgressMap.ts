@@ -8,7 +8,7 @@ import { isFlagshipCoursePublished } from '../lib/pathwayProgressDerived'
 import {
   fetchFlagshipProgressRowsForSlugs,
   flagshipProgressRowToState,
-} from '../services/learning/flagshipCourseProgressRemote'
+} from '../services/learnerState/flagshipCourseProgressRemote'
 
 export type PathwayProgressSyncContext = {
   supabase: SupabaseClient

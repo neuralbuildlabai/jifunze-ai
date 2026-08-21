@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { FlagshipSession } from '../data/learning/flagshipCourseSessions'
-import { fetchLearnerLessonTime, upsertLearnerLessonTimeProgress } from '../services/learning/learnerLessonTimeRemote'
+import { fetchLearnerLessonTime, upsertLearnerLessonTimeProgress } from '../services/learnerState/learnerLessonTimeRemote'
 
 const INACTIVITY_MS = 60_000
 const SYNC_MS = 5000

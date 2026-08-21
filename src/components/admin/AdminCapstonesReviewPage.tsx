@@ -7,7 +7,7 @@ import {
   adminUpdateCapstoneSubmission,
   fetchAllCapstoneSubmissionsForAdmin,
   type LearnerCapstoneSubmissionRow,
-} from '../../services/learning/learnerCapstoneSubmissionsRemote'
+} from '../../services/learnerState/learnerCapstoneSubmissionsRemote'
 
 const STATUSES = ['submitted', 'under_review', 'revision_requested', 'passed', 'failed'] as const
 

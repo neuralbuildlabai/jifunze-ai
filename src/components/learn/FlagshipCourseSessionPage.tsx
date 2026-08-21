@@ -28,8 +28,7 @@ import { buildLessonNavFull } from '../../lib/flagshipSessionLessonFlow'
 import { flagshipNextSessionBlockedReason } from '../../lib/flagshipSessionNavigationHints'
 import { blockAllowsLearnerResponse } from '../../lib/flagshipSessionResponseBlocks'
 import { archiveLocalDraftsForModule } from '../../lib/learnerCourseArtifactsLocal'
-import { isWorkspaceTenantId } from '../../persistence/tenantPersistenceMode'
-import { archiveNonAcceptedArtifactsForModule } from '../../services/learning/learnerCourseArtifactsRemote'
+import { archiveNonAcceptedArtifactsForModule } from '../../services/learnerState/learnerCourseArtifactsRemote'
 import { useFlagshipLessonTimer } from '../../hooks/useFlagshipLessonTimer'
 import { getPaidFlagshipCertificateConfig } from '../../lib/paidFlagshipCertificateConfig'
 import { LEGAL_ROUTES } from '../../training/trustCopy'
@@ -79,7 +78,10 @@ function neighborSessions(sessions: FlagshipSession[], current: FlagshipSession)
 
 export function FlagshipCourseSessionPage() {
   const { slug, sessionId } = useParams<{ slug: string; sessionId: string }>()
-  const { user, supabase, signOut, signOutPending, usesWorkspacePersistence, tenantId } = useAuth()
+  const { user, supabase, signOut, signOutPending } = useAuth()
+  // Post-Wave-1: every signed-in learner is their own implicit scope. Persistence is keyed by
+  // `user.id`; there is no tenant context to forward.
+  const usesWorkspacePersistence = Boolean(user?.id && supabase)
   const commerce = useLearnerCommerceOptional()
   const course = slug ? getFlagshipCourseBySlug(slug) : undefined
   const curriculum = slug ? getFlagshipCurriculum(slug) : undefined
@@ -199,7 +201,6 @@ export function FlagshipCourseSessionPage() {
       userId: user?.id ?? null,
       supabase,
       usesWorkspacePersistence,
-      tenantId: tenantId && isWorkspaceTenantId(tenantId) ? tenantId : null,
       canEdit: Boolean(learnerReachable),
       moduleFullyComplete: moduleDoneForResponses,
     }
@@ -210,7 +211,6 @@ export function FlagshipCourseSessionPage() {
     user?.id,
     supabase,
     usesWorkspacePersistence,
-    tenantId,
     learnerReachable,
     moduleDoneForResponses,
   ])

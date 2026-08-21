@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { FlagshipCourseCurriculum } from '../data/learning/flagshipCourseCurricula'
 import type { FlagshipSession } from '../data/learning/flagshipCourseSessions'
-import { fetchLatestCapstoneSubmissionForLearner } from '../services/learning/learnerCapstoneSubmissionsRemote'
+import { fetchLatestCapstoneSubmissionForLearner } from '../services/learnerState/learnerCapstoneSubmissionsRemote'
 import type { FlagshipCourseProgressState } from './flagshipCourseProgressDerived'
 import {
   evaluateLearnerCertificateEligibility,

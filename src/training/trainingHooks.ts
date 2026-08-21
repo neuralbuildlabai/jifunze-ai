@@ -62,8 +62,8 @@ export function useTrainingPlansList(): {
   error: TrainingError | null
   refetch: () => Promise<void>
 } {
-  const { user, tenantId, supabase } = useAuth()
-  const mode = useTrainingWorkspace(user, tenantId, supabase)
+  const { user, supabase } = useAuth()
+  const mode = useTrainingWorkspace(user, supabase)
   const [plans, setPlans] = useState<TrainingPlanRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<TrainingError | null>(null)
@@ -113,8 +113,8 @@ export function useTrainingPlanDetail(planId: string | undefined): {
   quizAttempts: QuizAttemptRow[]
   refetch: () => Promise<TrainingPlanDetailSnapshot | null>
 } {
-  const { user, tenantId, supabase } = useAuth()
-  const mode = useTrainingWorkspace(user, tenantId, supabase)
+  const { user, supabase } = useAuth()
+  const mode = useTrainingWorkspace(user, supabase)
   const [tree, setTree] = useState<TrainingPlanWithTree | null>(null)
   const [progress, setProgress] = useState<LessonProgressRow[]>([])
   const [quizAttempts, setQuizAttempts] = useState<QuizAttemptRow[]>([])
@@ -223,8 +223,8 @@ export function useTrainingPlanKnowledgeSpec(
   error: TrainingError | null
   refetch: () => Promise<void>
 } {
-  const { user, tenantId, supabase } = useAuth()
-  const mode = useTrainingWorkspace(user, tenantId, supabase)
+  const { user, supabase } = useAuth()
+  const mode = useTrainingWorkspace(user, supabase)
   const [spec, setSpec] = useState<TrainingKnowledgeSpec | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<TrainingError | null>(null)
@@ -287,8 +287,8 @@ export function useDerivedContentAssetsForPlan(planId: string | undefined): {
   error: TrainingError | null
   refetch: () => Promise<void>
 } {
-  const { user, tenantId, supabase } = useAuth()
-  const mode = useTrainingWorkspace(user, tenantId, supabase)
+  const { user, supabase } = useAuth()
+  const mode = useTrainingWorkspace(user, supabase)
   const [assets, setAssets] = useState<DerivedContentAssetRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<TrainingError | null>(null)
@@ -344,8 +344,8 @@ export function useLearnerPlacementForPlan(planId: string | undefined): {
   error: TrainingError | null
   refetch: () => Promise<void>
 } {
-  const { user, tenantId, supabase } = useAuth()
-  const mode = useTrainingWorkspace(user, tenantId, supabase)
+  const { user, supabase } = useAuth()
+  const mode = useTrainingWorkspace(user, supabase)
   const [placement, setPlacement] = useState<TrainingPlanLearnerPlacementRow | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<TrainingError | null>(null)
@@ -408,8 +408,8 @@ export function useLearnerIntelligenceOnPlan(planId: string | undefined): {
   error: TrainingError | null
   refetch: () => Promise<void>
 } {
-  const { user, tenantId, supabase } = useAuth()
-  const mode = useTrainingWorkspace(user, tenantId, supabase)
+  const { user, supabase } = useAuth()
+  const mode = useTrainingWorkspace(user, supabase)
   const [snapshots, setSnapshots] = useState<TrainingLearnerIntelligenceSnapshotRow[]>([])
   const [planSignalCount, setPlanSignalCount] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -486,8 +486,8 @@ export function useWorkspaceIntelligenceSnapshotsForPlan(planId: string | undefi
   error: TrainingError | null
   refetch: () => Promise<void>
 } {
-  const { user, tenantId, supabase } = useAuth()
-  const mode = useTrainingWorkspace(user, tenantId, supabase)
+  const { user, supabase } = useAuth()
+  const mode = useTrainingWorkspace(user, supabase)
   const [snapshots, setSnapshots] = useState<TrainingLearnerIntelligenceSnapshotRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<TrainingError | null>(null)
@@ -543,8 +543,8 @@ export function useTrainingDashboardSummary(): {
   error: TrainingError | null
   refetch: () => Promise<void>
 } {
-  const { user, tenantId, supabase } = useAuth()
-  const mode = useTrainingWorkspace(user, tenantId, supabase)
+  const { user, supabase } = useAuth()
+  const mode = useTrainingWorkspace(user, supabase)
   const [summary, setSummary] = useState<ReturnType<typeof buildDashboardSummary>>(
     EMPTY_TRAINING_DASHBOARD_SUMMARY,
   )

@@ -7,7 +7,6 @@ export type FlagshipSessionResponseContext = {
   userId: string | null
   supabase: SupabaseClient | null
   usesWorkspacePersistence: boolean
-  tenantId: string | null
   canEdit: boolean
   moduleFullyComplete: boolean
 }

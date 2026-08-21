@@ -9,7 +9,6 @@ export type LearnerArtifactValidationStatus =
 export type LearnerCourseArtifactRow = {
   id: string
   user_id: string
-  tenant_id: string | null
   course_slug: string
   module_id: string
   session_id: string

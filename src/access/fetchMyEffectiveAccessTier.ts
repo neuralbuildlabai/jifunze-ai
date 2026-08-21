@@ -16,15 +16,16 @@ function parseTier(raw: unknown): AccessTier | null {
 }
 
 /**
- * Server-side effective tier for the signed-in user. Pass the current workspace UUID when
- * `usesWorkspacePersistence` and `tenantId` is a Postgres workspace id.
+ * Server-side effective tier for the signed-in user.
+ *
+ * Post-Wave-1 (2026-05-18): tenant_id parameter removed; the RPC now resolves the learner's
+ * tier from `auth.uid()` only. Wave 6 (team learning) will reintroduce an organization-scoped
+ * tier resolution as a separate function.
  */
 export async function fetchMyEffectiveAccessTier(
   supabase: SupabaseClient,
-  tenantIdForRpc: string | null,
 ): Promise<{ tier: AccessTier | null; error: { message: string } | null }> {
-  const args: { p_tenant_id: string | null } = { p_tenant_id: tenantIdForRpc }
-  const { data, error } = await supabase.rpc('my_effective_access_tier', args)
+  const { data, error } = await supabase.rpc('my_effective_access_tier')
   if (error) {
     return { tier: null, error: { message: error.message } }
   }

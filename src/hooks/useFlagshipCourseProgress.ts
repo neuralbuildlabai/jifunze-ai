@@ -40,7 +40,7 @@ import {
   fetchFlagshipProgressRow,
   flagshipProgressRowToState,
   upsertFlagshipProgress,
-} from '../services/learning/flagshipCourseProgressRemote'
+} from '../services/learnerState/flagshipCourseProgressRemote'
 
 export type FlagshipCourseSyncContext = {
   supabase: SupabaseClient
