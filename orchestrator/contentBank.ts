@@ -1,8 +1,8 @@
 /**
  * Evergreen content bank — the brand-right backbone.
  *
- * Each entry is a proven how-to topic for Jifunze's audience (job seekers &
- * students in emerging markets), distilled from the 30-script playbook. The
+ * Each entry is a proven how-to topic for Jifunze's audience (ambitious African and
+ * diaspora professionals), distilled from the 30-script playbook. The
  * engine draws from here by default and only reaches for news when a signal
  * clears a strict career-skill bar (see select.ts). Rotated deterministically by
  * date so topics don't repeat quickly.
@@ -14,7 +14,7 @@
  */
 
 /** Who every script is written for. Recorded on every decision for audit. */
-export const TARGET_AUDIENCE = 'Job seekers, students and new freelancers in Kenya and other emerging markets'
+export const TARGET_AUDIENCE = 'Ambitious African and diaspora professionals who want to use AI and digital tools to improve their work, career and income'
 
 export type EvergreenScript = {
   hook: string

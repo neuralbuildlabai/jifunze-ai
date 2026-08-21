@@ -12,14 +12,17 @@ type Props = {
 }
 
 export function PolicyChrome(props: Props) {
-  const { title, eyebrow = 'Jifunze.AI', children, lastUpdated = '2026-04-16' } = props
+  const { title, eyebrow = 'Jifunze', children, lastUpdated = '2026-08-21' } = props
 
   return (
-    <div className="min-h-screen w-full bg-zinc-950 px-4 py-10 text-zinc-100">
+    <div className="jf-media min-h-screen w-full bg-[#0B0B12] px-4 py-10 text-zinc-100 antialiased">
       <div className="mx-auto w-full max-w-2xl">
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
-          <JifunzeBrandLogo to="/" size="sm" variant="compact" />
-          <Link to="/" className="text-xs font-medium text-violet-300/90 hover:text-violet-200">
+          <JifunzeBrandLogo to="/" size="sm" />
+          <Link
+            to="/"
+            className="rounded text-xs font-medium text-[#A78BFA] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8B5CF6]"
+          >
             Home
           </Link>
         </header>
@@ -32,7 +35,7 @@ export function PolicyChrome(props: Props) {
         <footer className="mt-10 border-t border-white/[0.06] pt-8 text-[11px] text-zinc-500">
           <p>
             Questions:{' '}
-            <a className="text-violet-300/90 hover:text-violet-200" href={`mailto:${SUPPORT_CONTACT_EMAIL}`}>
+            <a className="text-[#A78BFA] hover:text-white" href={`mailto:${SUPPORT_CONTACT_EMAIL}`}>
               {SUPPORT_CONTACT_EMAIL}
             </a>
           </p>
@@ -43,10 +46,16 @@ export function PolicyChrome(props: Props) {
             <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.privacy}>
               Privacy
             </Link>
+            <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.aiDisclosure}>
+              AI disclosure
+            </Link>
+            <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.contact}>
+              Contact
+            </Link>
           </nav>
           <p className="mt-4 text-zinc-600">
-            Jurisdiction-specific legal requirements may apply. These pages are intended to be accurate for the product as
-            shipped; counsel review is recommended before high-stakes or regulated contexts.
+            These pages describe how Jifunze operates today. They are not a substitute for
+            jurisdiction-specific legal advice.
           </p>
         </footer>
       </div>

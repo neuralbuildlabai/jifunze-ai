@@ -98,7 +98,7 @@ export function careerRelevance(s: Signal): number {
   return Math.min(careerFamilies(s).length / 3, 1)
 }
 
-/** Jifunze brand config: what the audience (Kenyan/emerging-market job seekers & learners) cares about. */
+/** Jifunze brand config: what the audience (ambitious African and diaspora professionals) cares about. */
 const BRAND = {
   keywords: {
     'ai': 3, 'chatgpt': 3, 'artificial intelligence': 3, 'openai': 2.5, 'llm': 2,

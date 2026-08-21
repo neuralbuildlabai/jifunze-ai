@@ -21,7 +21,7 @@ test.describe('Retired course routes', () => {
       await page.goto(path)
       await expect(page.getByRole('heading', { name: /course page has been retired/i })).toBeVisible()
       const body = (await page.locator('body').innerText()).toLowerCase()
-      expect(body).not.toMatch(/enrol|checkout|price|ksh|\$\d|certificate|lesson \d/i)
+      expect(body).not.toMatch(/enrol|checkout|add to cart|buy now|ksh \d|\$\d|certificate|lesson \d/i)
       const robots = await page.locator('meta[name="robots"]').getAttribute('content')
       expect(robots).toContain('noindex')
     })

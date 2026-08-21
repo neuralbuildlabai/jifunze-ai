@@ -31,7 +31,7 @@ export function SocialDirectoryPage() {
         .
       </p>
 
-      <PublicSocialLinks variant="cards" className="mt-9" label="Official Jifunze.AI accounts" />
+      <PublicSocialLinks variant="cards" className="mt-9" label="Official Jifunze accounts" />
 
       <div className="mt-12 rounded-2xl border border-white/10 bg-white/[0.02] p-6">
         <h2 className="text-[15px] font-semibold text-white">A note on what is not here</h2>

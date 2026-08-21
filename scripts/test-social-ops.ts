@@ -316,8 +316,8 @@ await test('the RSS feed has one item per lesson with a permalink guid', () => {
 
 await test('index.html carries the approved title, description and Organization data', () => {
   const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8')
-  assert.match(html, /<title>Jifunze\.ai — Career, Income and Practical AI Skills<\/title>/)
-  assert.match(html, /Practical career, income and AI skills for job seekers/)
+  assert.match(html, /<title>Jifunze — Your idea never sleeps\.<\/title>/)
+  assert.match(html, /social content you can read, watch and apply/)
   assert.match(html, /"@type": "Organization"/)
   assert.match(html, /"slogan": "Your idea never sleeps\."/)
   assert.match(html, /rel="canonical"/)

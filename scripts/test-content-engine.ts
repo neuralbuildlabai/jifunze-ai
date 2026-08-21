@@ -159,7 +159,7 @@ await test('recently used topics are skipped', () => {
 
 await test('audience is recorded and non-empty', () => {
   assert.ok(TARGET_AUDIENCE.length > 20)
-  assert.match(TARGET_AUDIENCE, /job seekers/i)
+  assert.match(TARGET_AUDIENCE, /african and diaspora professionals/i)
 })
 
 console.log('\nscript quality\n')

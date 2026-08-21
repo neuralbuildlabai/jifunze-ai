@@ -12,17 +12,17 @@ import { usePageMeta } from '../../social/seo'
 
 export function HowJifunzeWorksPage() {
   usePageMeta({
-    title: `How Jifunze works — ${BRAND_SITE_NAME}`,
+    title: `About — ${BRAND_SITE_NAME}`,
     description:
-      'Who Jifunze.ai is for, what the six content topics cover, how a lesson is chosen, and the role automation plays.',
+      'Who Jifunze is for, what the six topics cover, how content is chosen and verified, and the role AI-assisted automation plays.',
     path: '/about',
   })
 
   return (
     <Section className="py-14 sm:py-16">
-      <Eyebrow>How Jifunze works</Eyebrow>
+      <Eyebrow>About Jifunze</Eyebrow>
       <h1 className="mt-3 max-w-2xl text-[30px] font-extrabold leading-tight tracking-tight sm:text-[38px]">
-        A career-skills media brand, run in the open
+        A social learning media brand, run in the open
       </h1>
       <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-zinc-300">{EXTENDED_DESCRIPTION}</p>
 
@@ -31,9 +31,9 @@ export function HowJifunzeWorksPage() {
           <h2 className="text-[19px] font-semibold tracking-tight text-white">Who this is for</h2>
           <p className="mt-3 text-[16px] leading-relaxed text-zinc-300">{TARGET_AUDIENCE}.</p>
           <p className="mt-3 text-[16px] leading-relaxed text-zinc-400">
-            If you are writing a CV, preparing for an interview, applying for work, learning to use
-            AI for a real task, trying to earn your first freelance income, or trying to keep going
-            through a long search — the lessons are written for you.
+            If you are figuring out how to use AI in your actual job, growing your career, building
+            an income, choosing the right digital tools, getting more done, or looking for real
+            opportunities — the content is made for you.
           </p>
         </section>
 
@@ -57,27 +57,30 @@ export function HowJifunzeWorksPage() {
         </section>
 
         <section>
-          <h2 className="text-[19px] font-semibold tracking-tight text-white">How a lesson is chosen</h2>
+          <h2 className="text-[19px] font-semibold tracking-tight text-white">How content is made</h2>
           <ol className="mt-4 space-y-3 text-[15px] leading-relaxed text-zinc-300">
             <li>
-              <strong className="font-semibold text-white">1. A backbone of tested lessons.</strong>{' '}
-              Most of what we publish comes from a written library of practical, evergreen lessons —
-              the ones on this site.
+              <strong className="font-semibold text-white">1. Discover useful signals.</strong> We
+              watch what is changing in AI, work and digital opportunity, alongside a backbone of
+              tested evergreen lessons.
             </li>
             <li>
-              <strong className="font-semibold text-white">2. A strict relevance test.</strong> We
-              also watch what is changing in work and hiring. A news story only becomes a lesson if
-              it clearly supports one of the six topics above and there is something a reader can
-              actually do about it. General technology news does not qualify.
+              <strong className="font-semibold text-white">2. Research and verify.</strong> A
+              development only becomes content if it clearly serves one of the six topics and its
+              claims hold up against traceable sources. General technology noise does not qualify.
             </li>
             <li>
-              <strong className="font-semibold text-white">3. A quality check before anything ships.</strong>{' '}
-              Every draft is checked for a working link, an honest claim, and a specific action. A
-              draft that promises something that does not exist is rejected, not fixed up.
+              <strong className="font-semibold text-white">3. Create practical content.</strong>{' '}
+              Every piece teaches something you can actually do — with quality checks for honest
+              claims and specific actions before anything ships.
             </li>
             <li>
-              <strong className="font-semibold text-white">4. Human approval.</strong> Nothing is
-              published to a channel without a person approving it.
+              <strong className="font-semibold text-white">4. Review and publish.</strong> A person
+              reviews content before it goes out on a channel.
+            </li>
+            <li>
+              <strong className="font-semibold text-white">5. Learn from engagement.</strong> What
+              the audience finds useful shapes what we make next.
             </li>
           </ol>
         </section>
@@ -87,15 +90,20 @@ export function HowJifunzeWorksPage() {
             What automation does, and does not, do
           </h2>
           <p className="mt-3 text-[16px] leading-relaxed text-zinc-300">
-            {BRAND_SITE_NAME} uses its own internal tooling to help draft, format and schedule its
-            content, and to keep track of what has been published where. That tooling exists to serve
-            this brand's own channels. It is not a product you can sign up for, and we do not offer
-            content generation as a service.
+            {BRAND_SITE_NAME} uses AI-assisted internal tooling to research, draft, adapt and
+            produce its content, and to keep track of what has been published where. That tooling
+            serves this brand's own channels — it is not a product you can sign up for, and we do
+            not offer content generation as a service.
           </p>
           <p className="mt-3 text-[16px] leading-relaxed text-zinc-400">
-            The lessons are written and reviewed by people. Automation handles the repetitive parts —
-            formatting, scheduling, and recording results — never the judgement about what is true or
-            worth saying.
+            Human oversight remains part of the process as our publishing system develops. See the{' '}
+            <Link
+              className="rounded text-[#A78BFA] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8B5CF6]"
+              to="/ai-disclosure"
+            >
+              full AI disclosure
+            </Link>
+            .
           </p>
         </section>
 
@@ -103,18 +111,9 @@ export function HowJifunzeWorksPage() {
           <h2 className="text-[19px] font-semibold tracking-tight text-white">What we do not claim</h2>
           <ul className="mt-3 space-y-2 text-[15px] leading-relaxed text-zinc-400">
             <li>We do not guarantee a job, an income, or an outcome of any kind.</li>
-            <li>We are not an accredited training provider and we do not issue certificates here.</li>
+            <li>We are not an accredited training provider and we do not sell courses or issue certificates here.</li>
             <li>We do not publish audience numbers, partnerships or endorsements we do not have.</li>
           </ul>
-        </section>
-
-        <section>
-          <h2 className="text-[19px] font-semibold tracking-tight text-white">Coming later</h2>
-          <p className="mt-3 text-[16px] leading-relaxed text-zinc-400">
-            A free downloadable resource — the Kazi Kit — is planned. It is not ready, so nothing on
-            this site or on any Jifunze.ai channel links to it. When it exists, it will appear here
-            first with a working link.
-          </p>
         </section>
 
         <section>
@@ -127,7 +126,7 @@ export function HowJifunzeWorksPage() {
             >
               {PUBLIC_CONTACT_EMAIL}
             </a>
-            . Jifunze.ai is based in Nairobi, Kenya.
+            . {BRAND_SITE_NAME} is based in Nairobi, Kenya.
           </p>
         </section>
 

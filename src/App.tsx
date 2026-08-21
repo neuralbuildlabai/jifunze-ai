@@ -14,7 +14,8 @@ import { resolveAccessTier } from './access/appAccess'
 import { AuthProvider, useAuth } from './auth/AuthContext'
 import { PrivacyPolicyPage } from './components/legal/PrivacyPolicyPage'
 import { TermsOfServicePage } from './components/legal/TermsOfServicePage'
-import { LearnerContactPage } from './components/legal/LearnerContactPage'
+import { ContactPage } from './components/legal/ContactPage'
+import { AiDisclosurePage } from './components/legal/AiDisclosurePage'
 import { logEnvValidationFailure, validateStartupEnv } from './lib/envCheck'
 import { MaintenancePublicGate } from './components/maintenance/MaintenancePublicGate'
 import { NotFoundPage } from './components/NotFoundPage'
@@ -143,7 +144,8 @@ export default function App() {
         {/* Legal */}
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
         <Route path="/terms" element={<TermsOfServicePage />} />
-        <Route path="/contact" element={<LearnerContactPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/ai-disclosure" element={<AiDisclosurePage />} />
         <Route path="/disclaimer" element={<Navigate to="/terms" replace />} />
         <Route path="/support" element={<Navigate to="/contact" replace />} />
 
