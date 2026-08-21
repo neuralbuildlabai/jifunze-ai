@@ -65,7 +65,7 @@ export function MediaSiteShell() {
             <Link
               to="/admin/login"
               className={focusRing(
-                'ml-1 hidden min-h-[2.5rem] items-center rounded-full border border-white/15 px-3.5 text-[13.5px] font-medium text-zinc-300 transition hover:border-white/30 hover:text-white sm:inline-flex',
+                'ml-1 inline-flex min-h-[2.5rem] items-center rounded-full border border-white/15 px-2.5 text-[13px] font-medium text-zinc-300 transition hover:border-white/30 hover:text-white sm:px-3.5 sm:text-[13.5px]',
               )}
             >
               Admin Login
