@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthForm } from '../AuthForm'
 import { TrustLegalFooterLinks } from '../TrustLegalFooterLinks'
@@ -7,6 +8,22 @@ import { TrustLegalFooterLinks } from '../TrustLegalFooterLinks'
  * Invite-only; there is no public registration and no learner or instructor login.
  */
 export function AdminLoginPage() {
+  // Admin surfaces must never be indexed, whatever a crawler manages to reach.
+  // (Same contract as AdminConsoleShell; /admin/login is publicly reachable.)
+  useEffect(() => {
+    let el = document.head.querySelector<HTMLMetaElement>('meta[name="robots"]')
+    if (!el) {
+      el = document.createElement('meta')
+      el.setAttribute('name', 'robots')
+      document.head.appendChild(el)
+    }
+    const previous = el.getAttribute('content')
+    el.setAttribute('content', 'noindex, nofollow')
+    return () => {
+      if (previous) el?.setAttribute('content', previous)
+    }
+  }, [])
+
   return (
     <div className="jf-media min-h-screen w-full bg-[#0B0B12] text-white antialiased">
       <div className="relative mx-auto w-full max-w-xl px-5 pb-16 pt-12 sm:px-8 sm:pt-16">

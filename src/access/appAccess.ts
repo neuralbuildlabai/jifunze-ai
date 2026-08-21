@@ -33,12 +33,20 @@ function parseEmailList(raw: string | undefined): Set<string> {
  * whole env record (every `VITE_*` value) into the public bundle. See
  * `docs/social/SECURITY_AND_CHANGE_PROVENANCE_REVIEW_2026-08-20.md`.
  */
-const TIER_EMAIL_ENV: Record<string, string | undefined> = {
-  VITE_SUPER_ADMIN_EMAILS: import.meta.env.VITE_SUPER_ADMIN_EMAILS,
-  VITE_PLATFORM_ADMIN_EMAILS: import.meta.env.VITE_PLATFORM_ADMIN_EMAILS,
-  VITE_WORKSPACE_ADMIN_EMAILS: import.meta.env.VITE_WORKSPACE_ADMIN_EMAILS,
-  VITE_PRO_USER_EMAILS: import.meta.env.VITE_PRO_USER_EMAILS,
-}
+const TIER_EMAIL_ENV: Record<string, string | undefined> = (() => {
+  try {
+    return {
+      VITE_SUPER_ADMIN_EMAILS: import.meta.env.VITE_SUPER_ADMIN_EMAILS,
+      VITE_PLATFORM_ADMIN_EMAILS: import.meta.env.VITE_PLATFORM_ADMIN_EMAILS,
+      VITE_WORKSPACE_ADMIN_EMAILS: import.meta.env.VITE_WORKSPACE_ADMIN_EMAILS,
+      VITE_PRO_USER_EMAILS: import.meta.env.VITE_PRO_USER_EMAILS,
+    }
+  } catch {
+    // Non-Vite runtimes (tsx/node test scripts) have no `import.meta.env`; the canonical
+    // operator emails above still apply, and env allowlists are simply empty there.
+    return {}
+  }
+})()
 
 function viteEnv(key: string): string | undefined {
   return TIER_EMAIL_ENV[key]
