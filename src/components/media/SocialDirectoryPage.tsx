@@ -37,8 +37,8 @@ export function SocialDirectoryPage() {
         <h2 className="text-[15px] font-semibold text-white">A note on what is not here</h2>
         <ul className="mt-3 space-y-2 text-[14px] leading-relaxed text-zinc-400">
           <li>
-            There is no {BRAND_SITE_NAME} WhatsApp channel, Telegram channel or Bluesky account yet.
-            If one is created it will be listed here first.
+            There is no {BRAND_SITE_NAME} WhatsApp channel or Telegram channel yet. If one is
+            created it will be listed here first.
           </li>
           <li>
             {BRAND_SITE_NAME} will never ask you to pay a fee to apply for a job, and will never DM

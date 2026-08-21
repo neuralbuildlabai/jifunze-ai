@@ -192,6 +192,24 @@ await test('sameAs covers every official account exactly once', () => {
   assert.equal(new Set(SOCIAL_SAME_AS).size, SOCIAL_SAME_AS.length)
 })
 
+await test('the "what is not here" note never names an account we actually list', () => {
+  // The /social page reassures visitors that certain channels do NOT exist. When a channel is
+  // later added, that reassurance silently becomes a lie on a live page — it happened with
+  // Bluesky. Anything named as absent must not be in the official list.
+  const src = readFileSync(
+    new URL('../src/components/media/SocialDirectoryPage.tsx', import.meta.url),
+    'utf8',
+  )
+  const note = src.slice(src.indexOf('A note on what is not here'))
+  for (const account of OFFICIAL_SOCIAL_ACCOUNTS) {
+    assert.doesNotMatch(
+      note,
+      new RegExp(`\\b${account.name}\\b`, 'i'),
+      `${account.name} is listed as an official account but the /social note still claims it does not exist`,
+    )
+  }
+})
+
 await test('PublicSocialLinks renders every official account and opens links safely', () => {
   const src = readFileSync(new URL('../src/components/PublicSocialLinks.tsx', import.meta.url), 'utf8')
   assert.match(src, /OFFICIAL_SOCIAL_ACCOUNTS/, 'must render from the canonical list, not a local copy')
