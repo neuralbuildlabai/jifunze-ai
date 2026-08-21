@@ -30,7 +30,28 @@ governs. A test asserts that Instagram is the only platform classified `ready`.
 | X | account + post | yes | ❌ | none beyond a developer account | **~$0.015/post, ~$0.200 with a link** | **Paid access required** — manual-only under the no-spend rule |
 | Pinterest | account + post | yes | ❌ | Trial → Standard review; Trial Pins are sandbox-only | $0 | **API approval required** |
 | Telegram | subscriber count only | yes | ❌ channel and bot do not exist | none | $0 | **Code-ready, credentials missing** — the cheapest new surface once approved |
+| Bluesky | account + post | yes | ❌ no app password issued to the server | **none — no developer app, no OAuth, no review** | $0 | **Code-ready, credentials missing** — the lowest-friction surface in this table |
 | WhatsApp Channel | — | **no** | — | — | $0 | **Manual only — no Channel API exists** |
+
+## Why Bluesky is the outlier
+
+Every other unready platform here is blocked by someone else's decision — an app review, an audit,
+a vetted-product queue, a bill. Bluesky is blocked only by us not having created a credential yet:
+
+- **Reads need no credential at all.** `public.api.bsky.app` serves profile and post views
+  unauthenticated, so account and post metrics are readable the moment the account exists. No other
+  platform in this table can say that.
+- **Writes need one app password**, created by the owner in Settings → App Passwords and exchanged
+  for a session via `com.atproto.server.createSession`. There is no developer app, no OAuth consent
+  screen, no platform review and no cost.
+- **The catch:** an app password is a *full-account* credential. It cannot be scoped to posting
+  alone, and it can change the account's data. It therefore belongs in server-side secrets only
+  (`BLUESKY_HANDLE`, `BLUESKY_APP_PASSWORD`), never in the browser bundle, and it should be revoked
+  and reissued rather than reused across environments.
+
+None of that weakens the publish path: Bluesky posts pass through the same fail-closed human
+approval gate and the same prohibited-claims linter as Instagram. Being easy to connect is not the
+same as being allowed to post.
 
 ## Cost note on X
 

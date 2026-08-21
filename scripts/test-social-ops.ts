@@ -139,7 +139,7 @@ section('official social accounts')
 await test('every official account is present and no others', () => {
   const ids = OFFICIAL_SOCIAL_ACCOUNTS.map((a) => a.id).sort()
   assert.deepEqual(ids, [
-    'facebook', 'instagram', 'linkedin', 'pinterest', 'threads', 'tiktok', 'x', 'youtube',
+    'bluesky', 'facebook', 'instagram', 'linkedin', 'pinterest', 'threads', 'tiktok', 'x', 'youtube',
   ])
 })
 
@@ -174,6 +174,7 @@ await test('the handles match the audited live profiles', () => {
     x: '@JifunzeAI',
     linkedin: 'jifunze-ai',
     pinterest: '@jifunzeai',
+    bluesky: '@jifunze.bsky.social',
   }
   for (const a of OFFICIAL_SOCIAL_ACCOUNTS) {
     assert.equal(a.handle, expected[a.id], `${a.id} handle drifted`)
@@ -365,7 +366,11 @@ await test('every sameAs entry in index.html is an official account', () => {
   const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8')
   const block = html.slice(html.indexOf('"sameAs"'), html.indexOf(']', html.indexOf('"sameAs"')))
   const urls = [...block.matchAll(/"(https:\/\/[^"]+)"/g)].map((m) => m[1])
-  assert.ok(urls.length >= 8, 'sameAs should list every official account')
+  assert.equal(
+    urls.length,
+    OFFICIAL_SOCIAL_ACCOUNTS.length,
+    'index.html sameAs has drifted from OFFICIAL_SOCIAL_ACCOUNTS — add the new account to the static JSON-LD too',
+  )
   for (const u of urls) {
     const host = new URL(u).hostname.replace(/^www\./, '')
     assert.ok(

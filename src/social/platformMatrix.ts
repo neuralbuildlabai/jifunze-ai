@@ -21,6 +21,7 @@ export type PlatformId =
   | 'pinterest'
   | 'telegram'
   | 'whatsapp_channel'
+  | 'bluesky'
 
 export type Readiness =
   /** Credentials exist, the API is approved, the adapter works end to end. */
@@ -229,6 +230,23 @@ export const PLATFORM_MATRIX: readonly PlatformCapability[] = [
     cost: '$0',
     blocker:
       'No official Channel API exists. Every update is posted from a phone by a person. Third-party "Channel API" vendors drive an unofficial client and risk the number being banned — do not use them.',
+  },
+  {
+    id: 'bluesky',
+    label: 'Bluesky',
+    readsAccountMetrics: true,
+    readsPostMetrics: true,
+    canPublish: true,
+    readiness: 'credentials_missing',
+    api: 'AT Protocol XRPC (app.bsky.actor / app.bsky.feed / com.atproto.repo)',
+    // App passwords are unscoped: they grant the account's own repo, minus account management.
+    scopes: [],
+    envVars: ['BLUESKY_HANDLE', 'BLUESKY_APP_PASSWORD'],
+    publishLimit:
+      '5,000 points/hour and 35,000 points/day per account; a post costs 3 points, so the ceiling sits far above this volume. Post text is capped at 300 graphemes.',
+    cost: '$0',
+    blocker:
+      'No app password issued to the server yet. Unusually, reads need no credential at all (the public API is unauthenticated), and publishing needs only an app password from Settings, App Passwords — there is no developer app, no OAuth flow and no platform review.',
   },
 ] as const
 

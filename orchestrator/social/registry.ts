@@ -5,6 +5,7 @@
 import type { PlatformId } from '../../src/social/platformMatrix.ts'
 import { PLATFORM_MATRIX } from '../../src/social/platformMatrix.ts'
 import type { AdapterEnv, ConnectionState, PlatformAdapter } from './types.ts'
+import { BlueskyAdapter } from './adapters/bluesky.ts'
 import { FacebookAdapter } from './adapters/facebook.ts'
 import { InstagramAdapter } from './adapters/instagram.ts'
 import { LinkedInAdapter } from './adapters/linkedin.ts'
@@ -27,6 +28,7 @@ const ADAPTERS: Record<PlatformId, PlatformAdapter> = {
   pinterest: new PinterestAdapter(),
   telegram: new TelegramAdapter(),
   whatsapp_channel: new WhatsAppChannelAdapter(),
+  bluesky: new BlueskyAdapter(),
 }
 
 export function adapterFor(platform: PlatformId): PlatformAdapter {

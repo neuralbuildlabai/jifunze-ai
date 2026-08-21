@@ -8,7 +8,7 @@
  *  - CalmSignal properties are unrelated and must never appear.
  *  - Handles are recorded exactly as the platform shows them.
  *
- * Verified against the live profiles on 20 August 2026.
+ * Verified against the live profiles on 20 August 2026 (Bluesky added and verified 21 August 2026).
  */
 
 export type SocialPlatformId =
@@ -20,6 +20,7 @@ export type SocialPlatformId =
   | 'x'
   | 'linkedin'
   | 'pinterest'
+  | 'bluesky'
 
 export type SocialAccount = {
   id: SocialPlatformId
@@ -95,6 +96,14 @@ export const OFFICIAL_SOCIAL_ACCOUNTS: readonly SocialAccount[] = [
     handle: '@jifunzeai',
     href: 'https://www.pinterest.com/jifunzeai/',
     purpose: 'Saveable CV, interview and application visuals.',
+  },
+  {
+    id: 'bluesky',
+    name: 'Bluesky',
+    handle: '@jifunze.bsky.social',
+    href: 'https://bsky.app/profile/jifunze.bsky.social',
+    identifier: 'did:plc:hez3uufhzodbtwzuvvreri5l',
+    purpose: 'Short written notes and links.',
   },
 ] as const
 

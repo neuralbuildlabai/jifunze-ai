@@ -36,7 +36,8 @@
 create table if not exists public.social_accounts (
   platform            text primary key
     check (platform in ('instagram','facebook','threads','tiktok','youtube',
-                        'linkedin','x','pinterest','telegram','whatsapp_channel')),
+                        'linkedin','x','pinterest','telegram','whatsapp_channel',
+                        'bluesky')),
   display_name        text not null,
   handle              text not null,
   profile_url         text not null,
@@ -458,7 +459,11 @@ values
    'Channel and bot do not exist yet. Creating them needs owner approval.'),
   ('whatsapp_channel','Jifunze.AI','(channels have no handle)','', null,
    'manual_only', true, false, false, false, false,
-   'No official Channel API exists. Manual distribution queue only.')
+   'No official Channel API exists. Manual distribution queue only.'),
+  ('bluesky','Jifunze.AI','@jifunze.bsky.social','https://bsky.app/profile/jifunze.bsky.social',
+   'did:plc:hez3uufhzodbtwzuvvreri5l',
+   'credentials_missing', false, true, true, true, true,
+   'Reads need no credential (public API is unauthenticated). Publishing needs only an app password, no developer app or review. Account created 21 Aug 2026.')
 on conflict (platform) do update set
   display_name          = excluded.display_name,
   handle                = excluded.handle,

@@ -44,7 +44,13 @@ export abstract class BaseAdapter implements PlatformAdapter {
     if (prohibited.length) {
       errors.push(`prohibited claim(s): ${prohibited.join(', ')}`)
     }
-    if (this.capability.canPublish && !content.video_url && this.platform !== 'x' && this.platform !== 'threads') {
+    if (
+      this.capability.canPublish &&
+      !content.video_url &&
+      this.platform !== 'x' &&
+      this.platform !== 'threads' &&
+      this.platform !== 'bluesky'
+    ) {
       errors.push('video_url is required for a video-first platform')
     }
     return errors
