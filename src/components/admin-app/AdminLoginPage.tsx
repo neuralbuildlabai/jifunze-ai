@@ -6,7 +6,7 @@ import { TrustLegalFooterLinks } from '../TrustLegalFooterLinks'
  * Administrator sign-in. Canonical path: `/admin/login` (`/auth/sign-in` redirects there).
  * Invite-only; there is no public registration and no learner or instructor login.
  */
-export function AuthSignInPage() {
+export function AdminLoginPage() {
   return (
     <div className="jf-media min-h-screen w-full bg-[#0B0B12] text-white antialiased">
       <div className="relative mx-auto w-full max-w-xl px-5 pb-16 pt-12 sm:px-8 sm:pt-16">

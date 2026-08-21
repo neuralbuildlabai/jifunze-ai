@@ -1,6 +1,11 @@
 import { useEffect, useMemo } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import { AuthSignInPage } from './components/auth/AuthSignInPage'
+import { AdminLoginPage } from './components/admin-app/AdminLoginPage'
+import { AdminConsoleShell } from './components/admin-app/AdminConsoleShell'
+import { AdminOverviewPage } from './components/admin-app/AdminOverviewPage'
+import { AdminSignalsPage } from './components/admin-app/AdminSignalsPage'
+import { AdminModulePage } from './components/admin-app/AdminModulePage'
+import { ADMIN_MODULES } from './components/admin-app/adminModules'
 import { ForgotPasswordPage } from './components/auth/ForgotPasswordPage'
 import { ResetPasswordPage } from './components/auth/ResetPasswordPage'
 import { AccessTierProvider } from './access/AccessTierProvider'
@@ -143,7 +148,7 @@ export default function App() {
         <Route path="/support" element={<Navigate to="/contact" replace />} />
 
         {/* Administrator authentication (invite-only; no public registration) */}
-        <Route path="/admin/login" element={<AuthSignInPage />} />
+        <Route path="/admin/login" element={<AdminLoginPage />} />
         <Route path="/auth/sign-in" element={<Navigate to="/admin/login" replace />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
@@ -162,7 +167,21 @@ export default function App() {
           <Route path="/admin/social-ops/pipeline" element={<SocialOpsPipelinePage />} />
           <Route path="/admin/social-ops/safety" element={<SocialOpsSafetyPage />} />
         </Route>
-        <Route path="/admin" element={<Navigate to="/admin/social-ops" replace />} />
+        {/* Admin console: overview + honestly-labeled workflow modules */}
+        <Route
+          path="/admin"
+          element={
+            <RequireSocialOpsAccess>
+              <AdminConsoleShell />
+            </RequireSocialOpsAccess>
+          }
+        >
+          <Route index element={<AdminOverviewPage />} />
+          <Route path="signals" element={<AdminSignalsPage />} />
+          {ADMIN_MODULES.filter((m) => m.path !== 'signals').map((m) => (
+            <Route key={m.path} path={m.path} element={<AdminModulePage />} />
+          ))}
+        </Route>
 
         {/* Retired course / commerce surfaces — HTTP 410 comes from vercel.json */}
         {RETIRED_COURSE_PATHS.map((path) => (
