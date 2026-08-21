@@ -3,12 +3,6 @@ import { Link } from 'react-router-dom'
 import { LEGAL_ROUTES, SUPPORT_CONTACT_EMAIL } from '../../shared/legalRoutes'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 
-/**
- * Inlined from the removed learner commerce layer (trap #2, docs/freeze/WIP_RECONCILIATION.md):
- * true (default) hides monetization UI. Behaviour unchanged.
- */
-const LEARNER_MONETIZATION_UI_DISABLED = import.meta.env.VITE_LEARNER_MONETIZATION_UI_DISABLED !== 'false'
-
 type Props = {
   title: string
   eyebrow?: string
@@ -43,23 +37,12 @@ export function PolicyChrome(props: Props) {
             </a>
           </p>
           <nav className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
-            <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.disclaimer}>
-              Product disclaimer
-            </Link>
             <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.terms}>
               Terms
             </Link>
             <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.privacy}>
               Privacy
             </Link>
-            <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.refunds}>
-              Refunds
-            </Link>
-            {LEARNER_MONETIZATION_UI_DISABLED ? null : (
-              <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.pricing}>
-                Plans &amp; pricing
-              </Link>
-            )}
           </nav>
           <p className="mt-4 text-zinc-600">
             Jurisdiction-specific legal requirements may apply. These pages are intended to be accurate for the product as

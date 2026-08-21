@@ -3,12 +3,6 @@ import { Link } from 'react-router-dom'
 import { JifunzeBrandLogo } from '../brand/JifunzeBrandLogo'
 import { LEGAL_ROUTES, SUPPORT_CONTACT_EMAIL } from '../../shared/legalRoutes'
 
-/**
- * Inlined from the removed learner commerce layer (trap #2, docs/freeze/WIP_RECONCILIATION.md):
- * true (default) hides monetization UI. Behaviour unchanged.
- */
-const LEARNER_MONETIZATION_UI_DISABLED = import.meta.env.VITE_LEARNER_MONETIZATION_UI_DISABLED !== 'false'
-
 type Props = {
   title: string
   effectiveLabel: string
@@ -56,23 +50,12 @@ export function LegalPageShell(props: Props) {
             </a>
           </p>
           <nav className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-zinc-600">
-            <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.disclaimer}>
-              Disclaimer
-            </Link>
             <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.terms}>
               Terms
             </Link>
             <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.privacy}>
               Privacy
             </Link>
-            <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.refunds}>
-              Refunds
-            </Link>
-            {LEARNER_MONETIZATION_UI_DISABLED ? null : (
-              <Link className="hover:text-zinc-300" to={LEGAL_ROUTES.pricing}>
-                Pricing
-              </Link>
-            )}
           </nav>
           <p className="mt-4 text-[10px] text-zinc-600">
             These documents describe how Jifunze intends to operate the product today. They are not a substitute for

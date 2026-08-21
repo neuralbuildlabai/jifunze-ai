@@ -1,15 +1,25 @@
+import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { AuthForm } from '../AuthForm'
 import { TrustLegalFooterLinks } from '../TrustLegalFooterLinks'
 
 /**
- * Administrator sign-in. Canonical path: `/admin/login` (`/auth/sign-in` redirects there).
- * Invite-only; there is no public registration and no learner or instructor login.
+ * Shared chrome for the administrator auth surfaces (sign-in, forgot password, reset password).
+ * Approved brand only: violet on near-black, Jifunze wordmark with no ".AI".
  */
-export function AuthSignInPage() {
+export function AuthPageShell({
+  eyebrow,
+  title,
+  intro,
+  children,
+}: {
+  eyebrow: string
+  title: string
+  intro?: string
+  children: ReactNode
+}) {
   return (
     <div className="jf-media min-h-screen w-full bg-[#0B0B12] text-white antialiased">
-      <div className="relative mx-auto w-full max-w-xl px-5 pb-16 pt-12 sm:px-8 sm:pt-16">
+      <div className="relative mx-auto flex min-h-screen w-full max-w-xl flex-col justify-center px-5 py-14 sm:px-8">
         <header className="flex flex-col items-center gap-6 pb-8 text-center">
           <Link
             to="/"
@@ -28,26 +38,17 @@ export function AuthSignInPage() {
             <span className="text-[19px] font-extrabold tracking-tight text-white">Jifunze</span>
           </Link>
           <div className="space-y-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#A78BFA]">
-              Administrator access
-            </p>
-            <h1 className="text-balance text-[1.7rem] font-semibold tracking-tight text-white sm:text-[2rem] sm:leading-[1.15]">
-              Sign in to manage Jifunze
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#A78BFA]">{eyebrow}</p>
+            <h1 className="text-balance text-[1.6rem] font-semibold tracking-tight text-white sm:leading-[1.15]">
+              {title}
             </h1>
-            <p className="text-pretty text-[14px] leading-relaxed text-zinc-400 sm:text-[15px]">
-              Sign in to manage Jifunze signals, content, social accounts and platform operations.
-            </p>
+            {intro ? (
+              <p className="text-pretty text-[14px] leading-relaxed text-zinc-400 sm:text-[15px]">{intro}</p>
+            ) : null}
           </div>
         </header>
-
-        <div className="flex flex-col items-center gap-5">
-          <AuthForm />
-          <Link
-            className="text-[12px] font-medium text-zinc-500 hover:text-zinc-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8B5CF6]"
-            to="/"
-          >
-            ← Back to the public site
-          </Link>
+        <div className="flex flex-col items-center gap-5">{children}</div>
+        <div className="mt-8">
           <TrustLegalFooterLinks variant="compact" className="justify-center" />
         </div>
       </div>

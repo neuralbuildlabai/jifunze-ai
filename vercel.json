@@ -1,9 +1,25 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [
-    {
-      "source": "/((?!assets/|course-assets/).*)",
-      "destination": "/index.html"
-    }
+  "routes": [
+    { "handle": "filesystem" },
+
+    { "src": "^/(generate|ideas|studio|trends|insights|platform|training|team)(/.*)?$", "headers": { "Location": "/" }, "status": 301 },
+    { "src": "^/disclaimer/?$", "headers": { "Location": "/terms" }, "status": 301 },
+    { "src": "^/support/?$", "headers": { "Location": "/contact" }, "status": 301 },
+    { "src": "^/auth/sign-in/?$", "headers": { "Location": "/admin/login" }, "status": 301 },
+
+    { "src": "^/(learn|library|libraries|courses|paths)(/.*)?$", "dest": "/index.html", "status": 410 },
+    { "src": "^/(pricing|refunds)/?$", "dest": "/index.html", "status": 410 },
+    { "src": "^/settings/subscription/?$", "dest": "/index.html", "status": 410 },
+    { "src": "^/auth/sign-up(/.*)?$", "dest": "/index.html", "status": 410 },
+
+    { "src": "^/(dashboard|my-learning|reports|account|settings|lab)(/.*)?$", "dest": "/index.html", "status": 404 },
+    { "src": "^/learning(/.*)?$", "dest": "/index.html", "status": 404 },
+
+    { "src": "^/(content(/[^/]+)?|topics/[^/]+|social|about|privacy|terms|ai-disclosure|contact|forgot-password|reset-password)/?$", "dest": "/index.html" },
+    { "src": "^/admin(/.*)?$", "dest": "/index.html" },
+    { "src": "^/$", "dest": "/index.html" },
+
+    { "src": "^/.*$", "dest": "/index.html", "status": 404 }
   ]
 }

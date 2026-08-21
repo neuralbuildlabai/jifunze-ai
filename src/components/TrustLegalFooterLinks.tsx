@@ -1,12 +1,6 @@
 import { Link } from 'react-router-dom'
 import { LEGAL_ROUTES } from '../shared/legalRoutes'
 
-/**
- * Inlined from the removed learner commerce layer (trap #2, docs/freeze/WIP_RECONCILIATION.md):
- * true (default) hides monetization UI. Behaviour unchanged.
- */
-const LEARNER_MONETIZATION_UI_DISABLED = import.meta.env.VITE_LEARNER_MONETIZATION_UI_DISABLED !== 'false'
-
 type Props = {
   className?: string
   /** Smaller copy for dense forms */
@@ -14,7 +8,7 @@ type Props = {
 }
 
 /**
- * Cross-links for disclaimer + legal + pricing surfaces.
+ * Cross-links for legal pages.
  */
 export function TrustLegalFooterLinks(props: Props) {
   const { className = '', variant = 'default' } = props
@@ -22,7 +16,7 @@ export function TrustLegalFooterLinks(props: Props) {
 
   return (
     <nav
-      aria-label="Disclaimer and policies"
+      aria-label="Policies"
       data-testid="trust-legal-footer-links"
       className={`flex flex-wrap items-center justify-center gap-x-3 gap-y-1 ${textSize} leading-snug text-zinc-500 ${className}`.trim()}
     >
@@ -38,37 +32,9 @@ export function TrustLegalFooterLinks(props: Props) {
       <span className="text-zinc-600" aria-hidden>
         ·
       </span>
-      <Link to={LEGAL_ROUTES.disclaimer} className="text-zinc-400 underline-offset-2 hover:text-zinc-100 hover:underline">
-        Disclaimer
-      </Link>
-      <span className="text-zinc-600" aria-hidden>
-        ·
-      </span>
-      <Link to={LEGAL_ROUTES.support} className="text-zinc-400 underline-offset-2 hover:text-zinc-100 hover:underline">
-        Support
-      </Link>
-      <span className="text-zinc-600" aria-hidden>
-        ·
-      </span>
       <Link to={LEGAL_ROUTES.contact} className="text-zinc-400 underline-offset-2 hover:text-zinc-100 hover:underline">
         Contact
       </Link>
-      <span className="text-zinc-600" aria-hidden>
-        ·
-      </span>
-      <Link to={LEGAL_ROUTES.refunds} className="text-zinc-400 underline-offset-2 hover:text-zinc-100 hover:underline">
-        Refunds
-      </Link>
-      {LEARNER_MONETIZATION_UI_DISABLED ? null : (
-        <>
-          <span className="text-zinc-600" aria-hidden>
-            ·
-          </span>
-          <Link to={LEGAL_ROUTES.pricing} className="text-zinc-400 underline-offset-2 hover:text-zinc-100 hover:underline">
-            Pricing
-          </Link>
-        </>
-      )}
     </nav>
   )
 }

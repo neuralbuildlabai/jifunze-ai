@@ -3,9 +3,6 @@
 interface ImportMetaEnv {
   readonly VITE_SUPABASE_URL?: string
   readonly VITE_SUPABASE_ANON_KEY?: string
-  readonly VITE_LOCAL_DEV_TENANT_ID?: string
-  /** When `true`, synthetic learning rows may seed UUID workspaces (default off for real tenants). */
-  readonly VITE_SEED_DEMO_LEARNING_IN_WORKSPACE?: string
   /** `false` disables localStorage-backed demo persistence (in-memory only). */
   readonly VITE_BROWSER_PERSISTENCE?: string
   /** Preferred: `mock` | `http` (falls back to legacy URL / VITE_CONTENT_GENERATION_MODE). */
@@ -22,19 +19,6 @@ interface ImportMetaEnv {
    * When `true`, or in dev unless `false`: use email allowlists for tier if `my_effective_access_tier` fails.
    */
   readonly VITE_ACCESS_TIER_EMAIL_FALLBACK?: string
-  /**
-   * When `true`, client shows live Checkout / Customer Portal actions (Edge Functions must be deployed with secrets).
-   */
-  readonly VITE_BILLING_CHECKOUT_ENABLED?: string
-  /** Comma-separated domain suffixes for student-discount eligibility (e.g. ".edu,.ac.uk,.ac.ke"). */
-  readonly VITE_BILLING_STUDENT_DOMAIN_SUFFIXES?: string
-  /** Comma-separated domain suffixes for team/org discount eligibility. */
-  readonly VITE_BILLING_TEAM_ORG_DOMAIN_SUFFIXES?: string
-  /**
-   * When `true`, `startStripeCheckout` returns synthetic URLs for Playwright (no Edge Function / Stripe network).
-   * Must remain `false`/unset in production builds.
-   */
-  readonly VITE_E2E_BILLING_INVOKE_MOCK?: string
   /**
    * When `true` with no Supabase URL, unlocks `/admin/*` for Playwright `test:e2e:access-forced` only.
    * Must stay unset in production — never combine with live Supabase keys.
@@ -58,8 +42,6 @@ interface ImportMetaEnv {
   readonly VITE_PLATFORM_ADMIN_EMAILS?: string
   readonly VITE_WORKSPACE_ADMIN_EMAILS?: string
   readonly VITE_PRO_USER_EMAILS?: string
-  /** Dev-only manual score helper on standalone module pages (presentation only, localStorage). */
-  readonly VITE_PRACTICAL_MATH_DEV_MANUAL_SCORE?: string
   /** Injected on Vercel builds. */
   readonly VERCEL?: string
 }

@@ -44,7 +44,7 @@ export function PublicMaintenancePage() {
           <div className="mt-8 flex flex-col items-center gap-4 border-t border-orange-100/80 pt-8">
             <p className="text-[12px] text-stone-500">Already have an account?</p>
             <Link
-              to={LEGAL_ROUTES.authSignIn}
+              to={LEGAL_ROUTES.adminLogin}
               className="inline-flex min-h-[2.75rem] items-center justify-center rounded-full bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500 px-8 text-[14px] font-semibold text-white shadow-md shadow-orange-500/25 transition hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--jf-focus-ring)]"
             >
               Sign in
@@ -65,7 +65,7 @@ export function PublicMaintenancePage() {
           <span className="text-stone-300" aria-hidden>
             ·
           </span>
-          <Link to={LEGAL_ROUTES.disclaimer} className="hover:text-orange-700 hover:underline">
+          <Link to={LEGAL_ROUTES.terms} className="hover:text-orange-700 hover:underline">
             Disclaimer
           </Link>
         </nav>
