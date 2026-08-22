@@ -174,7 +174,7 @@ await test('the handles match the audited live profiles', () => {
     x: '@JifunzeAI',
     linkedin: 'jifunze-ai',
     pinterest: '@jifunzeai',
-    bluesky: '@jifunze.bsky.social',
+    bluesky: '@jifunze.ai',
   }
   for (const a of OFFICIAL_SOCIAL_ACCOUNTS) {
     assert.equal(a.handle, expected[a.id], `${a.id} handle drifted`)
