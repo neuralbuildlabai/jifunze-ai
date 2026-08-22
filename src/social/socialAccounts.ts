@@ -100,8 +100,8 @@ export const OFFICIAL_SOCIAL_ACCOUNTS: readonly SocialAccount[] = [
   {
     id: 'bluesky',
     name: 'Bluesky',
-    handle: '@jifunze.bsky.social',
-    href: 'https://bsky.app/profile/jifunze.bsky.social',
+    handle: '@jifunze.ai',
+    href: 'https://bsky.app/profile/jifunze.ai',
     identifier: 'did:plc:hez3uufhzodbtwzuvvreri5l',
     purpose: 'Short written notes and links.',
   },
