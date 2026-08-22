@@ -1,7 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "routes": [
+    { "src": "^/\\.well-known/atproto-did$", "headers": { "Content-Type": "text/plain; charset=utf-8" }, "continue": true },
+
     { "handle": "filesystem" },
+
+    { "src": "^/\\.well-known/.*$", "status": 404 },
 
     { "src": "^/(generate|ideas|studio|trends|insights|platform|training|team)(/.*)?$", "headers": { "Location": "/" }, "status": 301 },
     { "src": "^/disclaimer/?$", "headers": { "Location": "/terms" }, "status": 301 },
