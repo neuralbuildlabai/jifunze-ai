@@ -22,6 +22,8 @@ $PSQL -c "create database $DB" >/dev/null
 $PSQL -d "$DB" -f "$ROOT/supabase/tests/local_preamble.sql" >/dev/null
 $PSQL -d "$DB" -f "$ROOT/supabase/migrations/20260820120000_social_ops_core.sql" >/dev/null
 echo "  ok  migration applies cleanly"
+$PSQL -d "$DB" -f "$ROOT/supabase/migrations/20260822090000_bluesky_domain_handle.sql" >/dev/null
+echo "  ok  bluesky domain-handle migration applies cleanly"
 
 fail=0
 assert() { # assert <name> <sql returning boolean>
@@ -82,6 +84,11 @@ assert "whatsapp channel cannot publish" \
 
 assert "bluesky is seeded and not yet credentialled" \
   "select readiness='credentials_missing' from public.social_accounts where platform='bluesky'"
+
+assert "bluesky carries the domain handle on the same DID" \
+  "select handle='@jifunze.ai' and profile_url='https://bsky.app/profile/jifunze.ai'
+     and platform_account_id='did:plc:hez3uufhzodbtwzuvvreri5l'
+   from public.social_accounts where platform='bluesky'"
 
 assert "public content policy requires approved AND published" \
   "select count(*)=1 from pg_policies where schemaname='public' and tablename='content_items'
