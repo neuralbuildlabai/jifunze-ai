@@ -2,6 +2,9 @@
 
 **Date:** 20 August 2026 · **Verified against the live profiles in a browser on this date.**
 **Amended 21 August 2026:** Bluesky added as the ninth official account (created and verified that day).
+**Amended 22 August 2026:** Bluesky branding applied (approved avatar + 1500×500 banner) and the
+domain handle `@jifunze.ai` adopted via the `/.well-known/atproto-did` verification (PR #8). Same
+account, same DID; the public profile URL is now `https://bsky.app/profile/jifunze.ai`.
 **Authority:** `OPERATIONS.md` · `docs/AMENDMENT_001_2026-08-18_PIVOT.md`
 **Machine-readable source of truth:** `src/social/socialAccounts.ts` (the website, the JSON-LD, the
 sitemap and the dashboard all read from it) and the `social_accounts` table seeded by
@@ -25,7 +28,7 @@ sitemap and the dashboard all read from it) and the `social_accounts` table seed
 | 6 | X | `https://x.com/JifunzeAI` | ✅ `Jifunze.AI` | `@JifunzeAI` | ✅ violet mark | ✅ 1500×500 | ✅ 119/160 | ✅ `jifunze.ai` | — | ✅ Nairobi, Kenya | — |
 | 7 | LinkedIn | `https://www.linkedin.com/company/jifunze-ai/` | ✅ `Jifunze.AI` | `jifunze-ai` (org `114444495`) | ✅ violet mark | ✅ 1584×396 | ✅ tagline 84/120 + overview 493/2000 | ✅ `jifunze.ai` | ✅ Education | ✅ Nairobi, KE | `+254796192425` |
 | 8 | Pinterest | `https://www.pinterest.com/jifunzeai/` | ✅ `Jifunze.AI` | `@jifunzeai` | ✅ violet mark | n/a | ✅ career-skills + tagline | ✅ `jifunze.ai` | ✅ Business · Publisher/media · Education | ✅ Kenya | — |
-| 9 | Bluesky | `https://bsky.app/profile/jifunze.bsky.social` | ✅ `Jifunze.AI` (set 21 Aug) | `@jifunze.bsky.social` | ⚠ **default yellow `@` placeholder — not the brand mark** | ⚠ **none** | ✅ career-skills bio + tagline (set 21 Aug) | ✅ in bio (`www.jifunze.ai`) — Bluesky has no website field | — | — | — |
+| 9 | Bluesky | `https://bsky.app/profile/jifunze.ai` | ✅ `Jifunze.AI` (set 21 Aug) | ✅ `@jifunze.ai` (domain handle, 22 Aug) | ✅ approved violet mark (22 Aug) | ✅ 1500×500 (22 Aug) | ✅ career-skills bio + tagline (set 21 Aug) | ✅ in bio (`www.jifunze.ai`) — Bluesky has no website field | — | — | — |
 
 ### Connected accounts and cross-links
 
@@ -34,7 +37,7 @@ sitemap and the dashboard all read from it) and the `social_accounts` table seed
 | YouTube | Website, Instagram, X, LinkedIn, Facebook, **TikTok, Threads, Pinterest** (last three added 20 Aug) — 8 links, verified live |
 | Threads | Instagram badge on; **no website link — see §2** |
 | Instagram | Threads badge on |
-| Website footer / `/social` | all eight, from `src/social/socialAccounts.ts` |
+| Website footer / `/social` | all nine, from `src/social/socialAccounts.ts` |
 
 ### Access, metrics and API status
 
@@ -123,7 +126,7 @@ It is recorded as attempted-and-failed rather than as done.
 | LinkedIn | Delete or hide 2 obsolete posts | Owner |
 | Threads | Add the website link `https://www.jifunze.ai` **in the Threads mobile app**. Desktop web accepts it and silently discards it — verified twice | Owner, in the app |
 | Pinterest | Domain claim — completes the moment the site with the `p:domain_verify` tag is deployed and *Claim* is pressed | After deploy |
-| Bluesky | Replace the default yellow `@` avatar with `brand/social-kit/exports/avatar-400.png`, and add the banner `brand/social-kit/x-header-1500x500.png` (1500×500 = Bluesky's 3:1 ratio). Both are file-picker uploads, so they are owner actions. | Owner |
-| Bluesky | **Recommended:** claim `@jifunze.ai` as the handle via the domain-verification route, which replaces `@jifunze.bsky.social` and doubles as verification. Needs a one-file deploy (`public/.well-known/atproto-did`) plus Settings → Handle → "I have my own domain". Changing the handle changes the public profile URL, so it is a deliberate decision, not a default. | Owner decision |
+| Bluesky | ~~Avatar and banner~~ — **Done 22 Aug 2026:** approved `avatar-400.png` and `x-header-1500x500.png` applied and verified on the public profile. | Done |
+| Bluesky | ~~Domain handle~~ — **Done 22 Aug 2026:** `https://www.jifunze.ai/.well-known/atproto-did` deployed (PR #8) and the handle switched to `@jifunze.ai` (same DID `did:plc:hez3uufhzodbtwzuvvreri5l`; `@jifunze.bsky.social` remains reserved to the account). | Done |
 | All | Confirm `hello@jifunze.ai` receives mail — it is now published on Facebook, LinkedIn and YouTube. **Cannot be verified without sending mail or opening the mailbox, so it is not claimed as verified here.** | Owner |
 | All | Confirm MFA is on. No security setting was inspected or changed | Owner |

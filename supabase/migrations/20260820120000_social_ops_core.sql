@@ -460,10 +460,10 @@ values
   ('whatsapp_channel','Jifunze.AI','(channels have no handle)','', null,
    'manual_only', true, false, false, false, false,
    'No official Channel API exists. Manual distribution queue only.'),
-  ('bluesky','Jifunze.AI','@jifunze.bsky.social','https://bsky.app/profile/jifunze.bsky.social',
+  ('bluesky','Jifunze.AI','@jifunze.ai','https://bsky.app/profile/jifunze.ai',
    'did:plc:hez3uufhzodbtwzuvvreri5l',
    'credentials_missing', false, true, true, true, true,
-   'Reads need no credential (public API is unauthenticated). Publishing needs only an app password, no developer app or review. Account created 21 Aug 2026.')
+   'Reads need no credential (public API is unauthenticated). Publishing needs only an app password, no developer app or review. Account created 21 Aug 2026; domain handle @jifunze.ai adopted 22 Aug 2026 (same DID).')
 on conflict (platform) do update set
   display_name          = excluded.display_name,
   handle                = excluded.handle,
